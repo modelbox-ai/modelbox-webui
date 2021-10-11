@@ -1,0 +1,30 @@
+{
+  "/console/rest": {
+    "target": "http://127.0.0.1:5555",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "/console/rest": "http://127.0.0.1:5555/console/rest"
+    }
+  },
+  "/v1/modelbox/job": {
+    "target": "http://127.0.0.1:1104",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "/v1/modelbox/job": "http://127.0.0.1:1104/v1/modelbox/job"
+    }
+  },
+  "/editor": {
+    "target": "http://127.0.0.1:1104",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "/editor": "http://127.0.0.1:1104/editor"
+    }
+  },
+  "/help": {
+    "target": "http://127.0.0.1:1104",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "/help": "http://127.0.0.1:1104/help"
+    }
+  }
+}

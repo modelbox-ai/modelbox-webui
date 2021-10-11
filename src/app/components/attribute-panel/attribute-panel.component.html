@@ -1,0 +1,95 @@
+<div class="drawer-menu">
+    <form dForm [layout]="layoutDirection" [labelSize]="'sm'" ngForm #myForm1="ngForm">
+        <d-form-item>
+            <p class="attribute-title">
+                {{ 'attributePanel.title' | translate }}
+                {{ config.name }}
+                {{ 'attributePanel.title1' | translate }}
+            </p>
+        </d-form-item>
+        <d-form-item>
+            <d-form-label>{{'insertPanels.tip.name'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    <input dTextInput autocomplete="off" style="width:184px;height:28px" [name]="'new-name'"
+                        (keyup)="changedValue=true" (blur)="attributeModel.blur(myForm1.form)" [required]="true"
+                        placeholder="{{'attributePanel.namePlaceholder'|translate}}" [(ngModel)]="newName">
+                </div>
+            </d-form-control>
+        </d-form-item>
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'attributePanel.topName'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    {{unit.name}}
+                </div>
+            </d-form-control>
+        </d-form-item>
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'insertPanels.tip.version'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    {{unit.version}}
+                </div>
+            </d-form-control>
+        </d-form-item>
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'insertPanels.tip.description'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    {{unit.descryption}}
+                </div>
+            </d-form-control>
+        </d-form-item>
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'attributePanel.arrayGroup'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    {{unit.group}}
+                </div>
+            </d-form-control>
+        </d-form-item>
+
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'insertPanels.tip.isVirtualmodel'|translate}}</d-form-label>
+            <d-form-control>
+                <div>
+                    {{unit.virtual ? ('insertPanels.tip.yes' | translate) : ('insertPanels.tip.no' | translate)}}
+                </div>
+            </d-form-control>
+        </d-form-item>
+
+        <d-form-item *ngIf="unit">
+            <d-form-label>{{'insertPanels.tip.topType'|translate}}</d-form-label>
+            <d-form-control>
+                <d-select [options]="unitType.options" name="'unit-type'" style="width: 160px;" id="typeSelect"
+                    placeholder="{{'attributePanel.selectType'|translate}}" [filterKey]="'label'"
+                    [(ngModel)]="unitType.selected" (ngModelChange)="unitType.change($event, myForm1.form)"></d-select>
+            </d-form-control>
+        </d-form-item>
+        <d-form-item *ngFor="let item of unitOptions.data">
+            <d-form-label [required]="item.required">{{item.label}}</d-form-label>
+            <d-form-control>
+                <ng-container *ngIf="item.type === 'string'">
+                    <input dTextInput autocomplete="off" style="width:184px;height:28px" [name]="'option-' + item.label"
+                        placeholder="{{item.default}}" [(ngModel)]="item.value" (keyup)="changedValue=true"
+                        (blur)="attributeModel.blur(myForm1.form)" />
+                </ng-container>
+                <ng-container *ngIf="item.type === 'bool'">
+                    <input type="checkbox" [(ngModel)]="item.value" [name]="'option-' + item.label"
+                        (keyup)="changedValue=true" (blur)="attributeModel.blur(myForm1.form)" />
+                </ng-container>
+                <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
+                    <input dTextInput autocomplete="off" style="width:184px;height:28px" [(ngModel)]="item.value"
+                        [name]="'option-' + item.label" placeholder="{{item.default}}" (keyup)="changedValue=true"
+                        (blur)="attributeModel.blur(myForm1.form)" />
+                </ng-container>
+                <ng-container *ngIf="item.type === 'list'">
+                    <d-select name="'option-' + item.label" [(ngModel)]="item.selected" [options]="item.options"
+                        [filterKey]="'label'" (ngModelChange)="attributeModel.blur(myForm1.form)"></d-select>
+                </ng-container>
+                <br /><span>{{item.desc}}</span>
+            </d-form-control>
+        </d-form-item>
+    </form>
+</div>

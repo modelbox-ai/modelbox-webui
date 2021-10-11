@@ -1,0 +1,14 @@
+{
+    "solution_list":[
+        {
+            "desc":"blkabal",
+            "file":"/fake/url/test.toml",
+            "name":"for_test.toml"
+        },
+        {
+            "desc":"car detection fro video streams",
+            "file":"/usr/local/share/modelbox/solution/graphs/car_detection/car_detection.toml",
+            "name":"car_detection.toml"
+        }
+    ]
+}

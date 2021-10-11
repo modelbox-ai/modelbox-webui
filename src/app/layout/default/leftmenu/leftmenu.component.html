@@ -1,0 +1,20 @@
+<!-- <ti-leftmenu
+  [id]="elementId"
+  [(active)]="active"
+  [(collapsed)]="collapsed"
+  [(reloadState)]="reloadState"
+  [toggleable]="toggleable"
+>
+  <ti-leftmenu-head>
+    <div style="height: 20px;">{{ 'leftmenu.serviceconsole' | translate }}</div>
+  </ti-leftmenu-head>
+
+  <ti-leftmenu-level1 [item]="m1" *ngFor="let m1 of items">
+    <ti-leftmenu-item>
+      <div>{{ m1.label | translate  }}</div>
+    </ti-leftmenu-item>
+    <ti-leftmenu-level2 [item]="m2" *ngFor="let m2 of m1.children">
+      <a>{{ m2.label | translate  }}</a>
+    </ti-leftmenu-level2>
+  </ti-leftmenu-level1>
+</ti-leftmenu> -->

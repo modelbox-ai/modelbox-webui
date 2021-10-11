@@ -1,0 +1,13 @@
+{
+  "common.home": "HomePage",
+  "common.back": "Back",
+  "create.i18nTestWord1": "Test",
+  "dashboard.i18nWord1": "{{value}} Page",
+  "home.username": "Username",
+  "home.regioninfo": "Region Info",
+  "home.servicelist": "Service List",
+  "leftmenu.serviceconsole": "Service Console",
+  "leftmenu.dashboard": "Dashboard",
+  "leftmenu.dataset1": "Dataset",
+  "dataset.gotobuypage": "Goto"
+}

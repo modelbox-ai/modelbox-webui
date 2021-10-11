@@ -1,0 +1,222 @@
+<div id="tool-bar" class="tool-bar">
+    <div class="tool-bar-left btn-group">
+        <d-button id="undo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
+            [disabled]="!hasUndo" (click)="handleUndoButtonClick($event)">
+            <img src={{backSvg}} />
+        </d-button>
+        <d-button id="redo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
+            [disabled]="!hasRedo" (click)="handleRedoButtonClick($event)">
+            <img src={{redoSvg}} />
+        </d-button>
+        <d-button id="zoom-in" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomInButton' | translate"
+            (click)="handleZoomInButtonClick($event)">
+            <img src={{zoomInSvg}} />
+        </d-button>
+        <d-button id="zoom-out" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomOutButton' | translate"
+            (click)="handleZoomOutButtonClick($event)">
+            <img src={{zoomOutSvg}} />
+        </d-button>
+        <d-button id="zoom-reset" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomResetButton' | translate"
+            (click)="handleZoomResetButtonClick($event)">
+            <img src={{zoomResetSvg}} />
+        </d-button>
+        <d-button id="zoom-fit" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomFitButton' | translate"
+            (click)="handleZoomFitButtonClick($event)">
+            <img src={{zoomFitSvg}} />
+        </d-button>
+    </div>
+    <div class="tool-bar-right">
+        <span style="margin-right:10px;">
+            {{'toolBar.nameLabel' | translate}}{{oldName || '--'}}
+        </span>
+        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
+            {{'toolBar.newButton' | translate}}
+        </button>
+        <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
+            {{'toolBar.saveAsButton' | translate}}
+        </button>
+        <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
+            {{'toolBar.graphSettingButton' | translate}}
+        </button>
+        <button id="open-select" (click)="showSelectDialog(graphSelect)" class="tool-bar-button">
+            {{'toolBar.selectDialogButton' | translate}}
+        </button>
+        <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
+            {{'toolBar.solutionDialogButton' | translate}}
+        </button>
+    </div>
+</div>
+
+<ng-template #graphSetting>
+    <d-layout class="basic-usage">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+                <a ngbNavLink>{{'toolBar.setting.basic'| translate}}</a>
+                <ng-template ngbNavContent>
+                    <form dForm [layout]="layoutDirection" ngForm style="margin:20px">
+                        <d-form-item>
+                            <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}</d-form-label>
+                            <d-form-control>
+                                <div>
+                                    <input type="text" [value]="formData.name"
+                                        (input)="formData.name=$event.target?.value">
+                                </div>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.desc' | translate}}</d-form-label>
+                            <d-form-control>
+                                <textarea dTextarea name="desc" maxlength="200" [(ngModel)]="formData.desc"></textarea>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.graphRankdir' | translate}}</d-form-label>
+                            <d-form-control>
+                                <div style="display: inline-block;">
+                                    <input id="upDown" type="radio" [value]="radioOptions[0].id" [name]="'schedule'"
+                                        [(ngModel)]="formData.radioValue">
+                                    <label>{{radioOptions[0].label}}</label>
+                                </div>
+
+                                <div style="display: inline-block; padding-left: 20px;">
+                                    <input id="leftRight" type="radio" [value]="radioOptions[1].id" [name]="'schedule'"
+                                        [(ngModel)]="formData.radioValue">
+                                    <label>{{radioOptions[1].label}}</label>
+                                </div>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.skipDefault' | translate}}</d-form-label>
+                            <d-form-control>
+                                <d-checkbox [(ngModel)]="formData.skipDefault" name="skipDefault"
+                                    (change)="onCheckboxSkipDefaultChange($event)"> </d-checkbox>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.dir' | translate}}</d-form-label>
+                            <d-form-control>
+                                <textarea dTextarea name="dir" maxlength="200"
+                                    [(ngModel)]="formData.flowunitPath"></textarea>
+                            </d-form-control>
+                        </d-form-item>
+                    </form>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink>{{'toolBar.setting.perf'| translate}}</a>
+                <ng-template ngbNavContent>
+                    <form dForm [layout]="layoutDirection" ngForm style="margin:20px">
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.perf.enable' | translate}}</d-form-label>
+                            <d-form-control>
+                                <d-checkbox [(ngModel)]="formData.perfEnable" name="perfEnable"
+                                    (change)="onCheckboxPerfEnableChange($event)"> </d-checkbox>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.perf.trace.enable' | translate}}</d-form-label>
+                            <d-form-control>
+                                <d-checkbox [(ngModel)]="formData.perfTraceEnable" name="perfTraceEnable"
+                                    (change)="onCheckboxPerfTraceEnableChange($event)"> </d-checkbox>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.perf.session.enable' | translate}}</d-form-label>
+                            <d-form-control>
+                                <d-checkbox [(ngModel)]="formData.perfSessionEnable" name="perfSessionEnable"
+                                    (change)="onCheckboxPerfSessionEnableChange($event)"> </d-checkbox>
+                            </d-form-control>
+                        </d-form-item>
+                        <d-form-item>
+                            <d-form-label>{{'toolBar.setting.perf.path' | translate}}</d-form-label>
+                            <d-form-control>
+                                <div>
+                                    <input dTextInput autocomplete="off" name="userName"
+                                        [(ngModel)]="formData.perfPath" />
+                                </div>
+                            </d-form-control>
+                        </d-form-item>
+                    </form>
+                </ng-template>
+            </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </d-layout>
+</ng-template>
+
+<ng-template #graphSelect let-context='context'>
+    <d-content>
+        <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
+            [colDraggable]="true" [dataSource]="graphSelectTableDataForDisplay" tableHeight="360px"
+            [tableWidthConfig]="tableWidthConfig">
+            <thead dTableHead>
+                <tr dTableRow>
+                    <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>
+                </tr>
+            </thead>
+            <tbody dTableBody>
+                <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
+                    <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
+                        <td dTableCell *ngFor="let colOption of dataTableOptions.columns">
+                            <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
+                                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+                                [ngModel]="rowItem.checked">
+                            </d-checkbox>
+                            <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                            <div *ngIf="colOption.field === 'dotSrc'">
+                                <ngbd-tooltip-customclass [displayedData]="rowItem[colOption.field]"
+                                    [tipData]="graphSelectTableData[rowIndex].dotSrc"></ngbd-tooltip-customclass>
+                            </div>
+                            <div *ngIf="colOption.field === 'lastChanged'" class="edit-padding-fix">
+                                {{ rowItem[colOption.field] | date: 'yyyy-MM-dd HH:mm:ss'}}
+                            </div>
+                            <div *ngIf="colOption.field === 'select_operation'" class="edit-padding-fix">
+                                <a class="delete-button" (click)="deleteData(rowItem, rowIndex)">
+                                    {{'toolBar.deleteDialogButton' | translate}}
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </d-data-table>
+    </d-content>
+</ng-template>
+
+<ng-template #solutionSelect let-context='context'>
+    <d-content>
+        <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
+            [colDraggable]="true" [dataSource]="solutionList" tableHeight="360px"
+            [tableWidthConfig]="solutionTableWidthConfig">
+            <thead dTableHead>
+                <tr dTableRow>
+                    <th dHeadCell *ngFor="let colOption of solutionTableOptions.columns">{{ colOption.header }}</th>
+                </tr>
+            </thead>
+            <tbody dTableBody>
+                <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
+                    <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
+                        <td dTableCell *ngFor="let colOption of solutionTableOptions.columns">
+                            <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
+                                (ngModelChange)="onSolutionRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+                                [ngModel]="rowItem.checked">
+                            </d-checkbox>
+                            <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                            <div *ngIf="colOption.field === 'desc'" class="edit-padding-fix">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                            <div *ngIf="colOption.field === 'file'" class="edit-padding-fix">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </d-data-table>
+    </d-content>
+</ng-template>

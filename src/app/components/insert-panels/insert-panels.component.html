@@ -1,0 +1,26 @@
+<d-accordion id="main-accrodition" [data]="nodeShapeCategories" [accordionType]="'embed'" [autoOpenActiveMenu]="true"
+  [innerListTemplate]="innerListTemplate" [ngStyle]="classes.columns"></d-accordion>
+
+<ng-template #innerListTemplate let-item="item">
+  <div class="devui-accordion-submenu menu-detail draggable" *ngFor="let child of item.children" [ngSwitch]="item.title"
+    [ngStyle]="classes.column" [ngbTooltip]="tipContent" #t1="ngbTooltip" (mouseenter)="toggleTip(t1, child)"
+    draggable="true" (dragstart)="handleNodeShapeDragStart(child).call(this, $event)"
+    (drag)="handleNodeShapeDrag(child).call(this, $event)" (dragend)="handleNodeShapeDragEnd(child).call(this, $event)"
+    (dblclick)="handleNodeShapeClick(child)($event)">
+    <img *ngSwitchCase="'Image'" src={{imgSvg}} />
+    <img *ngSwitchCase="'Video'" src={{videoSvg}} />
+    <img *ngSwitchCase="'Input'" src={{inputSvg}} />
+    <img *ngSwitchCase="'Output'" src={{outputSvg}} />
+    <img *ngSwitchDefault src={{commonSvg}} />
+    {{child.title}}
+  </div>
+</ng-template>
+<ng-template #tipContent let-context="context">
+  <div style="display:grid;text-align: left;">
+    <div>{{tipName}}{{context.title}}</div>
+    <div>{{tipVersion}}{{context.version}}</div>
+    <div>{{tipTopType}}{{context.types.join(' | ')}}</div>
+    <div>{{tipDescription}}{{context.descryption}}</div>
+    <div>{{tipIsVirtualmodel}}{{context.virtual ? tipYes : tipNo}}</div>
+  </div>
+</ng-template>

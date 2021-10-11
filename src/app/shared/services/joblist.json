@@ -1,0 +1,14 @@
+{
+    "job_list": [
+        {
+            "job_error_msg": "",
+            "job_id": "car_detection.toml",
+            "job_status": "RUNNING"
+        },
+        {
+            "job_error_msg": "Bad Config -> Error in /v1/modelbox/",
+            "job_id": "car_den.toml",
+            "job_status": "FAILED"
+        }
+    ]
+}

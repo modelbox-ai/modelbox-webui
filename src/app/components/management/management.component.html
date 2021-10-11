@@ -1,0 +1,65 @@
+<div>
+  <div class="tasklist-search-box-div">
+    <div class="tasklist-search-box-block">
+      <button class="tasklist-button" type="button" tiButton autofocus (click)="openCreateTask(createTaskModal)">
+        {{newTaskText}}
+      </button>
+    </div>
+    <div class="tasklist-search-box-block">
+      <d-search style="width: 300px; height:28px" [placeholder]="placeholder" [(ngModel)]="sreachValue"
+        (clear)="onClear($event)" [isKeyupSearch]="true" (searchFn)="onSearch($event)">
+      </d-search>
+    </div>
+  </div>
+  <d-data-table [fixHeader]="true" tableHeight="360px" [containFixHeaderHeight]="true" [scrollable]="true"
+    [headerBg]="true" [colDraggable]="true" [dataSource]="tableData.srcData.data">
+    <thead dTableHead>
+      <tr dTableRow>
+        <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>
+      </tr>
+    </thead>
+    <tbody dTableBody>
+      <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+        <tr dTableRow>
+          <td dTableCell *ngFor="let colOption of dataTableOptions.columns">
+            <div *ngIf="colOption.field !== 'job_operation'" class="edit-padding-fix">
+              {{ rowItem[colOption.field] }}
+            </div>
+            <div *ngIf="colOption.field === 'job_operation'" class="edit-padding-fix">
+              <a class="delete-button" (click)="deleteData(rowItem)">
+                {{'toolBar.deleteDialogButton' | translate}}
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </d-data-table>
+</div>
+
+<ng-template #createTaskModal let-context='context'>
+  <d-content>
+    <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
+      [colDraggable]="true" [dataSource]="taskData.srcData.data" [tableWidthConfig]="tableWidthConfig">
+      <thead dTableHead>
+        <tr dTableRow>
+          <th dHeadCell *ngFor="let colOption of taskData.columns">{{ colOption.header }}</th>
+        </tr>
+      </thead>
+      <tbody dTableBody>
+        <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
+          <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
+            <td dTableCell *ngFor="let colOption of taskData.columns">
+              <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)" [ngModel]="rowItem.checked">
+              </d-checkbox>
+              <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
+                {{ rowItem.job_id }}
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </d-data-table>
+  </d-content>
+</ng-template>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>通用</title>
+    <desc>Created with Sketch.</desc>
+    <g id="通用" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形" stroke="#ADB0B8" stroke-width="1.5" x="1" y="1" width="5.5" height="5.5" rx="1"></rect>
+        <rect id="矩形备份-2" stroke="#ADB0B8" stroke-width="1.5" x="1" y="9.5" width="5.5" height="5.5" rx="1"></rect>
+        <rect id="矩形备份" stroke="#ADB0B8" stroke-width="1.5" x="9.5" y="1" width="5.5" height="5.5" rx="1"></rect>
+        <rect id="矩形备份-3" stroke="#ADB0B8" stroke-width="1.5" x="9.5" y="9.5" width="5.5" height="5.5" rx="2.75"></rect>
+    </g>
+</svg>

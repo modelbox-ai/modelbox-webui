@@ -1,0 +1,10 @@
+{
+  "company": "hws",
+  "description": "ModelBox",
+  "supportLanguages": [
+    "zh_CN",
+    "en_US"
+  ],
+  "theme": "hws",
+  "cfui-version": "1.1.4"
+}
