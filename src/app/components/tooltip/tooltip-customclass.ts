@@ -1,4 +1,4 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'ngbd-tooltip-customclass',
@@ -11,16 +11,21 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
     width: 400px;
     max-width: 400px;
   }
-  .my-custom-class .arrow::before {
-    border-top-color: darkgreen;
-  }
   `]
 })
 export class NgbdTooltipCustomclass {
-    
+
   @Input() displayedData: any;
   @Input() tipData: any;
 
-  ngOnInit(){
+  ngOnInit() {
+  }
+
+  toggleTip(tooltip, context) {
+    if (tooltip.isOpen()) {
+      tooltip.close();
+    } else {
+      tooltip.open({ context });
+    }
   }
 }

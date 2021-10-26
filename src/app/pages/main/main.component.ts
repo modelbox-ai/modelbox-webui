@@ -65,7 +65,7 @@ export class MainComponent {
   resetUndoStack: any;
   selectedGraphComponents: any = [];
   graphInitialized = false;
-  leftSpliterSize = 12;
+  leftSpliterSize = 14;
   centerSplitterSize = 95;
   holdOff = localStorage.getItem('holdOff') || 0.2;
   fontSize = localStorage.getItem('fontSize') || 12;
@@ -107,7 +107,7 @@ export class MainComponent {
   }
 
   click(tab: string): void {
-    if (tab == 'editor') {
+    if (tab === 'editor') {
       this.activeEditor = true;
       this.activeTaskLists = false;
     } else {

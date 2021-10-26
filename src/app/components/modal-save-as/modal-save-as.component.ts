@@ -10,9 +10,9 @@ export class ModalSaveAsComponent {
   graphName: string
   constructor() { }
   ngOnInit(): void {
-    this.graphName = this.data.graphName
+    this.graphName = this.data.graphName;
   }
   onInputChange() {
-    this.data.graphName = this.graphName
+    this.data.graphName = this.graphName;
   }
 }

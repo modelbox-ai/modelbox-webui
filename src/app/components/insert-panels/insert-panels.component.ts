@@ -6,16 +6,22 @@ import { I18nService } from '@core/i18n.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-declare var require: any
+declare const require: any
 
 @Component({
   selector: 'app-insert-panels',
   templateUrl: './insert-panels.component.html',
   styleUrls: ['./insert-panels.component.less'],
-  styles: [
-    '.headClass {background-color: #fff !important; border: none}',
-    '.bodyClass {color: blue !important}'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .my-custom-class .tooltip-inner {
+      background-color: #333854;
+      font-size: 75%;
+      max-width: 280px;
+      margin: 20px;
+      padding: 8px;
+    }
+  `]
 })
 @Injectable({
   providedIn: 'root',
@@ -60,22 +66,11 @@ export class InsertPanelsComponent implements OnInit {
       alignItems: 'center',
       justifyContent: 'left',
       position: 'relative',
-      padding: '0 5px 0 24px',
       marginTop: '10px',
       height: '40px',
-      fontFamily: 'HuaweiSans',
       color: '#575D6C',
     }
   };
-
-  toggleTip(tooltip, context: any) {
-    if (tooltip.isOpen()) {
-      tooltip.close();
-    } else {
-      tooltip.open({ context });
-    }
-  }
-
 
   trustHtml = this.sanitized.bypassSecurityTrustHtml;
   nodeShapeCategories: Array<any> = [];
@@ -86,6 +81,25 @@ export class InsertPanelsComponent implements OnInit {
     private i18n: I18nService,
     private http: HttpClient,
   ) { }
+
+  toggleTip(tooltip, context: any) {
+    if (tooltip.isOpen()) {
+      tooltip.close();
+    } else {
+      context = this.handleTipText(context);
+      tooltip.open({ context });
+    }
+  }
+
+  handleTipText(context) {
+    let reg = /(?<=@Brief:)[\s\S]*?(?=@Port)/;
+    let res = context.descryption.match(reg);
+    if (res !== null) {
+      context.descryption = res[0].trim();
+    }
+
+    return context;
+  }
 
   public isFlowUnitExist(name, type) {
     if (this.dataService.getUnit(name, type)) {
@@ -100,7 +114,7 @@ export class InsertPanelsComponent implements OnInit {
     }
 
     if (skip === "") {
-      skip == false;
+      skip = false;
     }
 
     let params = {
@@ -196,8 +210,4 @@ export class InsertPanelsComponent implements OnInit {
     document.body.removeChild(document.body.lastChild);
     document.body.removeChild(document.body.lastChild);
   };
-
-  doubleclick(){
-    console.log("dbc")
-  }
 }
