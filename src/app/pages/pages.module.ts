@@ -31,6 +31,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ModalSaveAsComponent } from '../components/modal-save-as/modal-save-as.component';
 import { DrawerModule } from 'ng-devui/drawer';
 import { NgbdTooltipCustomclass } from '../components/tooltip/tooltip-customclass';
+import { PopoverModule } from 'ng-devui/popover';
+import { BrowserModule } from '@angular/platform-browser';
+// DevUI部分组件依赖angular动画，需要引入animations模块
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DevUIModule } from 'ng-devui';
+import { BadgeModule } from 'ng-devui/badge';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
@@ -41,7 +47,9 @@ const COMPONENTS_NOROUNT = [];
     RouteRoutingModule,
     AceModule,
     ButtonModule,
+    PopoverModule,
     TabsModule,
+    BadgeModule,
     SplitterModule,
     TooltipModule,
     LayoutModule,
@@ -58,6 +66,9 @@ const COMPONENTS_NOROUNT = [];
     FormsModule,
     FormModule,
     AngularSplitModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    DevUIModule
   ],
   declarations: [
     ...COMPONENTS,

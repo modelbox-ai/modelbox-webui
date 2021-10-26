@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, TemplateRef, OnInit, Input } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
@@ -44,6 +62,24 @@ export class ManagementComponent implements OnInit {
       }
     ]
   }
+  mainTableWidthConfig: TableWidthConfig[] = [{
+    field: 'job_id',
+    width: '20%'
+  },
+  {
+    field: 'job_status',
+    width: '20%'
+  },
+  {
+    field: 'job_error_msg',
+    width: '40%'
+  },
+  {
+    field: 'job_operation',
+    width: '20%'
+  },]
+
+
   tableWidthConfig: TableWidthConfig[] = [{
     field: 'checked',
     width: '25px'
@@ -80,8 +116,6 @@ export class ManagementComponent implements OnInit {
 
   sreachValue: string = '';
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
-
-
   @Input() collapsed: boolean;
   @Input() isSupportFold: boolean = true;
   @Input() projects: any;
@@ -123,15 +157,14 @@ export class ManagementComponent implements OnInit {
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
-
     rowItem.checked = checked;
-    this.selectedProject = rowItem
+    this.selectedProject = rowItem;
     this.taskData.srcData.data.map(function (obj) {
-      if (obj != rowItem) {
-        obj.checked = false
+      if (obj.job_id != rowItem.job_id) {
+        obj.checked = false;
       }
       return obj;
-    })
+    });
   }
 
   // 查询任务状态
@@ -163,7 +196,7 @@ export class ManagementComponent implements OnInit {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.createTask()
+          this.createTask();
         },
       },
       {
@@ -180,13 +213,13 @@ export class ManagementComponent implements OnInit {
 
   createTask() {
     let params;
-    let self = this;
-    this.checkedList.push(this.selectedProject)
+    this.checkedList.splice(0, this.checkedList.length);
+    this.checkedList.push(this.selectedProject);
     this.checkedList.forEach((item) => {
       // doesnot exist the same name
       let res = false;
       for (let item_displayed of this.tableData.srcData.data) {
-        if (item_displayed.job_id == item.job_id) {
+        if (item_displayed.job_id === item.job_id) {
           res = true;
           break;
         }
@@ -247,45 +280,27 @@ export class ManagementComponent implements OnInit {
   createTaskResult(option) {
     this.basicService.queryCreateTask(option)
       .subscribe((data: any) => {
-        if (data && data.status === 201) {
-          const results = this.dialogService.open({
-            id: 'task-create-success',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById("message.taskHasBeenCreatedSuccessfully"),
-            backdropCloseable: true,
-            dialogtype: 'success',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: this.i18n.getById('modal.okButton'),
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                },
-              }
-            ],
-          });
-
-        } else {
-          const results = this.dialogService.open({
-            id: 'task-create-success',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById("message.failToCreateTask"),
-            backdropCloseable: true,
-            dialogtype: 'failed',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: this.i18n.getById('modal.okButton'),
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                },
-              }
-            ],
-          });
+        if (data) {
+          if (data.status === 201) {
+            const results = this.dialogService.open({
+              id: 'task-create-success',
+              width: '346px',
+              maxHeight: '600px',
+              title: '',
+              content: this.i18n.getById("message.taskHasBeenCreatedSuccessfully"),
+              backdropCloseable: true,
+              dialogtype: 'success',
+              buttons: [
+                {
+                  cssClass: 'primary',
+                  text: this.i18n.getById('modal.okButton'),
+                  handler: ($event: Event) => {
+                    results.modalInstance.hide();
+                  },
+                }
+              ],
+            });
+          }
         }
         this.getTaskslists();
       },
@@ -325,7 +340,7 @@ export class ManagementComponent implements OnInit {
     },
       (error) => {
         this.tableData.srcData.data.forEach(item => {
-          item.job_status = TaskStatus.UNKNOWN;
+          item.job_status_value = TaskStatus.UNKNOWN;
         })
         this.util.messageShow('获取列表数据失败', 'error');
       })
@@ -386,21 +401,21 @@ export class ManagementComponent implements OnInit {
     data.forEach(item => {
       switch (item.job_status) {
         case "CREATEING":
-          return item.job_status = TaskStatus.CREATEING;
+          return item.job_status_value = TaskStatus.CREATEING;
         case "RUNNING":
-          return item.job_status = TaskStatus.RUNNING;
+          return item.job_status_value = TaskStatus.RUNNING;
         case "SUCCEEDED":
-          return item.job_status = TaskStatus.SUCCEEDED;
+          return item.job_status_value = TaskStatus.SUCCEEDED;
         case "FAILED":
-          return item.job_status = TaskStatus.FAILED;
+          return item.job_status_value = TaskStatus.FAILED;
         case "PENDING":
-          return item.job_status = TaskStatus.PENDING;
+          return item.job_status_value = TaskStatus.PENDING;
         case "DELETEING":
-          return item.job_status = TaskStatus.DELETEING;
+          return item.job_status_value = TaskStatus.DELETEING;
         case "UNKNOWN":
-          return item.job_status = TaskStatus.UNKNOWN;
+          return item.job_status_value = TaskStatus.UNKNOWN;
         case "NOTEXIST":
-          return item.job_status = TaskStatus.NOTEXIST;
+          return item.job_status_value = TaskStatus.NOTEXIST;
       }
     });
     return data;

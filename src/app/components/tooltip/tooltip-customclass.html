@@ -1,3 +1,10 @@
-<div ngbTooltip="{{tipData}}" placement="right" tooltipClass="my-custom-class" container="body">
+<div ngbTooltip="{{tipData}}" placement="right" [ngbTooltip]="tipContent" #t1="ngbTooltip"
+    (mouseenter)="toggleTip(t1, tipData)" placement="right" container="body" tooltipClass="my-custom-class">
     {{displayedData}}
 </div>
+
+<ng-template #tipContent let-context="context">
+    <div style="display:grid; text-align:left;">
+        {{context}}
+    </div>
+</ng-template>

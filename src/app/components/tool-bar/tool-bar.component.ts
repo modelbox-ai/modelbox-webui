@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { DialogService } from 'ng-devui/modal';
@@ -6,7 +24,7 @@ import { FormLayout } from 'ng-devui/form';
 import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
 import { TabsModule } from 'ng-devui/tabs';
 
-declare var require: any
+declare const require: any
 @Component({
   selector: 'app-tool-bar',
   templateUrl: './tool-bar.component.html',
@@ -50,6 +68,9 @@ export class ToolBarComponent {
   selectedSolutionName: string
   solutionListTableData;
   active = 1;
+  inputDemoConfig: any;
+  textareaDemoConfig: any;
+  disabled: false;
 
   dataTableOptions = {
     columns: [
@@ -128,28 +149,26 @@ export class ToolBarComponent {
       },
     ]
   };
+
   solutionTableWidthConfig: TableWidthConfig[] = [
     {
       field: 'checked',
-      width: '50px'
+      width: '5%'
     },
     {
       field: 'name',
-      width: '100px'
+      width: '20%'
     },
     {
       field: 'file',
-      width: '200px'
+      width: '40%'
     },
     {
       field: 'desc',
-      width: '200px'
+      width: '35%'
     },
   ];
 
-  inputDemoConfig: any;
-  textareaDemoConfig: any;
-  disabled: false;
   radioOptions = [{
     id: 1,
     label: this.i18n.getById('toolBar.setting.graphRankdir.topBottom')
@@ -157,6 +176,7 @@ export class ToolBarComponent {
     id: 2,
     label: this.i18n.getById('toolBar.setting.graphRankdir.leftRight')
   }];
+
   formData = {
     name: '',
     desc: '',
@@ -174,24 +194,24 @@ export class ToolBarComponent {
 
   ngOnInit() {
 
-    const current_project = JSON.parse(localStorage.getItem('project'))
+    const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
       this.formData.name = this.oldName;
-      this.formData.desc = current_project.desc
-      var randdirRegex = /[\n|{]\s*rankdir\s*=\s*([a-zA-Z]*).*\s*[\n|}]/g;
-      let match = randdirRegex.exec(current_project.dotSrc)
+      this.formData.desc = current_project.desc;
+      let randdirRegex = /[\n|{]\s*rankdir\s*=\s*([a-zA-Z]*).*\s*[\n|}]/g;
+      let match = randdirRegex.exec(current_project.dotSrc);
       let rankdir = 1;
-      if (match != null && match.length > 0 && match[1] == "LR") {
+      if (match != null && match.length > 0 && match[1] === "LR") {
         rankdir = 2;
       }
 
-      this.formData.radioValue = rankdir
-      this.formData.flowunitPath = current_project.dirs
-      this.formData.skipDefault = current_project.skipDefault
-      this.formData.perfEnable = current_project.settingPerfEnable
-      this.formData.perfTraceEnable = current_project.settingPerfTraceEnable
-      this.formData.perfSessionEnable = current_project.settingPerfSessionEnable
-      this.formData.perfPath = current_project.settingPerfDir
+      this.formData.radioValue = rankdir;
+      this.formData.flowunitPath = current_project.dirs;
+      this.formData.skipDefault = current_project.skipDefault;
+      this.formData.perfEnable = current_project.settingPerfEnable;
+      this.formData.perfTraceEnable = current_project.settingPerfTraceEnable;
+      this.formData.perfSessionEnable = current_project.settingPerfSessionEnable;
+      this.formData.perfPath = current_project.settingPerfDir;
     }
 
     this.graphSelectTableData = Object.keys(this.projects).map(item => {
@@ -206,70 +226,74 @@ export class ToolBarComponent {
 
     this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
     for (let e in this.graphSelectTableDataForDisplay) {
-      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc)
+      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
     }
 
     this.solutionList.map(function (obj) {
-      obj.checked = false
+      obj.checked = false;
       return obj;
     })
   }
 
   transformDisplayData(data) {
     if (data.length > 100) {
-      data = data.substr(0, 61) + "..."
+      data = data.substr(0, 61) + "...";
     }
-    return data
+    return data;
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
+    const self = this;
     rowItem.checked = checked;
-
-    this.selectedName = rowItem.name
-    this.graphSelectTableData.map(function (obj) {
+    this.selectedName = rowItem.name;
+    this.graphSelectTableData = [];
+    this.graphSelectTableDataForDisplay.map(function (obj) {
       if (obj != rowItem) {
-        obj.checked = false
+        obj.checked = false;
       }
+      self.graphSelectTableData.push(obj);
       return obj;
     })
-    this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
   }
 
   onSolutionRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
     rowItem.checked = checked;
-    this.selectedSolutionName = rowItem.name
+    this.selectedSolutionName = rowItem.name;
     this.solutionList.map(function (obj) {
       if (obj != rowItem) {
-        obj.checked = false
+        obj.checked = false;
       }
       return obj;
     })
   }
 
   deleteData(row, rowIndex) {
-    delete this.projects[row.name]
+    delete this.projects[row.name];
     this.graphSelectTableData = this.graphSelectTableData.filter(item => {
-      return item.name != row.name
+      return item.name != row.name;
     })
     this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
-    this.projectsEmmiter.emit(this.projects)
+    this.projectsEmmiter.emit(this.projects);
   }
 
   onCheckboxSkipDefaultChange(value) {
     this.formData.skipDefault = value;
   }
+
   onCheckboxPerfEnableChange(value) {
     this.formData.perfEnable = value;
   }
+
   onCheckboxPerfTraceEnableChange(value) {
     this.formData.perfTraceEnable = value;
   }
+
   onCheckboxPerfSessionEnableChange(value) {
     this.formData.perfSessionEnable = value;
   }
 
   click(tab: string): void {
-    if (tab == 'basic') {
+    if (tab === 'basic') {
       this.activeBasic = true;
       this.activePerf = false;
     } else {
@@ -277,6 +301,7 @@ export class ToolBarComponent {
       this.activePerf = true;
     }
   }
+
   handleUndoButtonClick = event => {
     this.onUndoButtonClick(event.currentTarget);
   };
@@ -328,8 +353,8 @@ export class ToolBarComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.formData.name = results.modalContentInstance.graphName
-          this.handleConfirmNameChange(results.modalContentInstance.graphName, '', false)
+          this.formData.name = results.modalContentInstance.graphName;
+          this.handleConfirmNameChange(results.modalContentInstance.graphName, '', false);
         },
       },
       {

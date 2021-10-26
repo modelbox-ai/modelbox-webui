@@ -8,18 +8,23 @@ html {
 
 .modal-dialog {
   max-width: none;
-  margin: 1.75rem auto;
+  margin: 20px;
+}
+
+.modal-body{
+  height: 100%;
 }
 
 .half-drawer {
-  height: 100%;
   padding: 12px 16px 0 12px;
   position: fixed;
   right: 0;
-  top: 44px;
+  top: 50px;
+  bottom: 0;
   background-color: #fff;
   width: 360px;
   box-shadow: -8px 0 40px 0 rgba(0, 0, 0, 0.2);
+  overflow: auto;
 }
 
 .model-box-tabs {
@@ -28,12 +33,12 @@ html {
   width: 100%;
   background-color: transparent;
   z-index: 1003;
-  padding-top: 14px;
+  padding-top: 5px;
   justify-content: center;
   border: 0 !important;
 
   .ti3-tabs {
-    font-size: 14px;
+    font-size: 18px;
     color: #ADB0B8;
     position: relative;
     padding-left: 0;
@@ -52,14 +57,13 @@ html {
 
     &>li {
       display: inline-block;
-
     }
   }
 
   .ti3-tabs>li.ti3-tab-active:not(.disabled)>a {
     color: #fff;
     border-bottom: 2px solid#96ADFA;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
   }
 

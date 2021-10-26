@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import {
   Component,
   ViewChild,
@@ -12,6 +30,7 @@ import { I18nService } from '@core/i18n.service';
 import { FormLayout } from 'ng-devui/form';
 import { DialogService } from 'ng-devui';
 import { Output, EventEmitter } from '@angular/core';
+import { TableWidthConfig } from 'ng-devui/data-table';
 
 @Component({
   selector: 'app-attribute-panel',
@@ -20,14 +39,13 @@ import { Output, EventEmitter } from '@angular/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class AttributePanelComponent {
-  layoutDirection: FormLayout = FormLayout.Horizontal;
+  layoutDirection: FormLayout = FormLayout.Vertical;
   @ViewChild('myForm1') attrform;
-
-  selectType = this.i18n.getById('attributePanel.selectType');
   @Input() config: any;
   @Input() onNodeAttributeChange: any;
   @Output() newItemEvent = new EventEmitter<any>();
-  changedValue = false
+  selectType = this.i18n.getById('attributePanel.selectType');
+  changedValue = false;
   newName: string;
   item: {
     name: '',
@@ -36,19 +54,23 @@ export class AttributePanelComponent {
     default: '',
     desc: '',
     values: '',
-  }
+  };
+  warnNoNode = true;
   // 节点对应的顶点信息
   unit: {
     name: '',
     version: '',
     descryption: '',
+    desc: '',
     group: '',
     virtual: false,
     types: [],
     type: '',
     options: [any],
     inputports: [any],
-    outputports: [any]
+    outputports: [any],
+    portDetail: '',
+    constraint: ''
   };
   // unitType
   unitType: any = {
@@ -75,14 +97,13 @@ export class AttributePanelComponent {
       this.attributeModel.blur(form);
     },
   };
-
   unitOptions: any = {
     data: [],
     init: () => {
       this.unitOptions.data = [];
       this.unit.options.forEach(item => {
         let formItem: any = {
-          label: item.name,
+          label: item.name.replace(/_/g, " "),
           required: item.required,
           type: item.type,
           default: item.default,
@@ -160,20 +181,20 @@ export class AttributePanelComponent {
       attrType.value = this.unitType.selected.id;
       // 处理 options
       this.unitOptions.data.forEach(item => {
-        let attr = config.attributes.find(it => it.key === item.label);
+        let attr = config.attributes.find(it => it.key === item.label.replaceAll(' ', '_'));
         if (['string', 'int', 'integer', 'bool'].includes(item.type)) {
           if (item.value !== item.default && item.value !== '') {
             if (attr) {
               attr.value = item.value;
             } else {
               config.attributes.push({
-                key: item.label,
+                key: item.label.replace(" ", "_"),
                 value: item.value,
               });
             }
           } else {
             config.attributes = config.attributes.filter(
-              it => it.key !== item.label
+              it => it.key !== item.label.replace(" ", "_")
             );
           }
         } else if (item.type === 'list') {
@@ -182,13 +203,13 @@ export class AttributePanelComponent {
               attr.value = item.selected.id;
             } else {
               config.attributes.push({
-                key: item.label,
+                key: item.label.replaceAll(' ', '_'),
                 value: item.selected.id,
               });
             }
           } else {
             config.attributes = config.attributes.filter(
-              it => it.key !== item.label
+              it => it.key !== item.label.replaceAll(' ', '_')
             );
           }
         }
@@ -198,7 +219,35 @@ export class AttributePanelComponent {
 
     }
   };
+
   unitName: any;
+
+  descTableOptions = {
+    columns: [
+      {
+        field: 'fieldName',
+        header: 'Field Name',
+        fieldType: 'text'
+      },
+      {
+        field: 'type',
+        header: 'Type',
+        fieldType: 'text'
+      }
+    ]
+  };
+  descDataSource: Object[] = [];
+
+  descWidthConfig: TableWidthConfig[] = [
+    {
+      field: 'fieldName',
+      width: '40%'
+    },
+    {
+      field: 'type',
+      width: '60%'
+    }
+  ];
 
   constructor(
     private dataService: DataServiceService,
@@ -220,19 +269,75 @@ export class AttributePanelComponent {
 
   ngOnDestroy() {
     if (this.changedValue == false) {
-      return
+      return;
     }
 
-    this.attributeModel.blur(this.attrform)
-    this.config = null
+    this.attributeModel.blur(this.attrform);
+    this.config = null;
     this.changedValue = false;
   }
 
+  handleTipText(context) {
+    let reg = /(?<=[@.*:])[\s\S]*?(?=@)/g;
+    context.descryption = context.descryption.replace(/::/g, "->");
+    let res = context.descryption.match(reg);
+    let group = [];
+    let smix = "";
+    if (res !== null) {
+      if (context.descryption.indexOf("@Constraint:") != -1) {
+        group = context.descryption.split("@Constraint:");
+        if (group.length > 0) {
+          context.constraint = group[1].trim();
+        }
+      }
+
+      for (let i of res) {
+        group = i.split("\n");
+        if (group.length > 0 && group[0].indexOf("Brief") != -1) {
+          smix = group[0].replace("Brief:", "").trim();
+          for (let j = 1; j < group.length; j++) {
+            smix += group[j];
+          }
+          context.desc = smix.trim();
+        }
+
+        let tempstr = "";
+        let tempstr_group = [];
+        this.descDataSource = [];
+        if (group.length > 0 && group[0].indexOf("Port parameter") != -1) {
+          smix = ""
+          for (let j = 0; j < group.length; j++) {
+            tempstr = group[j].replace(/:/g, "").trim();
+            if (tempstr.indexOf("Field Name") != -1 && tempstr.indexOf("Type") != -1) {
+              tempstr = tempstr.replace(/Field Name/g, "").replace(/Type/g, "").trim();
+              tempstr_group = tempstr.split(",");
+              if (tempstr_group.length === 2) {
+                this.descDataSource.push({ fieldName: tempstr_group[0].trim(), type: tempstr_group[1].trim().replace(/->/g, "::") });
+              }
+            } else {
+              smix += tempstr.replace(/Port parameter/, "").trim() + "\n";
+            }
+          }
+          context.portDetail = this.handlePortDetail(smix.trim());
+        }
+      }
+    } else {
+      return context;
+    }
+  }
+
+  handlePortDetail(portDetail) {
+    portDetail = portDetail.replace(/\t/g, "  ");
+    portDetail = portDetail.replace(/->/g, "::");
+    return portDetail;
+  }
+
   initConfig(config) {
-    this.changedValue = false
+    this.changedValue = false;
     this.unit = this.getUnit(config);
-    if (!this.unit) {
-      this.newItemEvent.emit(null)
+    if (!this.unit && this.warnNoNode) {
+      this.newItemEvent.emit(null);
+      this.warnNoNode = false;
       const results = this.dialogService.open({
         id: 'dialog-service',
         width: '346px',
@@ -255,6 +360,8 @@ export class AttributePanelComponent {
 
       return;
     }
+    this.handleTipText(this.unit);
+
     this.unitType.init();
     this.unitOptions.init();
     // type
@@ -265,14 +372,14 @@ export class AttributePanelComponent {
         );
       }
       this.unitOptions.data.forEach(it => {
-        if (it.label === item.key) {
+        if (it.label.replace(" ", "_") === item.key) {
           if (['string', 'int', 'integer'].includes(it.type)) {
             it.value = item.value;
           } else if (it.type === 'bool') {
             if (item.value.toLowerCase() === "true") {
-              it.value = true
+              it.value = true;
             } else {
-              it.value = false
+              it.value = false;
             }
           } else if (it.type === 'list') {
             it.selected = it.options.find(i => i.id === item.value);
