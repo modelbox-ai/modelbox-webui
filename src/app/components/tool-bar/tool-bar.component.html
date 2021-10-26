@@ -47,13 +47,13 @@
     </div>
 </div>
 
-<ng-template #graphSetting>
+<ng-template #graphSetting id="graphSetting">
     <d-layout class="basic-usage">
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
             <li [ngbNavItem]="1">
                 <a ngbNavLink>{{'toolBar.setting.basic'| translate}}</a>
                 <ng-template ngbNavContent>
-                    <form dForm [layout]="layoutDirection" ngForm style="margin:20px">
+                    <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
                         <d-form-item>
                             <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}</d-form-label>
                             <d-form-control>
@@ -66,7 +66,7 @@
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.desc' | translate}}</d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="desc" maxlength="200" [(ngModel)]="formData.desc"></textarea>
+                                <textarea dTextarea name="desc" [(ngModel)]="formData.desc"></textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
@@ -95,8 +95,7 @@
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.dir' | translate}}</d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="dir" maxlength="200"
-                                    [(ngModel)]="formData.flowunitPath"></textarea>
+                                <textarea dTextarea name="dir" [(ngModel)]="formData.flowunitPath"></textarea>
                             </d-form-control>
                         </d-form-item>
                     </form>

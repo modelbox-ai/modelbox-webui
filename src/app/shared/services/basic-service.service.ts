@@ -15,7 +15,7 @@ export class BasicServiceService {
 
   //请求数据
   queryData(paramData?: any): Observable<any> {
-    return this.http.get<any>(this.serviceRouter + '/editor/flow-info', paramData).pipe(timeout(30000))
+    return this.http.put<any>(this.serviceRouter + '/editor/flow-info', paramData).pipe(timeout(30000))
   }
 
   queryManagementData(paramData?: string): Observable<any> {

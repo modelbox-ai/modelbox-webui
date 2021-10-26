@@ -12,7 +12,8 @@
     </div>
   </div>
   <d-data-table [fixHeader]="true" tableHeight="360px" [containFixHeaderHeight]="true" [scrollable]="true"
-    [headerBg]="true" [colDraggable]="true" [dataSource]="tableData.srcData.data">
+    [headerBg]="true" [colDraggable]="true" [dataSource]="tableData.srcData.data"
+    [tableWidthConfig]="mainTableWidthConfig">
     <thead dTableHead>
       <tr dTableRow>
         <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>
@@ -23,7 +24,20 @@
         <tr dTableRow>
           <td dTableCell *ngFor="let colOption of dataTableOptions.columns">
             <div *ngIf="colOption.field !== 'job_operation'" class="edit-padding-fix">
-              {{ rowItem[colOption.field] }}
+              <span *ngIf="colOption.field == 'job_status'" class="edit-padding-fix">
+                <d-badge *ngIf="rowItem['job_status'] === 'CREATEING'" [showDot]="true" status="warning"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'SUCCEEDED'" [showDot]="true" status="success"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'FAILED'" [showDot]="true" status="danger"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'PENDING'" [showDot]="true" status="waiting"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'UNKNOWN'" [showDot]="true" status="danger"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'RUNNING'" [showDot]="true" status="success"></d-badge>
+                <d-badge *ngIf="rowItem['job_status'] === 'NOTEXIST'" [showDot]="true" status="danger"></d-badge>
+                &nbsp;
+                {{ rowItem['job_status_value'] }}
+              </span>
+              <span *ngIf="colOption.field !== 'job_status'">
+                {{ rowItem[colOption.field] }}
+              </span>
             </div>
             <div *ngIf="colOption.field === 'job_operation'" class="edit-padding-fix">
               <a class="delete-button" (click)="deleteData(rowItem)">

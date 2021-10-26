@@ -123,8 +123,8 @@ export class TextEditorComponent {
     }
 
     for (const i in markers) {
-      let m = markers[i]
-      let add = new this.Range(m.startRow, m.startCol, m.endRow, m.endCol)
+      let m = markers[i];
+      let add = new this.Range(m.startRow, m.startCol, m.endRow, m.endCol);
       this.editor.getSession().addMarker(add, "warning", "text", false);
     }
   }

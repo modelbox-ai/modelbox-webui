@@ -1,6 +1,12 @@
 #main-accrodition {
+    color: #282B33;
+    
+    .menu-block {
+        white-space: nowrap
+    }
+
     .devui-accordion-item-title {
-        width: 200px;
+        width: 100%;
         font-weight: 600;
         font-size: 16px;
     }
@@ -11,12 +17,18 @@
 
     .menu-detail {
         margin: 20px;
+        padding-left: 16px;
+        padding-right: 16px;
+        width: calc(100% - 36px);
+    }
+
+    .menu-detail:hover {
+        box-shadow: 0 0 3px 3px #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
     }
 
     .cat-units-length {
         display: inline-block;
         right: 2px;
-        font-family: HuaweiSans;
         font-size: 12px;
         color: #8A8E99;
         font-weight: 400;
@@ -37,6 +49,5 @@
 
     .draggable:active {
         cursor: grabbing;
-
     }
 }

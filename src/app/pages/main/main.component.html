@@ -17,7 +17,7 @@
   <as-split #splitH direction="horizontal" (dragEnd)="handleGutterEnd($event, 'left')"
     (dragStart)="handleGutterStart($event)">
     <as-split-area [size]="leftSpliterSize">
-      <as-split direction="vertical" style="width:320px">
+      <as-split direction="vertical" style="width:100%">
         <as-split-area class="as-split-area-left">
           <app-insert-panels [onClick]="handleInsertPanelsClick" [onNodeShapeClick]="handleNodeShapeClick"
             [onNodeShapeDragStart]="handleNodeShapeDragStart" [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
@@ -72,7 +72,7 @@
 </div>
 
 <div>
-  <app-attribute-panel id="attribute-area" class="half-drawer" *ngIf="currentComponent" [config]="currentComponent"
+  <app-attribute-panel style="z-index:99999" id="attribute-area" class="half-drawer" *ngIf="currentComponent" [config]="currentComponent"
     [onNodeAttributeChange]="handleNodeAttributeChange" (newItemEvent)="updateConfig($event)">
   </app-attribute-panel>
 </div>

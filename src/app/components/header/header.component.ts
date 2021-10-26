@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
-declare var require: any
+declare const require: any
 
 @Component({
   selector: 'app-header',

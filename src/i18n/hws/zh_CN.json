@@ -11,7 +11,7 @@
   "leftmenu.dashboard": "数据看板",
   "leftmenu.dataset1": "数据项1",
   "dataset.gotobuypage": "前往购买页",
-  "consoleName": "ModelBox任务编排",
+  "consoleName": "ModelBox",
   "editor": "任务编排",
   "taskLists": "任务列表",
   "graph.cavans.tip": "按住CTRL+鼠标左键可拖动画布",
@@ -58,6 +58,8 @@
   "insertPanels.tip.name": "名称：",
   "insertPanels.tip.topType": "顶点类型：",
   "insertPanels.tip.description": "描述：",
+  "insertPanels.tip.portDetail": "端口详情: ",
+  "insertPanels.tip.constraint": "约束: ",
   "insertPanels.tip.isVirtualmodel": "是否虚拟模块：",
   "insertPanels.tip.yes": "是",
   "insertPanels.tip.no": "否",
@@ -81,5 +83,6 @@
   "message.taskWithTheSameNameHasAlreadyBeenExisted": "已存在同名任务",
   "message.taskHasBeenCreatedSuccessfully": "任务创建成功",
   "message.failToCreateTask": "任务创建失败",
-  "message.failToQueryTask": "查询任务状态失败"
+  "message.failToQueryTask": "查询任务状态失败",
+  "message.cannotConnectToSelf": "不能连接到自己"
 }
