@@ -111,8 +111,9 @@
                 <d-form-control>
                     <ng-container *ngIf="item.type === 'string'">
                         <input class="content-font" dTextInput autocomplete="off" style="height:32px"
-                            [name]="'option-' + item.label.replaceAll(' ', '_')" placeholder="{{item.desc}}" [(ngModel)]="item.value"
-                            (keyup)="changedValue=true" (blur)="attributeModel.blur(myForm1.form)" />
+                            [name]="'option-' + item.label.replaceAll(' ', '_')" placeholder="{{item.desc}}"
+                            [(ngModel)]="item.value" (keyup)="changedValue=true"
+                            (blur)="attributeModel.blur(myForm1.form)" />
                     </ng-container>
                     <ng-container *ngIf="item.type === 'bool'">
                         <input class="content-font" type="checkbox" style="height:32px" [(ngModel)]="item.value"
@@ -121,12 +122,13 @@
                     </ng-container>
                     <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
                         <input class="content-font" dTextInput autocomplete="off" style="height:32px"
-                            [(ngModel)]="item.value" [name]="'option-' + item.label.replaceAll(' ', '_')" placeholder="{{item.desc}}"
-                            (keyup)="changedValue=true" (blur)="attributeModel.blur(myForm1.form)" />
+                            [(ngModel)]="item.value" [name]="'option-' + item.label.replaceAll(' ', '_')"
+                            placeholder="{{item.desc}}" (keyup)="changedValue=true"
+                            (blur)="attributeModel.blur(myForm1.form)" />
                     </ng-container>
                     <ng-container *ngIf="item.type === 'list'">
-                        <select class="form-select" [name]="'option-' + item.label.replaceAll(' ', '_')" [(ngModel)]="item.selected"
-                            (ngModelChange)="attributeModel.blur(myForm1.form)">
+                        <select class="form-select" [name]="'option-' + item.label.replaceAll(' ', '_')"
+                            [(ngModel)]="item.selected" (ngModelChange)="attributeModel.blur(myForm1.form)">
                             <option [ngValue]="op" *ngFor="let op of item.options">{{op.label}}</option>
                         </select>
                         <span style="color:#adb0b8">{{item.desc}}</span>
