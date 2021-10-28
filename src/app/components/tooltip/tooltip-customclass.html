@@ -1,5 +1,5 @@
-<div ngbTooltip="{{tipData}}" placement="right" [ngbTooltip]="tipContent" #t1="ngbTooltip" (mouseenter)="toggleTip(t1, tipData)"
-    placement="right" container="body" tooltipClass="my-custom-class">
+<div ngbTooltip="{{tipData}}" placement="right" [ngbTooltip]="tipContent" #t1="ngbTooltip"
+    (mouseenter)="toggleTip(t1, tipData)" placement="right" container="body" tooltipClass="my-custom-class">
     {{displayedData}}
 </div>
 
@@ -7,4 +7,4 @@
     <div style="display:grid; text-align:left;">
         {{context}}
     </div>
-  </ng-template>
+</ng-template>
