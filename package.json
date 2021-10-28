@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npm run prepare && ng start",
-    "prepare": "mkdir dist -p && pegjs src/app/components/graph/dotParser.pegjs dist/dotParser.js",
+    "prepare": "mkdir dist -p && pegjs src/app/components/graph/dotParser.pegjs src/app/components/graph/dotParser.js",
     "build": "npm run prepare && ng build",
     "serve": "ng serve"
   },

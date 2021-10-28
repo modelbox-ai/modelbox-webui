@@ -160,7 +160,7 @@ export class ManagementComponent implements OnInit {
     rowItem.checked = checked;
     this.selectedProject = rowItem;
     this.taskData.srcData.data.map(function (obj) {
-      if (obj != rowItem) {
+      if (obj.job_id != rowItem.job_id) {
         obj.checked = false;
       }
       return obj;
@@ -213,7 +213,7 @@ export class ManagementComponent implements OnInit {
 
   createTask() {
     let params;
-    let self = this;
+    this.checkedList.splice(0, this.checkedList.length);
     this.checkedList.push(this.selectedProject);
     this.checkedList.forEach((item) => {
       // doesnot exist the same name
