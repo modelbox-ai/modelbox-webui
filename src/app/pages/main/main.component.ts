@@ -577,9 +577,6 @@ export class MainComponent {
     }
 
     this.renameGraphSrc(newName);
-    this.dotSrc = this.dotSrc.replace(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/gi, '$1');
-    this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + rankdir);
-
     this.settingPerfEnable = context.perfEnable;
     this.settingPerfTraceEnable = context.perfTraceEnable;
     this.settingPerfSessionEnable = context.perfSessionEnable;

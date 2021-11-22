@@ -50,7 +50,7 @@
 <ng-template #graphSetting id="graphSetting">
     <d-layout class="basic-usage">
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-            <li [ngbNavItem]="1">
+            <li #tab1 [ngbNavItem]="1" style="display: inline-block;" class="nav-tab nav-active" (click)="tabSwitch($event, 'tab1')">
                 <a ngbNavLink>{{'toolBar.setting.basic'| translate}}</a>
                 <ng-template ngbNavContent>
                     <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
@@ -69,7 +69,7 @@
                                 <textarea dTextarea name="desc" [(ngModel)]="formData.desc"></textarea>
                             </d-form-control>
                         </d-form-item>
-                        <d-form-item>
+                        <!-- <d-form-item>
                             <d-form-label>{{'toolBar.setting.graphRankdir' | translate}}</d-form-label>
                             <d-form-control>
                                 <div style="display: inline-block;">
@@ -84,7 +84,7 @@
                                     <label>{{radioOptions[1].label}}</label>
                                 </div>
                             </d-form-control>
-                        </d-form-item>
+                        </d-form-item> -->
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.skipDefault' | translate}}</d-form-label>
                             <d-form-control>
@@ -101,10 +101,10 @@
                     </form>
                 </ng-template>
             </li>
-            <li [ngbNavItem]="2">
+            <li #tab2 [ngbNavItem]="2" style="display: inline-block;" class="nav-tab" (click)="tabSwitch($event, 'tab2')">
                 <a ngbNavLink>{{'toolBar.setting.perf'| translate}}</a>
                 <ng-template ngbNavContent>
-                    <form dForm [layout]="layoutDirection" ngForm style="margin:20px">
+                    <form dForm [layout]="layoutDirection" ngForm>
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.perf.enable' | translate}}</d-form-label>
                             <d-form-control>
