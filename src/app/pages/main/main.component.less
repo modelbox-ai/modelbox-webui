@@ -29,13 +29,23 @@ html {
 
 .model-box-tabs {
   position: absolute;
-  top: 0;
+  left:0;
+  right:0;
+  top: 13px;
+  height:50px;
+  display: flex;
+  justify-content: center;
   width: 100%;
   background-color: transparent;
   z-index: 1003;
-  padding-top: 5px;
-  justify-content: center;
+  user-select: none;
   border: 0 !important;
+
+  .nav-link{
+    height: 100%;
+    margin: 0 30px 0 30px;
+    padding-bottom: 10px;
+  }
 
   .ti3-tabs {
     font-size: 18px;
@@ -57,6 +67,7 @@ html {
 
     &>li {
       display: inline-block;
+      height:100%;
     }
   }
 
@@ -74,11 +85,7 @@ html {
   .ti3-tabs>li>a:hover {
     text-shadow: 0 0 1px #fff;
     color: #ADB0B8;
-
-    &:after {
-      left: 120%;
-      transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
-    }
+    font-weight:500;
   }
 
   .ti3-tabs>li>a {
@@ -91,19 +98,6 @@ html {
 
     span {
       z-index: 20;
-    }
-
-    &:after {
-      background: #fff;
-      content: "";
-      height: 155px;
-      left: -75px;
-      opacity: .2;
-      position: absolute;
-      top: -50px;
-      transform: rotate(35deg);
-      width: 50px;
-      z-index: -10;
     }
   }
 
