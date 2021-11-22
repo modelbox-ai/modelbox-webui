@@ -15,6 +15,7 @@
   "editor": "任务编排",
   "taskLists": "任务列表",
   "graph.cavans.tip": "按住CTRL+鼠标左键可拖动画布",
+  "toolBar.switchButton": "切换布局",
   "toolBar.backButton": "回退",
   "toolBar.redoButton": "重做",
   "toolBar.zoomInButton": "放大",

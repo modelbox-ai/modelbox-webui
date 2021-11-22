@@ -1,4 +1,4 @@
-import parser from "src/app/components/graph/dotParser";
+import parser from "dist/dotParser";
 var parse = parser.parse;
 
 const whitespaceWithinLine = ' \t\r';

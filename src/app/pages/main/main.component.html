@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="nav justify-content-center model-box-tabs">
+<div class="model-box-tabs">
   <ul class="ti3-tabs">
     <li [ngClass]="{'ti3-tab-active': activeEditor}">
       <a class="nav-link" href="javascript:void(0);" oncontext="return false" (click)="click('editor')">
@@ -72,7 +72,8 @@
 </div>
 
 <div>
-  <app-attribute-panel style="z-index:99999" id="attribute-area" class="half-drawer" *ngIf="currentComponent" [config]="currentComponent"
-    [onNodeAttributeChange]="handleNodeAttributeChange" (newItemEvent)="updateConfig($event)">
+  <app-attribute-panel style="z-index:99999" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
+    [config]="currentComponent" [onNodeAttributeChange]="handleNodeAttributeChange"
+    (newItemEvent)="updateConfig($event)">
   </app-attribute-panel>
 </div>

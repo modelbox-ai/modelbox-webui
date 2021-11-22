@@ -6,9 +6,9 @@
     }
 
     .devui-accordion-item-title {
-        width: 100%;
+        width      : 100%;
         font-weight: 600;
-        font-size: 16px;
+        font-size  : 16px;
     }
 
     .devui-accordion-splitter {
@@ -16,10 +16,10 @@
     }
 
     .menu-detail {
-        margin: 20px;
-        padding-left: 16px;
+        margin       : 20px;
+        padding-left : 16px;
         padding-right: 16px;
-        width: calc(100% - 36px);
+        width        : calc(100% - 36px);
     }
 
     .menu-detail:hover {
@@ -27,27 +27,49 @@
     }
 
     .cat-units-length {
-        display: inline-block;
-        right: 2px;
-        font-size: 12px;
-        color: #8A8E99;
+        display    : inline-block;
+        right      : 2px;
+        font-size  : 12px;
+        color      : #8A8E99;
         font-weight: 400;
     }
 
     .cat-name {
-        display: inline-block;
-        width: 140px;
+        display    : inline-block;
+        width      : 140px;
         font-weight: 600;
-        font-size: 14px;
+        font-size  : 14px;
     }
 
     .draggable {
-        cursor: move;
-        cursor: grab;
+        cursor     : grab;
         user-select: none;
     }
 
     .draggable:active {
         cursor: grabbing;
+    }
+
+
+}
+
+.tips-block {
+    display      : grid;
+    text-align   : left;
+    width        : 240px;
+    color        : white;
+    height       : auto;
+
+    &::before {
+        width        : 0;
+        height       : 0;
+        position     : absolute;
+        content      : "";
+        left         : 0px;
+        top          : 50% - 5px;
+        border-top   : 10px solid transparent;
+        border-right : 10px solid #333854;
+        border-bottom: 10px solid transparent;
+        border-left  : 10px solid transparent;
     }
 }
