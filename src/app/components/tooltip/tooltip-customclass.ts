@@ -26,8 +26,12 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
   .my-custom-class .tooltip-inner {
     background-color: #252b3a;
     font-size: 75%;
+    width: 200px;
+  }
+  .my-custom-class-wide .tooltip-inner {
+    background-color: #252b3a;
+    font-size: 75%;
     width: 400px;
-    max-width: 400px;
   }
   `]
 })

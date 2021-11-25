@@ -38,6 +38,7 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { DevUIModule } from 'ng-devui';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   const CDN_BASE = (<any>window).CDNAddress || '';
@@ -107,6 +108,7 @@ export function appInitializerFactory(
       deps: [TranslateService, Injector],
       multi: true,
     },
+    BasicServiceService,
   ],
   bootstrap: [AppComponent],
 })

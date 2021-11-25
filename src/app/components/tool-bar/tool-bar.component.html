@@ -24,6 +24,10 @@
             (click)="handleZoomFitButtonClick($event)">
             <img src={{zoomFitSvg}} />
         </d-button>
+        <d-button id="switch" dTooltip bsStyle="text-dark" [content]="'toolBar.switchButton' | translate"
+            (click)="handleSwitchButtonClick('switch')">
+            <img src={{switchSvg}} />
+        </d-button>
     </div>
     <div class="tool-bar-right">
         <span style="margin-right:10px;">
@@ -50,7 +54,8 @@
 <ng-template #graphSetting id="graphSetting">
     <d-layout class="basic-usage">
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-            <li #tab1 [ngbNavItem]="1" style="display: inline-block;" class="nav-tab nav-active" (click)="tabSwitch($event, 'tab1')">
+            <li #tab1 [ngbNavItem]="1" style="display: inline-block;" class="nav-tab nav-active"
+                (click)="tabSwitch($event, 'tab1')">
                 <a ngbNavLink>{{'toolBar.setting.basic'| translate}}</a>
                 <ng-template ngbNavContent>
                     <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
@@ -101,7 +106,8 @@
                     </form>
                 </ng-template>
             </li>
-            <li #tab2 [ngbNavItem]="2" style="display: inline-block;" class="nav-tab" (click)="tabSwitch($event, 'tab2')">
+            <li #tab2 [ngbNavItem]="2" style="display: inline-block;" class="nav-tab"
+                (click)="tabSwitch($event, 'tab2')">
                 <a ngbNavLink>{{'toolBar.setting.perf'| translate}}</a>
                 <ng-template ngbNavContent>
                     <form dForm [layout]="layoutDirection" ngForm>
@@ -166,8 +172,10 @@
                                 {{ rowItem[colOption.field] }}
                             </div>
                             <div *ngIf="colOption.field === 'dotSrc'">
-                                <ngbd-tooltip-customclass [displayedData]="rowItem[colOption.field]"
-                                    [tipData]="graphSelectTableData[rowIndex].dotSrc"></ngbd-tooltip-customclass>
+                                <div [ngbTooltip]="tipContent" #t1="ngbTooltip" (mouseenter)="toggleTip(t1, graphSelectTableData[rowIndex].dotSrc)"
+                                    placement="bottom" tooltipClass="my-custom-class-wide">
+                                    {{ rowItem[colOption.field] }}
+                                </div>
                             </div>
                             <div *ngIf="colOption.field === 'lastChanged'" class="edit-padding-fix">
                                 {{ rowItem[colOption.field] | date: 'yyyy-MM-dd HH:mm:ss'}}
@@ -183,6 +191,13 @@
             </tbody>
         </d-data-table>
     </d-content>
+</ng-template>
+
+
+<ng-template #tipContent let-context="context">
+    <div class="tips-block-top" style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+        {{context}}
+    </div>
 </ng-template>
 
 <ng-template #solutionSelect let-context='context'>

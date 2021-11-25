@@ -1,5 +1,6 @@
 #main-accrodition {
     color: #282B33;
+
     .menu-block {
         white-space: nowrap
     }
@@ -48,16 +49,14 @@
     .draggable:active {
         cursor: grabbing;
     }
-
-
 }
 
 .tips-block {
-    display      : grid;
-    text-align   : left;
-    width        : 240px;
-    color        : white;
-    height       : auto;
+    display   : grid;
+    text-align: left;
+    width     : 240px;
+    color     : white;
+    height    : auto;
 
     &::before {
         width        : 0;
@@ -65,10 +64,31 @@
         position     : absolute;
         content      : "";
         left         : 0px;
-        top          : 50% - 5px;
+        top          : 50% - 10px;
         border-top   : 10px solid transparent;
         border-right : 10px solid #333854;
         border-bottom: 10px solid transparent;
+        border-left  : 10px solid transparent;
+    }
+}
+
+.tips-block-top {
+    display   : grid;
+    text-align: left;
+    width     : 240px;
+    color     : white;
+    height    : auto;
+
+    &::before {
+        width        : 0;
+        height       : 0;
+        position     : absolute;
+        content      : "";
+        left         : 50% - 10px;
+        top          : 0;
+        border-top   : 10px solid transparent;
+        border-right : 10px solid transparent;
+        border-bottom: 10px solid #333854;
         border-left  : 10px solid transparent;
     }
 }

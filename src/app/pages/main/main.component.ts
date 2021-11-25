@@ -116,12 +116,11 @@ export class MainComponent {
     }
     this.currentComponent = null;
   }
-
+  
   ngOnInit(): void {
     this.LoadSolutionData();
 
     this.reloadInsertComponent();
-
   }
 
   ngAfterViewInit() {

@@ -22,6 +22,7 @@ import { DialogService } from 'ng-devui/modal';
 import { ModalSaveAsComponent } from '../modal-save-as/modal-save-as.component';
 import { FormLayout } from 'ng-devui/form';
 import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 declare const require: any
 @Component({
@@ -73,6 +74,7 @@ export class ToolBarComponent {
   inputDemoConfig: any;
   textareaDemoConfig: any;
   disabled: false;
+  switchCount = 1;
 
   dataTableOptions = {
     columns: [
@@ -191,7 +193,7 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  constructor(private dialogService: DialogService, private i18n: I18nService) {
+  constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService) {
   }
 
   ngOnInit() {
@@ -237,6 +239,17 @@ export class ToolBarComponent {
       this.tab1.nativeElement.classList.remove("nav-active");
     }
   }
+
+  handleSwitchButtonClick(sign){
+    this.switchCount += 1;
+    this.publishData(this.switchCount);
+  }
+
+  publishData(data) {
+    this.basicService.publish({
+     data: data,
+    }, undefined);
+   }
 
   transformDisplayData(data) {
     if (data.length > 100) {
@@ -336,6 +349,14 @@ export class ToolBarComponent {
   handleNewButtonClick = event => {
     this.onNewButtonClick && this.onNewButtonClick();
   };
+
+  toggleTip(tooltip, context: any) {
+    if (tooltip.isOpen()) {
+      tooltip.close();
+    } else {
+      tooltip.open({ context });
+    }
+  }
 
   showSaveAsDialog() {
     const results = this.dialogService.open({
