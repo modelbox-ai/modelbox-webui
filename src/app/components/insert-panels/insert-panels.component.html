@@ -20,7 +20,7 @@
 </ng-template>
 
 <ng-template #tipContent let-context="context">
-  <div style="display:grid; text-align:left; width:240px">
+  <div class="tips-block">
     <div>{{tipName}}{{context.title}}</div>
     <div>{{tipVersion}}{{context.version}}</div>
     <div>{{tipTopType}}{{context.types.join(' | ')}}</div>

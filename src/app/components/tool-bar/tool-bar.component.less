@@ -10,10 +10,6 @@
     border-radius: 2px;
 }
 
-.nav-link {
-    text-align: center;
-}
-
 .basic-usage {
 
     li>a {
@@ -33,6 +29,18 @@
         display: none;
     }
 }
+.nav-tab{
+    border: 1px solid transparent;
+    padding: 2px 10px 2px 10px;
+    border-bottom: 1px solid #000;
+    
+}
+.nav-active{
+    border-bottom: none;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
 
 .tool-bar {
     height: 44px;
@@ -46,6 +54,7 @@
     .tool-bar-left {
         float: left;
         padding: 8px 8px 8px 24px;
+        user-select: none;
 
         & d-button {
             margin: 0 4px 0 4px;

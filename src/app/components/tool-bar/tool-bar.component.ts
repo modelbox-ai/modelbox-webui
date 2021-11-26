@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { DialogService } from 'ng-devui/modal';
 import { ModalSaveAsComponent } from '../modal-save-as/modal-save-as.component';
 import { FormLayout } from 'ng-devui/form';
 import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
-import { TabsModule } from 'ng-devui/tabs';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 declare const require: any
 @Component({
@@ -33,6 +33,8 @@ declare const require: any
 
 export class ToolBarComponent {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  @ViewChild('tab1') tab1: ElementRef;
+  @ViewChild('tab2') tab2: ElementRef;
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() projects: any = {};
@@ -44,6 +46,7 @@ export class ToolBarComponent {
   @Input() onZoomFitButtonClick: any;
   @Input() onConfirmNameChange: any;
   @Input() onNewButtonClick: any;
+  @Input() onSwitchButtonClick: any;
   @Input() oldName: string;
   @Input() showGraphSettingDialog: any;
   @Input() showSelectDialog: any;
@@ -51,13 +54,13 @@ export class ToolBarComponent {
   @Input() solutionList: any;
 
   @Output() projectsEmmiter = new EventEmitter()
-
   backSvg = require("../../../assets/undo.svg");
   redoSvg = require("../../../assets/redo.svg");
   zoomInSvg = require("../../../assets/zoom-in.svg");
   zoomOutSvg = require("../../../assets/zoom-out.svg");
   zoomResetSvg = require("../../../assets/zoom-reset.svg");
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
+  switchSvg = require("../../../assets/switch.svg");
   defaultPerfDir: string = '/tmp/modelbox/perf/';
   activeBasic: boolean = true;
   activePerf: boolean = false;
@@ -71,6 +74,7 @@ export class ToolBarComponent {
   inputDemoConfig: any;
   textareaDemoConfig: any;
   disabled: false;
+  switchCount = 1;
 
   dataTableOptions = {
     columns: [
@@ -180,7 +184,7 @@ export class ToolBarComponent {
   formData = {
     name: '',
     desc: '',
-    radioValue: 1,
+    radioValue: "N",
     skipDefault: false,
     flowunitPath: '',
     perfEnable: false,
@@ -189,7 +193,7 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  constructor(private dialogService: DialogService, private i18n: I18nService,) {
+  constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService) {
   }
 
   ngOnInit() {
@@ -198,14 +202,6 @@ export class ToolBarComponent {
     if (current_project) {
       this.formData.name = this.oldName;
       this.formData.desc = current_project.desc;
-      let randdirRegex = /[\n|{]\s*rankdir\s*=\s*([a-zA-Z]*).*\s*[\n|}]/g;
-      let match = randdirRegex.exec(current_project.dotSrc);
-      let rankdir = 1;
-      if (match != null && match.length > 0 && match[1] === "LR") {
-        rankdir = 2;
-      }
-
-      this.formData.radioValue = rankdir;
       this.formData.flowunitPath = current_project.dirs;
       this.formData.skipDefault = current_project.skipDefault;
       this.formData.perfEnable = current_project.settingPerfEnable;
@@ -234,6 +230,26 @@ export class ToolBarComponent {
       return obj;
     })
   }
+
+  tabSwitch(e, current) {
+    e.currentTarget.classList.add("nav-active");
+    if (current === "tab1") {
+      this.tab2.nativeElement.classList.remove("nav-active");
+    } else if (current === "tab2") {
+      this.tab1.nativeElement.classList.remove("nav-active");
+    }
+  }
+
+  handleSwitchButtonClick(sign){
+    this.switchCount += 1;
+    this.publishData(this.switchCount);
+  }
+
+  publishData(data) {
+    this.basicService.publish({
+     data: data,
+    }, undefined);
+   }
 
   transformDisplayData(data) {
     if (data.length > 100) {
@@ -333,6 +349,14 @@ export class ToolBarComponent {
   handleNewButtonClick = event => {
     this.onNewButtonClick && this.onNewButtonClick();
   };
+
+  toggleTip(tooltip, context: any) {
+    if (tooltip.isOpen()) {
+      tooltip.close();
+    } else {
+      tooltip.open({ context });
+    }
+  }
 
   showSaveAsDialog() {
     const results = this.dialogService.open({
