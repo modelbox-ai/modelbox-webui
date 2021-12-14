@@ -1,0 +1,48 @@
+<div class="header-main">
+    <div class="modelArts-header-container">
+        <img src={{logoSvg}} />
+        <div class="logo-text">{{consoleName}}</div>
+    </div>
+    <div style="position: fixed;top:8px;left:40%;">
+        <ul class="tabs">
+            <li>
+                <a class="nav-link" [ngClass]="{'tab-active': activeFirstPage}" href=" javascript:void(0);"
+                    oncontext="return false" (click)="click('')">
+                    {{ 'firstPage' | translate}}
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" [ngClass]="{'tab-active': activeExDisplay}" href=" javascript:void(0);"
+                    oncontext="return false" (click)="click('example')">
+                    {{ 'exampleDisplay' | translate}}
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" [ngClass]="{'tab-active': activeEditor}" href=" javascript:void(0);"
+                    oncontext="return false" (click)="click('editor')">
+                    {{'editor' | translate}}
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" [ngClass]="{'tab-active': activeTaskLists}" href=" javascript:void(0);"
+                    oncontext="return false" (click)="click('task')">
+                    {{'taskLists' | translate}}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div style="position: fixed;top:8px;right:0;">
+        <div class="links-first" style="display: inline-block;">
+            <a href="/help/" target="_blank">
+                <img src={{helpSvg}} />
+                <span>&nbsp;&nbsp;{{helpText}}</span>
+            </a>
+        </div>
+        <div class="links-first" style="display: inline-block;vertical-align: middle;">
+            <a href="/api/" target="_blank">
+                <img src={{apiSvg}} />
+                <span>&nbsp;&nbsp;API</span>
+            </a>
+        </div>
+    </div>
+</div>

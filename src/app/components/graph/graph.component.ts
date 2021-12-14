@@ -461,7 +461,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
           d.attributes.stroke = 'white';
         }
         if (d.tag === "text") {
-          d.attributes["font-family"] = 'HuaweiSans';
           d.attributes["font-size"] = "12";
           if (d.children[0].text == d.parent.key) {
             d.attributes.fill = "#252B3A";

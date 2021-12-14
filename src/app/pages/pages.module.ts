@@ -24,6 +24,8 @@ import { AttributePanelComponent } from '../components/attribute-panel/attribute
 import { FormsModule } from '@angular/forms';
 import { FormModule } from 'ng-devui/form';
 import { HeaderComponent } from '../components/header/header.component';
+import { HeaderMainComponent } from '../components/header-main/header-main.component';
+import { FirstComponent } from '../components/first/first.component';
 import { ButtonModule } from 'ng-devui/button';
 import { TooltipModule } from 'ng-devui/tooltip';
 import { TabsModule } from 'ng-devui/tabs';
@@ -79,6 +81,8 @@ const COMPONENTS_NOROUNT = [];
     ToolBarComponent,
     AttributePanelComponent,
     HeaderComponent,
+    HeaderMainComponent,
+    FirstComponent,
     ManagementComponent,
     ModalSaveAsComponent,
     NgbdTooltipCustomclass

@@ -61,6 +61,7 @@ export class ToolBarComponent {
   zoomResetSvg = require("../../../assets/zoom-reset.svg");
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
+  runGraphSvg = require("../../../assets/run-graph.svg");
   defaultPerfDir: string = '/tmp/modelbox/perf/';
   activeBasic: boolean = true;
   activePerf: boolean = false;

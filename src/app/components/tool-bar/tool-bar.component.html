@@ -28,6 +28,10 @@
             (click)="handleSwitchButtonClick('switch')">
             <img src={{switchSvg}} />
         </d-button>
+        <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
+            (click)="handleSwitchButtonClick('switch')">
+            <img src={{runGraphSvg}} />
+        </d-button>
     </div>
     <div class="tool-bar-right">
         <span style="margin-right:10px;">
@@ -36,11 +40,17 @@
         <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
             {{'toolBar.newButton' | translate}}
         </button>
-        <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
-            {{'toolBar.saveAsButton' | translate}}
+        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
+            {{'toolBar.openProjectButton' | translate}}
+        </button>
+        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
+            {{'toolBar.newFlowunitButton' | translate}}
         </button>
         <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
             {{'toolBar.graphSettingButton' | translate}}
+        </button>
+        <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
+            {{'toolBar.saveAsButton' | translate}}
         </button>
         <button id="open-select" (click)="showSelectDialog(graphSelect)" class="tool-bar-button">
             {{'toolBar.selectDialogButton' | translate}}

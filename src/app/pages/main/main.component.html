@@ -11,6 +11,11 @@
         {{'taskLists' | translate}}
       </a>
     </li>
+    <li [ngClass]="{'ti3-tab-active': activeTaskLists}">
+      <a class="nav-link" href="javascript:void(0);" oncontext="return false" (click)="click('taskLists')">
+        {{'taskLists' | translate}}
+      </a>
+    </li>
   </ul>
 </div>
 <div class="task-scheduling-panel" style="height: 100%; width: 100%;" [ngClass]="{'editor-disactive': !activeEditor}">
