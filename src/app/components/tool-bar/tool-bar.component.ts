@@ -47,6 +47,7 @@ export class ToolBarComponent {
   @Input() onConfirmNameChange: any;
   @Input() onNewButtonClick: any;
   @Input() onSwitchButtonClick: any;
+  @Input() onSwitchDirectionButtonClick: any;
   @Input() oldName: string;
   @Input() showGraphSettingDialog: any;
   @Input() showSelectDialog: any;
@@ -55,7 +56,9 @@ export class ToolBarComponent {
 
   @Output() projectsEmmiter = new EventEmitter()
   backSvg = require("../../../assets/undo.svg");
+  backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
+  redoDisabledSvg = require("../../../assets/redo_disabled.svg");
   zoomInSvg = require("../../../assets/zoom-in.svg");
   zoomOutSvg = require("../../../assets/zoom-out.svg");
   zoomResetSvg = require("../../../assets/zoom-reset.svg");
@@ -63,6 +66,7 @@ export class ToolBarComponent {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
   defaultPerfDir: string = '/tmp/modelbox/perf/';
+  
   activeBasic: boolean = true;
   activePerf: boolean = false;
   layoutDirection: FormLayout = FormLayout.Horizontal;
@@ -241,17 +245,6 @@ export class ToolBarComponent {
     }
   }
 
-  handleSwitchButtonClick(sign){
-    this.switchCount += 1;
-    this.publishData(this.switchCount);
-  }
-
-  publishData(data) {
-    this.basicService.publish({
-     data: data,
-    }, undefined);
-   }
-
   transformDisplayData(data) {
     if (data.length > 100) {
       data = data.substr(0, 61) + "...";
@@ -349,6 +342,10 @@ export class ToolBarComponent {
 
   handleNewButtonClick = event => {
     this.onNewButtonClick && this.onNewButtonClick();
+  };
+
+  handleSwitchDirectionButtonClick  = event => {
+    this.onSwitchDirectionButtonClick && this.onSwitchDirectionButtonClick();
   };
 
   toggleTip(tooltip, context: any) {

@@ -70,7 +70,6 @@ export class BasicServiceService {
   }
 
   querySolution(params?: string): Observable<any> {
-
     return this.http.get(this.serviceRouter + '/editor/solution/' + params).pipe(timeout(30000))
   }
 

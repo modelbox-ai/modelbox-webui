@@ -5,6 +5,7 @@ import { LayoutFullComponent } from '../layout/full/full.component';
 // main pages
 import { MainComponent } from './main/main.component';
 import { FirstComponent } from '../components/first/first.component';
+import { SolutionComponent } from '../components/solution/solution.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'solution',
-    component: MainComponent,
+    component: SolutionComponent,
     canActivate: [],
     canActivateChild: [],
     children: [],

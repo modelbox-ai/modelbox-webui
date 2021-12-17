@@ -1,0 +1,59 @@
+<div id="tool-bar" class="tool-bar">
+  <div class="tool-bar-left btn-group">
+    <d-button id="undo" *ngIf="hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate" [disabled]="!hasUndo"
+      (click)="handleUndoButtonClick($event)">
+      <img src={{backSvg}} />
+    </d-button>
+    <d-button id="undo" *ngIf="!hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate" [disabled]="!hasUndo"
+      (click)="handleUndoButtonClick($event)">
+      <img src={{backDisabledSvg}} />
+    </d-button>
+    <d-button id="redo" *ngIf="hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate" [disabled]="!hasRedo"
+      (click)="handleRedoButtonClick($event)">
+      <img src={{redoSvg}} />
+    </d-button>
+    <d-button id="redo" *ngIf="!hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate" [disabled]="!hasRedo"
+      (click)="handleRedoButtonClick($event)">
+      <img src={{redoDisabledSvg}} />
+    </d-button>
+    <d-button id="zoom-in" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomInButton' | translate"
+      (click)="handleZoomInButtonClick($event)">
+      <img src={{zoomInSvg}} />
+    </d-button>
+    <d-button id="zoom-out" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomOutButton' | translate"
+      (click)="handleZoomOutButtonClick($event)">
+      <img src={{zoomOutSvg}} />
+    </d-button>
+    <d-button id="zoom-reset" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomResetButton' | translate"
+      (click)="handleZoomResetButtonClick($event)">
+      <img src={{zoomResetSvg}} />
+    </d-button>
+    <d-button id="zoom-fit" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomFitButton' | translate"
+      (click)="handleZoomFitButtonClick($event)">
+      <img src={{zoomFitSvg}} />
+    </d-button>
+   <d-button id="switch" dTooltip bsStyle="text-dark" [content]="'toolBar.switchButton' | translate"
+      (click)="handleSwitchDirectionButtonClick($event)">
+      <img src={{switchSvg}} />
+    </d-button>
+     <!-- <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
+      (click)="handleSwitchButtonClick('switch')">
+      <img src={{runGraphSvg}} />
+    </d-button> -->
+  </div>
+  <div class="tool-bar-right" style="margin: 0 20px 0 20px;">
+    <span style="font-size: 16px;">{{'example' | translate}}: &nbsp;&nbsp;&nbsp;</span>
+    <div style="display: inline-block;">
+      <d-select
+        [options]="solutionList"
+        [isSearch]="true"
+        [filterKey]="'name'"
+        [(ngModel)]="currentOption"
+        (valueChange)="handleSelectChange($event)"
+      ></d-select>
+    </div>
+    <button id="tutorial" (click)="openTutorial()" class="tool-bar-button"  style="display: inline-block;">
+      {{'toolBar.openTutorial' | translate}}
+    </button>
+  </div>
+</div>

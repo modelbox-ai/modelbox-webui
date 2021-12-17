@@ -1,12 +1,20 @@
 <div id="tool-bar" class="tool-bar">
     <div class="tool-bar-left btn-group">
-        <d-button id="undo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
+        <d-button id="undo" *ngIf="hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
             [disabled]="!hasUndo" (click)="handleUndoButtonClick($event)">
             <img src={{backSvg}} />
         </d-button>
-        <d-button id="redo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
+        <d-button id="undo" *ngIf="!hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
+            [disabled]="!hasUndo" (click)="handleUndoButtonClick($event)">
+            <img src={{backDisabledSvg}} />
+        </d-button>
+        <d-button id="redo" *ngIf="hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
             [disabled]="!hasRedo" (click)="handleRedoButtonClick($event)">
             <img src={{redoSvg}} />
+        </d-button>
+        <d-button id="redo" *ngIf="!hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
+            [disabled]="!hasRedo" (click)="handleRedoButtonClick($event)">
+            <img src={{redoDisabledSvg}} />
         </d-button>
         <d-button id="zoom-in" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomInButton' | translate"
             (click)="handleZoomInButtonClick($event)">
@@ -25,12 +33,8 @@
             <img src={{zoomFitSvg}} />
         </d-button>
         <d-button id="switch" dTooltip bsStyle="text-dark" [content]="'toolBar.switchButton' | translate"
-            (click)="handleSwitchButtonClick('switch')">
+            (click)="handleSwitchDirectionButtonClick($event)">
             <img src={{switchSvg}} />
-        </d-button>
-        <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
-            (click)="handleSwitchButtonClick('switch')">
-            <img src={{runGraphSvg}} />
         </d-button>
     </div>
     <div class="tool-bar-right">
@@ -84,22 +88,6 @@
                                 <textarea dTextarea name="desc" [(ngModel)]="formData.desc"></textarea>
                             </d-form-control>
                         </d-form-item>
-                        <!-- <d-form-item>
-                            <d-form-label>{{'toolBar.setting.graphRankdir' | translate}}</d-form-label>
-                            <d-form-control>
-                                <div style="display: inline-block;">
-                                    <input id="upDown" type="radio" [value]="radioOptions[0].id" [name]="'schedule'"
-                                        [(ngModel)]="formData.radioValue">
-                                    <label>{{radioOptions[0].label}}</label>
-                                </div>
-
-                                <div style="display: inline-block; padding-left: 20px;">
-                                    <input id="leftRight" type="radio" [value]="radioOptions[1].id" [name]="'schedule'"
-                                        [(ngModel)]="formData.radioValue">
-                                    <label>{{radioOptions[1].label}}</label>
-                                </div>
-                            </d-form-control>
-                        </d-form-item> -->
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.skipDefault' | translate}}</d-form-label>
                             <d-form-control>
@@ -182,7 +170,8 @@
                                 {{ rowItem[colOption.field] }}
                             </div>
                             <div *ngIf="colOption.field === 'dotSrc'">
-                                <div [ngbTooltip]="tipContent" #t1="ngbTooltip" (mouseenter)="toggleTip(t1, graphSelectTableData[rowIndex].dotSrc)"
+                                <div [ngbTooltip]="tipContent" #t1="ngbTooltip"
+                                    (mouseenter)="toggleTip(t1, graphSelectTableData[rowIndex].dotSrc)"
                                     placement="bottom" tooltipClass="my-custom-class-wide">
                                     {{ rowItem[colOption.field] }}
                                 </div>
@@ -205,7 +194,8 @@
 
 
 <ng-template #tipContent let-context="context">
-    <div class="tips-block-top" style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+    <div class="tips-block-top"
+        style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
         {{context}}
     </div>
 </ng-template>

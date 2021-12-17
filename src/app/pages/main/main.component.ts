@@ -53,11 +53,11 @@ export class MainComponent {
   collapsed = false;
   editorCollapsed = false;
   getSvg: any;
-  resizeGraph: any;
   focusedPane: any = '';
   error: any;
   undo: any;
   redo: any;
+  switchDirection: any;
   editorResize: any;
   hasUndo = false;
   hasRedo = false;
@@ -88,6 +88,7 @@ export class MainComponent {
   handleZoomFitButtonClick = () => { };
   handleZoomResetButtonClick = () => { };
   handleNodeAttributeChange = () => { };
+  handleSwitchButtonClick = () => { }
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
@@ -240,6 +241,10 @@ export class MainComponent {
     }
   };
 
+  handleSwitchDirectionButtonClick = () => {
+    this.switchDirection();
+  };
+
   registerUndo = (undo, context) => {
     this.undo = undo.bind(context);
   };
@@ -258,10 +263,6 @@ export class MainComponent {
 
   registerGetSvg = (getSvg, context) => {
     this.getSvg = getSvg.bind(context);
-  };
-
-  regOnResizeGraph = (onResizeGraph, context) => {
-    this.resizeGraph = onResizeGraph.bind(context);
   };
 
   registerNodeShapeClick = (handleNodeShapeClick, context) => {
@@ -288,6 +289,17 @@ export class MainComponent {
     this.handleZoomFitButtonClick = handleZoomFitButtonClick.bind(
       context
     );
+  };
+  registerSwitchDirectionButtonClick = (switchDirection, context) => {
+    this.switchDirection = switchDirection.bind(context);
+  };
+
+  registerZoomResetButtonClick = (handleZoomResetButtonClick, context) => {
+    this.handleZoomResetButtonClick = handleZoomResetButtonClick.bind(context);
+  };
+
+  registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
+    this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
   };
 
   setEditorMarkers(components) {
@@ -405,14 +417,6 @@ export class MainComponent {
     if (this.focusedPane === currentlyFocusedPane) {
       this.focusedPane = newFocusedPane;
     }
-  };
-
-  registerZoomResetButtonClick = (handleZoomResetButtonClick, context) => {
-    this.handleZoomResetButtonClick = handleZoomResetButtonClick.bind(context);
-  };
-
-  registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
-    this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
   };
 
   handleGutterEnd = (event, name) => {
@@ -557,7 +561,7 @@ export class MainComponent {
   }
 
   getSvgString() {
-    const svg = this.getSvg()
+    const svg = this.getSvg();
     const serializer = new XMLSerializer();
     return svg ? serializer.serializeToString(svg) : this.svgString;
   }
@@ -682,7 +686,6 @@ export class MainComponent {
   }
 
   selectSolution(selectedName) {
-
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
 

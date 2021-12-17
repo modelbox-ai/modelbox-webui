@@ -73,7 +73,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() tweenShapes: any;
   @Input() tweenPrecision: any;
   @Input() test: any;
-  @Input() regOnResizeGraph: any;
   @Input() registerNodeShapeClick: any;
   @Input() registerNodeShapeDragStart: any;
   @Input() registerNodeShapeDragEnd: any;
@@ -154,16 +153,15 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       .graphviz()
       .onerror(this.handleError.bind(this))
       .on('initEnd', () => this.renderGraph());
-    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
-    this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
-    this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
+    this.registerGetSvg(this.getSvg, this);
     this.registerZoomInButtonClick(this.handleZoomInButtonClick, this);
     this.registerZoomOutButtonClick(this.handleZoomOutButtonClick, this);
     this.registerZoomFitButtonClick(this.handleZoomFitButtonClick, this);
     this.registerZoomResetButtonClick(this.handleZoomResetButtonClick, this);
+    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
+    this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
+    this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
     this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
-    this.registerGetSvg(this.getSvg, this);
-    this.regOnResizeGraph(this.onResizeGraph, this);
   }
 
   replaceEdgeLinkName(linkName, nodeName, newNodeName): string {
@@ -207,20 +205,22 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   };
 
   formatDotSrc(): void {
-    const nodes = { ...this.dotGraph.nodes };
-    const edges = { ...this.dotGraph.edges };
-    for (let node in nodes) {
-      let attr = nodes[node]['attributes'];
-      let flowunit = attr['flowunit'];
-      let device = attr['device'];
-      if (flowunit) {
-        attr["label"] = this.dataService.getLabel(flowunit, device, node);
-        if (attr["label"] == "") {
-          attr["label"] = this.getLabelFromEdge(node, edges);
+    if (this.dotGraph !== undefined) {
+      const nodes = { ...this.dotGraph.nodes };
+      const edges = { ...this.dotGraph.edges };
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        let device = attr['device'];
+        if (flowunit) {
+          attr["label"] = this.dataService.getLabel(flowunit, device, node);
+          if (attr["label"] == "") {
+            attr["label"] = this.getLabelFromEdge(node, edges);
+          }
         }
+        this.dotGraph.updateNode(node, attr);
+        this.dotGraph.reparse();
       }
-      this.dotGraph.updateNode(node, attr);
-      this.dotGraph.reparse();
     }
   }
 
@@ -346,18 +346,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
   handleError(errorMessage) {
     const line = errorMessage.replace(/.*error in line ([0-9]*) .*\n/, '$1');
-    this.onError({ message: errorMessage, line: line });
+    if (this.onError !== undefined) {
+      this.onError({ message: errorMessage, line: line });
+    }
     this.rendering = false;
     this.busy = false;
     if (this.pendingUpdate) {
       this.pendingUpdate = false;
     }
-  }
-
-  onResizeGraph() {
-    this.prevDotSrc = "";
-    this.rendering = false;
-    this.renderGraph();
   }
 
   renderGraph() {
@@ -366,11 +362,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     const height = container.clientHeight;
     const fit = this.fit;
     const engine = this.engine;
-
-    if (this.dotSrc.length === 0) {
+    if (this.dotSrc !== undefined && this.dotSrc.length === 0) {
       this.svg.remove();
       this.svg = d3_select(null);
-      this.onError(null);
+      if (this.onError !== undefined) {
+        this.onError(null);
+      }
       this.renderGraphReady = false;
       this.prevDotSrc = this.dotSrc;
       return;
@@ -403,9 +400,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.prevEngine = this.engine;
     try {
       if (!this.test?.disableDotParsing) {
-        this.prelDotGraph = new DotGraph(this.dotSrc);
+        if (this.dotSrc !== undefined) {
+          this.prelDotGraph = new DotGraph(this.dotSrc);
+        }
       }
-      this.onError(null);
+      if (this.onError !== undefined) {
+        this.onError(null);
+      }
     } catch (error) {
       if (!error.location) {
         throw error;
@@ -416,7 +417,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         },
         message,
       } = error;
-      this.onError({ message: message, line: line });
+      if (this.onError !== undefined) {
+        this.onError({ message: message, line: line });
+      }
       return;
     }
     this.rendering = true;
@@ -592,7 +595,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       }
 
       if (graph.canMoveGraph) {
-        graph.onSelect([]);
+        if (graph.onSelect !== undefined) {
+          graph.onSelect([]);
+        }
         return true;
       }
       if (!d3_event.ctrlKey) {
@@ -641,7 +646,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickDiv(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     (document.activeElement as any).blur();
     this.isOnFocus = true;
     const event = d3_event;
@@ -662,7 +669,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.selectedComponents.size() > 0) {
       this.selectedComponents = d3_selectAll(null);
       this.selectNames.length = 0;
-      this.onSelect([]);
+      if (this.onSelect !== undefined) {
+        this.onSelect([]);
+      }
     }
     this.canMoveGraph = false;
     this.isOnFocus = false;
@@ -887,7 +896,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       this.isOnFocus = false;
       return;
     }
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.blueActiveElement();
     event.preventDefault();
     event.stopPropagation();
@@ -895,7 +906,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleMouseDownSvg(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.blueActiveElement();
     const event = d3_event;
     if (event.which !== 1) {
@@ -941,7 +954,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickSvg(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.blueActiveElement();
     this.isOnFocus = false;
     this.startPoints.forEach(item => item.remove());
@@ -981,7 +996,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleMouseUpSvg(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.blueActiveElement();
     let event = d3_event;
     if (event.which === 2) {
@@ -1056,7 +1073,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickEdge(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.blueActiveElement();
     let event = d3_event;
     event.preventDefault();
@@ -1227,7 +1246,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         name: name,
       };
     });
-    this.onSelect(selectedComponents);
+    if (this.onSelect !== undefined) {
+      this.onSelect(selectedComponents);
+    }
     if (selectedComponents.length >= 1) {
       this.canMoveGraph = true;
       let name = selectedComponents[0]["name"]
@@ -1240,13 +1261,17 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         }
 
         this.formatDotSrc();
-        this.onTextChange(this.dotGraph.dotSrc);
+        if (this.onTextChange !== undefined) {
+          this.onTextChange(this.dotGraph.dotSrc);
+        }
       }
     }
   }
 
   handleClickNode(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.isOnFocus = true;
     this.blueActiveElement();
     let event = d3_event;
@@ -1258,7 +1283,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickUpNode(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.isOnFocus = true;
     this.blueActiveElement();
     let event = d3_event;

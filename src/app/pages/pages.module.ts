@@ -39,6 +39,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevUIModule } from 'ng-devui';
 import { BadgeModule } from 'ng-devui/badge';
+import { SolutionComponent } from '../components/solution/solution.component';
+import { ToolBarSolutionComponent } from '../components/tool-bar-solution/tool-bar-solution.component';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
@@ -82,11 +84,13 @@ const COMPONENTS_NOROUNT = [];
     AttributePanelComponent,
     HeaderComponent,
     HeaderMainComponent,
+    ToolBarSolutionComponent,
     FirstComponent,
+    SolutionComponent,
     ManagementComponent,
     ModalSaveAsComponent,
     NgbdTooltipCustomclass
   ],
   entryComponents: COMPONENTS_NOROUNT,
 })
-export class PagesModule {}
+export class PagesModule { }

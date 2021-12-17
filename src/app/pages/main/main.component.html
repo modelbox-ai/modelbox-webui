@@ -11,11 +11,6 @@
         {{'taskLists' | translate}}
       </a>
     </li>
-    <li [ngClass]="{'ti3-tab-active': activeTaskLists}">
-      <a class="nav-link" href="javascript:void(0);" oncontext="return false" (click)="click('taskLists')">
-        {{'taskLists' | translate}}
-      </a>
-    </li>
   </ul>
 </div>
 <div class="task-scheduling-panel" style="height: 100%; width: 100%;" [ngClass]="{'editor-disactive': !activeEditor}">
@@ -38,7 +33,9 @@
             [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
             [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
             [onZoomFitButtonClick]="handleZoomFitButtonClick" [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
-            [onNewButtonClick]="handleNewClick.bind(this)" [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
+            [onNewButtonClick]="handleNewClick.bind(this)"
+            [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
+            [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
             [showSelectDialog]="showSelectDialog.bind(this)" [showSolutionDialog]="showSolutionDialog.bind(this)"
             [projects]="projects" [oldName]="name" (projectsEmmiter)="getToolBarProjectsChange($event)"
             [solutionList]="solutionList">
@@ -49,7 +46,7 @@
               [onRedo]="handleRedoButtonClick" [onError]="handleError" [onFocus]="handleGraphFocus"
               [onSelect]="handleGraphComponentSelect" [onTextChange]="handleTextChange"
               [onInitialized]="handleGraphInitialized" [registerGetSvg]="registerGetSvg"
-              [regOnResizeGraph]="regOnResizeGraph" [registerNodeShapeClick]="registerNodeShapeClick"
+              [registerNodeShapeClick]="registerNodeShapeClick"
               [registerNodeShapeDragStart]="registerNodeShapeDragStart"
               [registerNodeShapeDragEnd]="registerNodeShapeDragEnd"
               [registerZoomInButtonClick]="registerZoomInButtonClick"
@@ -64,7 +61,8 @@
             [onFocus]="handleTextEditorFocus" [onBlur]="handleTextEditorBlur" [error]="error"
             [selectedGraphComponents]="selectedGraphComponents" [holdOff]="holdOff" [fontSize]="fontSize"
             [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
-            [registerResize]="registerEditorResize"></app-text-editor>
+            [registerResize]="registerEditorResize"
+            [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick"></app-text-editor>
         </as-split-area>
       </as-split>
     </as-split-area>

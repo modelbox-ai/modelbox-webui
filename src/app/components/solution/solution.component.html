@@ -1,0 +1,34 @@
+<app-header-main #header></app-header-main>
+<div class="demo-page">
+  <as-split direction="horizontal">
+    <as-split-area [size]="100" class="main-container-body">
+      <as-split direction="vertical">
+        <app-tool-bar-solution #toolBarSolution (newItemEvent)="getChildData($event)" [hasUndo]="hasUndo"
+          [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick" [onRedoButtonClick]="handleRedoButtonClick"
+          [onZoomInButtonClick]="handleZoomInButtonClick" [onZoomOutButtonClick]="handleZoomOutButtonClick"
+          [onZoomResetButtonClick]="handleZoomResetButtonClick" [onZoomFitButtonClick]="handleZoomFitButtonClick"
+          [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
+          >
+        </app-tool-bar-solution>
+        <as-split-area [size]="70">
+          <div class="graph">
+            <app-graph [dotSrc]="dotSrc" [isResizing]="isResizing" [onInitialized]="handleGraphInitialized"
+              [registerGetSvg]="registerGetSvg" [registerZoomInButtonClick]="registerZoomInButtonClick"
+              [registerZoomOutButtonClick]="registerZoomOutButtonClick"
+              [registerZoomFitButtonClick]="registerZoomFitButtonClick"
+              [registerZoomResetButtonClick]="registerZoomResetButtonClick" ></app-graph>
+          </div>
+        </as-split-area>
+        <as-split-area [size]="30">
+          <app-text-editor #textEditor [dotSrc]="dotSrc" [onTextChange]="handleTextChange"
+            [onFocus]="handleTextEditorFocus" [onBlur]="handleTextEditorBlur"
+            [selectedGraphComponents]="selectedGraphComponents" [registerUndo]="registerUndo"
+            [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset" [registerResize]="registerEditorResize"
+            [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick"
+            >
+          </app-text-editor>
+        </as-split-area>
+      </as-split>
+    </as-split-area>
+  </as-split>
+</div>
