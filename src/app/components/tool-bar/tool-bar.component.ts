@@ -17,6 +17,7 @@
  */
 
 import { Component, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { I18nService } from '@core/i18n.service';
 import { DialogService } from 'ng-devui/modal';
 import { ModalSaveAsComponent } from '../modal-save-as/modal-save-as.component';
@@ -198,7 +199,7 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService) {
+  constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService, private domSanitizer: DomSanitizer) {
   }
 
   ngOnInit() {

@@ -1,4 +1,14 @@
 const webpack = require('webpack');
-module.exports = (config, options) => {
-  return config;
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.svg/,
+        loader: 'file-loader',
+        options: {
+          esModule: false,
+        },
+      }
+    ],
+  },
 };
