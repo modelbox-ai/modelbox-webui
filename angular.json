@@ -4,35 +4,6 @@
     "projects": {
         "console": {
             "projectType": "application",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "inlineTemplate": false,
-                    "inlineStyle": false,
-                    "style": "less",
-                    "skipTests": true
-                },
-                "@schematics/angular:class": {
-                    "skipTests": true
-                },
-                "@schematics/angular:directive": {
-                    "skipTests": true
-                },
-                "@schematics/angular:guard": {
-                    "skipTests": true
-                },
-                "@schematics/angular:interceptor": {
-                    "skipTests": true
-                },
-                "@schematics/angular:module": {
-                    "skipTests": true
-                },
-                "@schematics/angular:pipe": {
-                    "skipTests": true
-                },
-                "@schematics/angular:service": {
-                    "skipTests": true
-                }
-            },
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",
@@ -50,6 +21,7 @@
                             "src/theme/default/images",
                             "src/i18n/hws/zh_CN.json",
                             "src/i18n/hws/en-US.json",
+                            "src/assets",
                             {
                                 "glob": "*",
                                 "input": "node_modules/@hpcc-js/wasm/dist",
@@ -95,6 +67,26 @@
                                     "maximumError": "10kb"
                                 }
                             ]
+                        },
+                        "development": {
+                            "optimization": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "extractLicenses": true,
+                            "vendorChunk": true,
+                            "buildOptimizer": false,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "6mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
                         }
                     }
                 },
@@ -102,14 +94,14 @@
                     "builder": "@angular-builders/custom-webpack:dev-server",
                     "options": {
                         "browserTarget": "console:build",
-                        "proxyConfig": ".staging/proxy.json",
-                        "customWebpackConfig": {
-                            "path": "config/webpack.config.js"
-                        }
+                        "proxyConfig": ".staging/proxy.json"
                     },
                     "configurations": {
                         "production": {
                             "browserTarget": "console:build:production"
+                        },
+                        "development": {
+                            "browserTarget": "console:build:development"
                         }
                     }
                 },
