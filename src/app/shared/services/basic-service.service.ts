@@ -9,6 +9,7 @@ import { timeout } from 'rxjs/operators';
 export class BasicServiceService {
   public serviceRouter = '';
   public messageSource = new BehaviorSubject<string>('');
+  public currentSolution = '';
 
   constructor(private http: HttpClient) {
     this.serviceRouter = '';
@@ -51,7 +52,7 @@ export class BasicServiceService {
   }
 
   // 创建任务
-  queryCreateTask(paramData?: string): Observable<any> {
+  queryCreateTask(paramData?: any): Observable<any> {
     return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData).pipe(timeout(30000))
   }
 

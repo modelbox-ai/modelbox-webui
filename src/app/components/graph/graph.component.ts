@@ -39,6 +39,7 @@ import DotGraph from './dot';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { I18nService } from '@core/i18n.service';
 import { ToastService } from 'ng-devui/toast';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 const shapes = 'box polygon ellipse oval circle point egg triangle plaintext plain diamond trapezium parallelogram house pentagon hexagon septagon octagon doublecircle doubleoctagon tripleoctagon invtriangle invtrapezium invhouse Mdiamond Msquare Mcircle rect rectangle square star none underline cylinder note tab folder box3d component promoter cds terminator utr primersite restrictionsite fivepoverhang threepoverhang noverhang assembly signature insulator ribosite rnastab proteasesite proteinstab rpromoter rarrow larrow lpromoter'.split(
   ' '
@@ -81,6 +82,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() registerZoomFitButtonClick: any;
   @Input() registerZoomResetButtonClick: any;
   @Input() registerNodeAttributeChange: any;
+  @Input() registerExtendDetail: any;
   @Input() isResizing: any;
 
   prevFit: any;
@@ -128,7 +130,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     private dataService: DataServiceService,
     private i18n: I18nService,
     private toastService: ToastService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private basicService: BasicServiceService) {
     this.toastService.open({
       value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
       life: 1500
@@ -158,10 +161,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.registerZoomOutButtonClick(this.handleZoomOutButtonClick, this);
     this.registerZoomFitButtonClick(this.handleZoomFitButtonClick, this);
     this.registerZoomResetButtonClick(this.handleZoomResetButtonClick, this);
-    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
-    this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
-    this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
     this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
+    if (this.registerNodeShapeClick !== undefined) {
+      //no need in solutiuon pgae
+      this.registerNodeShapeClick(this.handleNodeShapeClick, this);
+      this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
+      this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
+    }
   }
 
   replaceEdgeLinkName(linkName, nodeName, newNodeName): string {
@@ -1254,7 +1260,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       let name = selectedComponents[0]["name"]
       if (selectedComponents.length == 1) {
         const Attr = this.dotGraph.getNodeAttributes(name);
-        if (typeof Attr["label"] != "undefined") {
+        if (Attr !== null && typeof Attr["label"] != "undefined") {
           if (Attr["label"].length > 1 && Attr["label"] == this.getLabelFromEdge(name, this.dotGraph.edges)) {
             return;
           }
@@ -1280,6 +1286,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (!this.isDrawingEdge && event.which === 1) {
       this.selectComponents(d3_select(nodes[i]));
     }
+    this.formatDotSrc();
+    this.onTextChange(this.dotGraph.dotSrc);
+
+
   }
 
   handleClickUpNode(d, i, nodes) {

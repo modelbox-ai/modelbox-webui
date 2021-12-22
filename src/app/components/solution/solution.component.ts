@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToolBarSolutionComponent } from '../tool-bar-solution/tool-bar-solution.component';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 @Component({
   selector: 'app-solution',
@@ -27,6 +28,7 @@ export class SolutionComponent implements OnInit {
   isResizing = false;
   focusedPane: any = '';
   selectedGraphComponents: any = [];
+  project: any = JSON.parse(localStorage.getItem('project')) || {};
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
   desc: any;
   dotSrcLastChangeTime: any;
@@ -35,8 +37,9 @@ export class SolutionComponent implements OnInit {
   handleZoomOutButtonClick = () => { };
   handleZoomFitButtonClick = () => { };
   handleZoomResetButtonClick = () => { };
+  handleNodeAttributeChange = () => { };
 
-  constructor() { }
+  constructor(private basicService: BasicServiceService) { }
 
   ngOnInit(): void {
   }
@@ -44,15 +47,11 @@ export class SolutionComponent implements OnInit {
   ngAfterViewInit(): void {
   }
 
-
   handleTextChange = (text, undoRedoState) => {
     const name =
       this.name || (text ? this.createUntitledName(this.projects) : '');
-    this.name = name
-
-    //this.isSaved = false;
+    this.name = name;
     this.dotSrc = text;
-    //this.dotSrcLastChangeTime = Date.now();
     this.saveCurrentProject();
 
     if (this.resetUndoAtNextTextChange) {
@@ -68,7 +67,6 @@ export class SolutionComponent implements OnInit {
   };
 
   handleGraphInitialized = () => {
-    //this.graphInitialized = true;
     this.setPersistentState({
       svgString: this.getSvgString(),
     });
@@ -85,6 +83,31 @@ export class SolutionComponent implements OnInit {
   handleSwitchDirectionButtonClick = () => {
     this.switchDirection();
   };
+
+  handleGutterEnd = (event, name) => {
+    this.isResizing = false;
+    if (event) {
+      const svgDomW = document.getElementsByTagName('svg')[0];
+      svgDomW.setAttribute('width', "100%");
+      svgDomW.setAttribute('height', "100%");
+    }
+
+    if (name === "left") {
+      localStorage.setItem('leftSpliterSize', String(event.sizes[0]))
+    } else if (name === "center") {
+      localStorage.setItem('centerSplitterSize', String(event.sizes[0]))
+    }
+    this.editorResize();
+  }
+
+  handleGutterStart = (event) => {
+    this.isResizing = true;
+    if (event) {
+      const svgDomW = document.getElementsByTagName('svg')[0];
+      svgDomW.setAttribute('width', "100%");
+      svgDomW.setAttribute('height', "100%");
+    }
+  }
 
   registerUndo = (undo, context) => {
     this.undo = undo.bind(context);
@@ -110,20 +133,6 @@ export class SolutionComponent implements OnInit {
     this.getSvg = getSvg.bind(context);
   };
 
-
-
-  // registerNodeShapeClick = (handleNodeShapeClick, context) => {
-  //   this.handleNodeShapeClick = handleNodeShapeClick.bind(context);
-  // };
-
-  // registerNodeShapeDragStart = (handleNodeShapeDragStart, context) => {
-  //   this.handleNodeShapeDragStart = handleNodeShapeDragStart.bind(context);
-  // };
-
-  // registerNodeShapeDragEnd = (handleNodeShapeDragEnd, context) => {
-  //   this.handleNodeShapeDragEnd = handleNodeShapeDragEnd.bind(context);
-  // };
-
   registerZoomInButtonClick = (handleZoomInButtonClick, context) => {
     this.handleZoomInButtonClick = handleZoomInButtonClick.bind(context);
   };
@@ -142,6 +151,10 @@ export class SolutionComponent implements OnInit {
     this.handleZoomResetButtonClick = handleZoomResetButtonClick.bind(context);
   };
 
+  registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
+    this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
+  };
+
   getChildData(e): void {
     this.dotSrc = e;
   }
@@ -158,6 +171,21 @@ export class SolutionComponent implements OnInit {
         project: this.getProjectJson()
       });
   }
+
+  saveProjects() {
+    this.saveCurrentProject();
+    this.setPersistentState({
+      projects: {
+        ...this.projects,
+      }
+    });
+  }
+
+  renameGraphSrc(newName) {
+    let name = newName.replace(/[\. -]/gi, '_');
+    this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 ' + name + ' {');
+  }
+
   getProjectJson() {
     const projectdata = {
       name: this.name,
@@ -209,4 +237,48 @@ export class SolutionComponent implements OnInit {
     }
   };
 
+  handleRunButtonClick = () => {
+    //saveToBrowser
+    this.projects = {};
+    this.name = this.basicService.currentSolution;
+    this.project.name = this.name;
+    this.saveCurrentProject();
+    this.projects[this.project.name] = this.project;
+    this.saveProjects();
+    //run
+    let option = this.createOptionFromProject(this.project);
+    this.basicService.queryCreateTask(option)
+      .subscribe((data: any) => {
+        //提示任务运行状态
+        debugger
+        if (data) {}
+      });
+  }
+
+  createOptionFromProject = (item) => {
+    let params = {};
+    params = {
+      job_id: item.name,
+      job_graph: {
+        flow: {
+          desc: item.desc,
+        },
+        driver: {
+          "skip-default": item.skipDefault,
+          dir: item.dirs,
+        },
+        profile: {
+          profile: item.settingPerfEnable,
+          trace: item.settingPerfTraceEnable,
+          session: item.settingPerfSessionEnable,
+          dir: item.settingPerfDir,
+        },
+        graph: {
+          graphconf: item.dotSrc,
+          format: "graphviz",
+        },
+      }
+    }
+    return params;
+  }
 }

@@ -43,7 +43,7 @@
     "pegjs": "^0.9.0",
     "rxjs": "^6.5.3",
     "tslib": "^1.10.0",
-    "zone.js": "^0.11.4"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "~12.0.0",

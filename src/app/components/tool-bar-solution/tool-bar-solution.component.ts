@@ -21,6 +21,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onConfirmNameChange: any;
   @Input() onNewButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
+  @Input() onRunButtonClick: any;
   @Output() newItemEvent = new EventEmitter<string>();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -75,8 +76,12 @@ export class ToolBarSolutionComponent implements OnInit {
     this.onNewButtonClick && this.onNewButtonClick();
   };
 
-  handleSwitchDirectionButtonClick  = event => {
+  handleSwitchDirectionButtonClick = event => {
     this.onSwitchDirectionButtonClick && this.onSwitchDirectionButtonClick();
+  };
+
+  handleRunButtonClick = event => {
+    this.onRunButtonClick && this.onRunButtonClick();
   };
 
   openTutorial(): void {
@@ -95,7 +100,7 @@ export class ToolBarSolutionComponent implements OnInit {
           //use mnist.toml as default
           if (obj.name === "mnist.toml") {
             this.currentOption = obj.name;
-            //this.handleSelectChange(obj);
+            this.basicService.currentSolution="mnist.toml";
           }
         })
       },
@@ -108,36 +113,13 @@ export class ToolBarSolutionComponent implements OnInit {
 
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
-
-      // this.initCurrentProlect();
-      // this.name = selectedName;
-      // if (response.flow) {
-      //   if (response.flow.desc) {
-      //     this.desc = response.flow.desc;
-      //   }
-      // }
       if (response.graph) {
         if (response.graph.graphconf) {
           this.dotSrc = response.graph.graphconf;
         }
       }
       this.sendToParent(this.dotSrc);
-
-      // this.dotSrcLastChangeTime = Date.now();
-      // if (response.driver) {
-      //   this.skipDefault = response.driver['skip-default'];
-      //   this.dirs = [];
-      //   if (typeof (response.driver.dir) == 'string') {
-      //     this.dirs.push(response.driver.dir);
-      //   } else {
-      //     response.driver.dir.forEach(item => {
-      //       this.dirs.push(item)
-      //     });
-      //   }
-      // }
-      // this.saveCurrentProject();
-      // this.reloadInsertComponent();
-      // this.handleZoomResetButtonClick();
+      this.basicService.currentSolution = selectedName;
     }
     )
   }

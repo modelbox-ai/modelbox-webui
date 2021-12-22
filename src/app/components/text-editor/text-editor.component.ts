@@ -69,32 +69,9 @@ export class TextEditorComponent {
 
   constructor(private div: ElementRef, private basicService: BasicServiceService) { }
 
-  ngOnInit() {
-    let self = this
-    this.basicService.subscribe({
-      next: value => {
-        let temp = self.dotSrc.match(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/);
-        self.dotSrc = self.dotSrc.replace(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/gi, '$1');
-        if (temp !== null && temp.length > 0) {
-          let rankdir = "LR";
-          if (temp[0].indexOf("LR") !== -1) {
-            rankdir = "VERTICLE";
-          }
-          self.dotSrc = self.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + rankdir);
-        } else {
-          self.dotSrc = self.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + "LR");
-        }
-      },
-      error: err => {
-        // handle err
-      },
-      complete: () => {
-        // handle complete
-      }
-    })
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
+    
     const { error } = changes;
     if (error && !error.firstChange) {
       let annotations = null;
