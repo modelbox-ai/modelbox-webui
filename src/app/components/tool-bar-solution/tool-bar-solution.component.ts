@@ -22,6 +22,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onNewButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onRunButtonClick: any;
+  @Input() onOpenTutorial: any;
   @Output() newItemEvent = new EventEmitter<string>();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -84,9 +85,9 @@ export class ToolBarSolutionComponent implements OnInit {
     this.onRunButtonClick && this.onRunButtonClick();
   };
 
-  openTutorial(): void {
-
-  }
+  openTutorial = event => {
+    this.onOpenTutorial && this.onOpenTutorial();
+  };
 
   LoadSolutionData() {
     this.basicService.querySolutionList().subscribe(

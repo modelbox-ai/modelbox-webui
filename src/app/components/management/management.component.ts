@@ -31,6 +31,7 @@ import { TableWidthConfig } from 'ng-devui/data-table';
   styleUrls: ['./management.component.less'],
 })
 export class ManagementComponent implements OnInit {
+  page = "task";
   folded: boolean = false;
   checkedList: Array<any> = [];
   createTasklists: any;
@@ -118,7 +119,7 @@ export class ManagementComponent implements OnInit {
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
   @Input() collapsed: boolean;
   @Input() isSupportFold: boolean = true;
-  @Input() projects: any;
+  @Input() projects: any = JSON.parse(localStorage.getItem('projects')) || {};
   selectedProject: any;
   dialog: boolean = false;
 
@@ -215,65 +216,67 @@ export class ManagementComponent implements OnInit {
     let params;
     this.checkedList.splice(0, this.checkedList.length);
     this.checkedList.push(this.selectedProject);
-    this.checkedList.forEach((item) => {
-      // doesnot exist the same name
-      let res = false;
-      for (let item_displayed of this.tableData.srcData.data) {
-        if (item_displayed.job_id === item.job_id) {
-          res = true;
-          break;
-        }
-      }
-      if (!res && item) {
-        params = {
-          job_id: item.job_id,
-          job_graph: {
-            flow: {
-              desc: item.project.desc,
-            },
-            driver: {
-              "skip-default": item.project.skipDefault,
-              dir: item.project.dirs,
-            },
-            profile: {
-              profile: item.project.settingPerfEnable,
-              trace: item.project.settingPerfTraceEnable,
-              session: item.project.settingPerfSessionEnable,
-              dir: item.project.settingPerfDir,
-            },
-            graph: {
-              graphconf: item.project.dotSrc,
-              format: "graphviz",
-            },
+    if (this.checkedList.length > 0) {
+      this.checkedList.forEach((item) => {
+        // doesnot exist the same name
+        let res = false;
+        for (let item_displayed of this.tableData.srcData.data) {
+          if (item_displayed.job_id === item.job_id) {
+            res = true;
+            break;
           }
         }
-        this.createTaskResult(params);
-      } else {
-        if (!this.dialog) {
-          const results = this.dialogService.open({
-            id: 'dialog-service',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById('message.taskWithTheSameNameHasAlreadyBeenExisted') + ": " + item.job_id,
-            backdropCloseable: true,
-            dialogtype: 'failed',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: 'Ok',
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                  results.modalInstance.zIndex = -1;
-                  this.dialog = false;
-                },
-              }
-            ],
-          });
-          this.dialog = true;
+        if (!res && item) {
+          params = {
+            job_id: item.job_id,
+            job_graph: {
+              flow: {
+                desc: item.project.desc,
+              },
+              driver: {
+                "skip-default": item.project.skipDefault,
+                dir: item.project.dirs,
+              },
+              profile: {
+                profile: item.project.settingPerfEnable,
+                trace: item.project.settingPerfTraceEnable,
+                session: item.project.settingPerfSessionEnable,
+                dir: item.project.settingPerfDir,
+              },
+              graph: {
+                graphconf: item.project.dotSrc,
+                format: "graphviz",
+              },
+            }
+          }
+          this.createTaskResult(params);
+        } else {
+          if (!this.dialog) {
+            const results = this.dialogService.open({
+              id: 'dialog-service',
+              width: '346px',
+              maxHeight: '600px',
+              title: '',
+              content: this.i18n.getById('message.taskWithTheSameNameHasAlreadyBeenExisted') + ": " + item.job_id,
+              backdropCloseable: true,
+              dialogtype: 'failed',
+              buttons: [
+                {
+                  cssClass: 'primary',
+                  text: 'Ok',
+                  handler: ($event: Event) => {
+                    results.modalInstance.hide();
+                    results.modalInstance.zIndex = -1;
+                    this.dialog = false;
+                  },
+                }
+              ],
+            });
+            this.dialog = true;
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   // 创建任务调用接口

@@ -6,6 +6,7 @@ import { LayoutFullComponent } from '../layout/full/full.component';
 import { MainComponent } from './main/main.component';
 import { FirstComponent } from '../components/first/first.component';
 import { SolutionComponent } from '../components/solution/solution.component';
+import { ManagementComponent } from '../components/management/management.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,13 @@ const routes: Routes = [
   {
     path: 'solution',
     component: SolutionComponent,
+    canActivate: [],
+    canActivateChild: [],
+    children: [],
+  },
+  {
+    path: 'management',
+    component: ManagementComponent,
     canActivate: [],
     canActivateChild: [],
     children: [],

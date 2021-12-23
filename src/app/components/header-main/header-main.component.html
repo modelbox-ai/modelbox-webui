@@ -6,25 +6,25 @@
     <div style="position: fixed;top:8px;left:40%;">
         <ul class="tabs">
             <li>
-                <a class="nav-link" [ngClass]="{'tab-active': activeFirstPage}" href=" javascript:void(0);"
+                <a #firstPage id="firstPage" class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active===''}"
                     oncontext="return false" (click)="click('')">
                     {{ 'firstPage' | translate}}
                 </a>
             </li>
             <li>
-                <a class="nav-link" [ngClass]="{'tab-active': activeExDisplay}" href=" javascript:void(0);"
+                <a #exampleDisplay id="exampleDisplay" class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active==='example'}"
                     oncontext="return false" (click)="click('example')">
                     {{ 'exampleDisplay' | translate}}
                 </a>
             </li>
             <li>
-                <a class="nav-link" [ngClass]="{'tab-active': activeEditor}" href=" javascript:void(0);"
+                <a class="nav-link" href=" javascript:void(0); " [ngClass]="{'tab-active': active==='editor'}"
                     oncontext="return false" (click)="click('editor')">
                     {{'editor' | translate}}
                 </a>
             </li>
             <li>
-                <a class="nav-link" [ngClass]="{'tab-active': activeTaskLists}" href=" javascript:void(0);"
+                <a class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active==='task'}"
                     oncontext="return false" (click)="click('task')">
                     {{'taskLists' | translate}}
                 </a>

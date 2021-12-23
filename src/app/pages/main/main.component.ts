@@ -50,6 +50,7 @@ export class MainComponent {
   settingPerfSessionEnable = false;
   settingPerfDir: any;
   model = 1;
+  page = "editor";
   collapsed = false;
   editorCollapsed = false;
   getSvg: any;

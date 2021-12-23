@@ -30,10 +30,12 @@
                         ],
                         "styles": [
                             "src/styles.less",
-                            "node_modules/ng-devui/devui.min.css"
+                            "node_modules/ng-devui/devui.min.css",
+                            "node_modules/driver.js/dist/driver.min.css"
                         ],
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js"
+                            "node_modules/jquery/dist/jquery.min.js",
+                            "node_modules/driver.js/dist/driver.min.js"
                         ],
                         "customWebpackConfig": {
                             "path": "config/webpack.config.js"
