@@ -13,6 +13,7 @@ import { TextEditorComponent } from '../../components/text-editor/text-editor.co
 import { ToolBarComponent } from '../../components/tool-bar/tool-bar.component';
 import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import { DataServiceService } from '@shared/services/data-service.service';
+import { ToastService } from 'ng-devui/toast';
 
 @Component({
   selector: 'app-main',
@@ -72,6 +73,7 @@ export class MainComponent {
   fontSize = localStorage.getItem('fontSize') || 12;
   tabSize = Number(localStorage.getItem('tabSize')) || 4;
   resetUndoAtNextTextChange: any;
+  project: any = JSON.parse(localStorage.getItem('project')) || {};
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
   state: any;
   solutionList: any = [];
@@ -93,7 +95,8 @@ export class MainComponent {
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
-    private dataService: DataServiceService,) {
+    private dataService: DataServiceService, 
+    private toastService: ToastService,) {
 
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
@@ -118,7 +121,7 @@ export class MainComponent {
     }
     this.currentComponent = null;
   }
-  
+
   ngOnInit(): void {
     this.LoadSolutionData();
 
@@ -720,6 +723,61 @@ export class MainComponent {
       this.handleZoomResetButtonClick();
     }
     )
+  }
+
+
+  handleRunButtonClick = () => {
+    //saveToBrowser
+    this.projects = {};
+    this.project.name = this.name;
+    this.saveCurrentProject();
+    this.projects[this.project.name] = this.project;
+    this.saveProjects();
+    //run
+    let option = this.createOptionFromProject(this.project);
+    this.basicService.queryCreateTask(option)
+      .subscribe((data: any) => {
+        //提示任务运行状态
+        this.toastService.open({
+          value: [{ severity: 'success', summary: "Success", content: "请前往任务管理页面查看明细" }],
+          life: 3000
+        });
+      }, error => {
+        if (error.error != null) {
+          this.toastService.open({
+            value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
+            life: 3000
+          });
+        }
+      }
+      );
+  }
+
+  createOptionFromProject = (item) => {
+    let params = {};
+    params = {
+      job_id: item.name,
+      job_graph: {
+        flow: {
+          desc: item.desc,
+        },
+        driver: {
+          "skip-default": item.skipDefault,
+          dir: item.dirs,
+        },
+        profile: {
+          profile: item.settingPerfEnable,
+          trace: item.settingPerfTraceEnable,
+          session: item.settingPerfSessionEnable,
+          dir: item.settingPerfDir,
+        },
+        graph: {
+          graphconf: item.dotSrc,
+          format: "graphviz",
+        },
+      }
+    }
+    return params;
   }
 
   showSolutionDialog(content: TemplateRef<any>) {

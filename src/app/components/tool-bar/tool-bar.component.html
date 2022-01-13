@@ -36,6 +36,10 @@
             (click)="handleSwitchDirectionButtonClick($event)">
             <img src={{switchSvg}} />
         </d-button>
+        <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
+          (click)="handleRunButtonClick($event)">
+          <img src={{runGraphSvg}} />
+        </d-button>
     </div>
     <div class="tool-bar-right">
         <span style="margin-right:10px;">

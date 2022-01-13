@@ -54,6 +54,7 @@ export class ToolBarComponent {
   @Input() showSelectDialog: any;
   @Input() showSolutionDialog: any;
   @Input() solutionList: any;
+  @Input() onRunButtonClick: any;
 
   @Output() projectsEmmiter = new EventEmitter()
   backSvg = require("../../../assets/undo.svg");
@@ -348,6 +349,11 @@ export class ToolBarComponent {
   handleSwitchDirectionButtonClick  = event => {
     this.onSwitchDirectionButtonClick && this.onSwitchDirectionButtonClick();
   };
+  
+  handleRunButtonClick = event => {
+    this.onRunButtonClick && this.onRunButtonClick();
+  };
+
 
   toggleTip(tooltip, context: any) {
     if (tooltip.isOpen()) {

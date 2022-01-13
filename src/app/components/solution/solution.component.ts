@@ -59,7 +59,6 @@ export class SolutionComponent implements OnInit {
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService) { }
 
   ngOnInit(): void {
-
   }
 
   ngAfterViewInit(): void {
