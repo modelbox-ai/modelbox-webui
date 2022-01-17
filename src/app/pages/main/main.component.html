@@ -56,7 +56,7 @@
     </as-split>
   </div>
   <div>
-    <app-attribute-panel style="z-index:99999" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
+    <app-attribute-panel style="z-index:5" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
       [config]="currentComponent" [onNodeAttributeChange]="handleNodeAttributeChange"
       (newItemEvent)="updateConfig($event)">
     </app-attribute-panel>

@@ -3,6 +3,7 @@ import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToolBarSolutionComponent } from '../tool-bar-solution/tool-bar-solution.component';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
+import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import Driver from 'driver.js';
 import { I18nService } from '@core/i18n.service';
 
@@ -14,6 +15,7 @@ import { I18nService } from '@core/i18n.service';
 export class SolutionComponent implements OnInit {
   @ViewChild('textEditor') editor: TextEditorComponent;
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
+  @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
   name: string = localStorage.getItem('project.name') || '';
   hasUndo = false;
   hasRedo = false;
@@ -36,12 +38,14 @@ export class SolutionComponent implements OnInit {
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
   desc: any;
   dotSrcLastChangeTime: any;
+  currentComponent: any;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
   handleZoomFitButtonClick = () => { };
   handleZoomResetButtonClick = () => { };
   handleNodeAttributeChange = () => { };
+  handleNodeShapeClick = () => { };
 
   introduce: any = new Driver({
     opacity: 0.5,
@@ -170,6 +174,10 @@ export class SolutionComponent implements OnInit {
 
   registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
     this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
+  };
+
+  registerNodeShapeClick = (handleNodeShapeClick, context) => {
+    this.handleNodeShapeClick = handleNodeShapeClick.bind(context);
   };
 
   getChildData(e): void {
@@ -354,6 +362,44 @@ export class SolutionComponent implements OnInit {
       }
       );
   }
+
+  handleGraphComponentSelect = components => {
+    this.selectedGraphComponents = components;
+    //this.setEditorMarkers(components);
+
+    if (components.length === 1 && components[0].name.indexOf('->') === -1) {
+      this.currentComponent = components[0];
+      this.currentComponent.attributes = Object.keys(
+        this.currentComponent.attributes
+      ).map(k => {
+        return {
+          key: k,
+          value: this.currentComponent.attributes[k],
+        };
+      });
+
+      try {
+        let flowunit = ""
+        let device = "cpu"
+        this.currentComponent.attributes.forEach(item => {
+          if (item.key === "flowunit") {
+            flowunit = item.value
+          } else if (item.key === "device") {
+            device = item.value
+          }
+        })
+        // if (!this.InsertPanels.isFlowUnitExist(
+        //   flowunit, device
+        // )) {
+        //   return;
+        // }
+      } catch (error) {
+        return;
+      }
+    } else {
+      this.currentComponent = null;
+    }
+  };
 
   createOptionFromProject = (item) => {
     let params = {};

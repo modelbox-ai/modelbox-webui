@@ -16,7 +16,9 @@ export class DataServiceService {
   // 使用 unit name 及 type获取 对应的 unit
   getUnit(name, type) {
     let unit;
-    
+    if (this.nodeShapeCategories.length === 0){
+      this.loadFlowUnit(null, []);
+    }
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name && it.type === type) {
@@ -25,6 +27,66 @@ export class DataServiceService {
       });
     });
     return unit;
+  }
+
+  loadFlowUnit(skip, dirs) {
+    if (skip === null) {
+      skip = false;
+    }
+
+    if (skip === "") {
+      skip = false;
+    }
+
+    let params = {
+      "skip-default": skip,
+      dir: dirs,
+    }
+    this.basicService.queryData(params).subscribe((data) => {
+
+      let nodeShapeCategories = [];
+      this.nodeShapeCategories = [];
+      if (data == null) {
+        return;
+      }
+      data.flowunits.forEach(item => {
+
+        const group = nodeShapeCategories.find(i => i.title === item.group);
+        const unit = {
+          ...item,
+          title: item.name,
+          active: nodeShapeCategories.length == 0 ? true : false,
+          types: [
+            ...new Set(
+              data.flowunits.filter(u => u.name === item.name).map(i => i.type)
+            ),
+          ],
+        };
+
+        if (group) {
+          group.children.push(unit);
+        } else {
+          nodeShapeCategories.push({
+            title: item.group,
+            collapsed: true,
+            children: [unit],
+          });
+        }
+
+        this.nodeShapeCategories = nodeShapeCategories;
+      });
+    })
+
+    this.nodeShapeCategories = this.nodeShapeCategories.map(
+      item => {
+        return {
+          ...item,
+          children: [...new Set(item.children.map(it => it.title))].map(it =>
+            item.children.find(i => i.title === it)
+          ),
+        };
+      }
+    );
   }
 
   getLabel(name, type, labelname) {

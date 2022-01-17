@@ -162,9 +162,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.registerZoomFitButtonClick(this.handleZoomFitButtonClick, this);
     this.registerZoomResetButtonClick(this.handleZoomResetButtonClick, this);
     this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
-    if (this.registerNodeShapeClick !== undefined) {
+    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
+    if (this.registerNodeShapeDragStart !== undefined) {
       //no need in solutiuon pgae
-      this.registerNodeShapeClick(this.handleNodeShapeClick, this);
       this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
       this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
     }
@@ -882,7 +882,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.addEventHandlers();
   }
 
-  blueActiveElement() {
+  blurActiveElement() {
     (document.activeElement as any).blur();
   }
 
@@ -905,7 +905,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
-    this.blueActiveElement();
+    this.blurActiveElement();
     event.preventDefault();
     event.stopPropagation();
     this.unSelectComponents();
@@ -915,7 +915,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
-    this.blueActiveElement();
+    this.blurActiveElement();
     const event = d3_event;
     if (event.which !== 1) {
       return;
@@ -963,7 +963,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
-    this.blueActiveElement();
+    this.blurActiveElement();
     this.isOnFocus = false;
     this.startPoints.forEach(item => item.remove());
     this.startPoints.length = 0;
@@ -1005,7 +1005,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     if (event.which === 2) {
       const [x0, y0] = d3_mouse(this.graph0.node());
@@ -1082,7 +1082,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
@@ -1278,8 +1278,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
+    this.blurActiveElement();
     this.isOnFocus = true;
-    this.blueActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
@@ -1288,8 +1288,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
     this.formatDotSrc();
     this.onTextChange(this.dotGraph.dotSrc);
-
-
   }
 
   handleClickUpNode(d, i, nodes) {
@@ -1297,7 +1295,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       this.onFocus();
     }
     this.isOnFocus = true;
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
@@ -1360,7 +1358,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
   handleClickCircle(d, i, nodes) {
     this.onFocus();
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     // circle自己不处理 right click事件
     if (event.which === 3) {

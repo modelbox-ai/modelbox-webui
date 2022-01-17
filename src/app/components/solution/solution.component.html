@@ -15,10 +15,12 @@
         <as-split-area [size]="70">
           <div class="graph" id="graph">
             <app-graph [dotSrc]="dotSrc" [isResizing]="isResizing" [onInitialized]="handleGraphInitialized"
+              [onSelect]="handleGraphComponentSelect" 
               [registerGetSvg]="registerGetSvg" [registerZoomInButtonClick]="registerZoomInButtonClick"
               [registerZoomOutButtonClick]="registerZoomOutButtonClick"
               [registerZoomFitButtonClick]="registerZoomFitButtonClick"
               [registerZoomResetButtonClick]="registerZoomResetButtonClick"
+              [registerNodeShapeClick]="registerNodeShapeClick"
               [registerNodeAttributeChange]="registerNodeAttributeChange" [onTextChange]="handleTextChange"></app-graph>
           </div>
         </as-split-area>
@@ -33,4 +35,9 @@
       </as-split>
     </as-split-area>
   </as-split>
+</div>
+<div>
+  <app-attribute-panel style="z-index:100" class="half-drawer" *ngIf="currentComponent"
+  [config]="currentComponent">
+  </app-attribute-panel>
 </div>
