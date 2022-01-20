@@ -77,7 +77,7 @@ export class AttributePanelComponent {
     options: [],
     selected: {},
     init: () => {
-      if (this.unit){
+      if (this.unit) {
         this.unitType.options = this.unit.types.map(item => {
           return {
             id: item,
@@ -103,7 +103,7 @@ export class AttributePanelComponent {
     data: [],
     init: () => {
       this.unitOptions.data = [];
-      if (this.unit){
+      if (this.unit) {
         this.unit.options.forEach(item => {
           let formItem: any = {
             label: item.name.replace(/_/g, " "),
@@ -282,7 +282,7 @@ export class AttributePanelComponent {
   }
 
   handleTipText(context) {
-    if (context){
+    if (context) {
       let reg = /(?<=[@.*:])[\s\S]*?(?=@)/g;
       context.descryption = context.descryption.replace(/::/g, "->");
       let res = context.descryption.match(reg);

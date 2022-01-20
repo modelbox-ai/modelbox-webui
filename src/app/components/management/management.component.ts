@@ -281,7 +281,7 @@ export class ManagementComponent implements OnInit {
 
   // 创建任务调用接口
   createTaskResult(option) {
-    this.basicService.queryCreateTask(option)
+    this.basicService.createTask(option)
       .subscribe((data: any) => {
         if (data) {
           if (data.status === 201) {

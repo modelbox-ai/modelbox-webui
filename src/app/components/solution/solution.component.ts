@@ -6,6 +6,7 @@ import { ToastService } from 'ng-devui/toast';
 import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import Driver from 'driver.js';
 import { I18nService } from '@core/i18n.service';
+import { DataServiceService } from '@shared/services/data-service.service';
 
 @Component({
   selector: 'app-solution',
@@ -16,7 +17,7 @@ export class SolutionComponent implements OnInit {
   @ViewChild('textEditor') editor: TextEditorComponent;
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
-  name: string = localStorage.getItem('project.name') || '';
+  name: string = localStorage.getItem('projectSolution.name') || '';
   hasUndo = false;
   hasRedo = false;
   page = "example";
@@ -34,8 +35,8 @@ export class SolutionComponent implements OnInit {
   isResizing = false;
   focusedPane: any = '';
   selectedGraphComponents: any = [];
-  project: any = JSON.parse(localStorage.getItem('project')) || {};
-  projects: any = JSON.parse(localStorage.getItem('projects')) || {};
+  project: any = JSON.parse(localStorage.getItem('projectSolution')) || {};
+  projects: any = JSON.parse(localStorage.getItem('projectsSolution')) || {};
   desc: any;
   dotSrcLastChangeTime: any;
   currentComponent: any;
@@ -60,9 +61,11 @@ export class SolutionComponent implements OnInit {
     }
   });
 
-  constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService) { }
+  constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
+    private dataService: DataServiceService) { }
 
   ngOnInit(): void {
+    this.dataService.currentPage = "solution";
   }
 
   ngAfterViewInit(): void {
@@ -193,14 +196,14 @@ export class SolutionComponent implements OnInit {
   saveCurrentProject() {
     this.setPersistentState(
       {
-        project: this.getProjectJson()
+        projectSolution: this.getProjectJson()
       });
   }
 
   saveProjects() {
     this.saveCurrentProject();
     this.setPersistentState({
-      projects: {
+      projectsSolution: {
         ...this.projects,
       }
     });
@@ -297,7 +300,7 @@ export class SolutionComponent implements OnInit {
         }
       },
       {
-        element: '#graph0',
+        element: '#graph',
         popover: {
           title: '画布',
           description: '用来进行编排的主要界面，此处仅为示例。按着Ctrl+鼠标左键可以拖拽画布。当图中的任一结点处于选中状态时（蓝框），直接使用鼠标左键也可以拖拽画布。图的所有变化，将以graphviz dot形式显示在下方文本编辑框中。',
@@ -345,7 +348,7 @@ export class SolutionComponent implements OnInit {
     this.saveProjects();
     //run
     let option = this.createOptionFromProject(this.project);
-    this.basicService.queryCreateTask(option)
+    this.basicService.createTask(option)
       .subscribe((data: any) => {
         //提示任务运行状态
         this.toastService.open({
@@ -365,7 +368,6 @@ export class SolutionComponent implements OnInit {
 
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
-    //this.setEditorMarkers(components);
 
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
@@ -388,11 +390,6 @@ export class SolutionComponent implements OnInit {
             device = item.value
           }
         })
-        // if (!this.InsertPanels.isFlowUnitExist(
-        //   flowunit, device
-        // )) {
-        //   return;
-        // }
       } catch (error) {
         return;
       }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { HeaderMainComponent } from '../header-main/header-main.component';
+import { DataServiceService } from '@shared/services/data-service.service';
 
 @Component({
   selector: 'app-first',
@@ -9,9 +10,11 @@ import { HeaderMainComponent } from '../header-main/header-main.component';
 })
 export class FirstComponent implements OnInit {
 
-  constructor(private i18n: I18nService) { }
+  constructor(private i18n: I18nService,
+    private dataService: DataServiceService) { }
 
   ngOnInit(): void {
+    this.dataService.currentPage = "first";
   }
 
 }

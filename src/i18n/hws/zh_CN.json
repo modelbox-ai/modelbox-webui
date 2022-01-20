@@ -95,6 +95,7 @@
   "message.failToCreateTask": "任务创建失败",
   "message.failToQueryTask": "查询任务状态失败",
   "message.cannotConnectToSelf": "不能连接到自己",
+  "message.loadNodeFail": "加载Node信息失败",
   "tutorial.toolbar": "工具栏",
   "tutorial.undoredo": "回退/重做",
   "tutorial.zoominout": "放大/缩小",

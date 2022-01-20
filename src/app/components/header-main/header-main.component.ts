@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { Router } from '@angular/router';
 import { includes } from 'lodash';
@@ -24,7 +24,7 @@ export class HeaderMainComponent implements OnInit {
 
   click(tab: string): void {
     this.active;
-    if (this.active === tab){
+    if (this.active === tab) {
       location.reload();
     }
     if (tab === 'editor') {

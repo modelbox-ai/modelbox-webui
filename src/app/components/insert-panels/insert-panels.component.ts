@@ -135,15 +135,18 @@ export class InsertPanelsComponent implements OnInit {
       skip = false;
     }
 
+    let mnist = '/usr/local/share/modelbox/solution/flowunit/mnist';
+    let car_detection = '/usr/local/share/modelbox/solution/flowunit/car_detect';
+    dirs.push(mnist, car_detection);
+
     let params = {
       "skip-default": skip,
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
-
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
-      if (data == null) {
+      if (data.devices == null) {
         return;
       }
       data.flowunits.forEach(item => {

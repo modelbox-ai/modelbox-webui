@@ -68,7 +68,7 @@ export class ToolBarComponent {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
   defaultPerfDir: string = '/tmp/modelbox/perf/';
-  
+
   activeBasic: boolean = true;
   activePerf: boolean = false;
   layoutDirection: FormLayout = FormLayout.Horizontal;
@@ -346,10 +346,10 @@ export class ToolBarComponent {
     this.onNewButtonClick && this.onNewButtonClick();
   };
 
-  handleSwitchDirectionButtonClick  = event => {
+  handleSwitchDirectionButtonClick = event => {
     this.onSwitchDirectionButtonClick && this.onSwitchDirectionButtonClick();
   };
-  
+
   handleRunButtonClick = event => {
     this.onRunButtonClick && this.onRunButtonClick();
   };

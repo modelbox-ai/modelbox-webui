@@ -12,11 +12,11 @@
           [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick" [onRunButtonClick]="handleRunButtonClick"
           [onOpenTutorial]="handleTutorials">
         </app-tool-bar-solution>
-        <as-split-area [size]="70">
+        <as-split-area [size]="80">
           <div class="graph" id="graph">
             <app-graph [dotSrc]="dotSrc" [isResizing]="isResizing" [onInitialized]="handleGraphInitialized"
-              [onSelect]="handleGraphComponentSelect" 
-              [registerGetSvg]="registerGetSvg" [registerZoomInButtonClick]="registerZoomInButtonClick"
+              [onSelect]="handleGraphComponentSelect" [registerGetSvg]="registerGetSvg"
+              [registerZoomInButtonClick]="registerZoomInButtonClick"
               [registerZoomOutButtonClick]="registerZoomOutButtonClick"
               [registerZoomFitButtonClick]="registerZoomFitButtonClick"
               [registerZoomResetButtonClick]="registerZoomResetButtonClick"
@@ -24,7 +24,7 @@
               [registerNodeAttributeChange]="registerNodeAttributeChange" [onTextChange]="handleTextChange"></app-graph>
           </div>
         </as-split-area>
-        <as-split-area [size]="30" #textEditor id="textEditor">
+        <as-split-area [size]="20">
           <app-text-editor [dotSrc]="dotSrc" [onTextChange]="handleTextChange" [onFocus]="handleTextEditorFocus"
             [onBlur]="handleTextEditorBlur" [selectedGraphComponents]="selectedGraphComponents"
             [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
@@ -37,7 +37,6 @@
   </as-split>
 </div>
 <div>
-  <app-attribute-panel style="z-index:100" class="half-drawer" *ngIf="currentComponent"
-  [config]="currentComponent">
+  <app-attribute-panel style="z-index:100" class="half-drawer" *ngIf="currentComponent" [config]="currentComponent">
   </app-attribute-panel>
 </div>

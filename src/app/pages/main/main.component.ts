@@ -95,7 +95,7 @@ export class MainComponent {
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
-    private dataService: DataServiceService, 
+    private dataService: DataServiceService,
     private toastService: ToastService,) {
 
     const current_project = JSON.parse(localStorage.getItem('project'));
@@ -126,6 +126,7 @@ export class MainComponent {
     this.LoadSolutionData();
 
     this.reloadInsertComponent();
+    this.dataService.currentPage = "main";
   }
 
   ngAfterViewInit() {
@@ -735,7 +736,7 @@ export class MainComponent {
     this.saveProjects();
     //run
     let option = this.createOptionFromProject(this.project);
-    this.basicService.queryCreateTask(option)
+    this.basicService.createTask(option)
       .subscribe((data: any) => {
         //提示任务运行状态
         this.toastService.open({

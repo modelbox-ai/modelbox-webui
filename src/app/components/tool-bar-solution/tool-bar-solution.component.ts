@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { DataServiceService } from '@shared/services/data-service.service';
+import { first } from 'rxjs/operators';
 
 declare const require: any
 @Component({
@@ -11,7 +13,6 @@ declare const require: any
 export class ToolBarSolutionComponent implements OnInit {
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
-
   @Input() onUndoButtonClick: any;
   @Input() onRedoButtonClick: any;
   @Input() onZoomInButtonClick: any;
@@ -36,12 +37,14 @@ export class ToolBarSolutionComponent implements OnInit {
   runGraphSvg = require("../../../assets/run-graph.svg");
   dotSrc: string;
   solutionList = [];
-  currentOption = {};
+  currentOption = localStorage.getItem('currentSolution') || {};
   constructor(private i18n: I18nService,
-    private basicService: BasicServiceService) { }
+    private basicService: BasicServiceService,
+    private dataService: DataServiceService) { }
 
   ngOnInit(): void {
-    this.LoadSolutionData();
+    this.loadSolutionData();
+    this.loadSolutionFlowUnit();
     this.selectSolution("mnist.toml");
   }
 
@@ -89,7 +92,7 @@ export class ToolBarSolutionComponent implements OnInit {
     this.onOpenTutorial && this.onOpenTutorial();
   };
 
-  LoadSolutionData() {
+  loadSolutionData() {
     this.basicService.querySolutionList().subscribe(
       (data: any) => {
         data.solution_list.forEach((item) => {
@@ -101,13 +104,22 @@ export class ToolBarSolutionComponent implements OnInit {
           //use mnist.toml as default
           if (obj.name === "mnist.toml") {
             this.currentOption = obj.name;
-            this.basicService.currentSolution="mnist.toml";
+            this.basicService.currentSolution = "mnist.toml";
           }
         })
       },
       (error) => {
         return null;
       })
+  }
+
+  public loadSolutionFlowUnit() {
+
+    let mnist = '/usr/local/share/modelbox/solution/flowunit/mnist';
+    let car_detection = '/usr/local/share/modelbox/solution/flowunit/car_detect';
+    let dirs = [mnist, car_detection];
+    this.dataService.loadFlowUnit(null, dirs);
+
   }
 
   selectSolution(selectedName) {
@@ -121,15 +133,15 @@ export class ToolBarSolutionComponent implements OnInit {
       }
       this.sendToParent(this.dotSrc);
       this.basicService.currentSolution = selectedName;
-    }
-    )
+      localStorage.setItem('currentSolution', selectedName)
+    });
   }
 
   handleSelectChange(e) {
     this.selectSolution(e.name);
   }
 
-  sendToParent(e): void{
+  sendToParent(e): void {
     this.newItemEvent.emit(e);
   }
 

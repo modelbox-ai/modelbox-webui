@@ -2,27 +2,36 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import units from './units.json';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { ToastService } from 'ng-devui/toast';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataServiceService {
   nodeShapeCategories: any = [];
+  currentPage: any = "";
   constructor(private sanitized: DomSanitizer,
-    private basicService: BasicServiceService) {
+    private basicService: BasicServiceService,
+    private toastService: ToastService) {
     this.nodeShapeCategories.length = 0;
   }
 
   // 使用 unit name 及 type获取 对应的 unit
   getUnit(name, type) {
     let unit;
-    if (this.nodeShapeCategories.length === 0){
+    if (this.nodeShapeCategories.length === 0) {
       this.loadFlowUnit(null, []);
     }
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
-        if (it.name === name && it.type === type) {
+        if (it.name === name) {
           unit = it;
+          if (it.type !== type && it.types.indexOf(type) === -1) {
+            this.toastService.open({
+              value: [{ severity: 'warn', content: unit.name + "顶点类型错误。请选择带有GPU的设备。" }],
+              life: 3000
+            });
+          }
         }
       });
     });
@@ -37,16 +46,14 @@ export class DataServiceService {
     if (skip === "") {
       skip = false;
     }
-
     let params = {
       "skip-default": skip,
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
-
       let nodeShapeCategories = [];
       this.nodeShapeCategories = [];
-      if (data == null) {
+      if (data.devices == null) {
         return;
       }
       data.flowunits.forEach(item => {

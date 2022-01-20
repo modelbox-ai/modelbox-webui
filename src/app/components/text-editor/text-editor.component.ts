@@ -71,7 +71,7 @@ export class TextEditorComponent {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    
+
     const { error } = changes;
     if (error && !error.firstChange) {
       let annotations = null;
