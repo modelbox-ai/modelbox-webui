@@ -75,6 +75,7 @@ export class MainComponent {
   resetUndoAtNextTextChange: any;
   project: any = JSON.parse(localStorage.getItem('project')) || {};
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
+  projectName: string = "defaultProject";
   state: any;
   solutionList: any = [];
   currentComponent: any;
@@ -124,9 +125,9 @@ export class MainComponent {
 
   ngOnInit(): void {
     this.LoadSolutionData();
-
     this.reloadInsertComponent();
     this.dataService.currentPage = "main";
+    //加载既存project
   }
 
   ngAfterViewInit() {

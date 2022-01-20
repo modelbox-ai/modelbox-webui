@@ -54,6 +54,7 @@
 
     .tool-bar-left {
         float      : left;
+        width      : 30%;
         padding    : 8px 8px 8px 24px;
         user-select: none;
 
@@ -72,8 +73,10 @@
     }
 
     .tool-bar-right {
-        float  : right;
-        padding: 8px;
+        float     : right;
+        padding   : 8px;
+        width     : 40%;
+        text-align: right;
 
         & d-button {
             margin        : 0 4px 0 4px;
@@ -87,5 +90,25 @@
             border-radius : 2px;
             border-radius : 2px;
         }
+    }
+
+    .tool-bar-mid {
+        float: right;
+    }
+    .align-origin {
+        border      : 1px dashed #000;
+        min-width   : 200px;
+        min-height  : 50px;
+        line-height : 50px;
+        display     : inline-block;
+        padding-left: 10px;
+    }
+
+    .devui-dropdown-menu {
+        overflow-y: auto;
+    }
+
+    .devui-dropdown-default {
+        margin-left: 4px;
     }
 }

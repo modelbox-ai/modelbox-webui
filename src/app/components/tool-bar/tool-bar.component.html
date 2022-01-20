@@ -37,45 +37,110 @@
             <img src={{switchSvg}} />
         </d-button>
         <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
-          (click)="handleRunButtonClick($event)">
-          <img src={{runGraphSvg}} />
+            (click)="handleRunButtonClick($event)">
+            <img src={{runGraphSvg}} />
         </d-button>
     </div>
+
     <div class="tool-bar-right">
-        <span style="margin-right:10px;">
-            {{'toolBar.nameLabel' | translate}}{{oldName || '--'}}
-        </span>
-        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
-            {{'toolBar.newButton' | translate}}
-        </button>
-        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
-            {{'toolBar.openProjectButton' | translate}}
-        </button>
-        <button id="new" (click)="handleNewButtonClick($event)" class="tool-bar-button">
-            {{'toolBar.newFlowunitButton' | translate}}
-        </button>
-        <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
-            {{'toolBar.graphSettingButton' | translate}}
-        </button>
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
+            appendToBody [alignOrigin]="projectRef"
+            [appendToBodyDirections]="['centerDown', 'centerUp']">
+            <span dDropDownToggle>
+                <button class="tool-bar-button">
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{'toolBar.project' | translate}}&nbsp;&nbsp;&nbsp;&nbsp;
+                </button>
+            </span>
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="createProject" (click)="handleNewProjectButtonClick($event)">
+                        {{'toolBar.newButton' | translate}}
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="createProject" (click)="handleOpenProjectButtonClick($event)">
+                        {{'toolBar.openProjectButton' | translate}}
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
+                        {{'toolBar.saveAsButton' | translate}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
+            appendToBody [alignOrigin]="flowunitRef"
+            [appendToBodyDirections]="['centerDown', 'centerUp']">
+            <span dDropDownToggle>
+                <button class="tool-bar-button">
+                    {{'toolBar.flowunit' | translate}}
+                </button>
+            </span>
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="new" (click)="handleNewFlowunitButtonClick($event)">
+                        {{'toolBar.newFlowunitButton' | translate}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
+            appendToBody [alignOrigin]="graphRef"
+            [appendToBodyDirections]="['centerDown', 'centerUp']">
+            <span dDropDownToggle>
+                <button class="tool-bar-button">
+                    &nbsp;&nbsp;{{'toolBar.graph' | translate}}&nbsp;&nbsp;
+                </button>
+            </span>
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="new-graph" (click)="handleNewButtonClick($event)">
+                        {{'toolBar.newGraphButton' | translate}}
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="open-graph-setting"
+                        (click)="showGraphSettingDialog(graphSetting)">
+                        {{'toolBar.graphSettingButton' | translate}}
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="open-select" (click)="showSelectDialog(graphSelect)">
+                        {{'toolBar.selectDialogButton' | translate}}
+                    </a>
+                </li>
+            </ul>
+        </div>
         <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
-            {{'toolBar.saveAsButton' | translate}}
-        </button>
-        <button id="open-select" (click)="showSelectDialog(graphSelect)" class="tool-bar-button">
-            {{'toolBar.selectDialogButton' | translate}}
+            &nbsp;&nbsp;&nbsp;&nbsp;{{'toolBar.saveAsButton' | translate}}&nbsp;&nbsp;&nbsp;&nbsp;
         </button>
         <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
             {{'toolBar.solutionDialogButton' | translate}}
         </button>
     </div>
+
+    <div class="tool-bar-mid">
+        <span style="font-size:28px; font-weight:500;">
+            {{projectName}}
+        </span>
+
+        <span style="margin-left:24px;">
+            {{'toolBar.nameLabel' | translate}}{{oldName || '--'}}
+        </span>
+    </div>
 </div>
 
 <ng-template #graphSetting id="graphSetting">
     <d-layout class="basic-usage">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-            <li #tab1 [ngbNavItem]="1" style="display: inline-block;" class="nav-tab nav-active"
-                (click)="tabSwitch($event, 'tab1')">
-                <a ngbNavLink>{{'toolBar.setting.basic'| translate}}</a>
-                <ng-template ngbNavContent>
+        <d-tabs [(activeTab)]="tabActiveId" type="slider" customWidth="100px">
+            <d-tab id="tab1">
+                <ng-template dTabTitle>
+                    {{'toolBar.setting.basic'| translate}}
+                </ng-template>
+                <ng-template dTabContent>
                     <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
                         <d-form-item>
                             <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}</d-form-label>
@@ -107,11 +172,13 @@
                         </d-form-item>
                     </form>
                 </ng-template>
-            </li>
-            <li #tab2 [ngbNavItem]="2" style="display: inline-block;" class="nav-tab"
-                (click)="tabSwitch($event, 'tab2')">
-                <a ngbNavLink>{{'toolBar.setting.perf'| translate}}</a>
-                <ng-template ngbNavContent>
+            </d-tab>
+
+            <d-tab id="tab2">
+                <ng-template dTabTitle>
+                    {{'toolBar.setting.perf'| translate}}
+                </ng-template>
+                <ng-template dTabContent>
                     <form dForm [layout]="layoutDirection" ngForm>
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.perf.enable' | translate}}</d-form-label>
@@ -145,10 +212,8 @@
                         </d-form-item>
                     </form>
                 </ng-template>
-            </li>
-        </ul>
-
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </d-tab>
+        </d-tabs>
     </d-layout>
 </ng-template>
 

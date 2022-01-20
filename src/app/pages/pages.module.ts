@@ -34,6 +34,7 @@ import { ModalSaveAsComponent } from '../components/modal-save-as/modal-save-as.
 import { DrawerModule } from 'ng-devui/drawer';
 import { NgbdTooltipCustomclass } from '../components/tooltip/tooltip-customclass';
 import { PopoverModule } from 'ng-devui/popover';
+import { DropDownModule } from 'ng-devui/dropdown';
 import { BrowserModule } from '@angular/platform-browser';
 // DevUI部分组件依赖angular动画，需要引入animations模块
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,6 +53,7 @@ const COMPONENTS_NOROUNT = [];
     AceModule,
     ButtonModule,
     PopoverModule,
+    DropDownModule,
     TabsModule,
     BadgeModule,
     SplitterModule,

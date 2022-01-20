@@ -36,6 +36,11 @@ export class ToolBarComponent {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   @ViewChild('tab1') tab1: ElementRef;
   @ViewChild('tab2') tab2: ElementRef;
+  @ViewChild('project') projectRef: ElementRef;
+  @ViewChild('flowunit') flowunitRef: ElementRef;
+  @ViewChild('graph') graphRef: ElementRef;
+
+
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() projects: any = {};
@@ -55,6 +60,7 @@ export class ToolBarComponent {
   @Input() showSolutionDialog: any;
   @Input() solutionList: any;
   @Input() onRunButtonClick: any;
+  @Input() projectName: any;
 
   @Output() projectsEmmiter = new EventEmitter()
   backSvg = require("../../../assets/undo.svg");
@@ -200,11 +206,12 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
+  tabActiveId: string = 'tab1';
+
   constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService, private domSanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
-
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
       this.formData.name = this.oldName;
@@ -285,6 +292,9 @@ export class ToolBarComponent {
       return item.name != row.name;
     })
     this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
+    for (let e in this.graphSelectTableDataForDisplay) {
+      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
+    }
     this.projectsEmmiter.emit(this.projects);
   }
 
@@ -353,6 +363,18 @@ export class ToolBarComponent {
   handleRunButtonClick = event => {
     this.onRunButtonClick && this.onRunButtonClick();
   };
+
+  handleNewProjectButtonClick(e) {
+
+  }
+
+  handleOpenProjectButtonClick(e) {
+
+  }
+
+  handleNewFlowunitButtonClick(e) {
+
+  }
 
 
   toggleTip(tooltip, context: any) {
