@@ -43,22 +43,23 @@
     </div>
 
     <div class="tool-bar-right">
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
-            appendToBody [alignOrigin]="projectRef"
-            [appendToBodyDirections]="['centerDown', 'centerUp']">
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+            [alignOrigin]="projectRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
-                    &nbsp;&nbsp;&nbsp;&nbsp;{{'toolBar.project' | translate}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {{'toolBar.project' | translate}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
                 </button>
             </span>
             <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
                 <li role="menuitem">
-                    <a class="devui-dropdown-item" id="createProject" (click)="handleNewProjectButtonClick($event)">
+                    <a class="devui-dropdown-item" id="createProject" (click)="showCreateProjectDialog(createProject)">
                         {{'toolBar.newButton' | translate}}
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a class="devui-dropdown-item" id="createProject" (click)="handleOpenProjectButtonClick($event)">
+                    <a class="devui-dropdown-item" id="openProject" (click)="handleOpenProjectButtonClick($event)">
                         {{'toolBar.openProjectButton' | translate}}
                     </a>
                 </li>
@@ -70,9 +71,8 @@
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
-            appendToBody [alignOrigin]="flowunitRef"
-            [appendToBodyDirections]="['centerDown', 'centerUp']">
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+            [alignOrigin]="flowunitRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
                     {{'toolBar.flowunit' | translate}}
@@ -80,19 +80,20 @@
             </span>
             <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
                 <li role="menuitem">
-                    <a class="devui-dropdown-item" id="new" (click)="handleNewFlowunitButtonClick($event)">
+                    <a class="devui-dropdown-item" id="new" (click)="showCreateFlowunitDialog(createFlowunit)">
                         {{'toolBar.newFlowunitButton' | translate}}
                     </a>
                 </li>
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'"
-            appendToBody [alignOrigin]="graphRef"
-            [appendToBodyDirections]="['centerDown', 'centerUp']">
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+            [alignOrigin]="graphRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
-                    &nbsp;&nbsp;{{'toolBar.graph' | translate}}&nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    {{'toolBar.graph' | translate}}
+                    &nbsp;&nbsp;
                 </button>
             </span>
             <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
@@ -115,7 +116,9 @@
             </ul>
         </div>
         <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{'toolBar.saveAsButton' | translate}}&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            {{'toolBar.saveAsButton' | translate}}
+            &nbsp;&nbsp;&nbsp;&nbsp;
         </button>
         <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
             {{'toolBar.solutionDialogButton' | translate}}
@@ -133,7 +136,210 @@
     </div>
 </div>
 
-<ng-template #graphSetting id="graphSetting">
+<ng-template #createProject id="createProject">
+    <d-layout class="basic-usage">
+        <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.projectName' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <div>
+                        <input dTextInput name="projectName" [(ngModel)]="formDataCreateProject.projectName" />
+                    </div>
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.projectPath' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path" />
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.programLanguage' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-radio-group [name]="'programLanguage'" [values]="valuesProgramLanguage"
+                        [(ngModel)]="formDataCreateProject.programLanguage"
+                        (change)="programLanguageValueChange($event)" [direction]="'row'">
+                    </d-radio-group>
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label>
+                    {{'toolBar.setting.desc' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <textarea dTextarea name="desc" [(ngModel)]="formDataCreateProject.desc"></textarea>
+                </d-form-control>
+            </d-form-item>
+        </form>
+    </d-layout>
+</ng-template>
+
+<ng-template #openProject id="openProject">
+    openProject
+</ng-template>
+
+<ng-template #createFlowunit id="createFlowunit">
+
+    <d-layout class="basic-usage">
+        <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.flowunitName' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <div>
+                        <input dTextInput name="flowunitName" [(ngModel)]="formDataCreateFlowunit.flowunitName" />
+                    </div>
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.flowunitPath' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" />
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label [required]="true">{{'toolBar.modal.portOption' | translate}}</d-form-label>
+                <d-form-control>
+                    <div style="display:flex; justify-content:space-between">
+                        <div style="width:120px">
+                            <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
+                                [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="portInfo.portType"
+                                [placeholder]="'toolBar.modal.inputOutput' | translate" [options]="optionsInOut">
+                            </d-select>
+                        </div>
+
+                        <div style="width:120px">
+                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
+                                [(ngModel)]="portInfo.dataType" [ngModelOptions]="{ standalone: true }"
+                                [filterKey]="'id'" [placeholder]="'toolBar.modal.dataType' | translate"
+                                [options]="optionsDataType" [isSearch]="true">
+                                <ng-template let-option="option">
+                                    {{ option }}
+                                </ng-template>
+                            </d-select>
+                        </div>
+
+                        <div style="width:120px">
+                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
+                                [(ngModel)]="portInfo.deviceType" [ngModelOptions]="{ standalone: true }"
+                                [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
+                            </d-select>
+                        </div>
+
+                        <button class="tool-bar-button" (click)="handleAddPortInfoClick()">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {{'toolBar.modal.add' | translate}}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </button>
+
+                    </div>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-control>
+                    <d-data-table [dataSource]="formDataCreateFlowunit.portInfos" [scrollable]="true"  maxHeight="200px" [borderType]="'Bordered'">
+                        <thead dTableHead>
+                            <tr dTableRow>
+                                <th dHeadCell>Nb.</th>
+                                <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">{{ colOption.header }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dTableBody>
+                            <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+                                <tr dTableRow>
+                                    <td dTableCell>
+                                        {{ rowIndex + 1 }}
+                                    </td>
+                                    <td dTableCell>
+                                        {{rowItem.portType}}
+                                    </td>
+                                    <td dTableCell>
+                                        {{rowItem.dataType}}
+                                    </td>
+                                    <td dTableCell>
+                                        {{rowItem.deviceType}}
+                                    </td>
+                                    <td dTableCell>
+                                        <a class="delete-button" (click)="deletePort(rowItem, rowIndex)">
+                                            {{'toolBar.deleteDialogButton' | translate}}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </d-data-table>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.programLanguage' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-radio-group [name]="'programLanguage2'" [values]="valuesProgramLanguage"
+                        [(ngModel)]="formDataCreateFlowunit.programLanguage"
+                        (change)="programLanguageValueChange2($event)" [direction]="'row'">
+                    </d-radio-group>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.flowUnitType' | translate}}
+                </d-form-label>
+                <d-form-control style="height:32px">
+                    <d-tabs [(activeTab)]="formDataCreateFlowunit.flowunitType" type="slider">
+                        <d-tab *ngFor="let item of flowunitTypes" [id]="item.id">
+                            <ng-template dTabTitle>
+                                {{ item.title }}
+                            </ng-template>
+                        </d-tab>
+                    </d-tabs>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.flowUnitGroup' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-select [options]="flowunitGroupOptions" [customViewTemplate]="addCustomeGroup"
+                        [(ngModel)]="formDataCreateFlowunit.title" [ngModelOptions]="{standalone: true}">
+                    </d-select>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-label>
+                    {{'toolBar.setting.desc' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <textarea dTextarea name=" desc" [(ngModel)]="formDataCreateFlowunit.desc"
+                        [ngModelOptions]="{standalone: true}"></textarea>
+                </d-form-control>
+            </d-form-item>
+        </form>
+    </d-layout>
+</ng-template>
+
+<ng-template #addCustomeGroup let-selectComponent>
+    <div>
+
+    </div>
+</ng-template>
+
+<ng-template #graphSetting id=" graphSetting">
     <d-layout class="basic-usage">
         <d-tabs [(activeTab)]="tabActiveId" type="slider" customWidth="100px">
             <d-tab id="tab1">
@@ -143,7 +349,8 @@
                 <ng-template dTabContent>
                     <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
                         <d-form-item>
-                            <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}</d-form-label>
+                            <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <div>
                                     <input type="text" [value]="formData.name"
@@ -158,7 +365,8 @@
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.skipDefault' | translate}}</d-form-label>
+                            <d-form-label>{{'toolBar.setting.skipDefault' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.skipDefault" name="skipDefault"
                                     (change)="onCheckboxSkipDefaultChange($event)"> </d-checkbox>
@@ -181,24 +389,29 @@
                 <ng-template dTabContent>
                     <form dForm [layout]="layoutDirection" ngForm>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.enable' | translate}}</d-form-label>
+                            <d-form-label>{{'toolBar.setting.perf.enable' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.perfEnable" name="perfEnable"
                                     (change)="onCheckboxPerfEnableChange($event)"> </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.trace.enable' | translate}}</d-form-label>
+                            <d-form-label>{{'toolBar.setting.perf.trace.enable' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.perfTraceEnable" name="perfTraceEnable"
-                                    (change)="onCheckboxPerfTraceEnableChange($event)"> </d-checkbox>
+                                    (change)="onCheckboxPerfTraceEnableChange($event)">
+                                </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.session.enable' | translate}}</d-form-label>
+                            <d-form-label>{{'toolBar.setting.perf.session.enable' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.perfSessionEnable" name="perfSessionEnable"
-                                    (change)="onCheckboxPerfSessionEnableChange($event)"> </d-checkbox>
+                                    (change)="onCheckboxPerfSessionEnableChange($event)">
+                                </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>

@@ -54,10 +54,13 @@ export class ToolBarComponent {
   @Input() onNewButtonClick: any;
   @Input() onSwitchButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
+  @Input() onCreateProjectButtonClick: any;
   @Input() oldName: string;
   @Input() showGraphSettingDialog: any;
   @Input() showSelectDialog: any;
   @Input() showSolutionDialog: any;
+  @Input() showCreateProjectDialog: any;
+  @Input() showCreateFlowunitDialog: any;
   @Input() solutionList: any;
   @Input() onRunButtonClick: any;
   @Input() projectName: any;
@@ -88,6 +91,11 @@ export class ToolBarComponent {
   textareaDemoConfig: any;
   disabled: false;
   switchCount = 1;
+  valueInOut: any;
+  valueDataType: any;
+  valueDeviceType: any;
+
+  valuesProgramLanguage = ['Python', 'C++'];
 
   dataTableOptions = {
     columns: [
@@ -206,7 +214,83 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  tabActiveId: string = 'tab1';
+  formDataCreateProject = {
+    projectName: 'defaultProject',
+    desc: '',
+    programLanguage: 'Python',
+    path: '/home/modelbox_projects/defaultProject',
+  };
+
+  formDataCreateFlowunit = {
+    flowunitName: 'defaultFlowunit',
+    desc: '',
+    programLanguage: 'Python',
+    path: '/home/modelbox_projects/defaultProject/src/defaultFlowunit',
+    portInfos: [],
+    flowunitType: 'NORMAL',
+    title: 'Generic'
+  };
+
+  portInfo: any = {
+    portType: '',
+    dataType: '',
+    deviceType: '',
+  }
+
+  optionsInOut = ['input', 'output'];
+  optionsDataType = ['Number', 'String', 'Boolean', 'Array', 'Object']; //flowunit type
+  optionsDeviceType = ['cpu', 'cuda'];
+  flowunitGroupOptions = ['Image', 'Input', 'Output', 'Video', 'Generic']
+
+  portHeaderOptions = {
+    columns: [
+      {
+        field: 'inputOutput',
+        header: this.i18n.getById("toolBar.modal.inputOutput"),
+        fieldType: 'text'
+      },
+      {
+        field: 'dataType',
+        header: this.i18n.getById("toolBar.modal.dataType"),
+        fieldType: 'text'
+      },
+      {
+        field: 'deviceType',
+        header: this.i18n.getById("toolBar.modal.deviceType"),
+        fieldType: 'text'
+      },
+      {
+        field: 'operation',
+        header: this.i18n.getById("toolBar.select.operation"),
+        fieldType: 'customized'
+      }
+    ]
+  };
+
+
+  flowunitTypes = [
+    {
+      id: 'NORMAL',
+      title: 'NORMAL'
+    },
+    {
+      id: 'STREAM',
+      title: 'STREAM'
+    },
+    {
+      id: 'IF_ELSE',
+      title: 'IF_ELSE'
+    },
+    {
+      id: 'EXPAND',
+      title: 'EXPAND'
+    },
+    {
+      id: 'COLLAPSE',
+      title: 'COLLAPSE'
+    }
+  ];
+  tabActiveId: string = "tab1";
 
   constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService, private domSanitizer: DomSanitizer) {
   }
@@ -245,13 +329,12 @@ export class ToolBarComponent {
     })
   }
 
-  tabSwitch(e, current) {
-    e.currentTarget.classList.add("nav-active");
-    if (current === "tab1") {
-      this.tab2.nativeElement.classList.remove("nav-active");
-    } else if (current === "tab2") {
-      this.tab1.nativeElement.classList.remove("nav-active");
-    }
+  programLanguageValueChange(value) {
+    this.formDataCreateProject.programLanguage = value;
+  }
+
+  programLanguageValueChange2(value) {
+    this.formDataCreateFlowunit.programLanguage = value;
   }
 
   transformDisplayData(data) {
@@ -284,6 +367,16 @@ export class ToolBarComponent {
       }
       return obj;
     })
+  }
+
+  handleAddPortInfoClick(): void {
+    if (this.portInfo != null) {
+      this.formDataCreateFlowunit.portInfos.push(this.portInfo);
+    }
+  }
+
+  deletePort(row, rowIndex) {
+    this.formDataCreateFlowunit.portInfos.splice(rowIndex, 1);
   }
 
   deleteData(row, rowIndex) {
@@ -364,9 +457,9 @@ export class ToolBarComponent {
     this.onRunButtonClick && this.onRunButtonClick();
   };
 
-  handleNewProjectButtonClick(e) {
-
-  }
+  handleCreateProjectButtonClick = event => {
+    this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
+  };
 
   handleOpenProjectButtonClick(e) {
 

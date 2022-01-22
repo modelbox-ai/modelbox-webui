@@ -207,6 +207,10 @@ export class MainComponent {
     return projectdata;
   }
 
+  createProject(param){
+    this.basicService.createProject(param);
+  }
+
   saveCurrentProject() {
     this.setPersistentState(
       {
@@ -599,6 +603,76 @@ export class MainComponent {
     this.saveCurrentProject();
     this.reloadInsertComponent();
   }
+
+  showCreateProjectDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createProject',
+      width: '700px',
+      title: this.i18n.getById('toolBar.newButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.createProject(this.toolBar.formDataCreateProject);
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
+  showCreateFlowunitDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createFlowunit',
+      width: '700px',
+      title: this.i18n.getById('toolBar.newButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.createFlowunit(this.toolBar.formDataCreateFlowunit);
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+  createFlowunit(param) {
+    this.basicService.createFlowunit(param);
+  }
+
 
   showGraphSettingDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
