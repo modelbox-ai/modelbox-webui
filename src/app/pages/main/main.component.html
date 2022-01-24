@@ -22,13 +22,13 @@
               [onZoomFitButtonClick]="handleZoomFitButtonClick" [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
               [onNewButtonClick]="handleNewClick.bind(this)" [onRunButtonClick]="handleRunButtonClick"
               [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
-              [onCreateProjectButtonClick]="createProject"
-              [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
+              [onCreateProjectButtonClick]="createProject" [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
               [showSelectDialog]="showSelectDialog.bind(this)" [showSolutionDialog]="showSolutionDialog.bind(this)"
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
-              [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)"
-              [projects]="projects" [oldName]="name" (projectsEmmiter)="getToolBarProjectsChange($event)"
-              [solutionList]="solutionList" [projectName]="projectName">
+              [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
+              [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [projects]="projects" [oldName]="name"
+              (projectsEmmiter)="getToolBarProjectsChange($event)" [solutionList]="solutionList"
+              [projectName]="projectName">
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">

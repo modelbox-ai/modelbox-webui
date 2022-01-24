@@ -637,6 +637,39 @@ export class MainComponent {
     });
   }
 
+  showOpenProjectButtonDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createProject',
+      width: '700px',
+      title: this.i18n.getById('toolBar.openProjectButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          //this.openProject(this.toolBar.formDataCreateProject);
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
   showCreateFlowunitDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
       id: 'createFlowunit',

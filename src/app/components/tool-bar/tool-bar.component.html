@@ -59,12 +59,12 @@
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a class="devui-dropdown-item" id="openProject" (click)="handleOpenProjectButtonClick($event)">
+                    <a class="devui-dropdown-item" id="openProject" (click)="showOpenProjectButtonDialog(openProject)">
                         {{'toolBar.openProjectButton' | translate}}
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
+                    <a class="devui-dropdown-item" id="save-as" (click)="saveAllProject()">
                         {{'toolBar.saveAsButton' | translate}}
                     </a>
                 </li>
@@ -181,7 +181,21 @@
 </ng-template>
 
 <ng-template #openProject id="openProject">
-    openProject
+    <d-layout class="basic-usage">
+        <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.projectPath' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <div style="display: flex; justify-content:center">
+                        <input style="width:80%" dTextInput name="path" [(ngModel)]="openProjectPath" />
+                        <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"></d-button>
+                    </div>
+                </d-form-control>
+            </d-form-item>
+        </form>
+    </d-layout>
 </ng-template>
 
 <ng-template #createFlowunit id="createFlowunit">
@@ -247,7 +261,8 @@
 
             <d-form-item>
                 <d-form-control>
-                    <d-data-table [dataSource]="formDataCreateFlowunit.portInfos" [scrollable]="true"  maxHeight="200px" [borderType]="'Bordered'">
+                    <d-data-table [dataSource]="formDataCreateFlowunit.portInfos" [scrollable]="true" maxHeight="200px"
+                        [borderType]="'Bordered'">
                         <thead dTableHead>
                             <tr dTableRow>
                                 <th dHeadCell>Nb.</th>

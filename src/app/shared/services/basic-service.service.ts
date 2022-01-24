@@ -20,7 +20,7 @@ export class BasicServiceService {
     this.messageSource.next(sign);
   }
 
-  private subject = new Subject < any > ();
+  private subject = new Subject<any>();
   publish(value: any, err: any) {
     if (value !== undefined) {
       this.subject.next(value);
@@ -29,11 +29,11 @@ export class BasicServiceService {
       this.subject.error(err);
     }
   }
- 
+
   subscribe(handler: {
-   next: (value) => void,
-   error: (err) => void,
-   complete: () => void
+    next: (value) => void,
+    error: (err) => void,
+    complete: () => void
   }) {
     this.subject.asObservable().subscribe(handler);
   }
@@ -51,6 +51,10 @@ export class BasicServiceService {
     return this.http.get(this.serviceRouter + '/console/rest/taskListData' + paramData).pipe(timeout(30000));
   }
 
+  loadTreeByPath(paramData?: string): Observable<any> {
+    return this.http.get(this.serviceRouter + '/editor/directory' + paramData).pipe(timeout(30000));
+  }
+
   // 创建任务
   createTask(paramData?: any): Observable<any> {
     return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData).pipe(timeout(30000));
@@ -62,6 +66,10 @@ export class BasicServiceService {
 
   createFlowunit(paramData?: any): Observable<any> {
     return this.http.put(this.serviceRouter + '/editor/flowunit', paramData).pipe(timeout(30000));
+  }
+
+  saveAllProject(paramData?: any): Observable<any> {
+    return this.http.put(this.serviceRouter + '/editor/project', paramData).pipe(timeout(30000));
   }
 
   // 查询任务列表

@@ -24,6 +24,7 @@ import { ModalSaveAsComponent } from '../modal-save-as/modal-save-as.component';
 import { FormLayout } from 'ng-devui/form';
 import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { ITreeItem, TreeComponent, TreeNode } from 'ng-devui/tree';
 
 declare const require: any
 @Component({
@@ -39,7 +40,7 @@ export class ToolBarComponent {
   @ViewChild('project') projectRef: ElementRef;
   @ViewChild('flowunit') flowunitRef: ElementRef;
   @ViewChild('graph') graphRef: ElementRef;
-
+  @ViewChild('basicTree', { static: true }) basicTree: TreeComponent;
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -60,6 +61,7 @@ export class ToolBarComponent {
   @Input() showSelectDialog: any;
   @Input() showSolutionDialog: any;
   @Input() showCreateProjectDialog: any;
+  @Input() showOpenProjectButtonDialog: any;
   @Input() showCreateFlowunitDialog: any;
   @Input() solutionList: any;
   @Input() onRunButtonClick: any;
@@ -291,6 +293,7 @@ export class ToolBarComponent {
     }
   ];
   tabActiveId: string = "tab1";
+  openProjectPath: string = "/home/modelbox_projects/defaultProject";
 
   constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService, private domSanitizer: DomSanitizer) {
   }
@@ -415,6 +418,10 @@ export class ToolBarComponent {
       this.activeBasic = false;
       this.activePerf = true;
     }
+  }
+
+  saveAllProject() {
+    this.basicService.saveAllProject();
   }
 
   handleUndoButtonClick = event => {
