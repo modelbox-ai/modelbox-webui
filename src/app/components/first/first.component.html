@@ -1,10 +1,10 @@
 <app-header-main #header></app-header-main>
 <div class="banner">
   <div class="title">
-    ModelBox AI推理平台
+    {{ 'first.title' | translate}}
   </div>
   <div class="para">
-    ModelBox是一套专门为AI开发者提供的易于使用，高效，高扩展的AI推理开发框架，它可以帮助AI开发者快速完成从模型文件到AI推理应用的开发和上线工作，降低AI算法落地门槛，同时带来AI应用的高稳定性和极致性能。
+    {{ 'first.introduction' | translate}}
   </div>
 </div>
 <div class="sp-panel">
@@ -12,33 +12,39 @@
     <div style="display: flex;align-items: center;justify-content: space-between;">
       <div class="first-icon icon-example" (click)="header.goExample()">
       </div>
-      <div class="title-ch-panel">{{ 'example' | translate}}</div>
+      <div class="title-ch-panel">
+        {{ 'example' | translate}}
+      </div>
     </div>
     <hr class="hr-dashed">
     <div class="para-ch-panel">
-      示例页面将展示一些例如mnsit的在ModelBox中实现的例子，让用户可以直观地感受到使用ModelBox进行推理的便捷高效。
+      {{ 'first.introductionExample' | translate}}
     </div>
   </div>
   <div class="ch-panel border">
     <div style="display: flex;align-items: center;justify-content: space-between;">
       <div class="first-icon icon-arrange" (click)="header.goMain()">
       </div>
-      <div class="title-ch-panel">{{ 'arrange' | translate}}</div>
+      <div class="title-ch-panel">
+        {{ 'arrange' | translate}}
+      </div>
     </div>
     <hr class="hr-dashed">
     <div class="para-ch-panel">
-      编排页面将提供开发者可视化编排推理的界面，使得开发者只需关注于具体的功能单元实现。
+      {{ 'first.introductionGraph' | translate}}
     </div>
   </div>
   <div class="ch-panel border">
     <div style="display: flex;align-items: center;justify-content: space-between;">
       <div class="first-icon icon-task" (click)="header.goTask()">
       </div>
-      <div class="title-ch-panel">{{ 'task' | translate}}</div>
+      <div class="title-ch-panel">
+        {{ 'task' | translate}}
+      </div>
     </div>
     <hr class="hr-dashed">
     <div class="para-ch-panel">
-      任务页面将显示所有正在运行的任务状态。
+      {{ 'first.introductionTask' | translate}}
     </div>
   </div>
 </div>

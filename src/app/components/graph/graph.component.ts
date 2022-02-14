@@ -162,9 +162,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.registerZoomFitButtonClick(this.handleZoomFitButtonClick, this);
     this.registerZoomResetButtonClick(this.handleZoomResetButtonClick, this);
     this.registerNodeShapeClick(this.handleNodeShapeClick, this);
+    this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
     if (this.dataService.currentPage === "main") {
       //no need in solutiuon pgae
-      this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
       this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
       this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
     }

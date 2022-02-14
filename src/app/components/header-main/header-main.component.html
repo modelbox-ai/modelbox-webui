@@ -6,14 +6,14 @@
     <div style="position: fixed;top:8px;left:40%;">
         <ul class="tabs">
             <li>
-                <a #firstPage id="firstPage" class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active===''}"
-                    oncontext="return false" (click)="click('')">
+                <a #firstPage id="firstPage" class="nav-link" href=" javascript:void(0);"
+                    [ngClass]="{'tab-active': active===''}" oncontext="return false" (click)="click('')">
                     {{ 'firstPage' | translate}}
                 </a>
             </li>
             <li>
-                <a #exampleDisplay id="exampleDisplay" class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active==='example'}"
-                    oncontext="return false" (click)="click('example')">
+                <a #exampleDisplay id="exampleDisplay" class="nav-link" href=" javascript:void(0);"
+                    [ngClass]="{'tab-active': active==='example'}" oncontext="return false" (click)="click('example')">
                     {{ 'exampleDisplay' | translate}}
                 </a>
             </li>

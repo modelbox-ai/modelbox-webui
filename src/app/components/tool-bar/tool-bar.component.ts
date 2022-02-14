@@ -16,15 +16,16 @@
  * limitations under the License.
  */
 
-import { Component, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { I18nService } from '@core/i18n.service';
 import { DialogService } from 'ng-devui/modal';
+import { ToastService } from 'ng-devui/toast';
 import { ModalSaveAsComponent } from '../modal-save-as/modal-save-as.component';
 import { FormLayout } from 'ng-devui/form';
 import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
 import { BasicServiceService } from '@shared/services/basic-service.service';
-import { ITreeItem, TreeComponent, TreeNode } from 'ng-devui/tree';
+import { DataServiceService } from '@shared/services/data-service.service';
 
 declare const require: any
 @Component({
@@ -40,7 +41,6 @@ export class ToolBarComponent {
   @ViewChild('project') projectRef: ElementRef;
   @ViewChild('flowunit') flowunitRef: ElementRef;
   @ViewChild('graph') graphRef: ElementRef;
-  @ViewChild('basicTree', { static: true }) basicTree: TreeComponent;
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -56,7 +56,7 @@ export class ToolBarComponent {
   @Input() onSwitchButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onCreateProjectButtonClick: any;
-  @Input() oldName: string;
+  oldName: string = '';
   @Input() showGraphSettingDialog: any;
   @Input() showSelectDialog: any;
   @Input() showSolutionDialog: any;
@@ -96,8 +96,23 @@ export class ToolBarComponent {
   valueInOut: any;
   valueDataType: any;
   valueDeviceType: any;
+  isChangeGraphName: boolean = false;
 
-  valuesProgramLanguage = ['Python', 'C++'];
+  folderList: any = [];
+
+  valuesProgramLanguage = [
+    {
+      name: 'Python',
+      value: 'python'
+    },
+    {
+      name: 'C++',
+      value: 'c++'
+    },
+    {
+      name: this.i18n.getById("inference"),
+      value: 'inference'
+    }];
 
   dataTableOptions = {
     columns: [
@@ -219,24 +234,27 @@ export class ToolBarComponent {
   formDataCreateProject = {
     projectName: 'defaultProject',
     desc: '',
-    programLanguage: 'Python',
-    path: '/home/modelbox_projects/defaultProject',
+    path: '/home/modelbox_projects',
   };
 
   formDataCreateFlowunit = {
     flowunitName: 'defaultFlowunit',
     desc: '',
-    programLanguage: 'Python',
-    path: '/home/modelbox_projects/defaultProject/src/defaultFlowunit',
+    programLanguage: 'python',
+    path: '/home/modelbox_projects/defaultProject/src/flowunit',
     portInfos: [],
     flowunitType: 'NORMAL',
-    title: 'Generic'
+    flowunitVirtualType: 'tensorflow',
+    title: 'Generic',
+    modelEntry: '',
+    plugin: ''
   };
 
   portInfo: any = {
     portType: '',
     dataType: '',
     deviceType: '',
+    deviceNum: 0
   }
 
   optionsInOut = ['input', 'output'];
@@ -259,6 +277,11 @@ export class ToolBarComponent {
       {
         field: 'deviceType',
         header: this.i18n.getById("toolBar.modal.deviceType"),
+        fieldType: 'text'
+      },
+      {
+        field: 'deviceNum',
+        header: this.i18n.getById("toolBar.modal.deviceNum"),
         fieldType: 'text'
       },
       {
@@ -292,10 +315,40 @@ export class ToolBarComponent {
       title: 'COLLAPSE'
     }
   ];
-  tabActiveId: string = "tab1";
-  openProjectPath: string = "/home/modelbox_projects/defaultProject";
 
-  constructor(private dialogService: DialogService, private i18n: I18nService, private basicService: BasicServiceService, private domSanitizer: DomSanitizer) {
+  flowunitVirtualTypes = [
+    {
+      id: 'tensorflow',
+      title: 'Tensorflow'
+    },
+    {
+      id: 'tensorrt',
+      title: 'Tensorrt'
+    },
+    {
+      id: 'torch',
+      title: 'Torch'
+    },
+    {
+      id: 'acl',
+      title: 'Acl'
+    },
+    {
+      id: 'mindspore',
+      title: 'Mindspore'
+    }
+  ];
+
+  tabActiveId: string = "tab1";
+  openProjectPath: string = "/home/modelbox_projects";
+  incomingGraphName: string = '';
+
+  constructor(private dialogService: DialogService,
+    private i18n: I18nService,
+    private basicService: BasicServiceService,
+    private domSanitizer: DomSanitizer,
+    private dataService: DataServiceService,
+    private toastService: ToastService) {
   }
 
   ngOnInit() {
@@ -332,8 +385,11 @@ export class ToolBarComponent {
     })
   }
 
-  programLanguageValueChange(value) {
-    this.formDataCreateProject.programLanguage = value;
+  ngOnChanges(changes: SimpleChanges) {
+    this.formDataCreateFlowunit.path = this.formDataCreateProject.path +
+      "/" +
+      this.formDataCreateProject.projectName +
+      "/src/flowunit";
   }
 
   programLanguageValueChange2(value) {
@@ -374,7 +430,7 @@ export class ToolBarComponent {
 
   handleAddPortInfoClick(): void {
     if (this.portInfo != null) {
-      this.formDataCreateFlowunit.portInfos.push(this.portInfo);
+      this.formDataCreateFlowunit.portInfos.push({ ...this.portInfo });
     }
   }
 
@@ -468,14 +524,105 @@ export class ToolBarComponent {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
 
-  handleOpenProjectButtonClick(e) {
 
+  createFlowunit() {
+    let param;
+    if (this.formDataCreateFlowunit.programLanguage !== "inference") {
+      delete this.formDataCreateFlowunit.flowunitVirtualType;
+      delete this.formDataCreateFlowunit.plugin;
+      delete this.formDataCreateFlowunit.modelEntry;
+    }
+    param = this.formDataCreateFlowunit;
+    this.basicService.createFlowunit(param).subscribe(
+      (data: any) => {
+        if (data) {
+          if (data.status == 201) {
+            //flowunit列表更新
+            this.dataService.nodeShapeCategoriesAdd(param);
+
+          }
+        }
+      },
+      (error) => {
+        return null;
+      });
   }
 
-  handleNewFlowunitButtonClick(e) {
-
+  cellDBClick(e) {
+    if (e.rowIndex !== 0) {
+      this.openProjectPath = this.openProjectPath + "/" + e.rowItem.folder;
+      this.searchDirectory();
+    } else {
+      this.cellClick(e);
+    }
+  }
+  cellClick(e) {
+    if (e.rowIndex === 0) {
+      let position = this.openProjectPath.lastIndexOf("/");
+      this.openProjectPath = this.openProjectPath.substring(0, position);
+      this.searchDirectory();
+    }
   }
 
+  handleChangeGraphName() {
+    this.isChangeGraphName = !this.isChangeGraphName;
+    this.oldName = this.incomingGraphName;
+  }
+
+  searchDirectory() {
+    this.basicService.loadTreeByPath(this.openProjectPath).subscribe(
+      (data: any) => {
+        if (data.folder_list) {
+          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return') }];
+
+          let temp = data.folder_list.filter(dir => dir != "." && dir != "..");
+
+          temp.forEach(element => {
+            this.folderList.push({ "folder": element });
+          });
+        }
+      },
+      error => {
+        if (error) {
+          if (error.staus == 404) {
+            this.toastService.open({
+              value: [{ severity: 'warn', content: this.i18n.getById('message.noFolder') }],
+              life: 1500
+            });
+          }
+        }
+        this.folderList = [];
+
+        // this.folderList = [
+        //   { "folder": this.i18n.getById('toolBar.modal.return') },
+        //   { "folder": "howe" },
+        //   { "folder": "dwj" },
+        //   { "folder": "dongtao" },
+        //   { "folder": "sunny" },
+        //   { "folder": "likesong" },
+        //   { "folder": "pymumu" },
+        //   { "folder": "panshigang" }];
+        return;
+      });
+  }
+
+  openProject() {
+    if (this.folderList.indexOf("src")) {
+      debugger
+      this.basicService.openProject(this.openProjectPath).subscribe(
+        (data: any) => {
+          if (data) {
+            debugger
+            //加载项目信息
+            //加载功能单元信息
+            //加载图信息
+          }
+        },
+        (error) => {
+          return;
+        });
+    }
+  }
 
   toggleTip(tooltip, context: any) {
     if (tooltip.isOpen()) {

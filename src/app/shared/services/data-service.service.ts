@@ -56,8 +56,9 @@ export class DataServiceService {
       if (data.devices == null) {
         return;
       }
+      debugger
       data.flowunits.forEach(item => {
-
+        debugger
         const group = nodeShapeCategories.find(i => i.title === item.group);
         const unit = {
           ...item,
@@ -94,6 +95,39 @@ export class DataServiceService {
         };
       }
     );
+  }
+
+  nodeShapeCategoriesAdd(param) {
+    debugger
+    this.nodeShapeCategories;
+    const group = this.nodeShapeCategories.find(i => i.title === param.title);
+    debugger
+    const unit = {
+      //   ...item,
+      name: param.flowunitName,
+      descryption: param.desc,
+      title: param.name,
+      active: this.nodeShapeCategories.length == 0 ? true : false,
+      // type: "cpu"
+      // types: ['cpu']
+      // version: "1.0.0"
+      // virtual: false
+      //   types: [
+      //     ...new Set(
+      //       data.flowunits.filter(u => u.name === item.name).map(i => i.type)
+      //     ),
+      //   ],
+    };
+
+    if (group) {
+      //  group.children.push(unit);
+    } else {
+      // this.nodeShapeCategories.push({
+      //   title: item.group,
+      //   collapsed: true,
+      //   children: [unit],
+      // });
+    }
   }
 
   getLabel(name, type, labelname) {

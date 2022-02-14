@@ -193,6 +193,10 @@ export class SolutionComponent implements OnInit {
     return svg ? serializer.serializeToString(svg) : this.svgString;
   }
 
+  updateConfig(e) {
+    this.currentComponent = e;
+  }
+
   saveCurrentProject() {
     this.setPersistentState(
       {

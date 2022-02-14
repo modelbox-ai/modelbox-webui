@@ -52,20 +52,24 @@ export class BasicServiceService {
   }
 
   loadTreeByPath(paramData?: string): Observable<any> {
-    return this.http.get(this.serviceRouter + '/editor/directory' + paramData).pipe(timeout(30000));
+    return this.http.get(this.serviceRouter + '/editor/directory/"' + paramData + '"').pipe(timeout(30000));
+  }
+
+  openProject(paramData?: string): Observable<any> {
+    return this.http.get(this.serviceRouter + '/editor/project/"' + paramData + '"').pipe(timeout(30000));
   }
 
   // 创建任务
   createTask(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData, {observe: 'response'}).pipe(timeout(30000));
   }
 
   createProject(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/project', paramData).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/project', paramData, {observe: 'response'}).pipe(timeout(30000));
   }
 
   createFlowunit(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/flowunit', paramData).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/flowunit', paramData, {observe: 'response'}).pipe(timeout(30000));
   }
 
   saveAllProject(paramData?: any): Observable<any> {

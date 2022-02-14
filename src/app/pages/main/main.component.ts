@@ -35,8 +35,9 @@ export class MainComponent {
   componentPanelEar: string = this.i18n.getById('panelEar.componentLabel');
   editToolPanelEar: string = this.i18n.getById('panelEar.editToolLabel');
 
-  name: string = localStorage.getItem('project.name') || '';
-  desc: string = localStorage.getItem('project.desc') || '';
+  name: string = '';
+  desc: string = '';
+
   dotSrcLastChangeTime: any =
     Number(localStorage.getItem('project.dotSrcLastChangeTime')) || Date.now();
   dotSrc: string;
@@ -79,6 +80,7 @@ export class MainComponent {
   state: any;
   solutionList: any = [];
   currentComponent: any;
+  folderList: any = [];
   InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
@@ -148,7 +150,8 @@ export class MainComponent {
 
   initCurrentProlect() {
 
-    this.name = this.createUntitledName(this.projects);
+    //this.name = this.createUntitledName(this.projects);
+
     this.desc = "";
     this.dotSrc = this.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
@@ -207,14 +210,59 @@ export class MainComponent {
     return projectdata;
   }
 
-  createProject(param){
-    this.basicService.createProject(param);
+  getProjectJson2() {
+    debugger
+    const projectdata = {
+      name: this.toolBar.formDataCreateProject.projectName,
+      desc: this.toolBar.formDataCreateProject.desc,
+      path: this.toolBar.formDataCreateProject.path,
+      dotSrc: this.dotSrc,
+      dotSrcLastChangeTime: this.dotSrcLastChangeTime,
+      svgString: this.getSvgString(),
+      skipDefault: this.skipDefault,
+      dirs: this.dirs,
+      settingPerfEnable: this.settingPerfEnable,
+      settingPerfTraceEnable: this.settingPerfTraceEnable,
+      settingPerfSessionEnable: this.settingPerfSessionEnable,
+      settingPerfDir: this.settingPerfDir,
+    }
+
+    return projectdata;
+  }
+
+  createProject(param) {
+    this.basicService.createProject(param).subscribe((data: any) => {
+      if (data.status === 201) {
+        this.projectName = param.projectName;
+        this.dotSrc = this.defaultSrc;
+        //after created successfully
+        localStorage.removeItem("project");
+        this.setPersistentState(
+          {
+            project: {
+              name: this.toolBar.formDataCreateProject.projectName,
+              desc: this.toolBar.formDataCreateProject.desc,
+              path: this.toolBar.formDataCreateProject.path,
+            }
+          });
+        return
+      }
+    }, error => {
+      this.toastService.open({
+        value: [{ severity: 'error', content: this.i18n.getById('message.createProjectFailedPleaseCheck') }],
+        life: 1500
+      });
+    });
   }
 
   saveCurrentProject() {
+    // this.setPersistentState(
+    //   {
+    //     project: this.getProjectJson()
+    //   });
     this.setPersistentState(
       {
-        project: this.getProjectJson()
+        project: this.getProjectJson2()
       });
   }
 
@@ -655,7 +703,7 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          //this.openProject(this.toolBar.formDataCreateProject);
+          this.toolBar.openProject();
         },
       },
       {
@@ -674,7 +722,7 @@ export class MainComponent {
     const results = this.dialogService.open({
       id: 'createFlowunit',
       width: '700px',
-      title: this.i18n.getById('toolBar.newButton'),
+      title: this.i18n.getById('toolBar.newFlowunitButton'),
       showAnimate: false,
       contentTemplate: content,
       backdropCloseable: true,
@@ -688,7 +736,7 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.createFlowunit(this.toolBar.formDataCreateFlowunit);
+          this.toolBar.createFlowunit();
         },
       },
       {
@@ -701,9 +749,6 @@ export class MainComponent {
         },
       },],
     });
-  }
-  createFlowunit(param) {
-    this.basicService.createFlowunit(param);
   }
 
 
