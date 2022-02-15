@@ -103,6 +103,11 @@
                     </a>
                 </li>
                 <li role="menuitem">
+                    <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
+                        {{'toolBar.saveGraphButton' | translate}}
+                    </a>
+                </li>
+                <li role="menuitem">
                     <a class="devui-dropdown-item" id="open-graph-setting"
                         (click)="showGraphSettingDialog(graphSetting)">
                         {{'toolBar.graphSettingButton' | translate}}
@@ -115,35 +120,37 @@
                 </li>
             </ul>
         </div>
-        <button id="save-as" (click)="showSaveAsDialog()" class="tool-bar-button">
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            {{'toolBar.saveAsButton' | translate}}
-            &nbsp;&nbsp;&nbsp;&nbsp;
-        </button>
         <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
             {{'toolBar.solutionDialogButton' | translate}}
         </button>
     </div>
 
     <div class="tool-bar-mid">
-        <span style="font-size:28px; font-weight:500;">
-            {{projectName}}
+        <span style="font-size:28px; font-weight:500;" dPopover bsStyle="common" [content]="titleTemplate"
+            [position]="'left'" [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black' }">
+
+            {{formDataCreateProject.projectName}}
         </span>
 
-        <span style="margin-left:24px;">
+        <!-- <span style="margin-left:24px;">
             {{'toolBar.nameLabel' | translate}}
         </span>
 
         <span (click)="handleChangeGraphName()" *ngIf="!isChangeGraphName">
-            {{oldName || 'defaultGraph'}}
+            {{graphName}}
         </span>
         <div style="display:inline-block">
             <input style="width:80px;" type="text" [(ngModel)]="incomingGraphName" (blur)="handleChangeGraphName()"
                 placeholder="Please Enter" *ngIf="isChangeGraphName" />
-        </div>
+        </div> -->
     </div>
 </div>
-
+<ng-template #titleTemplate>
+    <h1>{{formDataCreateProject.projectName}}</h1>
+    <h4>路径：{{formDataCreateProject.path}}</h4>
+    <h4>{{formDataCreateProject.desc}}</h4>
+  </ng-template>
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
         <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
@@ -241,6 +248,19 @@
                 </d-form-label>
                 <d-form-control>
                     <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" />
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.flowunitPath' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
+                        [(ngModel)]="formDataCreateFlowunit.deviceType"
+                        [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
+                    </d-select>
                 </d-form-control>
             </d-form-item>
 

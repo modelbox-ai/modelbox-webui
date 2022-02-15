@@ -28,7 +28,7 @@
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
               [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [projects]="projects"
               (projectsEmmiter)="getToolBarProjectsChange($event)" [solutionList]="solutionList"
-              [projectName]="projectName">
+              [graphName]="name" [formDataCreateProject]="formDataCreateProject"> 
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">

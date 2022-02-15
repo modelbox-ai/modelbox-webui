@@ -36,7 +36,6 @@ export class MainComponent {
   editToolPanelEar: string = this.i18n.getById('panelEar.editToolLabel');
 
   name: string = '';
-  desc: string = '';
 
   dotSrcLastChangeTime: any =
     Number(localStorage.getItem('project.dotSrcLastChangeTime')) || Date.now();
@@ -76,7 +75,14 @@ export class MainComponent {
   resetUndoAtNextTextChange: any;
   project: any = JSON.parse(localStorage.getItem('project')) || {};
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
-  projectName: string = "defaultProject";
+  projectName: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectName : "";
+  desc: string = "";
+  path: string = "/home/modelbox_projects";
+  formDataCreateProject = {
+    projectName: this.projectName,
+    desc: this.desc,
+    path: this.path,
+  };
   state: any;
   solutionList: any = [];
   currentComponent: any;
@@ -94,24 +100,39 @@ export class MainComponent {
   handleZoomFitButtonClick = () => { };
   handleZoomResetButtonClick = () => { };
   handleNodeAttributeChange = () => { };
-  handleSwitchButtonClick = () => { }
+  handleSwitchButtonClick = () => { };
+
+
+
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
     private toastService: ToastService,) {
-
+debugger
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
-      this.loadProjectFromJson(current_project);
+      // this.loadProjectFromJson(current_project);
       if (this.defaultSrc == this.dotSrc) {
         this.skipDefault = false;
       }
+      debugger
+      this.projectName = current_project.projectName || this.projectName;
+      this.desc = current_project.desc || this.desc;
+      this.path = current_project.path || this.path;
+      this.formDataCreateProject = {
+        projectName: this.projectName,
+        desc: this.desc,
+        path: this.path,
+      };
     }
 
     if ((typeof (this.dotSrc) == "undefined") || this.dotSrc === null || this.dotSrc === '') {
       this.dotSrc = this.defaultSrc;
     }
+
+
+
   }
 
   click(tab: string): void {
@@ -148,7 +169,7 @@ export class MainComponent {
     this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs);
   }
 
-  initCurrentProlect() {
+  initCurrentProject() {
 
     //this.name = this.createUntitledName(this.projects);
 
@@ -213,7 +234,7 @@ export class MainComponent {
   getProjectJson2() {
     debugger
     const projectdata = {
-      name: this.toolBar.formDataCreateProject.projectName,
+      projectName: this.toolBar.formDataCreateProject.projectName,
       desc: this.toolBar.formDataCreateProject.desc,
       path: this.toolBar.formDataCreateProject.path,
       dotSrc: this.dotSrc,
@@ -531,7 +552,7 @@ export class MainComponent {
           handler: ($event: Event) => {
             results.modalInstance.hide();
             results.modalInstance.zIndex = -1;
-            this.initCurrentProlect();
+            this.initCurrentProject();
             this.resetUndoAtNextTextChange = true;
             setTimeout(() => {
               this.handleZoomResetButtonClick();
@@ -554,7 +575,7 @@ export class MainComponent {
       return;
     }
 
-    this.initCurrentProlect();
+    this.initCurrentProject();
     this.resetUndoAtNextTextChange = true;
     this.handleZoomResetButtonClick();
   };
@@ -847,7 +868,7 @@ export class MainComponent {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
 
-      this.initCurrentProlect();
+      this.initCurrentProject();
       this.name = selectedName;
       if (response.flow) {
         if (response.flow.desc) {

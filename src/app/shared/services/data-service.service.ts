@@ -56,9 +56,7 @@ export class DataServiceService {
       if (data.devices == null) {
         return;
       }
-      debugger
       data.flowunits.forEach(item => {
-        debugger
         const group = nodeShapeCategories.find(i => i.title === item.group);
         const unit = {
           ...item,
@@ -98,35 +96,29 @@ export class DataServiceService {
   }
 
   nodeShapeCategoriesAdd(param) {
-    debugger
     this.nodeShapeCategories;
     const group = this.nodeShapeCategories.find(i => i.title === param.title);
-    debugger
     const unit = {
-      //   ...item,
       name: param.flowunitName,
       descryption: param.desc,
-      title: param.name,
+      title: param.flowunitName,
       active: this.nodeShapeCategories.length == 0 ? true : false,
-      // type: "cpu"
-      // types: ['cpu']
-      // version: "1.0.0"
-      // virtual: false
-      //   types: [
-      //     ...new Set(
-      //       data.flowunits.filter(u => u.name === item.name).map(i => i.type)
-      //     ),
-      //   ],
+      type: param.deviceType,
+      types: [param.deviceType],
+      version: "1.0.0",
+      virtual: false,
+      inputports:param.portInfos.filter(x=>x.portType=="output"),
+      outputports:param.portInfos.filter(x=>x.portType=="input")
     };
 
     if (group) {
-      //  group.children.push(unit);
+       group.children.push(unit);
     } else {
-      // this.nodeShapeCategories.push({
-      //   title: item.group,
-      //   collapsed: true,
-      //   children: [unit],
-      // });
+      this.nodeShapeCategories.push({
+        title: "Custome",
+        collapsed: true,
+        children: [unit],
+      });
     }
   }
 

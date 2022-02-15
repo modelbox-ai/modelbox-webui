@@ -56,6 +56,8 @@ function isNumeric(n) {
 })
 export class GraphComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas: ElementRef;
+
+  @Input() disabled: any;
   @Input() fit: any;
   @Input() engine: any;
   @Input() dotSrc: '';

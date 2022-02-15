@@ -52,6 +52,7 @@ export class ToolBarComponent {
   @Input() onZoomResetButtonClick: any;
   @Input() onZoomFitButtonClick: any;
   @Input() onConfirmNameChange: any;
+  @Input() graphName: string;
   @Input() onNewButtonClick: any;
   @Input() onSwitchButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
@@ -66,6 +67,8 @@ export class ToolBarComponent {
   @Input() solutionList: any;
   @Input() onRunButtonClick: any;
   @Input() projectName: any;
+  @Input() formDataCreateProject: any;
+  @Input() projectInfo: any;
 
   @Output() projectsEmmiter = new EventEmitter()
   backSvg = require("../../../assets/undo.svg");
@@ -231,17 +234,18 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  formDataCreateProject = {
-    projectName: 'defaultProject',
-    desc: '',
-    path: '/home/modelbox_projects',
-  };
+  // formDataCreateProject = {
+  //   projectName: 'defaultProject',
+  //   desc: '',
+  //   path: '/home/modelbox_projects',
+  // };
 
   formDataCreateFlowunit = {
     flowunitName: 'defaultFlowunit',
     desc: '',
     programLanguage: 'python',
     path: '/home/modelbox_projects/defaultProject/src/flowunit',
+    deviceType: 'cpu',
     portInfos: [],
     flowunitType: 'NORMAL',
     flowunitVirtualType: 'tensorflow',
@@ -253,7 +257,7 @@ export class ToolBarComponent {
   portInfo: any = {
     portType: '',
     dataType: '',
-    deviceType: '',
+    deviceType: 'cpu',
     deviceNum: 0
   }
 
@@ -390,6 +394,8 @@ export class ToolBarComponent {
       "/" +
       this.formDataCreateProject.projectName +
       "/src/flowunit";
+
+      this.portInfo.deviceType =this.formDataCreateFlowunit.deviceType;
   }
 
   programLanguageValueChange2(value) {
@@ -524,6 +530,22 @@ export class ToolBarComponent {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
 
+  initFormDataCreateFlowunit(){
+    this.formDataCreateFlowunit = {
+      flowunitName: 'defaultFlowunit',
+      desc: '',
+      programLanguage: 'python',
+      path: '/home/modelbox_projects/defaultProject/src/flowunit',
+      portInfos: [],
+      deviceType: 'cpu',
+      flowunitType: 'NORMAL',
+      flowunitVirtualType: 'tensorflow',
+      title: 'Generic',
+      modelEntry: '',
+      plugin: ''
+    };
+  }
+
 
   createFlowunit() {
     let param;
@@ -531,12 +553,16 @@ export class ToolBarComponent {
       delete this.formDataCreateFlowunit.flowunitVirtualType;
       delete this.formDataCreateFlowunit.plugin;
       delete this.formDataCreateFlowunit.modelEntry;
+    }else{
+      this.formDataCreateFlowunit.programLanguage = "infer"
     }
     param = this.formDataCreateFlowunit;
     this.basicService.createFlowunit(param).subscribe(
       (data: any) => {
         if (data) {
           if (data.status == 201) {
+            //clear info
+            this.initFormDataCreateFlowunit();
             //flowunit列表更新
             this.dataService.nodeShapeCategoriesAdd(param);
 
@@ -566,7 +592,7 @@ export class ToolBarComponent {
 
   handleChangeGraphName() {
     this.isChangeGraphName = !this.isChangeGraphName;
-    this.oldName = this.incomingGraphName;
+    this.graphName = this.incomingGraphName;
   }
 
   searchDirectory() {
@@ -592,16 +618,6 @@ export class ToolBarComponent {
           }
         }
         this.folderList = [];
-
-        // this.folderList = [
-        //   { "folder": this.i18n.getById('toolBar.modal.return') },
-        //   { "folder": "howe" },
-        //   { "folder": "dwj" },
-        //   { "folder": "dongtao" },
-        //   { "folder": "sunny" },
-        //   { "folder": "likesong" },
-        //   { "folder": "pymumu" },
-        //   { "folder": "panshigang" }];
         return;
       });
   }
