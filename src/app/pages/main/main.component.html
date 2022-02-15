@@ -28,11 +28,11 @@
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
               [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [projects]="projects"
               (projectsEmmiter)="getToolBarProjectsChange($event)" [solutionList]="solutionList"
-              [graphName]="name" [formDataCreateProject]="formDataCreateProject"> 
+              [graphName]="name"> 
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">
-              <app-graph [dotSrc]="dotSrc" [hasFocus]="focusedPane === 'Graph'" [onUndo]="handleUndoButtonClick"
+              <app-graph [dotSrc]="dotSrc" [hasFocus]="focusedPane === 'Graph'" [onUndo]="handleUndoButtonClick" style="z-index:-100"
                 [onRedo]="handleRedoButtonClick" [onError]="handleError" [onFocus]="handleGraphFocus"
                 [onSelect]="handleGraphComponentSelect" [onTextChange]="handleTextChange"
                 [onInitialized]="handleGraphInitialized" [registerGetSvg]="registerGetSvg"

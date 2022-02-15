@@ -76,13 +76,10 @@ export class MainComponent {
   project: any = JSON.parse(localStorage.getItem('project')) || {};
   projects: any = JSON.parse(localStorage.getItem('projects')) || {};
   projectName: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectName : "";
-  desc: string = "";
-  path: string = "/home/modelbox_projects";
-  formDataCreateProject = {
-    projectName: this.projectName,
-    desc: this.desc,
-    path: this.path,
-  };
+  projectDesc: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectDesc : "";
+  path: string;
+  desc: string;
+  
   state: any;
   solutionList: any = [];
   currentComponent: any;
@@ -109,41 +106,15 @@ export class MainComponent {
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
     private toastService: ToastService,) {
-debugger
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
-      // this.loadProjectFromJson(current_project);
-      if (this.defaultSrc == this.dotSrc) {
-        this.skipDefault = false;
-      }
-      debugger
-      this.projectName = current_project.projectName || this.projectName;
-      this.desc = current_project.desc || this.desc;
-      this.path = current_project.path || this.path;
-      this.formDataCreateProject = {
-        projectName: this.projectName,
-        desc: this.desc,
-        path: this.path,
-      };
-    }
-
-    if ((typeof (this.dotSrc) == "undefined") || this.dotSrc === null || this.dotSrc === '') {
-      this.dotSrc = this.defaultSrc;
-    }
-
-
-
-  }
-
-  click(tab: string): void {
-    if (tab === 'editor') {
-      this.activeEditor = true;
-      this.activeTaskLists = false;
+      this.loadProjectFromJson(current_project);
     } else {
-      this.activeEditor = false;
-      this.activeTaskLists = true;
+      this.initCurrentProject();
     }
-    this.currentComponent = null;
+
+
+
   }
 
   ngOnInit(): void {
@@ -173,25 +144,26 @@ debugger
 
     //this.name = this.createUntitledName(this.projects);
 
-    this.desc = "";
+    this.projectDesc = "";
     this.dotSrc = this.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
-    this.svgString = this.getSvgString();
     this.svgString = '';
     this.skipDefault = false;
     this.dirs = [];
     this.settingPerfEnable = false;
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
-    this.settingPerfDir = this.defaultPerfDir + "/" + this.name
+    this.settingPerfDir = this.defaultPerfDir + "/" + this.name;
 
     this.reloadInsertComponent();
   }
 
   loadProjectFromJson(project) {
     this.name = project.name;
-    this.desc = project.desc;
-    this.dotSrc = project.dotSrc;
+    this.projectName = project.projectName;
+    this.projectDesc = project.projectDesc;
+    this.path = project.path;
+    this.dotSrc = project.graph.dotSrc;
     if (typeof this.dotSrc === 'undefined') {
       this.dotSrc = this.defaultSrc;
     }
@@ -207,45 +179,48 @@ debugger
     if (typeof this.dirs === 'undefined') {
       this.dirs = []
     }
-    this.settingPerfEnable = project.settingPerfEnable;
-    this.settingPerfTraceEnable = project.settingPerfTraceEnable;
-    this.settingPerfSessionEnable = project.settingPerfSessionEnable;
-    this.settingPerfDir = project.settingPerfDir;
+    this.settingPerfEnable = project.graph.settingPerfEnable;
+    this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
+    this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
+    this.settingPerfDir = project.graph.settingPerfDir;
   }
 
-  getProjectJson() {
-    const projectdata = {
-      name: this.name,
-      desc: this.desc,
-      dotSrc: this.dotSrc,
-      dotSrcLastChangeTime: this.dotSrcLastChangeTime,
-      svgString: this.getSvgString(),
-      skipDefault: this.skipDefault,
-      dirs: this.dirs,
-      settingPerfEnable: this.settingPerfEnable,
-      settingPerfTraceEnable: this.settingPerfTraceEnable,
-      settingPerfSessionEnable: this.settingPerfSessionEnable,
-      settingPerfDir: this.settingPerfDir,
-    }
+  // getProjectJson() {
+  //   const projectdata = {
+  //     name: this.name,
+  //     desc: this.desc,
+  //     dotSrc: this.dotSrc,
+  //     dotSrcLastChangeTime: this.dotSrcLastChangeTime,
+  //     svgString: this.getSvgString(),
+  //     skipDefault: this.skipDefault,
+  //     dirs: this.dirs,
+  //     settingPerfEnable: this.settingPerfEnable,
+  //     settingPerfTraceEnable: this.settingPerfTraceEnable,
+  //     settingPerfSessionEnable: this.settingPerfSessionEnable,
+  //     settingPerfDir: this.settingPerfDir,
+  //   }
 
-    return projectdata;
-  }
+  //   return projectdata;
+  // }
 
   getProjectJson2() {
-    debugger
     const projectdata = {
       projectName: this.toolBar.formDataCreateProject.projectName,
-      desc: this.toolBar.formDataCreateProject.desc,
+      projectDesc: this.toolBar.formDataCreateProject.projectDesc,
       path: this.toolBar.formDataCreateProject.path,
-      dotSrc: this.dotSrc,
-      dotSrcLastChangeTime: this.dotSrcLastChangeTime,
-      svgString: this.getSvgString(),
-      skipDefault: this.skipDefault,
-      dirs: this.dirs,
-      settingPerfEnable: this.settingPerfEnable,
-      settingPerfTraceEnable: this.settingPerfTraceEnable,
-      settingPerfSessionEnable: this.settingPerfSessionEnable,
-      settingPerfDir: this.settingPerfDir,
+      graph: {
+        dotSrc: this.dotSrc,
+        dotSrcLastChangeTime: this.dotSrcLastChangeTime,
+        svgString: this.getSvgString(),
+        skipDefault: this.skipDefault,
+        dirs: this.dirs,
+        settingPerfEnable: this.settingPerfEnable,
+        settingPerfTraceEnable: this.settingPerfTraceEnable,
+        settingPerfSessionEnable: this.settingPerfSessionEnable,
+        settingPerfDir: this.settingPerfDir,
+
+      }
+
     }
 
     return projectdata;
@@ -258,14 +233,7 @@ debugger
         this.dotSrc = this.defaultSrc;
         //after created successfully
         localStorage.removeItem("project");
-        this.setPersistentState(
-          {
-            project: {
-              name: this.toolBar.formDataCreateProject.projectName,
-              desc: this.toolBar.formDataCreateProject.desc,
-              path: this.toolBar.formDataCreateProject.path,
-            }
-          });
+        this.saveCurrentProject();
         return
       }
     }, error => {
@@ -605,7 +573,7 @@ debugger
         ? Date.now()
         : this.dotSrcLastChangeTime;
     this.saveCurrentProject();
-    this.projects[newName] = this.getProjectJson();
+    this.projects[newName] = this.getProjectJson2();
     this.saveProjects();
     this.isSaved = true;
     this.renameGraphSrc(this.name)
@@ -898,6 +866,17 @@ debugger
       this.handleZoomResetButtonClick();
     }
     )
+  }
+
+  click(tab: string): void {
+    if (tab === 'editor') {
+      this.activeEditor = true;
+      this.activeTaskLists = false;
+    } else {
+      this.activeEditor = false;
+      this.activeTaskLists = true;
+    }
+    this.currentComponent = null;
   }
 
 

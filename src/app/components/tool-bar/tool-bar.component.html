@@ -43,7 +43,7 @@
     </div>
 
     <div class="tool-bar-right">
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'click'" appendToBody (toggleEvent)="onToggle($event)"
             [alignOrigin]="projectRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
@@ -71,7 +71,7 @@
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'click'" appendToBody
             [alignOrigin]="flowunitRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
@@ -87,7 +87,7 @@
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'click'" appendToBody
             [alignOrigin]="graphRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
@@ -149,7 +149,7 @@
 <ng-template #titleTemplate>
     <h1>{{formDataCreateProject.projectName}}</h1>
     <h4>路径：{{formDataCreateProject.path}}</h4>
-    <h4>{{formDataCreateProject.desc}}</h4>
+    <h4>{{formDataCreateProject.projectDesc}}</h4>
   </ng-template>
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
@@ -177,7 +177,7 @@
                     {{'toolBar.setting.desc' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <textarea dTextarea name="desc" [(ngModel)]="formDataCreateProject.desc"></textarea>
+                    <textarea dTextarea name="desc" [(ngModel)]="formDataCreateProject.projectDesc"></textarea>
                 </d-form-control>
             </d-form-item>
         </form>

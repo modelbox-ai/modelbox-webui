@@ -66,8 +66,7 @@ export class ToolBarComponent {
   @Input() showCreateFlowunitDialog: any;
   @Input() solutionList: any;
   @Input() onRunButtonClick: any;
-  @Input() projectName: any;
-  @Input() formDataCreateProject: any;
+
   @Input() projectInfo: any;
 
   @Output() projectsEmmiter = new EventEmitter()
@@ -100,6 +99,10 @@ export class ToolBarComponent {
   valueDataType: any;
   valueDeviceType: any;
   isChangeGraphName: boolean = false;
+
+  projectDesc: string = "";
+  projectName: string = "";
+  path: string = "/home/modelbox_projects";
 
   folderList: any = [];
 
@@ -234,11 +237,11 @@ export class ToolBarComponent {
     perfPath: this.defaultPerfDir
   };
 
-  // formDataCreateProject = {
-  //   projectName: 'defaultProject',
-  //   desc: '',
-  //   path: '/home/modelbox_projects',
-  // };
+  formDataCreateProject = {
+    projectName: this.projectName,
+    projectDesc: this.projectDesc,
+    path: this.path,
+  };
 
   formDataCreateFlowunit = {
     flowunitName: 'defaultFlowunit',
@@ -354,18 +357,25 @@ export class ToolBarComponent {
     private dataService: DataServiceService,
     private toastService: ToastService) {
   }
+  onToggle(event) {
+    console.log(event);
+  }
 
   ngOnInit() {
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
       this.formData.name = this.oldName;
-      this.formData.desc = current_project.desc;
+      this.formData.desc = current_project.projectDesc;
       this.formData.flowunitPath = current_project.dirs;
       this.formData.skipDefault = current_project.skipDefault;
       this.formData.perfEnable = current_project.settingPerfEnable;
       this.formData.perfTraceEnable = current_project.settingPerfTraceEnable;
       this.formData.perfSessionEnable = current_project.settingPerfSessionEnable;
       this.formData.perfPath = current_project.settingPerfDir;
+
+      this.formDataCreateProject.projectName = current_project.projectName;
+      this.formDataCreateProject.projectDesc = current_project.projectDesc;
+      this.formDataCreateProject.path = current_project.path;
     }
 
     this.graphSelectTableData = Object.keys(this.projects).map(item => {
@@ -390,12 +400,18 @@ export class ToolBarComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.formDataCreateFlowunit.path = this.formDataCreateProject.path +
-      "/" +
-      this.formDataCreateProject.projectName +
-      "/src/flowunit";
+    if (this.formDataCreateProject) {
+      this.formDataCreateFlowunit.path = this.formDataCreateProject.path +
+        "/" +
+        this.formDataCreateProject.projectName +
+        "/src/flowunit";
 
-      this.portInfo.deviceType =this.formDataCreateFlowunit.deviceType;
+      this.portInfo.deviceType = this.formDataCreateFlowunit.deviceType;
+    }
+  }
+
+  getFormDataCreateProject() {
+    return this.formDataCreateProject;
   }
 
   programLanguageValueChange2(value) {
@@ -403,8 +419,10 @@ export class ToolBarComponent {
   }
 
   transformDisplayData(data) {
-    if (data.length > 100) {
-      data = data.substr(0, 61) + "...";
+    if (data) {
+      if (data.length > 100) {
+        data = data.substr(0, 61) + "...";
+      }
     }
     return data;
   }
@@ -530,7 +548,7 @@ export class ToolBarComponent {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
 
-  initFormDataCreateFlowunit(){
+  initFormDataCreateFlowunit() {
     this.formDataCreateFlowunit = {
       flowunitName: 'defaultFlowunit',
       desc: '',
@@ -553,7 +571,7 @@ export class ToolBarComponent {
       delete this.formDataCreateFlowunit.flowunitVirtualType;
       delete this.formDataCreateFlowunit.plugin;
       delete this.formDataCreateFlowunit.modelEntry;
-    }else{
+    } else {
       this.formDataCreateFlowunit.programLanguage = "infer"
     }
     param = this.formDataCreateFlowunit;
