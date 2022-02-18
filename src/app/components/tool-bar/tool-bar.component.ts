@@ -44,7 +44,7 @@ export class ToolBarComponent {
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
-  @Input() projects: any = {};
+  @Input() graphs: any = {};
   @Input() onUndoButtonClick: any;
   @Input() onRedoButtonClick: any;
   @Input() onZoomInButtonClick: any;
@@ -52,7 +52,6 @@ export class ToolBarComponent {
   @Input() onZoomResetButtonClick: any;
   @Input() onZoomFitButtonClick: any;
   @Input() onConfirmNameChange: any;
-  @Input() graphName: string;
   @Input() onNewButtonClick: any;
   @Input() onSwitchButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
@@ -64,12 +63,12 @@ export class ToolBarComponent {
   @Input() showCreateProjectDialog: any;
   @Input() showOpenProjectButtonDialog: any;
   @Input() showCreateFlowunitDialog: any;
-  @Input() solutionList: any;
   @Input() onRunButtonClick: any;
 
   @Input() projectInfo: any;
 
-  @Output() projectsEmmiter = new EventEmitter()
+  @Output() graphsEmmiter = new EventEmitter();
+  @Output() refreshEmmiter = new EventEmitter();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -81,6 +80,7 @@ export class ToolBarComponent {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
   defaultPerfDir: string = '/tmp/modelbox/perf/';
+  defaultDir: string = '/usr/local/lib';
 
   activeBasic: boolean = true;
   activePerf: boolean = false;
@@ -103,8 +103,12 @@ export class ToolBarComponent {
   projectDesc: string = "";
   projectName: string = "";
   path: string = "/home/modelbox_projects";
+  model: string = "blank";
+  optionSolutionList: any = ["blank"];
 
   folderList: any = [];
+
+  solutionList: any = [];
 
   valuesProgramLanguage = [
     {
@@ -226,11 +230,11 @@ export class ToolBarComponent {
   }];
 
   formData = {
-    name: '',
-    desc: '',
+    graphName: '',
+    graphDesc: '',
     radioValue: "N",
     skipDefault: false,
-    flowunitPath: '',
+    flowunitPath: this.defaultDir,
     perfEnable: false,
     perfTraceEnable: false,
     perfSessionEnable: false,
@@ -364,39 +368,22 @@ export class ToolBarComponent {
   ngOnInit() {
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
-      this.formData.name = this.oldName;
-      this.formData.desc = current_project.projectDesc;
-      this.formData.flowunitPath = current_project.dirs;
-      this.formData.skipDefault = current_project.skipDefault;
-      this.formData.perfEnable = current_project.settingPerfEnable;
-      this.formData.perfTraceEnable = current_project.settingPerfTraceEnable;
-      this.formData.perfSessionEnable = current_project.settingPerfSessionEnable;
-      this.formData.perfPath = current_project.settingPerfDir;
+      this.formData.graphName = current_project.graph.graphName;
+      this.formData.graphDesc = current_project.graph.graphDesc;
+      this.formData.flowunitPath = current_project.graph.dirs;
+      this.formData.skipDefault = current_project.graph.skipDefault;
+      this.formData.perfEnable = current_project.graph.settingPerfEnable;
+      this.formData.perfTraceEnable = current_project.graph.settingPerfTraceEnable;
+      this.formData.perfSessionEnable = current_project.graph.settingPerfSessionEnable;
+      this.formData.perfPath = current_project.graph.settingPerfDir;
 
       this.formDataCreateProject.projectName = current_project.projectName;
       this.formDataCreateProject.projectDesc = current_project.projectDesc;
       this.formDataCreateProject.path = current_project.path;
     }
 
-    this.graphSelectTableData = Object.keys(this.projects).map(item => {
-      return {
-        name: item,
-        dotSrc: this.projects[item].dotSrc,
-        lastChanged: new Date(this.projects[item].dotSrcLastChangeTime),
-        svgString: this.projects[item].svgString,
-        checked: false
-      };
-    });
-
-    this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
-    for (let e in this.graphSelectTableDataForDisplay) {
-      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
-    }
-
-    this.solutionList.map(function (obj) {
-      obj.checked = false;
-      return obj;
-    })
+    this.loadGraphData();
+    this.loadSolutionData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -407,6 +394,27 @@ export class ToolBarComponent {
         "/src/flowunit";
 
       this.portInfo.deviceType = this.formDataCreateFlowunit.deviceType;
+
+      if (this.formDataCreateProject.projectName && typeof (this.formData.flowunitPath) === "string" &&
+        this.formData.flowunitPath.indexOf(this.formDataCreateFlowunit.path) < 0) {
+        this.formData.flowunitPath += "\n" + this.formDataCreateFlowunit.path;
+      }
+    }
+  }
+
+  loadGraphData() {
+    this.graphSelectTableData = Object.keys(this.graphs).map(item => {
+      return {
+        name: item,
+        dotSrc: this.graphs[item].graph.dotSrc,
+        lastChanged: new Date(this.graphs[item].graph.dotSrcLastChangeTime),
+        svgString: this.graphs[item].graph.svgString,
+        checked: false
+      };
+    });
+    this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
+    for (let e in this.graphSelectTableDataForDisplay) {
+      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
     }
   }
 
@@ -441,7 +449,7 @@ export class ToolBarComponent {
     })
   }
 
-  onSolutionRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
+  onSolutionRowCheckChange(checked, rowItem) {
     rowItem.checked = checked;
     this.selectedSolutionName = rowItem.name;
     this.solutionList.map(function (obj) {
@@ -450,6 +458,25 @@ export class ToolBarComponent {
       }
       return obj;
     })
+  }
+
+  loadSolutionData() {
+    this.basicService.querySolutionList().subscribe(
+      (data: any) => {
+        data.solution_list.forEach((item) => {
+          let obj = { name: '', desc: '', file: '', checked: false };
+          obj.name = item.name;
+          obj.desc = item.desc;
+          obj.file = item.file;
+          this.solutionList.push(obj)
+        });
+        this.optionSolutionList = this.optionSolutionList.concat(this.solutionList.map(function (obj) {
+          return obj.name;
+        }));
+      },
+      (error) => {
+        return null;
+      })
   }
 
   handleAddPortInfoClick(): void {
@@ -463,7 +490,7 @@ export class ToolBarComponent {
   }
 
   deleteData(row, rowIndex) {
-    delete this.projects[row.name];
+    delete this.graphs[row.name];
     this.graphSelectTableData = this.graphSelectTableData.filter(item => {
       return item.name != row.name;
     })
@@ -471,7 +498,7 @@ export class ToolBarComponent {
     for (let e in this.graphSelectTableDataForDisplay) {
       this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
     }
-    this.projectsEmmiter.emit(this.projects);
+    this.graphsEmmiter.emit(this.graphs);
   }
 
   onCheckboxSkipDefaultChange(value) {
@@ -490,6 +517,20 @@ export class ToolBarComponent {
     this.formData.perfSessionEnable = value;
   }
 
+  initFormData() {
+    this.formData = {
+      graphName: '',
+      graphDesc: '',
+      radioValue: "N",
+      skipDefault: false,
+      flowunitPath: this.defaultDir,
+      perfEnable: false,
+      perfTraceEnable: false,
+      perfSessionEnable: false,
+      perfPath: this.defaultPerfDir
+    };
+  }
+
   click(tab: string): void {
     if (tab === 'basic') {
       this.activeBasic = true;
@@ -501,7 +542,8 @@ export class ToolBarComponent {
   }
 
   saveAllProject() {
-    this.basicService.saveAllProject();
+    debugger
+    this.showSaveAsDialog();
   }
 
   handleUndoButtonClick = event => {
@@ -582,8 +624,14 @@ export class ToolBarComponent {
             //clear info
             this.initFormDataCreateFlowunit();
             //flowunit列表更新
-            this.dataService.nodeShapeCategoriesAdd(param);
-
+            //this.dataService.nodeShapeCategoriesAdd(param);
+            let dirs;
+            if (typeof (this.formData.flowunitPath) === "string") {
+              dirs = this.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
+            } else {
+              dirs = [];
+            }
+            this.dataService.loadFlowUnit("", dirs);
           }
         }
       },
@@ -606,11 +654,6 @@ export class ToolBarComponent {
       this.openProjectPath = this.openProjectPath.substring(0, position);
       this.searchDirectory();
     }
-  }
-
-  handleChangeGraphName() {
-    this.isChangeGraphName = !this.isChangeGraphName;
-    this.graphName = this.incomingGraphName;
   }
 
   searchDirectory() {
@@ -666,6 +709,10 @@ export class ToolBarComponent {
     }
   }
 
+  refreshFlowunit(){
+    this.refreshEmmiter.emit("refresh");
+  }
+
   showSaveAsDialog() {
     const results = this.dialogService.open({
       id: 'save-as-ok',
@@ -685,8 +732,10 @@ export class ToolBarComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.formData.name = results.modalContentInstance.graphName;
+          this.formData.graphName = results.modalContentInstance.graphName;
           this.handleConfirmNameChange(results.modalContentInstance.graphName, '', false);
+          this.loadGraphData();
+          this.basicService.saveAllProject();
         },
       },
       {

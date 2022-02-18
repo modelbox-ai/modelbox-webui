@@ -119,7 +119,7 @@ export class ManagementComponent implements OnInit {
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
   @Input() collapsed: boolean;
   @Input() isSupportFold: boolean = true;
-  @Input() projects: any = JSON.parse(localStorage.getItem('projects')) || {};
+  @Input() graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   selectedProject: any;
   dialog: boolean = false;
 
@@ -141,11 +141,11 @@ export class ManagementComponent implements OnInit {
     }
   }
 
-  getCurrentCreateTaskLists(projects) {
+  getCurrentCreateTaskLists(graphs) {
     let taskCreateLists = [];
-    for (let key in projects) {
-      projects[key].job_id = key;
-      taskCreateLists.push(projects[key]);
+    for (let key in graphs) {
+      graphs[key].job_id = key;
+      taskCreateLists.push(graphs[key]);
     };
     this.taskData.srcData.data = [];
     taskCreateLists.forEach((item, index) => {
@@ -181,7 +181,7 @@ export class ManagementComponent implements OnInit {
 
   // 创建任务modal
   openCreateTask(content: TemplateRef<any>) {
-    this.getCurrentCreateTaskLists(this.projects);
+    this.getCurrentCreateTaskLists(this.graphs);
     const results = this.dialogService.open({
       id: this.i18n.getById('modal.createTaskModal'),
       width: '550px',

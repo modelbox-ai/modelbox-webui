@@ -139,6 +139,7 @@ export class InsertPanelsComponent implements OnInit {
       "skip-default": skip,
       dir: dirs,
     }
+    
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];

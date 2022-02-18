@@ -35,7 +35,6 @@ export class MainComponent {
   componentPanelEar: string = this.i18n.getById('panelEar.componentLabel');
   editToolPanelEar: string = this.i18n.getById('panelEar.editToolLabel');
 
-  name: string = '';
 
   dotSrcLastChangeTime: any =
     Number(localStorage.getItem('project.dotSrcLastChangeTime')) || Date.now();
@@ -74,14 +73,13 @@ export class MainComponent {
   tabSize = Number(localStorage.getItem('tabSize')) || 4;
   resetUndoAtNextTextChange: any;
   project: any = JSON.parse(localStorage.getItem('project')) || {};
-  projects: any = JSON.parse(localStorage.getItem('projects')) || {};
+  graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   projectName: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectName : "";
   projectDesc: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectDesc : "";
+  graphName: string = JSON.parse(localStorage.getItem('project')) ? this.project.graph.graphName : "";
   path: string;
   desc: string;
-  
   state: any;
-  solutionList: any = [];
   currentComponent: any;
   folderList: any = [];
   InsertPanels: InsertPanelsComponent;
@@ -98,8 +96,8 @@ export class MainComponent {
   handleZoomResetButtonClick = () => { };
   handleNodeAttributeChange = () => { };
   handleSwitchButtonClick = () => { };
-
-
+  graphDesc: string;
+  flowunitPath: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -118,7 +116,6 @@ export class MainComponent {
   }
 
   ngOnInit(): void {
-    this.LoadSolutionData();
     this.reloadInsertComponent();
     this.dataService.currentPage = "main";
     //加载既存project
@@ -142,24 +139,26 @@ export class MainComponent {
 
   initCurrentProject() {
 
-    //this.name = this.createUntitledName(this.projects);
-
+    this.graphName = this.createUntitledName(this.graphs); //graph
     this.projectDesc = "";
     this.dotSrc = this.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
     this.svgString = '';
+    this.graphDesc = '';
     this.skipDefault = false;
     this.dirs = [];
     this.settingPerfEnable = false;
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
-    this.settingPerfDir = this.defaultPerfDir + "/" + this.name;
-
+    this.settingPerfDir = this.defaultPerfDir + "/" + this.graphName;
+    if (this.toolBar) {
+      this.toolBar.initFormData();
+    }
     this.reloadInsertComponent();
   }
 
   loadProjectFromJson(project) {
-    this.name = project.name;
+    this.graphName = project.graph.graphName;
     this.projectName = project.projectName;
     this.projectDesc = project.projectDesc;
     this.path = project.path;
@@ -203,24 +202,34 @@ export class MainComponent {
   //   return projectdata;
   // }
 
-  getProjectJson2() {
+  getProjectJson() {
     const projectdata = {
       projectName: this.toolBar.formDataCreateProject.projectName,
       projectDesc: this.toolBar.formDataCreateProject.projectDesc,
       path: this.toolBar.formDataCreateProject.path,
       graph: {
+        graphName: this.toolBar.formData.graphName,
+        graphDesc: this.toolBar.formData.graphDesc,
         dotSrc: this.dotSrc,
         dotSrcLastChangeTime: this.dotSrcLastChangeTime,
         svgString: this.getSvgString(),
         skipDefault: this.skipDefault,
-        dirs: this.dirs,
-        settingPerfEnable: this.settingPerfEnable,
-        settingPerfTraceEnable: this.settingPerfTraceEnable,
-        settingPerfSessionEnable: this.settingPerfSessionEnable,
-        settingPerfDir: this.settingPerfDir,
+        dirs: this.toolBar.formData.flowunitPath,
+        settingPerfEnable: this.toolBar.formData.perfEnable,
+        settingPerfTraceEnable: this.toolBar.formData.perfTraceEnable,
+        settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
+        settingPerfDir: this.toolBar.formData.perfPath,
+      },
 
-      }
+      // radioValue: "N",
+      // skipDefault: false,
+      // flowunitPath: '',
+      // perfEnable: false,
+      // perfTraceEnable: false,
+      // perfSessionEnable: false,
+      // perfPath: this.defaultPerfDir
 
+      flowunit: this.toolBar.formDataCreateFlowunit
     }
 
     return projectdata;
@@ -245,21 +254,17 @@ export class MainComponent {
   }
 
   saveCurrentProject() {
-    // this.setPersistentState(
-    //   {
-    //     project: this.getProjectJson()
-    //   });
     this.setPersistentState(
       {
-        project: this.getProjectJson2()
+        project: this.getProjectJson()
       });
   }
 
-  saveProjects() {
+  saveGraphs() {
     this.saveCurrentProject();
     this.setPersistentState({
-      projects: {
-        ...this.projects,
+      graphs: {
+        ...this.graphs,
       }
     });
   }
@@ -281,7 +286,9 @@ export class MainComponent {
 
   handleError = error => {
     if (error) {
-      error.numLines = this.dotSrc.split('\n').length;
+      if (this.dotSrc) {
+        error.numLines = this.dotSrc.split('\n').length;
+      }
     }
     if (JSON.stringify(error) !== JSON.stringify(this.error)) {
       this.error = error;
@@ -407,10 +414,10 @@ export class MainComponent {
     this.setFocus('Graph');
   };
 
-  createUntitledName = (projects, currentName?) => {
+  createUntitledName = (graphs, currentName?) => {
     const baseName = 'Untitled';
     let newName = baseName;
-    while (projects[newName] || newName === currentName) {
+    while (graphs[newName] || newName === currentName) {
       newName = baseName + ' ' + (Number(newName.replace(baseName, '')) + 1);
     }
     return newName;
@@ -419,8 +426,8 @@ export class MainComponent {
 
   handleTextChange = (text, undoRedoState) => {
     const name =
-      this.name || (text ? this.createUntitledName(this.projects) : '');
-    this.name = name
+      this.graphName || (text ? this.createUntitledName(this.graphs) : '');
+    this.graphName = name
 
     this.isSaved = false;
     this.dotSrc = text;
@@ -558,29 +565,31 @@ export class MainComponent {
       return;
     }
 
-    const currentName = this.name;
+    const currentName = this.graphName;
     if (rename) {
-      delete this.projects[currentName];
+      delete this.graphs[currentName];
     }
 
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.name) {
+    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.graphName) {
       this.settingPerfDir = this.defaultPerfDir + "/" + newName;
     }
-    this.name = newName;
+    this.graphName = newName;
     this.dotSrc = newDotSrc ? newDotSrc : newName ? this.dotSrc : '',
       this.dotSrcLastChangeTime = newDotSrc
         ? Date.now()
         : this.dotSrcLastChangeTime;
     this.saveCurrentProject();
-    this.projects[newName] = this.getProjectJson2();
-    this.saveProjects();
+    this.graphs[newName] = this.getProjectJson();
+    this.saveGraphs();
     this.isSaved = true;
-    this.renameGraphSrc(this.name)
+    this.renameGraphSrc(this.graphName)
+
+
   }
 
-  getToolBarProjectsChange(e) {
-    this.projects = e
+  getToolBarGraphsChange(e) {
+    this.graphs = e
   }
 
   handleRedoButtonClick = () => {
@@ -615,9 +624,9 @@ export class MainComponent {
 
   saveSetting(context: any) {
 
-    let newName = context.name;
-    this.name = newName;
-    this.desc = context.desc;
+    let newName = context.graphName;
+    this.graphName = newName;
+    this.desc = context.graphDesc;
     let rankdir = context.radioValue;
     this.skipDefault = context.skipDefault;
     if (typeof (context.flowunitPath) === "string") {
@@ -625,19 +634,28 @@ export class MainComponent {
     } else {
       this.dirs = [];
     }
-
     this.renameGraphSrc(newName);
     this.settingPerfEnable = context.perfEnable;
     this.settingPerfTraceEnable = context.perfTraceEnable;
     this.settingPerfSessionEnable = context.perfSessionEnable;
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.name) {
+    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.graphName) {
       this.settingPerfDir = this.defaultPerfDir + "/" + newName;
     } else {
       this.settingPerfDir = context.perfPath;
     }
 
     this.saveCurrentProject();
+    this.reloadInsertComponent();
+  }
+
+  refreshFlowunit(e) {
+
+    if (typeof (this.toolBar.formData.flowunitPath) === "string") {
+      this.dirs = this.toolBar.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
+    } else {
+      this.dirs = [];
+    }
     this.reloadInsertComponent();
   }
 
@@ -660,6 +678,9 @@ export class MainComponent {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
           this.createProject(this.toolBar.formDataCreateProject);
+          if (this.toolBar.model != "blank") {
+            this.selectSolution(this.toolBar.model);
+          }
         },
       },
       {
@@ -726,6 +747,7 @@ export class MainComponent {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
           this.toolBar.createFlowunit();
+          //保存至本地
         },
       },
       {
@@ -795,10 +817,10 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          if (!this.projects[this.toolBar.selectedName]) {
+          if (!this.graphs[this.toolBar.selectedName]) {
             return;
           }
-          this.loadProjectFromJson(this.projects[this.toolBar.selectedName]);
+          this.loadProjectFromJson(this.graphs[this.toolBar.selectedName]);
           this.reloadInsertComponent();
         },
       },
@@ -814,30 +836,12 @@ export class MainComponent {
     });
   }
 
-  LoadSolutionData() {
-    this.basicService.querySolutionList().subscribe(
-      (data: any) => {
-
-        data.solution_list.forEach((item) => {
-          let obj = { name: '', desc: '', file: '' };
-          obj.name = item.name;
-          obj.desc = item.desc;
-          obj.file = item.file
-          this.solutionList.push(obj)
-        })
-
-      },
-      (error) => {
-        return null;
-      })
-  }
-
   selectSolution(selectedName) {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
 
       this.initCurrentProject();
-      this.name = selectedName;
+      this.graphName = selectedName;
       if (response.flow) {
         if (response.flow.desc) {
           this.desc = response.flow.desc;
@@ -882,11 +886,11 @@ export class MainComponent {
 
   handleRunButtonClick = () => {
     //saveToBrowser
-    this.projects = {};
-    this.project.name = this.name;
+    this.graphs = {};
+    this.project.graph.name = this.graphName;
     this.saveCurrentProject();
-    this.projects[this.project.name] = this.project;
-    this.saveProjects();
+    this.graphs[this.project.graph.name] = this.project;
+    this.saveGraphs();
     //run
     let option = this.createOptionFromProject(this.project);
     this.basicService.createTask(option)

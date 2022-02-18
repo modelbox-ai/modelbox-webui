@@ -52,7 +52,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 </button>
             </span>
-            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu" style="z-index:100">
                 <li role="menuitem">
                     <a class="devui-dropdown-item" id="createProject" (click)="showCreateProjectDialog(createProject)">
                         {{'toolBar.newButton' | translate}}
@@ -84,10 +84,15 @@
                         {{'toolBar.newFlowunitButton' | translate}}
                     </a>
                 </li>
+                <li role="menuitem">
+                    <a class="devui-dropdown-item" id="refresh" (click)="refreshFlowunit()">
+                        {{'toolBar.refreshFlowunitButton' | translate}}
+                    </a>
+                </li>
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
+        <!-- <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
             [alignOrigin]="graphRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
@@ -96,61 +101,59 @@
                     &nbsp;&nbsp;
                 </button>
             </span>
-            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
-                <li role="menuitem">
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu"> -->
+                <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="new-graph" (click)="handleNewButtonClick($event)">
                         {{'toolBar.newGraphButton' | translate}}
                     </a>
-                </li>
-                <li role="menuitem">
+                </li> -->
+                <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
                         {{'toolBar.saveGraphButton' | translate}}
                     </a>
-                </li>
-                <li role="menuitem">
+                </li> -->
+                <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="open-graph-setting"
                         (click)="showGraphSettingDialog(graphSetting)">
                         {{'toolBar.graphSettingButton' | translate}}
                     </a>
-                </li>
-                <li role="menuitem">
+                </li> -->
+                <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="open-select" (click)="showSelectDialog(graphSelect)">
                         {{'toolBar.selectDialogButton' | translate}}
                     </a>
-                </li>
-            </ul>
-        </div>
-        <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
-            {{'toolBar.solutionDialogButton' | translate}}
+                </li> -->
+            <!-- </ul> 
+        </div>-->
+        <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
+            {{'toolBar.graphSettingButton' | translate}}
         </button>
+        <!-- <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
+            {{'toolBar.solutionDialogButton' | translate}}
+        </button> -->
     </div>
 
     <div class="tool-bar-mid">
         <span style="font-size:28px; font-weight:500;" dPopover bsStyle="common" [content]="titleTemplate"
-            [position]="'left'" [controlled]="true"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black' }">
+            [position]="'left'" [controlled]="true" [popoverStyle]="{ backgroundColor: 'white', color: 'black' }">
 
             {{formDataCreateProject.projectName}}
         </span>
 
-        <!-- <span style="margin-left:24px;">
+        <span style="margin-left:30px;">
             {{'toolBar.nameLabel' | translate}}
         </span>
 
-        <span (click)="handleChangeGraphName()" *ngIf="!isChangeGraphName">
-            {{graphName}}
+        <span>
+            {{formData.graphName}}
         </span>
-        <div style="display:inline-block">
-            <input style="width:80px;" type="text" [(ngModel)]="incomingGraphName" (blur)="handleChangeGraphName()"
-                placeholder="Please Enter" *ngIf="isChangeGraphName" />
-        </div> -->
     </div>
 </div>
 <ng-template #titleTemplate>
     <h1>{{formDataCreateProject.projectName}}</h1>
     <h4>路径：{{formDataCreateProject.path}}</h4>
     <h4>{{formDataCreateProject.projectDesc}}</h4>
-  </ng-template>
+</ng-template>
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
         <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
@@ -169,7 +172,19 @@
                     {{'toolBar.modal.projectPath' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path" />
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path"/>
+                </d-form-control>
+            </d-form-item>
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.model' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
+                        [(ngModel)]="model"
+                        [placeholder]="'toolBar.modal.model' | translate" [options]="optionSolutionList">
+                    </d-select>
                 </d-form-control>
             </d-form-item>
             <d-form-item>
@@ -247,7 +262,7 @@
                     {{'toolBar.modal.flowunitPath' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" />
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" [disabled]="true"/>
                 </d-form-control>
             </d-form-item>
 
@@ -443,15 +458,15 @@
                             </d-form-label>
                             <d-form-control>
                                 <div>
-                                    <input type="text" [value]="formData.name"
-                                        (input)="formData.name=$event.target?.value">
+                                    <input type="text" [value]="formData.graphName"
+                                        (input)="formData.graphName=$event.target?.value">
                                 </div>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.desc' | translate}}</d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="desc" [(ngModel)]="formData.desc"></textarea>
+                                <textarea dTextarea name="desc" [(ngModel)]="formData.graphDesc"></textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
@@ -587,7 +602,7 @@
                     <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
                         <td dTableCell *ngFor="let colOption of solutionTableOptions.columns">
                             <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
-                                (ngModelChange)="onSolutionRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)"
                                 [ngModel]="rowItem.checked">
                             </d-checkbox>
                             <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">

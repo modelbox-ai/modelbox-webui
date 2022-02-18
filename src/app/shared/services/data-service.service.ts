@@ -110,12 +110,11 @@ export class DataServiceService {
       inputports:param.portInfos.filter(x=>x.portType=="output"),
       outputports:param.portInfos.filter(x=>x.portType=="input")
     };
-
     if (group) {
        group.children.push(unit);
     } else {
       this.nodeShapeCategories.push({
-        title: "Custome",
+        title: "Generic",
         collapsed: true,
         children: [unit],
       });

@@ -36,7 +36,7 @@ export class SolutionComponent implements OnInit {
   focusedPane: any = '';
   selectedGraphComponents: any = [];
   project: any = JSON.parse(localStorage.getItem('projectSolution')) || {};
-  projects: any = JSON.parse(localStorage.getItem('projectsSolution')) || {};
+  graphs: any = JSON.parse(localStorage.getItem('graphsSolution')) || {};
   desc: any;
   dotSrcLastChangeTime: any;
   currentComponent: any;
@@ -73,7 +73,7 @@ export class SolutionComponent implements OnInit {
 
   handleTextChange = (text, undoRedoState) => {
     const name =
-      this.name || (text ? this.createUntitledName(this.projects) : '');
+      this.name || (text ? this.createUntitledName(this.graphs) : '');
     this.name = name;
     this.dotSrc = text;
     this.saveCurrentProject();
@@ -204,11 +204,11 @@ export class SolutionComponent implements OnInit {
       });
   }
 
-  saveProjects() {
+  saveGraphs() {
     this.saveCurrentProject();
     this.setPersistentState({
-      projectsSolution: {
-        ...this.projects,
+      graphsSolution: {
+        ...this.graphs,
       }
     });
   }
@@ -316,10 +316,10 @@ export class SolutionComponent implements OnInit {
     driver.start();
   }
 
-  createUntitledName = (projects, currentName?) => {
+  createUntitledName = (graphs, currentName?) => {
     const baseName = 'Untitled';
     let newName = baseName;
-    while (projects[newName] || newName === currentName) {
+    while (graphs[newName] || newName === currentName) {
       newName = baseName + ' ' + (Number(newName.replace(baseName, '')) + 1);
     }
     return newName;
@@ -344,12 +344,12 @@ export class SolutionComponent implements OnInit {
 
   handleRunButtonClick = () => {
     //saveToBrowser
-    this.projects = {};
+    this.graphs = {};
     this.name = this.basicService.currentSolution;
     this.project.name = this.name;
     this.saveCurrentProject();
-    this.projects[this.project.name] = this.project;
-    this.saveProjects();
+    this.graphs[this.project.name] = this.project;
+    this.saveGraphs();
     //run
     let option = this.createOptionFromProject(this.project);
     this.basicService.createTask(option)
