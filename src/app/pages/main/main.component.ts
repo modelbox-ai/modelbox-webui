@@ -110,9 +110,6 @@ export class MainComponent {
     } else {
       this.initCurrentProject();
     }
-
-
-
   }
 
   ngOnInit(): void {
@@ -133,7 +130,6 @@ export class MainComponent {
     if (typeof this.InsertPanels === 'undefined') {
       return
     }
-
     this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs);
   }
 
@@ -174,7 +170,7 @@ export class MainComponent {
       this.skipDefault = false;
     }
 
-    this.dirs = project.dirs;
+    this.dirs = project.flowunit.path;
     if (typeof this.dirs === 'undefined') {
       this.dirs = []
     }
@@ -182,25 +178,8 @@ export class MainComponent {
     this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
     this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
     this.settingPerfDir = project.graph.settingPerfDir;
+    this.reloadInsertComponent();
   }
-
-  // getProjectJson() {
-  //   const projectdata = {
-  //     name: this.name,
-  //     desc: this.desc,
-  //     dotSrc: this.dotSrc,
-  //     dotSrcLastChangeTime: this.dotSrcLastChangeTime,
-  //     svgString: this.getSvgString(),
-  //     skipDefault: this.skipDefault,
-  //     dirs: this.dirs,
-  //     settingPerfEnable: this.settingPerfEnable,
-  //     settingPerfTraceEnable: this.settingPerfTraceEnable,
-  //     settingPerfSessionEnable: this.settingPerfSessionEnable,
-  //     settingPerfDir: this.settingPerfDir,
-  //   }
-
-  //   return projectdata;
-  // }
 
   getProjectJson() {
     const projectdata = {
@@ -220,14 +199,6 @@ export class MainComponent {
         settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
         settingPerfDir: this.toolBar.formData.perfPath,
       },
-
-      // radioValue: "N",
-      // skipDefault: false,
-      // flowunitPath: '',
-      // perfEnable: false,
-      // perfTraceEnable: false,
-      // perfSessionEnable: false,
-      // perfPath: this.defaultPerfDir
 
       flowunit: this.toolBar.formDataCreateFlowunit
     }
@@ -355,6 +326,10 @@ export class MainComponent {
   registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
     this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
   };
+
+  dotSrcUpdate(e){
+    this.dotSrc = e;
+  }
 
   setEditorMarkers(components) {
     let marks = []

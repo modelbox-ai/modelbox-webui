@@ -187,7 +187,7 @@
                     </d-select>
                 </d-form-control>
             </d-form-item>
-            <d-form-item>
+            <d-form-item *ngIf="false">
                 <d-form-label>
                     {{'toolBar.setting.desc' | translate}}
                 </d-form-label>
@@ -268,10 +268,10 @@
 
             <d-form-item>
                 <d-form-label [required]="true">
-                    {{'toolBar.modal.flowunitPath' | translate}}
+                    {{'toolBar.modal.deviceType' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
+                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
                         [(ngModel)]="formDataCreateFlowunit.deviceType"
                         [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
@@ -404,7 +404,7 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item>
+            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'inference' || formDataCreateFlowunit.programLanguage === 'c++'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitGroup' | translate}}
                 </d-form-label>

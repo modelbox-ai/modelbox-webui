@@ -73,7 +73,7 @@ export class BasicServiceService {
   }
 
   saveAllProject(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/project', paramData).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/all', paramData, {observe: 'response'}).pipe(timeout(30000));
   }
 
   // 查询任务列表

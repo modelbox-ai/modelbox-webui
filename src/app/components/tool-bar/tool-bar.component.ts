@@ -69,6 +69,7 @@ export class ToolBarComponent {
 
   @Output() graphsEmmiter = new EventEmitter();
   @Output() refreshEmmiter = new EventEmitter();
+  @Output() dotSrcEmmiter = new EventEmitter();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -254,7 +255,7 @@ export class ToolBarComponent {
     path: '/home/modelbox_projects/defaultProject/src/flowunit',
     deviceType: 'cpu',
     portInfos: [],
-    flowunitType: 'NORMAL',
+    flowunitType: 'normal',
     flowunitVirtualType: 'tensorflow',
     title: 'Generic',
     modelEntry: '',
@@ -269,7 +270,7 @@ export class ToolBarComponent {
   }
 
   optionsInOut = ['input', 'output'];
-  optionsDataType = ['Number', 'String', 'Boolean', 'Array', 'Object']; //flowunit type
+  optionsDataType = ['number', 'string', 'boolean', 'array', 'object']; //flowunit type
   optionsDeviceType = ['cpu', 'cuda'];
   flowunitGroupOptions = ['Image', 'Input', 'Output', 'Video', 'Generic']
 
@@ -306,23 +307,23 @@ export class ToolBarComponent {
 
   flowunitTypes = [
     {
-      id: 'NORMAL',
+      id: 'normal',
       title: 'NORMAL'
     },
     {
-      id: 'STREAM',
+      id: 'stream',
       title: 'STREAM'
     },
     {
-      id: 'IF_ELSE',
+      id: 'condition',
       title: 'IF_ELSE'
     },
     {
-      id: 'EXPAND',
+      id: 'expand',
       title: 'EXPAND'
     },
     {
-      id: 'COLLAPSE',
+      id: 'collapse',
       title: 'COLLAPSE'
     }
   ];
@@ -392,8 +393,6 @@ export class ToolBarComponent {
         "/" +
         this.formDataCreateProject.projectName +
         "/src/flowunit";
-
-      this.portInfo.deviceType = this.formDataCreateFlowunit.deviceType;
 
       if (this.formDataCreateProject.projectName && typeof (this.formData.flowunitPath) === "string" &&
         this.formData.flowunitPath.indexOf(this.formDataCreateFlowunit.path) < 0) {
@@ -542,7 +541,6 @@ export class ToolBarComponent {
   }
 
   saveAllProject() {
-    debugger
     this.showSaveAsDialog();
   }
 
@@ -598,7 +596,7 @@ export class ToolBarComponent {
       path: '/home/modelbox_projects/defaultProject/src/flowunit',
       portInfos: [],
       deviceType: 'cpu',
-      flowunitType: 'NORMAL',
+      flowunitType: 'normal',
       flowunitVirtualType: 'tensorflow',
       title: 'Generic',
       modelEntry: '',
@@ -617,6 +615,10 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit.programLanguage = "infer"
     }
     param = this.formDataCreateFlowunit;
+    let ret = this.infoCreateProjectFirst();
+    if (!ret) { 
+      return; 
+    }
     this.basicService.createFlowunit(param).subscribe(
       (data: any) => {
         if (data) {
@@ -624,14 +626,15 @@ export class ToolBarComponent {
             //clear info
             this.initFormDataCreateFlowunit();
             //flowunit列表更新
-            //this.dataService.nodeShapeCategoriesAdd(param);
             let dirs;
-            if (typeof (this.formData.flowunitPath) === "string") {
+            let type = typeof (this.formData.flowunitPath);
+            if (type === "string") {
               dirs = this.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
             } else {
               dirs = [];
             }
             this.dataService.loadFlowUnit("", dirs);
+            this.refreshFlowunit();
           }
         }
       },
@@ -685,14 +688,24 @@ export class ToolBarComponent {
 
   openProject() {
     if (this.folderList.indexOf("src")) {
-      debugger
       this.basicService.openProject(this.openProjectPath).subscribe(
         (data: any) => {
           if (data) {
-            debugger
             //加载项目信息
+            this.formDataCreateProject.projectName = data.projectName;
+            this.formDataCreateProject.path = data.path;
+            
             //加载功能单元信息
             //加载图信息
+            this.formData.graphName = data.graphs[0].name;
+            this.formData.graphDesc = data.graphs[0].desc;
+            this.formData.flowunitPath = data.graphs[0].dir.substring(0, data.graphs[0].dir.length - 2);
+            this.formData.skipDefault = false;
+            this.formData.perfEnable = data.graphs[0].profile;
+            this.formData.perfTraceEnable = data.graphs[0].trace;
+            this.formData.perfSessionEnable = data.graphs[0].session;
+            this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
+            this.refreshFlowunit();
           }
         },
         (error) => {
@@ -709,7 +722,7 @@ export class ToolBarComponent {
     }
   }
 
-  refreshFlowunit(){
+  refreshFlowunit() {
     this.refreshEmmiter.emit("refresh");
   }
 
@@ -735,7 +748,22 @@ export class ToolBarComponent {
           this.formData.graphName = results.modalContentInstance.graphName;
           this.handleConfirmNameChange(results.modalContentInstance.graphName, '', false);
           this.loadGraphData();
-          this.basicService.saveAllProject();
+          let param = JSON.parse(localStorage.getItem('project'));
+          let ret = this.infoCreateProjectFirst();
+          param = this.createProjectParam(param);
+          this.basicService.saveAllProject(param).subscribe((data) => {
+            if (data.status == 200){
+              this.toastService.open({
+                value: [{ severity: 'success', content: "Project is successfully created!" }],
+                life: 1500
+              });
+            }else{
+              this.toastService.open({
+                value: [{ severity: 'error', content: "Failed to create project." }],
+                life: 1500
+              });
+            }
+          });
         },
       },
       {
@@ -750,4 +778,46 @@ export class ToolBarComponent {
     });
 
   }
+
+  createProjectParam(project){
+    let params = {};
+    params = {
+      job_id: project.graph.graphName,
+      job_graph: {
+        flow: {
+          desc: project.graph.graphDesc,
+        },
+        driver: {
+          "skip-default": project.graph.skipDefault,
+          dir: project.graph.dirs,
+        },
+        profile: {
+          profile: project.graph.settingPerfEnable,
+          trace: project.graph.settingPerfTraceEnable,
+          session: project.graph.settingPerfSessionEnable,
+          dir: project.graph.settingPerfDir,
+        },
+        graph: {
+          graphconf: project.graph.dotSrc,
+          format: "graphviz",
+        },
+      },
+      graphPath:project.path+"/"+project.projectName+"/src/graph"
+    }
+    return params;
+  }
+
+  infoCreateProjectFirst() {
+    if (!this.formDataCreateProject.projectName) {
+      this.toastService.open({
+        value: [{ severity: 'warn', content: "请先新建一个项目" }],
+        life: 1500
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
+
+
