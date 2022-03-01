@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { DataServiceService } from '@shared/services/data-service.service';
+import { indexOf } from 'lodash';
 import { first } from 'rxjs/operators';
+import { ToastService } from 'ng-devui/toast';
 
 declare const require: any
 @Component({
@@ -24,7 +26,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onRunButtonClick: any;
   @Input() onOpenTutorial: any;
-  @Output() newItemEvent = new EventEmitter<string>();
+  @Output() currentProjectEmitter = new EventEmitter<any>(); 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -35,17 +37,23 @@ export class ToolBarSolutionComponent implements OnInit {
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
-  dotSrc: string;
+  
+
   solutionList = [];
+  dirs = [];
+
+
   currentOption = localStorage.getItem('currentSolution') || {};
+  
   constructor(private i18n: I18nService,
     private basicService: BasicServiceService,
-    private dataService: DataServiceService) { }
+    private dataService: DataServiceService,
+    private toastService: ToastService) { }
 
   ngOnInit(): void {
+    this.dirs.push(this.dataService.commonFlowunitPath);
     this.loadSolutionData();
-    this.loadSolutionFlowUnit();
-    this.selectSolution("mnist.toml");
+    this.selectSolution(this.dataService.defaultSolutionGraph);
   }
 
   handleUndoButtonClick = event => {
@@ -95,54 +103,57 @@ export class ToolBarSolutionComponent implements OnInit {
   loadSolutionData() {
     this.basicService.querySolutionList().subscribe(
       (data: any) => {
-        data.solution_list.forEach((item) => {
+        let solution = data.solution_list.filter(e => e.file.search(/\/oneshot\//) === -1);
+        solution.forEach((item) => {
           let obj = { name: '', desc: '', file: '' };
           obj.name = item.name;
           obj.desc = item.desc;
           obj.file = item.file;
           this.solutionList.push(obj);
-          //use mnist.toml as default
-          if (obj.name === "mnist.toml") {
-            this.currentOption = obj.name;
-            this.basicService.currentSolution = "mnist.toml";
-          }
-        })
+          let flowunitPath = this.getFlowunitPathFromGraphPath(obj.file, obj.name);
+          this.dirs.push(flowunitPath);
+        });
+        this.dataService.loadFlowUnit(null, this.dirs);
       },
       (error) => {
         return null;
-      })
+      });
   }
 
-  public loadSolutionFlowUnit() {
-
-    let mnist = '/usr/local/share/modelbox/solution/flowunit/mnist';
-    let car_detection = '/usr/local/share/modelbox/solution/flowunit/car_detect';
-    let dirs = [mnist, car_detection];
-    this.dataService.loadFlowUnit(null, dirs);
-
+  getFlowunitPathFromGraphPath(graphPath, graphName){
+    let pos = graphPath.search(/\/graphs\//);
+    if (graphName.indexOf(".toml")){
+      graphName = graphName.slice(0,-5);
+    }
+    if (pos > -1){
+      return graphPath.slice(0,pos + 1) + "flowunit/" + graphName;
+    }
+    return;
   }
 
   selectSolution(selectedName) {
-
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {
-        if (response.graph.graphconf) {
-          this.dotSrc = response.graph.graphconf;
-        }
+        this.dataService.currentSolution = selectedName;
+        this.dataService.currentSolutionProject = data;
+        this.sendCurrentProject(data);
+        this.currentOption = selectedName;
+      }else{
+        this.toastService.open({
+          value: [{ severity: 'warn', summary: "Warning!", content: "未找到所选样例" }],
+          life: 3000
+        });
       }
-      this.sendToParent(this.dotSrc);
-      this.basicService.currentSolution = selectedName;
-      localStorage.setItem('currentSolution', selectedName)
+      
     });
+  }
+
+  sendCurrentProject(data){
+    this.currentProjectEmitter.emit(data);
   }
 
   handleSelectChange(e) {
     this.selectSolution(e.name);
   }
-
-  sendToParent(e): void {
-    this.newItemEvent.emit(e);
-  }
-
 }

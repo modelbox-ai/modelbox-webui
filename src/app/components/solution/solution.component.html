@@ -4,13 +4,13 @@
     <as-split-area [size]="100" class="main-container-body">
       <as-split direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
         (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
-        <app-tool-bar-solution #toolBarSolution id="toolBarSolution" (newItemEvent)="getChildData($event)"
+        <app-tool-bar-solution #toolBarSolution id="toolBarSolution"
           [hasUndo]="hasUndo" [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick"
           [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
           [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
           [onZoomFitButtonClick]="handleZoomFitButtonClick"
           [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick" [onRunButtonClick]="handleRunButtonClick"
-          [onOpenTutorial]="handleTutorials">
+          [onOpenTutorial]="handleTutorials" (currentProjectEmitter)="handleCurrentProjectChange($event)">
         </app-tool-bar-solution>
         <as-split-area [size]="80">
           <div class="graph" id="graph">

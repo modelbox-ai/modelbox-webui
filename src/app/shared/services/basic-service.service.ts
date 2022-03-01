@@ -9,7 +9,6 @@ import { timeout } from 'rxjs/operators';
 export class BasicServiceService {
   public serviceRouter = '';
   public messageSource = new BehaviorSubject<string>('');
-  public currentSolution = '';
 
   constructor(private http: HttpClient) {
     this.serviceRouter = '';

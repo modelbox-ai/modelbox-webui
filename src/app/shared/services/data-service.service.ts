@@ -9,7 +9,16 @@ import { ToastService } from 'ng-devui/toast';
 })
 export class DataServiceService {
   nodeShapeCategories: any = [];
-  currentPage: any = "";
+  public currentPage: any = "";
+  
+  public defaultSolutionGraph = "mnist.toml";
+  public commonFlowunitPath = "/usr/local/lib";
+  public defaultPerfDir = '/tmp/modelbox/perf/';
+  public defaultFormat = "graphviz";
+
+  public currentSolution = this.defaultSolutionGraph;
+  public currentSolutionProject = {};
+
   constructor(private sanitized: DomSanitizer,
     private basicService: BasicServiceService,
     private toastService: ToastService) {
@@ -78,21 +87,21 @@ export class DataServiceService {
             children: [unit],
           });
         }
-
-        this.nodeShapeCategories = nodeShapeCategories;
       });
+      this.nodeShapeCategories = nodeShapeCategories;
+      this.nodeShapeCategories = this.nodeShapeCategories.map(
+        item => {
+          return {
+            ...item,
+            children: [...new Set(item.children.map(it => it.title))].map(it =>
+              item.children.find(i => i.title === it)
+            ),
+          };
+        }
+      );
     })
 
-    this.nodeShapeCategories = this.nodeShapeCategories.map(
-      item => {
-        return {
-          ...item,
-          children: [...new Set(item.children.map(it => it.title))].map(it =>
-            item.children.find(i => i.title === it)
-          ),
-        };
-      }
-    );
+    
   }
 
   nodeShapeCategoriesAdd(param) {

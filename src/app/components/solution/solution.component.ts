@@ -197,6 +197,10 @@ export class SolutionComponent implements OnInit {
     this.currentComponent = e;
   }
 
+  handleCurrentProjectChange(e){
+    this.dotSrc = e.graph.graphconf;
+  }
+
   saveCurrentProject() {
     this.setPersistentState(
       {
@@ -341,11 +345,15 @@ export class SolutionComponent implements OnInit {
       this.focusedPane = newFocusedPane;
     }
   };
+  handleDotSrcChange(e){
+    this.dotSrc = e;
+  }
 
   handleRunButtonClick = () => {
     //saveToBrowser
     this.graphs = {};
-    this.name = this.basicService.currentSolution;
+    this.name = this.dataService.currentSolution;
+    this.project = this.dataService.currentSolutionProject;
     this.project.name = this.name;
     this.saveCurrentProject();
     this.graphs[this.project.name] = this.project;
@@ -355,6 +363,7 @@ export class SolutionComponent implements OnInit {
     this.basicService.createTask(option)
       .subscribe((data: any) => {
         //提示任务运行状态
+        debugger
         this.toastService.open({
           value: [{ severity: 'success', summary: "Success", content: "请前往任务管理页面查看明细" }],
           life: 3000
@@ -408,21 +417,21 @@ export class SolutionComponent implements OnInit {
       job_id: item.name,
       job_graph: {
         flow: {
-          desc: item.desc,
+          desc: item.flow.desc,
         },
         driver: {
-          "skip-default": item.skipDefault,
-          dir: item.dirs,
+          "skip-default": false,
+          dir: item.driver.dir,
         },
         profile: {
-          profile: item.settingPerfEnable,
-          trace: item.settingPerfTraceEnable,
-          session: item.settingPerfSessionEnable,
-          dir: item.settingPerfDir,
+          profile: false,
+          trace: false,
+          session: false,
+          dir: this.dataService.defaultPerfDir,
         },
         graph: {
-          graphconf: item.dotSrc,
-          format: "graphviz",
+          graphconf: item.graph.graphconf,
+          format: this.dataService.defaultFormat,
         },
       }
     }
