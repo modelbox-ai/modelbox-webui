@@ -85,6 +85,7 @@ export class ToolBarComponent {
 
   activeBasic: boolean = true;
   activePerf: boolean = false;
+  portDeviceTypeAble = false;
   layoutDirection: FormLayout = FormLayout.Horizontal;
   graphSelectTableData: any;
   graphSelectTableDataForDisplay: any;
@@ -425,6 +426,15 @@ export class ToolBarComponent {
     this.formDataCreateFlowunit.programLanguage = value;
   }
 
+  handleValueChangePortType(e) {
+    if (e === "output") {
+      this.portDeviceTypeAble = true;
+    }else{
+      this.portDeviceTypeAble = false;
+    }
+    this.portInfo.deviceType = this.formDataCreateFlowunit.deviceType;
+  }
+
   transformDisplayData(data) {
     if (data) {
       if (data.length > 100) {
@@ -616,8 +626,8 @@ export class ToolBarComponent {
     }
     param = this.formDataCreateFlowunit;
     let ret = this.infoCreateProjectFirst();
-    if (!ret) { 
-      return; 
+    if (!ret) {
+      return;
     }
     this.basicService.createFlowunit(param).subscribe(
       (data: any) => {
@@ -694,7 +704,7 @@ export class ToolBarComponent {
             //加载项目信息
             this.formDataCreateProject.projectName = data.projectName;
             this.formDataCreateProject.path = data.path;
-            
+
             //加载功能单元信息
             //加载图信息
             this.formData.graphName = data.graphs[0].name;
@@ -752,12 +762,12 @@ export class ToolBarComponent {
           let ret = this.infoCreateProjectFirst();
           param = this.createProjectParam(param);
           this.basicService.saveAllProject(param).subscribe((data) => {
-            if (data.status == 200){
+            if (data.status == 200) {
               this.toastService.open({
                 value: [{ severity: 'success', content: "Project is successfully created!" }],
                 life: 1500
               });
-            }else{
+            } else {
               this.toastService.open({
                 value: [{ severity: 'error', content: "Failed to create project." }],
                 life: 1500
@@ -779,7 +789,7 @@ export class ToolBarComponent {
 
   }
 
-  createProjectParam(project){
+  createProjectParam(project) {
     let params = {};
     params = {
       job_id: project.graph.graphName,
@@ -802,7 +812,7 @@ export class ToolBarComponent {
           format: "graphviz",
         },
       },
-      graphPath:project.path+"/"+project.projectName+"/src/graph"
+      graphPath: project.path + "/" + project.projectName + "/src/graph"
     }
     return params;
   }

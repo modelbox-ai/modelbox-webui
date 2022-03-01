@@ -363,7 +363,6 @@ export class SolutionComponent implements OnInit {
     this.basicService.createTask(option)
       .subscribe((data: any) => {
         //提示任务运行状态
-        debugger
         this.toastService.open({
           value: [{ severity: 'success', summary: "Success", content: "请前往任务管理页面查看明细" }],
           life: 3000

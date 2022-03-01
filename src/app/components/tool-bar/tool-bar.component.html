@@ -296,7 +296,8 @@
                         <div style="width:100px">
                             <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
                                 [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="portInfo.portType"
-                                [placeholder]="'toolBar.modal.inputOutput' | translate" [options]="optionsInOut">
+                                [placeholder]="'toolBar.modal.inputOutput' | translate" [options]="optionsInOut"
+                                (valueChange)="handleValueChangePortType($event)">
                             </d-select>
                         </div>
 
@@ -312,7 +313,7 @@
                         </div>
 
                         <div style="width:100px">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
+                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']" [disabled]="portDeviceTypeAble"
                                 [(ngModel)]="portInfo.deviceType" [ngModelOptions]="{ standalone: true }"
                                 [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
                             </d-select>
