@@ -872,7 +872,7 @@ export class MainComponent {
       .subscribe((data: any) => {
         //提示任务运行状态
         this.toastService.open({
-          value: [{ severity: 'success', summary: "Success", content: "请前往任务管理页面查看明细" }],
+          value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
           life: 3000
         });
       }, error => {

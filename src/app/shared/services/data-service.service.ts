@@ -15,6 +15,9 @@ export class DataServiceService {
   public commonFlowunitPath = "/usr/local/lib";
   public defaultPerfDir = '/tmp/modelbox/perf/';
   public defaultFormat = "graphviz";
+  public defaultSrc: string = `digraph {
+    node [shape=Mrecord];
+  }`;
 
   public currentSolution = this.defaultSolutionGraph;
   public currentSolutionProject = {};

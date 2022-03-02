@@ -255,7 +255,7 @@ export class SolutionComponent implements OnInit {
         element: '#toolBarSolution',
         popover: {
           title: this.i18n.getById('tutorial.toolbar'),
-          description: '工具栏集成了各种常用工具',
+          description:  this.i18n.getById("tutorial.toolbarGuide"),
           position: 'buttom'
         }
       },
@@ -263,7 +263,7 @@ export class SolutionComponent implements OnInit {
         element: '#undoredo',
         popover: {
           title: this.i18n.getById('tutorial.undoredo'),
-          description: '在进行图编排的过程中，可以使用回退/重做进行修改，也可以在下方文本编辑栏中使用Ctrl+z/Ctrl+y快捷键',
+          description: this.i18n.getById( "tutorial.redoGuide"),
           position: 'buttom'
         }
       },
@@ -271,7 +271,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoominout',
         popover: {
           title: this.i18n.getById('tutorial.zoominout'),
-          description: '放大后或者缩小图，也可以使用鼠标滚轮',
+          description: this.i18n.getById( "tutorial.zoomGuide"),
           position: 'buttom'
         }
       },
@@ -279,7 +279,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoom-reset',
         popover: {
           title: this.i18n.getById('toolBar.zoomResetButton'),
-          description: '重置缩放大小比例',
+          description: this.i18n.getById( "tutorial.restGuide"),
           position: 'buttom'
         }
       },
@@ -287,7 +287,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoom-fit',
         popover: {
           title: this.i18n.getById('toolBar.zoomFitButton'),
-          description: '图自适应居中显示在屏幕中央',
+          description: this.i18n.getById( "tutorial.fitGuide"),
           position: 'buttom'
         }
       },
@@ -295,7 +295,7 @@ export class SolutionComponent implements OnInit {
         element: '#switch',
         popover: {
           title: this.i18n.getById('toolBar.switchButton'),
-          description: '垂直布局或者横向布局（默认为垂直布局）',
+          description: this.i18n.getById( "tutorial.layoutGuide"),
           position: 'buttom'
         }
       },
@@ -303,7 +303,7 @@ export class SolutionComponent implements OnInit {
         element: '#run',
         popover: {
           title: this.i18n.getById('toolBar.runGraphButton'),
-          description: '运行当前的图，图的运行状态将显示在任务管理页面',
+          description: this.i18n.getById( "tutorial.runGuide"),
           position: 'buttom'
         }
       },
@@ -311,7 +311,7 @@ export class SolutionComponent implements OnInit {
         element: '#graph',
         popover: {
           title: '画布',
-          description: '用来进行编排的主要界面，此处仅为示例。按着Ctrl+鼠标左键可以拖拽画布。当图中的任一结点处于选中状态时（蓝框），直接使用鼠标左键也可以拖拽画布。图的所有变化，将以graphviz dot形式显示在下方文本编辑框中。',
+          description: this.i18n.getById( "tutorial.graphGuide"),
           position: 'right'
         }
       }
@@ -364,7 +364,7 @@ export class SolutionComponent implements OnInit {
       .subscribe((data: any) => {
         //提示任务运行状态
         this.toastService.open({
-          value: [{ severity: 'success', summary: "Success", content: "请前往任务管理页面查看明细" }],
+          value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
           life: 3000
         });
       }, error => {

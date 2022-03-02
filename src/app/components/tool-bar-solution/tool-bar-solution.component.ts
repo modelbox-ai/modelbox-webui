@@ -141,7 +141,7 @@ export class ToolBarSolutionComponent implements OnInit {
         this.currentOption = selectedName;
       }else{
         this.toastService.open({
-          value: [{ severity: 'warn', summary: "Warning!", content: "未找到所选样例" }],
+          value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],
           life: 3000
         });
       }

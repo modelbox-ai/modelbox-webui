@@ -117,10 +117,10 @@ export class ToolBarComponent {
       name: 'Python',
       value: 'python'
     },
-    {
-      name: 'C++',
-      value: 'c++'
-    },
+    // {
+    //   name: 'C++',
+    //   value: 'c++'
+    // },
     {
       name: this.i18n.getById("inference"),
       value: 'inference'
@@ -429,7 +429,7 @@ export class ToolBarComponent {
   handleValueChangePortType(e) {
     if (e === "output") {
       this.portDeviceTypeAble = true;
-    }else{
+    } else {
       this.portDeviceTypeAble = false;
     }
     this.portInfo.deviceType = this.formDataCreateFlowunit.deviceType;
@@ -479,6 +479,7 @@ export class ToolBarComponent {
           obj.file = item.file;
           this.solutionList.push(obj)
         });
+        this.solutionList = this.solutionList.filter(e => e.file.search(/\/oneshot\//) === -1);
         this.optionSolutionList = this.optionSolutionList.concat(this.solutionList.map(function (obj) {
           return obj.name;
         }));
@@ -707,14 +708,18 @@ export class ToolBarComponent {
 
             //加载功能单元信息
             //加载图信息
-            this.formData.graphName = data.graphs[0].name;
-            this.formData.graphDesc = data.graphs[0].desc;
-            this.formData.flowunitPath = data.graphs[0].dir.substring(0, data.graphs[0].dir.length - 2);
-            this.formData.skipDefault = false;
-            this.formData.perfEnable = data.graphs[0].profile;
-            this.formData.perfTraceEnable = data.graphs[0].trace;
-            this.formData.perfSessionEnable = data.graphs[0].session;
-            this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
+            if (data.graphs && data.graphs[0] != null) {
+              this.formData.graphName = data.graphs[0].name;
+              this.formData.graphDesc = data.graphs[0].desc;
+              this.formData.flowunitPath = data.graphs[0].dir.substring(0, data.graphs[0].dir.length - 2);
+              this.formData.skipDefault = false;
+              this.formData.perfEnable = data.graphs[0].profile;
+              this.formData.perfTraceEnable = data.graphs[0].trace;
+              this.formData.perfSessionEnable = data.graphs[0].session;
+              this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
+            }else{
+              this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+            }
             this.refreshFlowunit();
           }
         },
@@ -764,12 +769,12 @@ export class ToolBarComponent {
           this.basicService.saveAllProject(param).subscribe((data) => {
             if (data.status == 200) {
               this.toastService.open({
-                value: [{ severity: 'success', content: "Project is successfully created!" }],
+                value: [{ severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }],
                 life: 1500
               });
             } else {
               this.toastService.open({
-                value: [{ severity: 'error', content: "Failed to create project." }],
+                value: [{ severity: 'error', content: this.i18n.getById("message.createProjectFail") }],
                 life: 1500
               });
             }
@@ -820,7 +825,7 @@ export class ToolBarComponent {
   infoCreateProjectFirst() {
     if (!this.formDataCreateProject.projectName) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "请先新建一个项目" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.createProjectFirst") }],
         life: 1500
       });
       return false;

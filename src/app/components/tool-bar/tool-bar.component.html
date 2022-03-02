@@ -102,28 +102,28 @@
                 </button>
             </span>
             <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu"> -->
-                <!-- <li role="menuitem">
+        <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="new-graph" (click)="handleNewButtonClick($event)">
                         {{'toolBar.newGraphButton' | translate}}
                     </a>
                 </li> -->
-                <!-- <li role="menuitem">
+        <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
                         {{'toolBar.saveGraphButton' | translate}}
                     </a>
                 </li> -->
-                <!-- <li role="menuitem">
+        <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="open-graph-setting"
                         (click)="showGraphSettingDialog(graphSetting)">
                         {{'toolBar.graphSettingButton' | translate}}
                     </a>
                 </li> -->
-                <!-- <li role="menuitem">
+        <!-- <li role="menuitem">
                     <a class="devui-dropdown-item" id="open-select" (click)="showSelectDialog(graphSelect)">
                         {{'toolBar.selectDialogButton' | translate}}
                     </a>
                 </li> -->
-            <!-- </ul> 
+        <!-- </ul> 
         </div>-->
         <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
             {{'toolBar.graphSettingButton' | translate}}
@@ -172,7 +172,7 @@
                     {{'toolBar.modal.projectPath' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path"/>
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path" />
                 </d-form-control>
             </d-form-item>
             <d-form-item>
@@ -181,8 +181,7 @@
                 </d-form-label>
                 <d-form-control>
                     <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
-                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
-                        [(ngModel)]="model"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="model"
                         [placeholder]="'toolBar.modal.model' | translate" [options]="optionSolutionList">
                     </d-select>
                 </d-form-control>
@@ -217,8 +216,8 @@
             <d-form-item>
                 <d-form-control>
                     <d-data-table [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
-                        [borderType]="'bordered'" (cellClick)="cellClick($event)" (cellDBClick)="cellDBClick($event)">
-                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate"></d-column>
+                        [borderType]="'borderless'" (cellClick)="cellClick($event)" (cellDBClick)="cellDBClick($event)">
+                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" style="cursor:pointer"></d-column>
                     </d-data-table>
 
                 </d-form-control>
@@ -262,7 +261,7 @@
                     {{'toolBar.modal.flowunitPath' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" [disabled]="true"/>
+                    <input dTextInput name="path" [(ngModel)]="formDataCreateFlowunit.path" [disabled]="true" />
                 </d-form-control>
             </d-form-item>
 
@@ -313,8 +312,9 @@
                         </div>
 
                         <div style="width:100px">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']" [disabled]="portDeviceTypeAble"
-                                [(ngModel)]="portInfo.deviceType" [ngModelOptions]="{ standalone: true }"
+                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
+                                [disabled]="portDeviceTypeAble" [(ngModel)]="portInfo.deviceType"
+                                [ngModelOptions]="{ standalone: true }"
                                 [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
                             </d-select>
                         </div>
@@ -405,7 +405,8 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'inference' || formDataCreateFlowunit.programLanguage === 'c++'">
+            <d-form-item
+                *ngIf="formDataCreateFlowunit.programLanguage === 'inference' || formDataCreateFlowunit.programLanguage === 'c++'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitGroup' | translate}}
                 </d-form-label>
@@ -603,8 +604,7 @@
                     <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
                         <td dTableCell *ngFor="let colOption of solutionTableOptions.columns">
                             <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
-                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)"
-                                [ngModel]="rowItem.checked">
+                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)" [ngModel]="rowItem.checked">
                             </d-checkbox>
                             <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
                                 {{ rowItem[colOption.field] }}
