@@ -80,8 +80,6 @@ export class ToolBarComponent {
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
-  defaultPerfDir: string = '/tmp/modelbox/perf/';
-  defaultDir: string = '/usr/local/lib';
 
   activeBasic: boolean = true;
   activePerf: boolean = false;
@@ -236,11 +234,11 @@ export class ToolBarComponent {
     graphDesc: '',
     radioValue: "N",
     skipDefault: false,
-    flowunitPath: this.defaultDir,
+    flowunitPath: this.dataService.commonFlowunitPath,
     perfEnable: false,
     perfTraceEnable: false,
     perfSessionEnable: false,
-    perfPath: this.defaultPerfDir
+    perfPath: this.dataService.defaultPerfDir
   };
 
   formDataCreateProject = {
@@ -533,11 +531,11 @@ export class ToolBarComponent {
       graphDesc: '',
       radioValue: "N",
       skipDefault: false,
-      flowunitPath: this.defaultDir,
+      flowunitPath: this.dataService.commonFlowunitPath,
       perfEnable: false,
       perfTraceEnable: false,
       perfSessionEnable: false,
-      perfPath: this.defaultPerfDir
+      perfPath: this.dataService.defaultPerfDir
     };
   }
 
@@ -623,7 +621,8 @@ export class ToolBarComponent {
       delete this.formDataCreateFlowunit.plugin;
       delete this.formDataCreateFlowunit.modelEntry;
     } else {
-      this.formDataCreateFlowunit.programLanguage = "infer"
+      this.formDataCreateFlowunit.programLanguage = "infer";
+      this.formDataCreateFlowunit.title = "Inference";
     }
     param = this.formDataCreateFlowunit;
     let ret = this.infoCreateProjectFirst();

@@ -25,11 +25,6 @@ export class MainComponent {
   @ViewChild('splitV') splitV: SplitComponent;
   @ViewChild('splitH') splitH: SplitComponent;
 
-  defaultPerfDir: string = '/tmp/modelbox/perf';
-
-  defaultSrc: string = `digraph {
-    node [shape=Mrecord];
-  }`;
   activeEditor: boolean = true;
   activeTaskLists: boolean = false;
   componentPanelEar: string = this.i18n.getById('panelEar.componentLabel');
@@ -134,10 +129,10 @@ export class MainComponent {
   }
 
   initCurrentProject() {
-
+    localStorage.clear();
     this.graphName = this.createUntitledName(this.graphs); //graph
     this.projectDesc = "";
-    this.dotSrc = this.defaultSrc;
+    this.dotSrc = this.dataService.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
     this.svgString = '';
     this.graphDesc = '';
@@ -146,7 +141,7 @@ export class MainComponent {
     this.settingPerfEnable = false;
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
-    this.settingPerfDir = this.defaultPerfDir + "/" + this.graphName;
+    this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
     if (this.toolBar) {
       this.toolBar.initFormData();
     }
@@ -160,7 +155,7 @@ export class MainComponent {
     this.path = project.path;
     this.dotSrc = project.graph.dotSrc;
     if (typeof this.dotSrc === 'undefined') {
-      this.dotSrc = this.defaultSrc;
+      this.dotSrc = this.dataService.defaultSrc;
     }
 
     this.dotSrcLastChangeTime = project.dotSrcLastChangeTime;
@@ -210,10 +205,14 @@ export class MainComponent {
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
         this.projectName = param.projectName;
-        this.dotSrc = this.defaultSrc;
         //after created successfully
         localStorage.removeItem("project");
         this.saveCurrentProject();
+        if (this.toolBar.model != "blank") {
+          this.selectSolution(this.toolBar.model);
+        }else{
+          this.dotSrc = this.dataService.defaultSrc;
+        }
         return
       }
     }, error => {
@@ -525,7 +524,6 @@ export class MainComponent {
       return;
     }
 
-    this.initCurrentProject();
     this.resetUndoAtNextTextChange = true;
     this.handleZoomResetButtonClick();
   };
@@ -546,8 +544,8 @@ export class MainComponent {
     }
 
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.graphName) {
-      this.settingPerfDir = this.defaultPerfDir + "/" + newName;
+    if (this.settingPerfDir === this.dataService.defaultPerfDir + "/" + this.graphName) {
+      this.settingPerfDir = this.dataService.defaultPerfDir + "/" + newName;
     }
     this.graphName = newName;
     this.dotSrc = newDotSrc ? newDotSrc : newName ? this.dotSrc : '',
@@ -614,8 +612,8 @@ export class MainComponent {
     this.settingPerfTraceEnable = context.perfTraceEnable;
     this.settingPerfSessionEnable = context.perfSessionEnable;
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.graphName) {
-      this.settingPerfDir = this.defaultPerfDir + "/" + newName;
+    if (this.settingPerfDir === this.dataService.defaultPerfDir + "/" + this.graphName) {
+      this.settingPerfDir = this.dataService.defaultPerfDir + "/" + newName;
     } else {
       this.settingPerfDir = context.perfPath;
     }
@@ -653,9 +651,6 @@ export class MainComponent {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
           this.createProject(this.toolBar.formDataCreateProject);
-          if (this.toolBar.model != "blank") {
-            this.selectSolution(this.toolBar.model);
-          }
         },
       },
       {
@@ -814,7 +809,6 @@ export class MainComponent {
   selectSolution(selectedName) {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
-
       this.initCurrentProject();
       this.graphName = selectedName;
       if (response.flow) {
