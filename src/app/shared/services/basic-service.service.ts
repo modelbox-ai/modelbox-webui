@@ -75,6 +75,10 @@ export class BasicServiceService {
     return this.http.put(this.serviceRouter + '/editor/all', paramData, {observe: 'response'}).pipe(timeout(30000));
   }
 
+  saveSolutionFlowunit(paramData?: any): Observable<any> {
+    return this.http.put(this.serviceRouter + '/editor/solutionToProject', paramData, {observe: 'response'}).pipe(timeout(30000));
+  }
+
   // 查询任务列表
   getTaskLists(): Observable<any> {
     return this.http.get(this.serviceRouter + '/v1/modelbox/job/list/all').pipe(timeout(30000));

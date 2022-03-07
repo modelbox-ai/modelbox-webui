@@ -29,8 +29,6 @@ export class MainComponent {
   activeTaskLists: boolean = false;
   componentPanelEar: string = this.i18n.getById('panelEar.componentLabel');
   editToolPanelEar: string = this.i18n.getById('panelEar.editToolLabel');
-
-
   dotSrcLastChangeTime: any =
     Number(localStorage.getItem('project.dotSrcLastChangeTime')) || Date.now();
   dotSrc: string;
@@ -77,6 +75,7 @@ export class MainComponent {
   state: any;
   currentComponent: any;
   folderList: any = [];
+  modelFlowunitPath = [];
   InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
@@ -108,7 +107,7 @@ export class MainComponent {
   }
 
   ngOnInit(): void {
-    this.reloadInsertComponent();
+    //this.reloadInsertComponent();
     this.dataService.currentPage = "main";
     //加载既存project
   }
@@ -164,7 +163,6 @@ export class MainComponent {
     if (typeof this.skipDefault === 'undefined') {
       this.skipDefault = false;
     }
-
     this.dirs = project.flowunit.path;
     if (typeof this.dirs === 'undefined') {
       this.dirs = []
@@ -210,9 +208,9 @@ export class MainComponent {
         this.saveCurrentProject();
         if (this.toolBar.model != "blank") {
           this.selectSolution(this.toolBar.model);
-        }else{
           this.dotSrc = this.dataService.defaultSrc;
         }
+
         return
       }
     }, error => {
@@ -221,7 +219,10 @@ export class MainComponent {
         life: 1500
       });
     });
+
   }
+
+
 
   saveCurrentProject() {
     this.setPersistentState(
@@ -326,7 +327,7 @@ export class MainComponent {
     this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
   };
 
-  dotSrcUpdate(e){
+  dotSrcUpdate(e) {
     this.dotSrc = e;
   }
 
@@ -623,7 +624,6 @@ export class MainComponent {
   }
 
   refreshFlowunit(e) {
-
     if (typeof (this.toolBar.formData.flowunitPath) === "string") {
       this.dirs = this.toolBar.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
     } else {
@@ -806,6 +806,15 @@ export class MainComponent {
     });
   }
 
+  saveSolutionFlowunitPath(dirs) {
+    let param = {};
+    param = {
+      dirs: dirs,
+      flowunitPath: this.toolBar.formDataCreateFlowunit.path
+    }
+    this.basicService.saveSolutionFlowunit(param).subscribe((data) => { });
+  }
+
   selectSolution(selectedName) {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
@@ -824,16 +833,19 @@ export class MainComponent {
 
       this.dotSrcLastChangeTime = Date.now();
       if (response.driver) {
+        this.modelFlowunitPath = response.driver.dir;
         this.skipDefault = response.driver['skip-default'];
         this.dirs = [];
         if (typeof (response.driver.dir) == 'string') {
           this.dirs.push(response.driver.dir);
         } else {
           response.driver.dir.forEach(item => {
-            this.dirs.push(item)
+            this.dirs.push(item);
+            this.toolBar.formData.flowunitPath += "\n" + item;
           });
         }
       }
+      this.saveSolutionFlowunitPath(response.driver.dir);
       this.saveCurrentProject();
       this.reloadInsertComponent();
       this.handleZoomResetButtonClick();

@@ -10,15 +10,15 @@ import { ToastService } from 'ng-devui/toast';
 export class DataServiceService {
   nodeShapeCategories: any = [];
   public currentPage: any = "";
-  
+
   public defaultSolutionGraph = "mnist.toml";
+  public defaultFormat = "graphviz";
   public commonFlowunitPath = "/usr/local/lib";
   public defaultPerfDir = '/tmp/modelbox/perf/';
-  public defaultFormat = "graphviz";
+  public defaultFlowunitDir = "/usr/local/share/modelbox/solution/flowunit/";
   public defaultSrc: string = `digraph {
     node [shape=Mrecord];
   }`;
-
   public currentSolution = this.defaultSolutionGraph;
   public currentSolutionProject = {};
 
@@ -104,7 +104,7 @@ export class DataServiceService {
       );
     })
 
-    
+
   }
 
   nodeShapeCategoriesAdd(param) {
@@ -119,11 +119,11 @@ export class DataServiceService {
       types: [param.deviceType],
       version: "1.0.0",
       virtual: false,
-      inputports:param.portInfos.filter(x=>x.portType=="output"),
-      outputports:param.portInfos.filter(x=>x.portType=="input")
+      inputports: param.portInfos.filter(x => x.portType == "output"),
+      outputports: param.portInfos.filter(x => x.portType == "input")
     };
     if (group) {
-       group.children.push(unit);
+      group.children.push(unit);
     } else {
       this.nodeShapeCategories.push({
         title: "Generic",

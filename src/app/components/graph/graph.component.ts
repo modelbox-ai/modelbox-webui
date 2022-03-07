@@ -233,16 +233,25 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleZoomResetButtonClick = () => {
-    this.setZoomScale(1, true);
+    try {
+      this.setZoomScale(1, true);
+    } catch (e) {
+      location.reload();
+    }
   };
 
   handleZoomFitButtonClick = () => {
-    const viewBox = this.svg.attr('viewBox').split(' ');
-    const bbox = this.graph0.node().getBBox();
-    const xRatio = viewBox[2] / bbox.width;
-    const yRatio = viewBox[3] / bbox.height;
-    const scale = Math.min(xRatio, yRatio);
-    this.setZoomScale(scale, true);
+    try {
+      const viewBox = this.svg.attr('viewBox').split(' ');
+      const bbox = this.graph0.node().getBBox();
+      const xRatio = viewBox[2] / bbox.width;
+      const yRatio = viewBox[3] / bbox.height;
+      const scale = Math.min(xRatio, yRatio);
+      this.setZoomScale(scale, true);
+    }
+    catch (e) {
+      location.reload();
+    }
   };
 
   handleZoomOutButtonClick = () => {
