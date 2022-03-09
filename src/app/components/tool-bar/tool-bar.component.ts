@@ -262,6 +262,7 @@ export class ToolBarComponent {
   };
 
   portInfo: any = {
+    portName: '',
     portType: '',
     dataType: '',
     deviceType: 'cpu',
@@ -422,6 +423,11 @@ export class ToolBarComponent {
 
   programLanguageValueChange2(value) {
     this.formDataCreateFlowunit.programLanguage = value;
+  }
+
+  deviceTypeValueChange(value){
+    this.formDataCreateFlowunit.deviceType = value;
+    this.portInfo.deviceType = value;
   }
 
   handleValueChangePortType(e) {
