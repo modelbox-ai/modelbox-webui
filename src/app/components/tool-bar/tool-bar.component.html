@@ -217,7 +217,8 @@
                 <d-form-control>
                     <d-data-table [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
                         [borderType]="'borderless'" (cellClick)="cellClick($event)" (cellDBClick)="cellDBClick($event)">
-                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" style="cursor:pointer"></d-column>
+                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" style="cursor:pointer">
+                        </d-column>
                     </d-data-table>
 
                 </d-form-control>
@@ -272,8 +273,7 @@
                 <d-form-control>
                     <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
-                        [(ngModel)]="formDataCreateFlowunit.deviceType"
-                        (valueChange)="deviceTypeValueChange($event)"
+                        [(ngModel)]="formDataCreateFlowunit.deviceType" (valueChange)="deviceTypeValueChange($event)"
                         [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
                     </d-select>
                 </d-form-control>
@@ -289,53 +289,41 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item>
-                <d-form-label [required]="true">{{'toolBar.modal.portOption' | translate}}</d-form-label>
+            <d-form-item style="margin-bottom: 0 !important;">
+                <d-form-label></d-form-label>
                 <d-form-control>
-                    <div style="display:flex; justify-content:space-between" *ngIf="formDataCreateFlowunit.programLanguage !== 'inference'">
-                        <div style="width:100px">
-                            <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
-                                [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="portInfo.portType"
-                                [placeholder]="'toolBar.modal.inputOutput' | translate" [options]="optionsInOut"
-                                (valueChange)="handleValueChangePortType($event)">
-                            </d-select>
+                    <div style="display:flex; justify-content:space-between">
+                        <div style="width:80px; text-align:center">
+                            {{'toolBar.modal.portName' | translate}}
                         </div>
-
-                        <div style="width:100px">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [(ngModel)]="portInfo.dataType" [ngModelOptions]="{ standalone: true }"
-                                [filterKey]="'id'" [placeholder]="'toolBar.modal.dataType' | translate"
-                                [options]="optionsDataType" [isSearch]="true">
-                                <ng-template let-option="option">
-                                    {{ option }}
-                                </ng-template>
-                            </d-select>
+                        <div style="width:100px; text-align:center">
+                            {{'toolBar.modal.inputOutput' | translate}}
                         </div>
-
-                        <div style="width:100px">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [disabled]="portDeviceTypeAble" [(ngModel)]="portInfo.deviceType"
-                                [ngModelOptions]="{ standalone: true }"
-                                [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
-                            </d-select>
+                        <div style="width:100px; text-align:center">
+                            {{'toolBar.modal.dataType' | translate}}
                         </div>
-
-                        <div style="width:100px">
-                            <d-input-number [placeholder]="'toolBar.modal.deviceNum' | translate"
-                                [ngModelOptions]="{ standalone: true }" [(ngModel)]="portInfo.deviceNum"
-                                class="input-number"></d-input-number>
+                        <div style="width:80px; text-align:center">
+                            {{'toolBar.modal.deviceType' | translate}}
                         </div>
+                        <div style="width:40px; text-align:center">
+                            {{'toolBar.modal.deviceNum' | translate}}
+                        </div>
+                        <div style="width:100px; text-align:center">
 
-                        <button class="tool-bar-button" (click)="handleAddPortInfoClick()">
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            {{'toolBar.modal.add' | translate}}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                        </button>
+                        </div>
                     </div>
+                </d-form-control>
+            </d-form-item>
 
-                    <div style="display:flex; justify-content:space-between" *ngIf="formDataCreateFlowunit.programLanguage === 'inference'">
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'toolBar.modal.portOption' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <div style="display:flex; justify-content:space-between">
                         <div style="width:80px">
-                            <input type="text" id="name" name="name" required [(ngModel)]="portInfo.portName" placeholder="port name">
+                            <input type="text" id="name" name="name" required [(ngModel)]="portInfo.portName"
+                                placeholder="port name">
                         </div>
                         <div style="width:100px">
                             <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
@@ -356,7 +344,7 @@
                             </d-select>
                         </div>
 
-                        <div style="width:60px">
+                        <div style="width:80px">
                             <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
                                 [disabled]="portDeviceTypeAble" [(ngModel)]="portInfo.deviceType"
                                 [ngModelOptions]="{ standalone: true }"
@@ -364,8 +352,8 @@
                             </d-select>
                         </div>
 
-                        <div style="width:60px">
-                            <d-input-number [placeholder]="'toolBar.modal.deviceNum' | translate"
+                        <div style="width:40px">
+                            <d-input-number style="width:40px" [placeholder]="'toolBar.modal.deviceNum' | translate"
                                 [ngModelOptions]="{ standalone: true }" [(ngModel)]="portInfo.deviceNum"
                                 class="input-number"></d-input-number>
                         </div>
@@ -385,19 +373,18 @@
                         [borderType]="'bordered'">
                         <thead dTableHead>
                             <tr dTableRow>
-                                <th *ngIf="formDataCreateFlowunit.programLanguage !== 'inference'" dHeadCell>Nb.</th>
-                                <th *ngIf="formDataCreateFlowunit.programLanguage === 'inference'" dHeadCell>Name</th>
-                                <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">{{ colOption.header }}
+                                <th dHeadCell>
+                                    {{'toolBar.modal.portName' | translate}}
+                                </th>
+                                <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">
+                                    {{ colOption.header }}
                                 </th>
                             </tr>
                         </thead>
                         <tbody dTableBody>
                             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
                                 <tr dTableRow>
-                                    <td dTableCell *ngIf="formDataCreateFlowunit.programLanguage !== 'inference'">
-                                        {{ rowIndex + 1 }}
-                                    </td>
-                                    <td dTableCell *ngIf="formDataCreateFlowunit.programLanguage === 'inference'">
+                                    <td dTableCell>
                                         {{rowItem.portName}}
                                     </td>
                                     <td dTableCell>
@@ -428,15 +415,24 @@
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitType' | translate}}
                 </d-form-label>
-                <d-form-control style="height:32px">
-                    <d-tabs [(activeTab)]="formDataCreateFlowunit.flowunitType" type="slider">
-                        <d-tab *ngFor="let item of flowunitTypes" [id]="item.id">
-                            <ng-template dTabTitle>
-                                {{ item.title }}
-                            </ng-template>
-                        </d-tab>
-                    </d-tabs>
+                <d-form-control style="height:32px;">
+                    <div style="display: inline-block;">
+                        <d-tabs [(activeTab)]="formDataCreateFlowunit.flowunitType" type="slider">
+                            <d-tab *ngFor="let item of flowunitTypes" [id]="item.id">
+                                <ng-template dTabTitle>
+                                    {{ item.title }}
+                                </ng-template>
+                            </d-tab>
+                        </d-tabs>
+                    </div>
+                    <div style="margin-left: 50px;display: inline-block;">
+                        <d-checkbox-group [(ngModel)]="valuesCheckbox" [name]="'type'"
+                            [options]="flowunitTypes2" [direction]="'row'" [isShowTitle]="true"
+                            (change)="onCheckbox2Change($event)">
+                        </d-checkbox-group>
+                    </div>
                 </d-form-control>
+
             </d-form-item>
 
             <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'inference'">
@@ -454,8 +450,7 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item
-                *ngIf="formDataCreateFlowunit.programLanguage === 'c++'">
+            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'c++'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitGroup' | translate}}
                 </d-form-label>

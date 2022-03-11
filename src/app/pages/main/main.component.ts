@@ -208,6 +208,7 @@ export class MainComponent {
         this.saveCurrentProject();
         if (this.toolBar.model != "blank") {
           this.selectSolution(this.toolBar.model);
+        }else{
           this.dotSrc = this.dataService.defaultSrc;
         }
 

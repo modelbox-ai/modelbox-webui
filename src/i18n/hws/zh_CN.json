@@ -70,6 +70,7 @@
   "toolBar.modal.unitType": "单元类型",
   "toolBar.modal.projectPath": "项目路径",
   "toolBar.modal.model": "项目模板",
+  "toolBar.modal.portName": "端口名称",
   "toolBar.modal.flowunitName": "功能单元名称",
   "toolBar.modal.flowunitPath": "功能单元路径",
   "toolBar.modal.portOption": "端口选项",

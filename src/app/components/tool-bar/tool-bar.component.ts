@@ -229,6 +229,14 @@ export class ToolBarComponent {
     label: this.i18n.getById('toolBar.setting.graphRankdir.leftRight')
   }];
 
+  valuesCheckbox=[];
+
+  flowunitTypeProDict = {
+    'IF_ELSE': 'condition',
+    'EXPAND': 'expand',
+    'COLLAPSE': 'collapse'
+  };
+
   formData = {
     graphName: '',
     graphDesc: '',
@@ -255,6 +263,7 @@ export class ToolBarComponent {
     deviceType: 'cpu',
     portInfos: [],
     flowunitType: 'normal',
+    flowunitTypePro: '',
     flowunitVirtualType: 'tensorflow',
     title: 'Generic',
     modelEntry: '',
@@ -270,7 +279,7 @@ export class ToolBarComponent {
   }
 
   optionsInOut = ['input', 'output'];
-  optionsDataType = ['number', 'string', 'boolean', 'array', 'object']; //flowunit type
+  optionsDataType = ['int', 'float', 'string', 'boolean', 'array', 'object']; //flowunit type
   optionsDeviceType = ['cpu', 'cuda'];
   flowunitGroupOptions = ['Image', 'Input', 'Output', 'Video', 'Generic']
 
@@ -313,19 +322,13 @@ export class ToolBarComponent {
     {
       id: 'stream',
       title: 'STREAM'
-    },
-    {
-      id: 'condition',
-      title: 'IF_ELSE'
-    },
-    {
-      id: 'expand',
-      title: 'EXPAND'
-    },
-    {
-      id: 'collapse',
-      title: 'COLLAPSE'
     }
+  ];
+
+  flowunitTypes2 = [
+    'IF_ELSE',
+    'EXPAND',
+    'COLLAPSE'
   ];
 
   flowunitVirtualTypes = [
@@ -423,9 +426,13 @@ export class ToolBarComponent {
 
   programLanguageValueChange2(value) {
     this.formDataCreateFlowunit.programLanguage = value;
+    if (value === "inference"){
+      this.formDataCreateFlowunit.deviceType = 'cuda';
+      this.portInfo.deviceType = 'cuda';
+    }
   }
 
-  deviceTypeValueChange(value){
+  deviceTypeValueChange(value) {
     this.formDataCreateFlowunit.deviceType = value;
     this.portInfo.deviceType = value;
   }
@@ -612,6 +619,7 @@ export class ToolBarComponent {
       portInfos: [],
       deviceType: 'cpu',
       flowunitType: 'normal',
+      flowunitTypePro: '',
       flowunitVirtualType: 'tensorflow',
       title: 'Generic',
       modelEntry: '',
@@ -675,6 +683,16 @@ export class ToolBarComponent {
     }
   }
 
+  onCheckbox2Change(e) {
+    if (e.isChecked) {
+      this.formDataCreateFlowunit.flowunitTypePro = this.flowunitTypeProDict[e.value];
+      this.valuesCheckbox = [e.value];
+    }else{
+      this.valuesCheckbox = [];
+    }
+    
+  }
+
   searchDirectory() {
     this.basicService.loadTreeByPath(this.openProjectPath).subscribe(
       (data: any) => {
@@ -722,7 +740,7 @@ export class ToolBarComponent {
               this.formData.perfTraceEnable = data.graphs[0].trace;
               this.formData.perfSessionEnable = data.graphs[0].session;
               this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
-            }else{
+            } else {
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
             }
             this.refreshFlowunit();
