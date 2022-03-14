@@ -827,7 +827,7 @@ export class ToolBarComponent {
         },
         driver: {
           "skip-default": project.graph.skipDefault,
-          dir: project.graph.dirs,
+          dir: project.graph.dirs.split("\n"),
         },
         profile: {
           profile: project.graph.settingPerfEnable,

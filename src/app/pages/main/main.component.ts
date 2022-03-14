@@ -14,6 +14,7 @@ import { ToolBarComponent } from '../../components/tool-bar/tool-bar.component';
 import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
+import { indexOf } from 'lodash';
 
 @Component({
   selector: 'app-main',
@@ -896,28 +897,35 @@ export class MainComponent {
   createOptionFromProject = (item) => {
     let params = {};
     params = {
-      job_id: item.name,
+      job_id: this.handleGraphName(item.graph.graphName),
       job_graph: {
         flow: {
-          desc: item.desc,
+          desc: item.graph.graphDesc,
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.dirs,
+          dir: item.graph.dirs.split("\n"),
         },
         profile: {
-          profile: item.settingPerfEnable,
-          trace: item.settingPerfTraceEnable,
-          session: item.settingPerfSessionEnable,
-          dir: item.settingPerfDir,
+          profile: item.graph.settingPerfEnable,
+          trace: item.graph.settingPerfTraceEnable,
+          session: item.graph.settingPerfSessionEnable,
+          dir: item.graph.settingPerfDir,
         },
         graph: {
-          graphconf: item.dotSrc,
+          graphconf: item.graph.dotSrc,
           format: "graphviz",
         },
       }
     }
     return params;
+  }
+
+  handleGraphName(name){
+    if (name.indexOf(".toml")==-1){
+      return name + ".toml";
+    }
+    return name;
   }
 
   showSolutionDialog(content: TemplateRef<any>) {
