@@ -140,10 +140,9 @@ export class InsertPanelsComponent implements OnInit {
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
-
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
-      if (data == null) {
+      if (data.devices == null) {
         return;
       }
       data.flowunits.forEach(item => {
@@ -207,6 +206,7 @@ export class InsertPanelsComponent implements OnInit {
   handleNodeShapeDragStart = shape => event => {
     this.onNodeShapeDragStart(event, shape);
     let crt = event.currentTarget.cloneNode(true);
+    crt.style.zIndex = "-100"
     crt.style.position = "absolute"; /* or visibility: hidden, or any of the above */
     crt.style.width = "200px";
     crt.style.height = "40px";

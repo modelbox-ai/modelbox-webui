@@ -4,11 +4,35 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutFullComponent } from '../layout/full/full.component';
 // main pages
 import { MainComponent } from './main/main.component';
+import { FirstComponent } from '../components/first/first.component';
+import { SolutionComponent } from '../components/solution/solution.component';
+import { ManagementComponent } from '../components/management/management.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: FirstComponent,
+    canActivate: [],
+    canActivateChild: [],
+    children: [],
+  },
+  {
+    path: 'main',
     component: MainComponent,
+    canActivate: [],
+    canActivateChild: [],
+    children: [],
+  },
+  {
+    path: 'solution',
+    component: SolutionComponent,
+    canActivate: [],
+    canActivateChild: [],
+    children: [],
+  },
+  {
+    path: 'management',
+    component: ManagementComponent,
     canActivate: [],
     canActivateChild: [],
     children: [],

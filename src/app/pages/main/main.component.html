@@ -1,79 +1,66 @@
-<app-header></app-header>
-<div class="model-box-tabs">
-  <ul class="ti3-tabs">
-    <li [ngClass]="{'ti3-tab-active': activeEditor}">
-      <a class="nav-link" href="javascript:void(0);" oncontext="return false" (click)="click('editor')">
-        {{ 'editor' | translate}}
-      </a>
-    </li>
-    <li [ngClass]="{'ti3-tab-active': activeTaskLists}">
-      <a class="nav-link" href="javascript:void(0);" oncontext="return false" (click)="click('taskLists')">
-        {{'taskLists' | translate}}
-      </a>
-    </li>
-  </ul>
-</div>
-<div class="task-scheduling-panel" style="height: 100%; width: 100%;" [ngClass]="{'editor-disactive': !activeEditor}">
-  <as-split #splitH direction="horizontal" (dragEnd)="handleGutterEnd($event, 'left')"
-    (dragStart)="handleGutterStart($event)">
-    <as-split-area [size]="leftSpliterSize">
-      <as-split direction="vertical" style="width:100%">
-        <as-split-area class="as-split-area-left">
-          <app-insert-panels [onClick]="handleInsertPanelsClick" [onNodeShapeClick]="handleNodeShapeClick"
-            [onNodeShapeDragStart]="handleNodeShapeDragStart" [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
-            [regFlowUnitPanel]="regFlowUnitPanel"></app-insert-panels>
-        </as-split-area>
-      </as-split>
-    </as-split-area>
-    <as-split-area [size]="100 - leftSpliterSize" class="main-container-body">
-      <as-split #splitV direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
-        (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
-        <as-split-area [size]="centerSplitterSize">
-          <app-tool-bar #toolBar [hasUndo]="hasUndo" [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick"
-            [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
-            [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
-            [onZoomFitButtonClick]="handleZoomFitButtonClick" [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
-            [onNewButtonClick]="handleNewClick.bind(this)" [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
-            [showSelectDialog]="showSelectDialog.bind(this)" [showSolutionDialog]="showSolutionDialog.bind(this)"
-            [projects]="projects" [oldName]="name" (projectsEmmiter)="getToolBarProjectsChange($event)"
-            [solutionList]="solutionList">
-          </app-tool-bar>
+<app-header-main #header [active]="page"></app-header-main>
+<div class="demo-page">
+  <div class="task-scheduling-panel" style="height: 100%; width: 100%;" [ngClass]="{'editor-disactive': !activeEditor}">
+    <as-split #splitH direction="horizontal" (dragEnd)="handleGutterEnd($event, 'left')"
+      (dragStart)="handleGutterStart($event)">
+      <as-split-area [size]="leftSpliterSize">
+        <as-split direction="vertical" style="width:100%">
+          <as-split-area class="as-split-area-left">
+            <app-insert-panels [onClick]="handleInsertPanelsClick" [onNodeShapeClick]="handleNodeShapeClick"
+              [onNodeShapeDragStart]="handleNodeShapeDragStart" [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
+              [regFlowUnitPanel]="regFlowUnitPanel"></app-insert-panels>
+          </as-split-area>
+        </as-split>
+      </as-split-area>
+      <as-split-area [size]="100 - leftSpliterSize" class="main-container-body">
+        <as-split #splitV direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
+          (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
+          <as-split-area [size]="centerSplitterSize">
+            <app-tool-bar #toolBar [hasUndo]="hasUndo" [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick"
+              [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
+              [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
+              [onZoomFitButtonClick]="handleZoomFitButtonClick" [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
+              [onNewButtonClick]="handleNewClick.bind(this)" [onRunButtonClick]="handleRunButtonClick"
+              [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
+              [onCreateProjectButtonClick]="createProject" [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
+              [showSelectDialog]="showSelectDialog.bind(this)" [showSolutionDialog]="showSolutionDialog.bind(this)"
+              [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
+              [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
+              [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [graphs]="graphs"
+              (graphsEmmiter)="getToolBarGraphsChange($event)" (refreshEmmiter)="refreshFlowunit($event)" (dotSrcEmmiter)="dotSrcUpdate($event)"> 
+            </app-tool-bar>
 
-          <div style="flex: 2;" class="graph">
-            <app-graph [dotSrc]="dotSrc" [hasFocus]="focusedPane === 'Graph'" [onUndo]="handleUndoButtonClick"
-              [onRedo]="handleRedoButtonClick" [onError]="handleError" [onFocus]="handleGraphFocus"
-              [onSelect]="handleGraphComponentSelect" [onTextChange]="handleTextChange"
-              [onInitialized]="handleGraphInitialized" [registerGetSvg]="registerGetSvg"
-              [regOnResizeGraph]="regOnResizeGraph" [registerNodeShapeClick]="registerNodeShapeClick"
-              [registerNodeShapeDragStart]="registerNodeShapeDragStart"
-              [registerNodeShapeDragEnd]="registerNodeShapeDragEnd"
-              [registerZoomInButtonClick]="registerZoomInButtonClick"
-              [registerZoomOutButtonClick]="registerZoomOutButtonClick"
-              [registerZoomFitButtonClick]="registerZoomFitButtonClick"
-              [registerZoomResetButtonClick]="registerZoomResetButtonClick"
-              [registerNodeAttributeChange]="registerNodeAttributeChange" [isResizing]="isResizing"></app-graph>
-          </div>
-        </as-split-area>
-        <as-split-area [size]="100-centerSplitterSize">
-          <app-text-editor #textEditor [dotSrc]="dotSrc" [onTextChange]="handleTextChange"
-            [onFocus]="handleTextEditorFocus" [onBlur]="handleTextEditorBlur" [error]="error"
-            [selectedGraphComponents]="selectedGraphComponents" [holdOff]="holdOff" [fontSize]="fontSize"
-            [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
-            [registerResize]="registerEditorResize"></app-text-editor>
-        </as-split-area>
-      </as-split>
-    </as-split-area>
-  </as-split>
-</div>
-<div style="height: 100%; padding: 12px 16px 0 12px" [ngClass]="{'taskLists-disactive':
-  !activeTaskLists}">
-  <app-management [projects]="projects">
-  </app-management>
-</div>
-
-<div>
-  <app-attribute-panel style="z-index:99999" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
-    [config]="currentComponent" [onNodeAttributeChange]="handleNodeAttributeChange"
-    (newItemEvent)="updateConfig($event)">
-  </app-attribute-panel>
+            <div style="flex: 2;" class="graph">
+              <app-graph [dotSrc]="dotSrc" [hasFocus]="focusedPane === 'Graph'" [onUndo]="handleUndoButtonClick" style="z-index:-100"
+                [onRedo]="handleRedoButtonClick" [onError]="handleError" [onFocus]="handleGraphFocus"
+                [onSelect]="handleGraphComponentSelect" [onTextChange]="handleTextChange"
+                [onInitialized]="handleGraphInitialized" [registerGetSvg]="registerGetSvg"
+                [registerNodeShapeClick]="registerNodeShapeClick"
+                [registerNodeShapeDragStart]="registerNodeShapeDragStart"
+                [registerNodeShapeDragEnd]="registerNodeShapeDragEnd"
+                [registerZoomInButtonClick]="registerZoomInButtonClick"
+                [registerZoomOutButtonClick]="registerZoomOutButtonClick"
+                [registerZoomFitButtonClick]="registerZoomFitButtonClick"
+                [registerZoomResetButtonClick]="registerZoomResetButtonClick"
+                [registerNodeAttributeChange]="registerNodeAttributeChange" [isResizing]="isResizing"></app-graph>
+            </div>
+          </as-split-area>
+          <as-split-area [size]="100-centerSplitterSize">
+            <app-text-editor #textEditor [dotSrc]="dotSrc" [onTextChange]="handleTextChange"
+              [onFocus]="handleTextEditorFocus" [onBlur]="handleTextEditorBlur" [error]="error"
+              [selectedGraphComponents]="selectedGraphComponents" [holdOff]="holdOff" [fontSize]="fontSize"
+              [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
+              [registerResize]="registerEditorResize"
+              [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick"></app-text-editor>
+          </as-split-area>
+        </as-split>
+      </as-split-area>
+    </as-split>
+  </div>
+  <div>
+    <app-attribute-panel style="z-index:5" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
+      [config]="currentComponent" [onNodeAttributeChange]="handleNodeAttributeChange"
+      (newItemEvent)="updateConfig($event)">
+    </app-attribute-panel>
+  </div>
 </div>

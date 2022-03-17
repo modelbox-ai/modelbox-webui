@@ -1,0 +1,50 @@
+<app-header-main #header></app-header-main>
+<div class="banner">
+  <div class="title">
+    {{ 'first.title' | translate}}
+  </div>
+  <div class="para">
+    {{ 'first.introduction' | translate}}
+  </div>
+</div>
+<div class="sp-panel">
+  <div class="ch-panel border">
+    <div style="display: flex;align-items: center;justify-content: space-between;">
+      <div class="first-icon icon-example" (click)="header.goExample()">
+      </div>
+      <div class="title-ch-panel">
+        {{ 'example' | translate}}
+      </div>
+    </div>
+    <hr class="hr-dashed">
+    <div class="para-ch-panel">
+      {{ 'first.introductionExample' | translate}}
+    </div>
+  </div>
+  <div class="ch-panel border">
+    <div style="display: flex;align-items: center;justify-content: space-between;">
+      <div class="first-icon icon-arrange" (click)="header.goMain()">
+      </div>
+      <div class="title-ch-panel">
+        {{ 'arrange' | translate}}
+      </div>
+    </div>
+    <hr class="hr-dashed">
+    <div class="para-ch-panel">
+      {{ 'first.introductionGraph' | translate}}
+    </div>
+  </div>
+  <div class="ch-panel border">
+    <div style="display: flex;align-items: center;justify-content: space-between;">
+      <div class="first-icon icon-task" (click)="header.goTask()">
+      </div>
+      <div class="title-ch-panel">
+        {{ 'task' | translate}}
+      </div>
+    </div>
+    <hr class="hr-dashed">
+    <div class="para-ch-panel">
+      {{ 'first.introductionTask' | translate}}
+    </div>
+  </div>
+</div>

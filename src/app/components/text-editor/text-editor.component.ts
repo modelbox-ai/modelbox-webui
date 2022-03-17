@@ -49,6 +49,7 @@ export class TextEditorComponent {
   @Input() registerRedo: any;
   @Input() registerUndoReset: any;
   @Input() registerResize: any;
+  @Input() registerSwitchDirectionButtonClick: any
   @ViewChild(AceComponent, { static: true }) componentRef: AceComponent;
   prevError: any;
   prevNumLines: number;
@@ -61,37 +62,16 @@ export class TextEditorComponent {
     const hasUndo = this.editor.getSession().getUndoManager().hasUndo();
     const hasRedo = this.editor.getSession().getUndoManager().hasRedo();
     const undoRedoState = { hasUndo, hasRedo };
-    this.onTextChange(value, undoRedoState);
+    if (this.onTextChange !== undefined) {
+      this.onTextChange(value, undoRedoState);
+    }
   }, 500);
 
   constructor(private div: ElementRef, private basicService: BasicServiceService) { }
 
-  ngOnInit() {
-    let self = this
-    this.basicService.subscribe({
-      next: value => {
-        let temp = self.dotSrc.match(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/);
-        self.dotSrc = self.dotSrc.replace(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/gi, '$1');
-        if (temp !== null && temp.length > 0) {
-          let rankdir = "LR";
-          if (temp[0].indexOf("LR") !== -1) {
-            rankdir = "VERTICLE";
-          }
-          self.dotSrc = self.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + rankdir);
-        } else {
-          self.dotSrc = self.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + "LR");
-        }
-      },
-      error: err => {
-        // handle err
-      },
-      complete: () => {
-        // handle complete
-      }
-    })
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
+
     const { error } = changes;
     if (error && !error.firstChange) {
       let annotations = null;
@@ -183,6 +163,7 @@ export class TextEditorComponent {
     this.registerRedo(this.redo);
     this.registerUndoReset(this.resetUndoStack);
     this.registerResize(this.resize);
+    this.registerSwitchDirectionButtonClick(this.switchDirection);
     this.config.tabSize = 2
     this.config.enableBasicAutocompletion = true;
     this.config.enableLiveAutocompletion = true;
@@ -204,5 +185,19 @@ export class TextEditorComponent {
 
   resetUndoStack = () => {
     this.editor.getSession().getUndoManager().reset();
+  };
+
+  switchDirection = () => {
+    let temp = this.dotSrc.match(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/);
+    this.dotSrc = this.dotSrc.replace(/[\n|}]\s*rankdir\s*=.*;*([\n|}])/gi, '$1');
+    if (temp !== null) {
+      let rankdir = "LR";
+      if (temp[0].indexOf("LR") !== -1) {
+        rankdir = "VERTICLE";
+      }
+      this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + rankdir);
+    } else {
+      this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 $3{\n    rankdir=' + "LR");
+    }
   };
 }

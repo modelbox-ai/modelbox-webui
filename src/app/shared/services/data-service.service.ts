@@ -2,29 +2,135 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import units from './units.json';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { ToastService } from 'ng-devui/toast';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataServiceService {
   nodeShapeCategories: any = [];
+  public currentPage: any = "";
+
+  public defaultSolutionGraph = "mnist.toml";
+  public defaultFormat = "graphviz";
+  public commonFlowunitPath = "/usr/local/lib";
+  public defaultPerfDir = '/tmp/modelbox/perf/';
+  public defaultFlowunitDir = "/usr/local/share/modelbox/solution/flowunit/";
+  public defaultSrc: string = `digraph {
+    node [shape=Mrecord];
+  }`;
+  public currentSolution = this.defaultSolutionGraph;
+  public currentSolutionProject = {};
+
   constructor(private sanitized: DomSanitizer,
-    private basicService: BasicServiceService) {
+    private basicService: BasicServiceService,
+    private toastService: ToastService) {
     this.nodeShapeCategories.length = 0;
   }
 
   // 使用 unit name 及 type获取 对应的 unit
   getUnit(name, type) {
     let unit;
-    
+    if (this.nodeShapeCategories.length === 0) {
+      this.loadFlowUnit(null, []);
+    }
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
-        if (it.name === name && it.type === type) {
+        if (it.name === name) {
           unit = it;
+          if (it.type !== type && it.types.indexOf(type) === -1) {
+            this.toastService.open({
+              value: [{ severity: 'warn', content: unit.name + "顶点类型错误。请选择带有GPU的设备。" }],
+              life: 3000
+            });
+          }
         }
       });
     });
     return unit;
+  }
+
+  loadFlowUnit(skip, dirs) {
+    if (skip === null) {
+      skip = false;
+    }
+
+    if (skip === "") {
+      skip = false;
+    }
+    let params = {
+      "skip-default": skip,
+      dir: dirs,
+    }
+    this.basicService.queryData(params).subscribe((data) => {
+      let nodeShapeCategories = [];
+      this.nodeShapeCategories = [];
+      if (data.devices == null) {
+        return;
+      }
+      data.flowunits.forEach(item => {
+        const group = nodeShapeCategories.find(i => i.title === item.group);
+        const unit = {
+          ...item,
+          title: item.name,
+          active: nodeShapeCategories.length == 0 ? true : false,
+          types: [
+            ...new Set(
+              data.flowunits.filter(u => u.name === item.name).map(i => i.type)
+            ),
+          ],
+        };
+
+        if (group) {
+          group.children.push(unit);
+        } else {
+          nodeShapeCategories.push({
+            title: item.group,
+            collapsed: true,
+            children: [unit],
+          });
+        }
+      });
+      this.nodeShapeCategories = nodeShapeCategories;
+      this.nodeShapeCategories = this.nodeShapeCategories.map(
+        item => {
+          return {
+            ...item,
+            children: [...new Set(item.children.map(it => it.title))].map(it =>
+              item.children.find(i => i.title === it)
+            ),
+          };
+        }
+      );
+    })
+
+
+  }
+
+  nodeShapeCategoriesAdd(param) {
+    this.nodeShapeCategories;
+    const group = this.nodeShapeCategories.find(i => i.title === param.title);
+    const unit = {
+      name: param.flowunitName,
+      descryption: param.desc,
+      title: param.flowunitName,
+      active: this.nodeShapeCategories.length == 0 ? true : false,
+      type: param.deviceType,
+      types: [param.deviceType],
+      version: "1.0.0",
+      virtual: false,
+      inputports: param.portInfos.filter(x => x.portType == "output"),
+      outputports: param.portInfos.filter(x => x.portType == "input")
+    };
+    if (group) {
+      group.children.push(unit);
+    } else {
+      this.nodeShapeCategories.push({
+        title: "Generic",
+        collapsed: true,
+        children: [unit],
+      });
+    }
   }
 
   getLabel(name, type, labelname) {

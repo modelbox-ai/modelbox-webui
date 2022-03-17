@@ -1,9 +1,10 @@
-<div>
+<app-header-main #header [active]="page"></app-header-main>
+<div class="demo-page">
   <div class="tasklist-search-box-div">
     <div class="tasklist-search-box-block">
-      <button class="tasklist-button" type="button" tiButton autofocus (click)="openCreateTask(createTaskModal)">
+      <!-- <button class="tasklist-button" type="button" tiButton autofocus (click)="openCreateTask(createTaskModal)">
         {{newTaskText}}
-      </button>
+      </button> -->
     </div>
     <div class="tasklist-search-box-block">
       <d-search style="width: 300px; height:28px" [placeholder]="placeholder" [(ngModel)]="sreachValue"

@@ -77,15 +77,17 @@ export class AttributePanelComponent {
     options: [],
     selected: {},
     init: () => {
-      this.unitType.options = this.unit.types.map(item => {
-        return {
-          id: item,
-          label: item,
-        };
-      });
-      this.unitType.selected = this.unitType.options.find(
-        item => item.id === this.unit.type
-      );
+      if (this.unit) {
+        this.unitType.options = this.unit.types.map(item => {
+          return {
+            id: item,
+            label: item,
+          };
+        });
+        this.unitType.selected = this.unitType.options.find(
+          item => item.id === this.unit.type
+        );
+      }
     },
     change: (event, form) => {
       const unitType = this.config.attributes.find(
@@ -101,37 +103,39 @@ export class AttributePanelComponent {
     data: [],
     init: () => {
       this.unitOptions.data = [];
-      this.unit.options.forEach(item => {
-        let formItem: any = {
-          label: item.name.replace(/_/g, " "),
-          required: item.required,
-          type: item.type,
-          default: item.default,
-          desc: item.desc,
-          values: item.values,
-        };
+      if (this.unit) {
+        this.unit.options.forEach(item => {
+          let formItem: any = {
+            label: item.name.replace(/_/g, " "),
+            required: item.required,
+            type: item.type,
+            default: item.default,
+            desc: item.desc,
+            values: item.values,
+          };
 
-        if (item.type === 'int' || item.type === 'integer') {
-          formItem.value = item.default;
-        } else if (item.type === 'bool') {
-          formItem.value = false
-        } else if (item.type === 'list') {
-          formItem.options = Object.keys(item.values).map(it => {
-            return {
-              id: it,
-              label: it,
-            };
-          });
-          formItem.selected =
-            (item.default &&
-              formItem.options.find(it => it.id === item.default)) ||
-            {};
-        } else {
-          // 字符串场景
-          formItem.value = item.default || '';
-        }
-        this.unitOptions.data.push(formItem);
-      });
+          if (item.type === 'int' || item.type === 'integer') {
+            formItem.value = item.default;
+          } else if (item.type === 'bool') {
+            formItem.value = false
+          } else if (item.type === 'list') {
+            formItem.options = Object.keys(item.values).map(it => {
+              return {
+                id: it,
+                label: it,
+              };
+            });
+            formItem.selected =
+              (item.default &&
+                formItem.options.find(it => it.id === item.default)) ||
+              {};
+          } else {
+            // 字符串场景
+            formItem.value = item.default || '';
+          }
+          this.unitOptions.data.push(formItem);
+        });
+      }
     },
   };
 
@@ -278,52 +282,53 @@ export class AttributePanelComponent {
   }
 
   handleTipText(context) {
-    let reg = /(?<=[@.*:])[\s\S]*?(?=@)/g;
-    context.descryption = context.descryption.replace(/::/g, "->");
-    let res = context.descryption.match(reg);
-    let group = [];
-    let smix = "";
-    if (res !== null) {
-      if (context.descryption.indexOf("@Constraint:") != -1) {
-        group = context.descryption.split("@Constraint:");
-        if (group.length > 0) {
-          context.constraint = group[1].trim();
-        }
-      }
-
-      for (let i of res) {
-        group = i.split("\n");
-        if (group.length > 0 && group[0].indexOf("Brief") != -1) {
-          smix = group[0].replace("Brief:", "").trim();
-          for (let j = 1; j < group.length; j++) {
-            smix += group[j];
+    if (context) {
+      let reg = /(?<=[@.*:])[\s\S]*?(?=@)/g;
+      context.descryption = context.descryption.replace(/::/g, "->");
+      let res = context.descryption.match(reg);
+      let group = [];
+      let smix = "";
+      if (res !== null) {
+        if (context.descryption.indexOf("@Constraint:") != -1) {
+          group = context.descryption.split("@Constraint:");
+          if (group.length > 0) {
+            context.constraint = group[1].trim();
           }
-          context.desc = smix.trim();
         }
 
-        let tempstr = "";
-        let tempstr_group = [];
-        this.descDataSource = [];
-        if (group.length > 0 && group[0].indexOf("Port parameter") != -1) {
-          smix = ""
-          for (let j = 0; j < group.length; j++) {
-            tempstr = group[j].replace(/:/g, "").trim();
-            if (tempstr.indexOf("Field Name") != -1 && tempstr.indexOf("Type") != -1) {
-              tempstr = tempstr.replace(/Field Name/g, "").replace(/Type/g, "").trim();
-              tempstr_group = tempstr.split(",");
-              if (tempstr_group.length === 2) {
-                this.descDataSource.push({ fieldName: tempstr_group[0].trim(), type: tempstr_group[1].trim().replace(/->/g, "::") });
-              }
-            } else {
-              smix += tempstr.replace(/Port parameter/, "").trim() + "\n";
+        for (let i of res) {
+          group = i.split("\n");
+          if (group.length > 0 && group[0].indexOf("Brief") != -1) {
+            smix = group[0].replace("Brief:", "").trim();
+            for (let j = 1; j < group.length; j++) {
+              smix += group[j];
             }
+            context.desc = smix.trim();
           }
-          context.portDetail = this.handlePortDetail(smix.trim());
+
+          let tempstr = "";
+          let tempstr_group = [];
+          this.descDataSource = [];
+          if (group.length > 0 && group[0].indexOf("Port parameter") != -1) {
+            smix = ""
+            for (let j = 0; j < group.length; j++) {
+              tempstr = group[j].replace(/:/g, "").trim();
+              if (tempstr.indexOf("Field Name") != -1 && tempstr.indexOf("Type") != -1) {
+                tempstr = tempstr.replace(/Field Name/g, "").replace(/Type/g, "").trim();
+                tempstr_group = tempstr.split(",");
+                if (tempstr_group.length === 2) {
+                  this.descDataSource.push({ fieldName: tempstr_group[0].trim(), type: tempstr_group[1].trim().replace(/->/g, "::") });
+                }
+              } else {
+                smix += tempstr.replace(/Port parameter/, "").trim() + "\n";
+              }
+            }
+            context.portDetail = this.handlePortDetail(smix.trim());
+          }
         }
       }
-    } else {
-      return context;
     }
+    return context;
   }
 
   handlePortDetail(portDetail) {
@@ -335,7 +340,9 @@ export class AttributePanelComponent {
   initConfig(config) {
     this.changedValue = false;
     this.unit = this.getUnit(config);
-    if (!this.unit && this.warnNoNode) {
+    this.unitType.init();
+    this.unitOptions.init();
+    if (!this.unit && this.warnNoNode && this.config.attributes.length === 0) {
       this.newItemEvent.emit(null);
       this.warnNoNode = false;
       const results = this.dialogService.open({
@@ -361,9 +368,6 @@ export class AttributePanelComponent {
       return;
     }
     this.handleTipText(this.unit);
-
-    this.unitType.init();
-    this.unitOptions.init();
     // type
     this.config.attributes.forEach(item => {
       if (item.key === 'device') {

@@ -13,6 +13,8 @@ import { TextEditorComponent } from '../../components/text-editor/text-editor.co
 import { ToolBarComponent } from '../../components/tool-bar/tool-bar.component';
 import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import { DataServiceService } from '@shared/services/data-service.service';
+import { ToastService } from 'ng-devui/toast';
+import { indexOf } from 'lodash';
 
 @Component({
   selector: 'app-main',
@@ -24,18 +26,10 @@ export class MainComponent {
   @ViewChild('splitV') splitV: SplitComponent;
   @ViewChild('splitH') splitH: SplitComponent;
 
-  defaultPerfDir: string = '/tmp/modelbox/perf';
-
-  defaultSrc: string = `digraph {
-    node [shape=Mrecord];
-  }`;
   activeEditor: boolean = true;
   activeTaskLists: boolean = false;
   componentPanelEar: string = this.i18n.getById('panelEar.componentLabel');
   editToolPanelEar: string = this.i18n.getById('panelEar.editToolLabel');
-
-  name: string = localStorage.getItem('project.name') || '';
-  desc: string = localStorage.getItem('project.desc') || '';
   dotSrcLastChangeTime: any =
     Number(localStorage.getItem('project.dotSrcLastChangeTime')) || Date.now();
   dotSrc: string;
@@ -50,14 +44,15 @@ export class MainComponent {
   settingPerfSessionEnable = false;
   settingPerfDir: any;
   model = 1;
+  page = "editor";
   collapsed = false;
   editorCollapsed = false;
   getSvg: any;
-  resizeGraph: any;
   focusedPane: any = '';
   error: any;
   undo: any;
   redo: any;
+  switchDirection: any;
   editorResize: any;
   hasUndo = false;
   hasRedo = false;
@@ -71,10 +66,17 @@ export class MainComponent {
   fontSize = localStorage.getItem('fontSize') || 12;
   tabSize = Number(localStorage.getItem('tabSize')) || 4;
   resetUndoAtNextTextChange: any;
-  projects: any = JSON.parse(localStorage.getItem('projects')) || {};
+  project: any = JSON.parse(localStorage.getItem('project')) || {};
+  graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
+  projectName: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectName : "";
+  projectDesc: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectDesc : "";
+  graphName: string = JSON.parse(localStorage.getItem('project')) ? this.project.graph.graphName : "";
+  path: string;
+  desc: string;
   state: any;
-  solutionList: any = [];
   currentComponent: any;
+  folderList: any = [];
+  modelFlowunitPath = [];
   InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
@@ -88,39 +90,27 @@ export class MainComponent {
   handleZoomFitButtonClick = () => { };
   handleZoomResetButtonClick = () => { };
   handleNodeAttributeChange = () => { };
+  handleSwitchButtonClick = () => { };
+  graphDesc: string;
+  flowunitPath: any;
+
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
-    private dataService: DataServiceService,) {
-
+    private dataService: DataServiceService,
+    private toastService: ToastService,) {
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project) {
       this.loadProjectFromJson(current_project);
-      if (this.defaultSrc == this.dotSrc) {
-        this.skipDefault = false;
-      }
-    }
-
-    if ((typeof (this.dotSrc) == "undefined") || this.dotSrc === null || this.dotSrc === '') {
-      this.dotSrc = this.defaultSrc;
-    }
-  }
-
-  click(tab: string): void {
-    if (tab === 'editor') {
-      this.activeEditor = true;
-      this.activeTaskLists = false;
     } else {
-      this.activeEditor = false;
-      this.activeTaskLists = true;
+      this.initCurrentProject();
     }
-    this.currentComponent = null;
   }
-  
-  ngOnInit(): void {
-    this.LoadSolutionData();
 
-    this.reloadInsertComponent();
+  ngOnInit(): void {
+    //this.reloadInsertComponent();
+    this.dataService.currentPage = "main";
+    //加载既存project
   }
 
   ngAfterViewInit() {
@@ -135,34 +125,37 @@ export class MainComponent {
     if (typeof this.InsertPanels === 'undefined') {
       return
     }
-
     this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs);
   }
 
-  initCurrentProlect() {
-
-    this.name = this.createUntitledName(this.projects);
-    this.desc = "";
-    this.dotSrc = this.defaultSrc;
+  initCurrentProject() {
+    localStorage.clear();
+    this.graphName = this.createUntitledName(this.graphs); //graph
+    this.projectDesc = "";
+    this.dotSrc = this.dataService.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
-    this.svgString = this.getSvgString();
     this.svgString = '';
+    this.graphDesc = '';
     this.skipDefault = false;
     this.dirs = [];
     this.settingPerfEnable = false;
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
-    this.settingPerfDir = this.defaultPerfDir + "/" + this.name
-
+    this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
+    if (this.toolBar) {
+      this.toolBar.initFormData();
+    }
     this.reloadInsertComponent();
   }
 
   loadProjectFromJson(project) {
-    this.name = project.name;
-    this.desc = project.desc;
-    this.dotSrc = project.dotSrc;
+    this.graphName = project.graph.graphName;
+    this.projectName = project.projectName;
+    this.projectDesc = project.projectDesc;
+    this.path = project.path;
+    this.dotSrc = project.graph.dotSrc;
     if (typeof this.dotSrc === 'undefined') {
-      this.dotSrc = this.defaultSrc;
+      this.dotSrc = this.dataService.defaultSrc;
     }
 
     this.dotSrcLastChangeTime = project.dotSrcLastChangeTime;
@@ -171,34 +164,67 @@ export class MainComponent {
     if (typeof this.skipDefault === 'undefined') {
       this.skipDefault = false;
     }
-
-    this.dirs = project.dirs;
+    this.dirs = project.flowunit.path;
     if (typeof this.dirs === 'undefined') {
       this.dirs = []
     }
-    this.settingPerfEnable = project.settingPerfEnable;
-    this.settingPerfTraceEnable = project.settingPerfTraceEnable;
-    this.settingPerfSessionEnable = project.settingPerfSessionEnable;
-    this.settingPerfDir = project.settingPerfDir;
+    this.settingPerfEnable = project.graph.settingPerfEnable;
+    this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
+    this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
+    this.settingPerfDir = project.graph.settingPerfDir;
+    this.reloadInsertComponent();
   }
 
   getProjectJson() {
     const projectdata = {
-      name: this.name,
-      desc: this.desc,
-      dotSrc: this.dotSrc,
-      dotSrcLastChangeTime: this.dotSrcLastChangeTime,
-      svgString: this.getSvgString(),
-      skipDefault: this.skipDefault,
-      dirs: this.dirs,
-      settingPerfEnable: this.settingPerfEnable,
-      settingPerfTraceEnable: this.settingPerfTraceEnable,
-      settingPerfSessionEnable: this.settingPerfSessionEnable,
-      settingPerfDir: this.settingPerfDir,
+      projectName: this.toolBar.formDataCreateProject.projectName,
+      projectDesc: this.toolBar.formDataCreateProject.projectDesc,
+      path: this.toolBar.formDataCreateProject.path,
+      graph: {
+        graphName: this.toolBar.formData.graphName,
+        graphDesc: this.toolBar.formData.graphDesc,
+        dotSrc: this.dotSrc,
+        dotSrcLastChangeTime: this.dotSrcLastChangeTime,
+        svgString: this.getSvgString(),
+        skipDefault: this.skipDefault,
+        dirs: this.toolBar.formData.flowunitPath,
+        settingPerfEnable: this.toolBar.formData.perfEnable,
+        settingPerfTraceEnable: this.toolBar.formData.perfTraceEnable,
+        settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
+        settingPerfDir: this.toolBar.formData.perfPath,
+      },
+
+      flowunit: this.toolBar.formDataCreateFlowunit
     }
 
     return projectdata;
   }
+
+  createProject(param) {
+    this.basicService.createProject(param).subscribe((data: any) => {
+      if (data.status === 201) {
+        this.projectName = param.projectName;
+        //after created successfully
+        localStorage.removeItem("project");
+        this.saveCurrentProject();
+        if (this.toolBar.model != "blank") {
+          this.selectSolution(this.toolBar.model);
+        }else{
+          this.dotSrc = this.dataService.defaultSrc;
+        }
+
+        return
+      }
+    }, error => {
+      this.toastService.open({
+        value: [{ severity: 'error', content: this.i18n.getById('message.createProjectFailedPleaseCheck') }],
+        life: 1500
+      });
+    });
+
+  }
+
+
 
   saveCurrentProject() {
     this.setPersistentState(
@@ -207,11 +233,11 @@ export class MainComponent {
       });
   }
 
-  saveProjects() {
+  saveGraphs() {
     this.saveCurrentProject();
     this.setPersistentState({
-      projects: {
-        ...this.projects,
+      graphs: {
+        ...this.graphs,
       }
     });
   }
@@ -233,11 +259,17 @@ export class MainComponent {
 
   handleError = error => {
     if (error) {
-      error.numLines = this.dotSrc.split('\n').length;
+      if (this.dotSrc) {
+        error.numLines = this.dotSrc.split('\n').length;
+      }
     }
     if (JSON.stringify(error) !== JSON.stringify(this.error)) {
       this.error = error;
     }
+  };
+
+  handleSwitchDirectionButtonClick = () => {
+    this.switchDirection();
   };
 
   registerUndo = (undo, context) => {
@@ -258,10 +290,6 @@ export class MainComponent {
 
   registerGetSvg = (getSvg, context) => {
     this.getSvg = getSvg.bind(context);
-  };
-
-  regOnResizeGraph = (onResizeGraph, context) => {
-    this.resizeGraph = onResizeGraph.bind(context);
   };
 
   registerNodeShapeClick = (handleNodeShapeClick, context) => {
@@ -289,6 +317,21 @@ export class MainComponent {
       context
     );
   };
+  registerSwitchDirectionButtonClick = (switchDirection, context) => {
+    this.switchDirection = switchDirection.bind(context);
+  };
+
+  registerZoomResetButtonClick = (handleZoomResetButtonClick, context) => {
+    this.handleZoomResetButtonClick = handleZoomResetButtonClick.bind(context);
+  };
+
+  registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
+    this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
+  };
+
+  dotSrcUpdate(e) {
+    this.dotSrc = e;
+  }
 
   setEditorMarkers(components) {
     let marks = []
@@ -348,10 +391,10 @@ export class MainComponent {
     this.setFocus('Graph');
   };
 
-  createUntitledName = (projects, currentName?) => {
+  createUntitledName = (graphs, currentName?) => {
     const baseName = 'Untitled';
     let newName = baseName;
-    while (projects[newName] || newName === currentName) {
+    while (graphs[newName] || newName === currentName) {
       newName = baseName + ' ' + (Number(newName.replace(baseName, '')) + 1);
     }
     return newName;
@@ -360,8 +403,8 @@ export class MainComponent {
 
   handleTextChange = (text, undoRedoState) => {
     const name =
-      this.name || (text ? this.createUntitledName(this.projects) : '');
-    this.name = name
+      this.graphName || (text ? this.createUntitledName(this.graphs) : '');
+    this.graphName = name
 
     this.isSaved = false;
     this.dotSrc = text;
@@ -405,14 +448,6 @@ export class MainComponent {
     if (this.focusedPane === currentlyFocusedPane) {
       this.focusedPane = newFocusedPane;
     }
-  };
-
-  registerZoomResetButtonClick = (handleZoomResetButtonClick, context) => {
-    this.handleZoomResetButtonClick = handleZoomResetButtonClick.bind(context);
-  };
-
-  registerNodeAttributeChange = (handleNodeAttributeChange, context) => {
-    this.handleNodeAttributeChange = handleNodeAttributeChange.bind(context);
   };
 
   handleGutterEnd = (event, name) => {
@@ -469,7 +504,7 @@ export class MainComponent {
           handler: ($event: Event) => {
             results.modalInstance.hide();
             results.modalInstance.zIndex = -1;
-            this.initCurrentProlect();
+            this.initCurrentProject();
             this.resetUndoAtNextTextChange = true;
             setTimeout(() => {
               this.handleZoomResetButtonClick();
@@ -492,7 +527,6 @@ export class MainComponent {
       return;
     }
 
-    this.initCurrentProlect();
     this.resetUndoAtNextTextChange = true;
     this.handleZoomResetButtonClick();
   };
@@ -507,29 +541,31 @@ export class MainComponent {
       return;
     }
 
-    const currentName = this.name;
+    const currentName = this.graphName;
     if (rename) {
-      delete this.projects[currentName];
+      delete this.graphs[currentName];
     }
 
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.name) {
-      this.settingPerfDir = this.defaultPerfDir + "/" + newName;
+    if (this.settingPerfDir === this.dataService.defaultPerfDir + "/" + this.graphName) {
+      this.settingPerfDir = this.dataService.defaultPerfDir + "/" + newName;
     }
-    this.name = newName;
+    this.graphName = newName;
     this.dotSrc = newDotSrc ? newDotSrc : newName ? this.dotSrc : '',
       this.dotSrcLastChangeTime = newDotSrc
         ? Date.now()
         : this.dotSrcLastChangeTime;
     this.saveCurrentProject();
-    this.projects[newName] = this.getProjectJson();
-    this.saveProjects();
+    this.graphs[newName] = this.getProjectJson();
+    this.saveGraphs();
     this.isSaved = true;
-    this.renameGraphSrc(this.name)
+    this.renameGraphSrc(this.graphName)
+
+
   }
 
-  getToolBarProjectsChange(e) {
-    this.projects = e
+  getToolBarGraphsChange(e) {
+    this.graphs = e
   }
 
   handleRedoButtonClick = () => {
@@ -557,16 +593,16 @@ export class MainComponent {
   }
 
   getSvgString() {
-    const svg = this.getSvg()
+    const svg = this.getSvg();
     const serializer = new XMLSerializer();
     return svg ? serializer.serializeToString(svg) : this.svgString;
   }
 
   saveSetting(context: any) {
 
-    let newName = context.name;
-    this.name = newName;
-    this.desc = context.desc;
+    let newName = context.graphName;
+    this.graphName = newName;
+    this.desc = context.graphDesc;
     let rankdir = context.radioValue;
     this.skipDefault = context.skipDefault;
     if (typeof (context.flowunitPath) === "string") {
@@ -574,14 +610,13 @@ export class MainComponent {
     } else {
       this.dirs = [];
     }
-
     this.renameGraphSrc(newName);
     this.settingPerfEnable = context.perfEnable;
     this.settingPerfTraceEnable = context.perfTraceEnable;
     this.settingPerfSessionEnable = context.perfSessionEnable;
 
-    if (this.settingPerfDir === this.defaultPerfDir + "/" + this.name) {
-      this.settingPerfDir = this.defaultPerfDir + "/" + newName;
+    if (this.settingPerfDir === this.dataService.defaultPerfDir + "/" + this.graphName) {
+      this.settingPerfDir = this.dataService.defaultPerfDir + "/" + newName;
     } else {
       this.settingPerfDir = context.perfPath;
     }
@@ -589,6 +624,116 @@ export class MainComponent {
     this.saveCurrentProject();
     this.reloadInsertComponent();
   }
+
+  refreshFlowunit(e) {
+    if (typeof (this.toolBar.formData.flowunitPath) === "string") {
+      this.dirs = this.toolBar.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
+    } else {
+      this.dirs = [];
+    }
+    this.reloadInsertComponent();
+  }
+
+  showCreateProjectDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createProject',
+      width: '700px',
+      title: this.i18n.getById('toolBar.newButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.createProject(this.toolBar.formDataCreateProject);
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
+  showOpenProjectButtonDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createProject',
+      width: '700px',
+      title: this.i18n.getById('toolBar.openProjectButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.toolBar.openProject();
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
+  showCreateFlowunitDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'createFlowunit',
+      width: '700px',
+      title: this.i18n.getById('toolBar.newFlowunitButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.toolBar.createFlowunit();
+          //保存至本地
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
 
   showGraphSettingDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
@@ -644,10 +789,10 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          if (!this.projects[this.toolBar.selectedName]) {
+          if (!this.graphs[this.toolBar.selectedName]) {
             return;
           }
-          this.loadProjectFromJson(this.projects[this.toolBar.selectedName]);
+          this.loadProjectFromJson(this.graphs[this.toolBar.selectedName]);
           this.reloadInsertComponent();
         },
       },
@@ -663,31 +808,20 @@ export class MainComponent {
     });
   }
 
-  LoadSolutionData() {
-    this.basicService.querySolutionList().subscribe(
-      (data: any) => {
-
-        data.solution_list.forEach((item) => {
-          let obj = { name: '', desc: '', file: '' };
-          obj.name = item.name;
-          obj.desc = item.desc;
-          obj.file = item.file
-          this.solutionList.push(obj)
-        })
-
-      },
-      (error) => {
-        return null;
-      })
+  saveSolutionFlowunitPath(dirs) {
+    let param = {};
+    param = {
+      dirs: dirs,
+      flowunitPath: this.toolBar.formDataCreateFlowunit.path
+    }
+    this.basicService.saveSolutionFlowunit(param).subscribe((data) => { });
   }
 
   selectSolution(selectedName) {
-
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
-
-      this.initCurrentProlect();
-      this.name = selectedName;
+      this.initCurrentProject();
+      this.graphName = selectedName;
       if (response.flow) {
         if (response.flow.desc) {
           this.desc = response.flow.desc;
@@ -701,21 +835,97 @@ export class MainComponent {
 
       this.dotSrcLastChangeTime = Date.now();
       if (response.driver) {
+        this.modelFlowunitPath = response.driver.dir;
         this.skipDefault = response.driver['skip-default'];
         this.dirs = [];
         if (typeof (response.driver.dir) == 'string') {
           this.dirs.push(response.driver.dir);
         } else {
           response.driver.dir.forEach(item => {
-            this.dirs.push(item)
+            this.dirs.push(item);
+            this.toolBar.formData.flowunitPath += "\n" + item;
           });
         }
       }
+      this.saveSolutionFlowunitPath(response.driver.dir);
       this.saveCurrentProject();
       this.reloadInsertComponent();
       this.handleZoomResetButtonClick();
     }
     )
+  }
+
+  click(tab: string): void {
+    if (tab === 'editor') {
+      this.activeEditor = true;
+      this.activeTaskLists = false;
+    } else {
+      this.activeEditor = false;
+      this.activeTaskLists = true;
+    }
+    this.currentComponent = null;
+  }
+
+
+  handleRunButtonClick = () => {
+    //saveToBrowser
+    this.graphs = {};
+    this.project.graph.name = this.graphName;
+    this.saveCurrentProject();
+    this.graphs[this.project.graph.name] = this.project;
+    this.saveGraphs();
+    //run
+    let option = this.createOptionFromProject(this.project);
+    this.basicService.createTask(option)
+      .subscribe((data: any) => {
+        //提示任务运行状态
+        this.toastService.open({
+          value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
+          life: 3000
+        });
+      }, error => {
+        if (error.error != null) {
+          this.toastService.open({
+            value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
+            life: 3000
+          });
+        }
+      }
+      );
+  }
+
+  createOptionFromProject = (item) => {
+    let params = {};
+    params = {
+      job_id: this.handleGraphName(item.graph.graphName),
+      job_graph: {
+        flow: {
+          desc: item.graph.graphDesc,
+        },
+        driver: {
+          "skip-default": item.skipDefault,
+          dir: item.graph.dirs.split("\n"),
+        },
+        profile: {
+          profile: item.graph.settingPerfEnable,
+          trace: item.graph.settingPerfTraceEnable,
+          session: item.graph.settingPerfSessionEnable,
+          dir: item.graph.settingPerfDir,
+        },
+        graph: {
+          graphconf: item.graph.dotSrc,
+          format: "graphviz",
+        },
+      }
+    }
+    return params;
+  }
+
+  handleGraphName(name){
+    if (name.indexOf(".toml")==-1){
+      return name + ".toml";
+    }
+    return name;
   }
 
   showSolutionDialog(content: TemplateRef<any>) {

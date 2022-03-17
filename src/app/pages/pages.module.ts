@@ -24,6 +24,8 @@ import { AttributePanelComponent } from '../components/attribute-panel/attribute
 import { FormsModule } from '@angular/forms';
 import { FormModule } from 'ng-devui/form';
 import { HeaderComponent } from '../components/header/header.component';
+import { HeaderMainComponent } from '../components/header-main/header-main.component';
+import { FirstComponent } from '../components/first/first.component';
 import { ButtonModule } from 'ng-devui/button';
 import { TooltipModule } from 'ng-devui/tooltip';
 import { TabsModule } from 'ng-devui/tabs';
@@ -32,11 +34,14 @@ import { ModalSaveAsComponent } from '../components/modal-save-as/modal-save-as.
 import { DrawerModule } from 'ng-devui/drawer';
 import { NgbdTooltipCustomclass } from '../components/tooltip/tooltip-customclass';
 import { PopoverModule } from 'ng-devui/popover';
+import { DropDownModule } from 'ng-devui/dropdown';
 import { BrowserModule } from '@angular/platform-browser';
 // DevUI部分组件依赖angular动画，需要引入animations模块
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevUIModule } from 'ng-devui';
 import { BadgeModule } from 'ng-devui/badge';
+import { SolutionComponent } from '../components/solution/solution.component';
+import { ToolBarSolutionComponent } from '../components/tool-bar-solution/tool-bar-solution.component';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
@@ -48,6 +53,7 @@ const COMPONENTS_NOROUNT = [];
     AceModule,
     ButtonModule,
     PopoverModule,
+    DropDownModule,
     TabsModule,
     BadgeModule,
     SplitterModule,
@@ -79,10 +85,14 @@ const COMPONENTS_NOROUNT = [];
     ToolBarComponent,
     AttributePanelComponent,
     HeaderComponent,
+    HeaderMainComponent,
+    ToolBarSolutionComponent,
+    FirstComponent,
+    SolutionComponent,
     ManagementComponent,
     ModalSaveAsComponent,
     NgbdTooltipCustomclass
   ],
   entryComponents: COMPONENTS_NOROUNT,
 })
-export class PagesModule {}
+export class PagesModule { }

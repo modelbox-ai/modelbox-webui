@@ -39,6 +39,7 @@ import DotGraph from './dot';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { I18nService } from '@core/i18n.service';
 import { ToastService } from 'ng-devui/toast';
+import { BasicServiceService } from '@shared/services/basic-service.service';
 
 const shapes = 'box polygon ellipse oval circle point egg triangle plaintext plain diamond trapezium parallelogram house pentagon hexagon septagon octagon doublecircle doubleoctagon tripleoctagon invtriangle invtrapezium invhouse Mdiamond Msquare Mcircle rect rectangle square star none underline cylinder note tab folder box3d component promoter cds terminator utr primersite restrictionsite fivepoverhang threepoverhang noverhang assembly signature insulator ribosite rnastab proteasesite proteinstab rpromoter rarrow larrow lpromoter'.split(
   ' '
@@ -55,6 +56,8 @@ function isNumeric(n) {
 })
 export class GraphComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas: ElementRef;
+
+  @Input() disabled: any;
   @Input() fit: any;
   @Input() engine: any;
   @Input() dotSrc: '';
@@ -73,7 +76,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() tweenShapes: any;
   @Input() tweenPrecision: any;
   @Input() test: any;
-  @Input() regOnResizeGraph: any;
   @Input() registerNodeShapeClick: any;
   @Input() registerNodeShapeDragStart: any;
   @Input() registerNodeShapeDragEnd: any;
@@ -82,6 +84,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() registerZoomFitButtonClick: any;
   @Input() registerZoomResetButtonClick: any;
   @Input() registerNodeAttributeChange: any;
+  @Input() registerExtendDetail: any;
   @Input() isResizing: any;
 
   prevFit: any;
@@ -129,7 +132,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     private dataService: DataServiceService,
     private i18n: I18nService,
     private toastService: ToastService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private basicService: BasicServiceService) {
     this.toastService.open({
       value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
       life: 1500
@@ -154,16 +158,18 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       .graphviz()
       .onerror(this.handleError.bind(this))
       .on('initEnd', () => this.renderGraph());
-    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
-    this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
-    this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
+    this.registerGetSvg(this.getSvg, this);
     this.registerZoomInButtonClick(this.handleZoomInButtonClick, this);
     this.registerZoomOutButtonClick(this.handleZoomOutButtonClick, this);
     this.registerZoomFitButtonClick(this.handleZoomFitButtonClick, this);
     this.registerZoomResetButtonClick(this.handleZoomResetButtonClick, this);
+    this.registerNodeShapeClick(this.handleNodeShapeClick, this);
     this.registerNodeAttributeChange(this.handleNodeAttributeChange, this);
-    this.registerGetSvg(this.getSvg, this);
-    this.regOnResizeGraph(this.onResizeGraph, this);
+    if (this.dataService.currentPage === "main") {
+      //no need in solutiuon pgae
+      this.registerNodeShapeDragStart(this.handleNodeShapeDragStart, this);
+      this.registerNodeShapeDragEnd(this.handleNodeShapeDragEnd, this);
+    }
   }
 
   replaceEdgeLinkName(linkName, nodeName, newNodeName): string {
@@ -207,34 +213,45 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   };
 
   formatDotSrc(): void {
-    const nodes = { ...this.dotGraph.nodes };
-    const edges = { ...this.dotGraph.edges };
-    for (let node in nodes) {
-      let attr = nodes[node]['attributes'];
-      let flowunit = attr['flowunit'];
-      let device = attr['device'];
-      if (flowunit) {
-        attr["label"] = this.dataService.getLabel(flowunit, device, node);
-        if (attr["label"] == "") {
-          attr["label"] = this.getLabelFromEdge(node, edges);
+    if (this.dotGraph !== undefined) {
+      const nodes = { ...this.dotGraph.nodes };
+      const edges = { ...this.dotGraph.edges };
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        let device = attr['device'];
+        if (flowunit) {
+          attr["label"] = this.dataService.getLabel(flowunit, device, node);
+          if (attr["label"] == "") {
+            attr["label"] = this.getLabelFromEdge(node, edges);
+          }
         }
+        this.dotGraph.updateNode(node, attr);
+        this.dotGraph.reparse();
       }
-      this.dotGraph.updateNode(node, attr);
-      this.dotGraph.reparse();
     }
   }
 
   handleZoomResetButtonClick = () => {
-    this.setZoomScale(1, true);
+    try {
+      this.setZoomScale(1, true);
+    } catch (e) {
+      location.reload();
+    }
   };
 
   handleZoomFitButtonClick = () => {
-    const viewBox = this.svg.attr('viewBox').split(' ');
-    const bbox = this.graph0.node().getBBox();
-    const xRatio = viewBox[2] / bbox.width;
-    const yRatio = viewBox[3] / bbox.height;
-    const scale = Math.min(xRatio, yRatio);
-    this.setZoomScale(scale, true);
+    try {
+      const viewBox = this.svg.attr('viewBox').split(' ');
+      const bbox = this.graph0.node().getBBox();
+      const xRatio = viewBox[2] / bbox.width;
+      const yRatio = viewBox[3] / bbox.height;
+      const scale = Math.min(xRatio, yRatio);
+      this.setZoomScale(scale, true);
+    }
+    catch (e) {
+      location.reload();
+    }
   };
 
   handleZoomOutButtonClick = () => {
@@ -346,18 +363,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
   handleError(errorMessage) {
     const line = errorMessage.replace(/.*error in line ([0-9]*) .*\n/, '$1');
-    this.onError({ message: errorMessage, line: line });
+    if (this.onError !== undefined) {
+      this.onError({ message: errorMessage, line: line });
+    }
     this.rendering = false;
     this.busy = false;
     if (this.pendingUpdate) {
       this.pendingUpdate = false;
     }
-  }
-
-  onResizeGraph() {
-    this.prevDotSrc = "";
-    this.rendering = false;
-    this.renderGraph();
   }
 
   renderGraph() {
@@ -366,11 +379,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     const height = container.clientHeight;
     const fit = this.fit;
     const engine = this.engine;
-
-    if (this.dotSrc.length === 0) {
+    if (this.dotSrc !== undefined && this.dotSrc.length === 0) {
       this.svg.remove();
       this.svg = d3_select(null);
-      this.onError(null);
+      if (this.onError !== undefined) {
+        this.onError(null);
+      }
       this.renderGraphReady = false;
       this.prevDotSrc = this.dotSrc;
       return;
@@ -403,9 +417,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.prevEngine = this.engine;
     try {
       if (!this.test?.disableDotParsing) {
-        this.prelDotGraph = new DotGraph(this.dotSrc);
+        if (this.dotSrc !== undefined) {
+          this.prelDotGraph = new DotGraph(this.dotSrc);
+        }
       }
-      this.onError(null);
+      if (this.onError !== undefined) {
+        this.onError(null);
+      }
     } catch (error) {
       if (!error.location) {
         throw error;
@@ -416,7 +434,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         },
         message,
       } = error;
-      this.onError({ message: message, line: line });
+      if (this.onError !== undefined) {
+        this.onError({ message: message, line: line });
+      }
       return;
     }
     this.rendering = true;
@@ -461,7 +481,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
           d.attributes.stroke = 'white';
         }
         if (d.tag === "text") {
-          d.attributes["font-family"] = 'HuaweiSans';
           d.attributes["font-size"] = "12";
           if (d.children[0].text == d.parent.key) {
             d.attributes.fill = "#252B3A";
@@ -593,7 +612,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       }
 
       if (graph.canMoveGraph) {
-        graph.onSelect([]);
+        if (graph.onSelect !== undefined) {
+          graph.onSelect([]);
+        }
         return true;
       }
       if (!d3_event.ctrlKey) {
@@ -642,7 +663,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickDiv(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     (document.activeElement as any).blur();
     this.isOnFocus = true;
     const event = d3_event;
@@ -663,7 +686,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.selectedComponents.size() > 0) {
       this.selectedComponents = d3_selectAll(null);
       this.selectNames.length = 0;
-      this.onSelect([]);
+      if (this.onSelect !== undefined) {
+        this.onSelect([]);
+      }
     }
     this.canMoveGraph = false;
     this.isOnFocus = false;
@@ -868,7 +893,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.addEventHandlers();
   }
 
-  blueActiveElement() {
+  blurActiveElement() {
     (document.activeElement as any).blur();
   }
 
@@ -888,16 +913,20 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       this.isOnFocus = false;
       return;
     }
-    this.onFocus();
-    this.blueActiveElement();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     event.preventDefault();
     event.stopPropagation();
     this.unSelectComponents();
   }
 
   handleMouseDownSvg(d, i, nodes) {
-    this.onFocus();
-    this.blueActiveElement();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     const event = d3_event;
     if (event.which !== 1) {
       return;
@@ -942,8 +971,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickSvg(d, i, nodes) {
-    this.onFocus();
-    this.blueActiveElement();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     this.isOnFocus = false;
     this.startPoints.forEach(item => item.remove());
     this.startPoints.length = 0;
@@ -982,8 +1013,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleMouseUpSvg(d, i, nodes) {
-    this.onFocus();
-    this.blueActiveElement();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     let event = d3_event;
     if (event.which === 2) {
       const [x0, y0] = d3_mouse(this.graph0.node());
@@ -1057,8 +1090,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleClickEdge(d, i, nodes) {
-    this.onFocus();
-    this.blueActiveElement();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
@@ -1228,40 +1263,50 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         name: name,
       };
     });
-    this.onSelect(selectedComponents);
+    if (this.onSelect !== undefined) {
+      this.onSelect(selectedComponents);
+    }
     if (selectedComponents.length >= 1) {
       this.canMoveGraph = true;
       let name = selectedComponents[0]["name"]
       if (selectedComponents.length == 1) {
         const Attr = this.dotGraph.getNodeAttributes(name);
-        if (typeof Attr["label"] != "undefined") {
+        if (Attr !== null && typeof Attr["label"] != "undefined") {
           if (Attr["label"].length > 1 && Attr["label"] == this.getLabelFromEdge(name, this.dotGraph.edges)) {
             return;
           }
         }
 
         this.formatDotSrc();
-        this.onTextChange(this.dotGraph.dotSrc);
+        if (this.onTextChange !== undefined) {
+          this.onTextChange(this.dotGraph.dotSrc);
+        }
       }
     }
   }
 
   handleClickNode(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
+    this.blurActiveElement();
     this.isOnFocus = true;
-    this.blueActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
     if (!this.isDrawingEdge && event.which === 1) {
       this.selectComponents(d3_select(nodes[i]));
     }
+    this.formatDotSrc();
+    this.onTextChange(this.dotGraph.dotSrc);
   }
 
   handleClickUpNode(d, i, nodes) {
-    this.onFocus();
+    if (this.onFocus !== undefined) {
+      this.onFocus();
+    }
     this.isOnFocus = true;
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     event.preventDefault();
     event.stopPropagation();
@@ -1324,7 +1369,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
   handleClickCircle(d, i, nodes) {
     this.onFocus();
-    this.blueActiveElement();
+    this.blurActiveElement();
     let event = d3_event;
     // circle自己不处理 right click事件
     if (event.which === 3) {

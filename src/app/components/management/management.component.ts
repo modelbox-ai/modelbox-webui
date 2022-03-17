@@ -31,6 +31,7 @@ import { TableWidthConfig } from 'ng-devui/data-table';
   styleUrls: ['./management.component.less'],
 })
 export class ManagementComponent implements OnInit {
+  page = "task";
   folded: boolean = false;
   checkedList: Array<any> = [];
   createTasklists: any;
@@ -118,7 +119,7 @@ export class ManagementComponent implements OnInit {
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
   @Input() collapsed: boolean;
   @Input() isSupportFold: boolean = true;
-  @Input() projects: any;
+  @Input() graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   selectedProject: any;
   dialog: boolean = false;
 
@@ -140,11 +141,11 @@ export class ManagementComponent implements OnInit {
     }
   }
 
-  getCurrentCreateTaskLists(projects) {
+  getCurrentCreateTaskLists(graphs) {
     let taskCreateLists = [];
-    for (let key in projects) {
-      projects[key].job_id = key;
-      taskCreateLists.push(projects[key]);
+    for (let key in graphs) {
+      graphs[key].job_id = key;
+      taskCreateLists.push(graphs[key]);
     };
     this.taskData.srcData.data = [];
     taskCreateLists.forEach((item, index) => {
@@ -179,106 +180,108 @@ export class ManagementComponent implements OnInit {
   }
 
   // 创建任务modal
-  openCreateTask(content: TemplateRef<any>) {
-    this.getCurrentCreateTaskLists(this.projects);
-    const results = this.dialogService.open({
-      id: this.i18n.getById('modal.createTaskModal'),
-      width: '550px',
-      showAnimation: true,
-      title: this.i18n.getById('modal.createTaskModal'),
-      contentTemplate: content,
-      backdropCloseable: true,
-      dialogtype: 'standard',
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-          this.createTask();
-        },
-      },
-      {
-        id: 'btn-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-        },
-      },],
-    });
-  }
+  // openCreateTask(content: TemplateRef<any>) {
+  //   this.getCurrentCreateTaskLists(this.graphs);
+  //   const results = this.dialogService.open({
+  //     id: this.i18n.getById('modal.createTaskModal'),
+  //     width: '550px',
+  //     showAnimation: true,
+  //     title: this.i18n.getById('modal.createTaskModal'),
+  //     contentTemplate: content,
+  //     backdropCloseable: true,
+  //     dialogtype: 'standard',
+  //     buttons: [{
+  //       cssClass: 'danger',
+  //       text: this.i18n.getById('modal.okButton'),
+  //       disabled: false,
+  //       handler: ($event: Event) => {
+  //         results.modalInstance.hide();
+  //         results.modalInstance.zIndex = -1;
+  //         this.createTask();
+  //       },
+  //     },
+  //     {
+  //       id: 'btn-cancel',
+  //       cssClass: 'common',
+  //       text: this.i18n.getById('modal.cancelButton'),
+  //       handler: ($event: Event) => {
+  //         results.modalInstance.hide();
+  //         results.modalInstance.zIndex = -1;
+  //       },
+  //     },],
+  //   });
+  // }
 
   createTask() {
     let params;
     this.checkedList.splice(0, this.checkedList.length);
     this.checkedList.push(this.selectedProject);
-    this.checkedList.forEach((item) => {
-      // doesnot exist the same name
-      let res = false;
-      for (let item_displayed of this.tableData.srcData.data) {
-        if (item_displayed.job_id === item.job_id) {
-          res = true;
-          break;
-        }
-      }
-      if (!res && item) {
-        params = {
-          job_id: item.job_id,
-          job_graph: {
-            flow: {
-              desc: item.project.desc,
-            },
-            driver: {
-              "skip-default": item.project.skipDefault,
-              dir: item.project.dirs,
-            },
-            profile: {
-              profile: item.project.settingPerfEnable,
-              trace: item.project.settingPerfTraceEnable,
-              session: item.project.settingPerfSessionEnable,
-              dir: item.project.settingPerfDir,
-            },
-            graph: {
-              graphconf: item.project.dotSrc,
-              format: "graphviz",
-            },
+    if (this.checkedList.length > 0) {
+      this.checkedList.forEach((item) => {
+        // doesnot exist the same name
+        let res = false;
+        for (let item_displayed of this.tableData.srcData.data) {
+          if (item_displayed.job_id === item.job_id) {
+            res = true;
+            break;
           }
         }
-        this.createTaskResult(params);
-      } else {
-        if (!this.dialog) {
-          const results = this.dialogService.open({
-            id: 'dialog-service',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById('message.taskWithTheSameNameHasAlreadyBeenExisted') + ": " + item.job_id,
-            backdropCloseable: true,
-            dialogtype: 'failed',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: 'Ok',
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                  results.modalInstance.zIndex = -1;
-                  this.dialog = false;
-                },
-              }
-            ],
-          });
-          this.dialog = true;
+        if (!res && item) {
+          params = {
+            job_id: item.job_id,
+            job_graph: {
+              flow: {
+                desc: item.project.desc,
+              },
+              driver: {
+                "skip-default": item.project.skipDefault,
+                dir: item.project.dirs,
+              },
+              profile: {
+                profile: item.project.settingPerfEnable,
+                trace: item.project.settingPerfTraceEnable,
+                session: item.project.settingPerfSessionEnable,
+                dir: item.project.settingPerfDir,
+              },
+              graph: {
+                graphconf: item.project.dotSrc,
+                format: "graphviz",
+              },
+            }
+          }
+          this.createTaskResult(params);
+        } else {
+          if (!this.dialog) {
+            const results = this.dialogService.open({
+              id: 'dialog-service',
+              width: '346px',
+              maxHeight: '600px',
+              title: '',
+              content: this.i18n.getById('message.taskWithTheSameNameHasAlreadyBeenExisted') + ": " + item.job_id,
+              backdropCloseable: true,
+              dialogtype: 'failed',
+              buttons: [
+                {
+                  cssClass: 'primary',
+                  text: 'Ok',
+                  handler: ($event: Event) => {
+                    results.modalInstance.hide();
+                    results.modalInstance.zIndex = -1;
+                    this.dialog = false;
+                  },
+                }
+              ],
+            });
+            this.dialog = true;
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   // 创建任务调用接口
   createTaskResult(option) {
-    this.basicService.queryCreateTask(option)
+    this.basicService.createTask(option)
       .subscribe((data: any) => {
         if (data) {
           if (data.status === 201) {
