@@ -33,10 +33,12 @@ endif()
 
 find_program(NPM npm)
 
+set(MODELBOX_WEBUI_BUILD OFF CACHE INTERNAL "")
 if(NOT NPM)
-    message(status "Skip build modelbox-editor-webui")
+    message(STATUS "Skip build modelbox-editor-webui")
     return()
 endif()
+set(MODELBOX_WEBUI_BUILD ON CACHE INTERNAL "")
 
 set(NODE_MODULES_PATH ${CMAKE_CURRENT_BINARY_DIR})
 set(NG ${CMAKE_CURRENT_LIST_DIR}/node_modules/.bin/ng)

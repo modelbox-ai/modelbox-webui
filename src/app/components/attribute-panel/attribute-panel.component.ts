@@ -192,13 +192,13 @@ export class AttributePanelComponent {
               attr.value = item.value;
             } else {
               config.attributes.push({
-                key: item.label.replace(" ", "_"),
+                key: item.label.replaceAll(" ", "_"),
                 value: item.value,
               });
             }
           } else {
             config.attributes = config.attributes.filter(
-              it => it.key !== item.label.replace(" ", "_")
+              it => it.key !== item.label.replaceAll(" ", "_")
             );
           }
         } else if (item.type === 'list') {
@@ -376,7 +376,7 @@ export class AttributePanelComponent {
         );
       }
       this.unitOptions.data.forEach(it => {
-        if (it.label.replace(" ", "_") === item.key) {
+        if (it.label.replaceAll(" ", "_") === item.key) {
           if (['string', 'int', 'integer'].includes(it.type)) {
             it.value = item.value;
           } else if (it.type === 'bool') {
