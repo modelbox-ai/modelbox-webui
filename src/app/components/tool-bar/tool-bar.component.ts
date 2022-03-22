@@ -81,6 +81,8 @@ export class ToolBarComponent {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
 
+  openProjectList = [];
+
   activeBasic: boolean = true;
   activePerf: boolean = false;
   portDeviceTypeAble = false;
@@ -229,7 +231,7 @@ export class ToolBarComponent {
     label: this.i18n.getById('toolBar.setting.graphRankdir.leftRight')
   }];
 
-  valuesCheckbox=[];
+  valuesCheckbox = [];
 
   flowunitTypeProDict = {
     'IF_ELSE': 'condition',
@@ -356,6 +358,7 @@ export class ToolBarComponent {
 
   tabActiveId: string = "tab1";
   openProjectPath: string = "/home/modelbox_projects";
+  openProjectListPath: string = "/home";
   incomingGraphName: string = '';
 
   constructor(private dialogService: DialogService,
@@ -388,6 +391,7 @@ export class ToolBarComponent {
 
     this.loadGraphData();
     this.loadSolutionData();
+    this.searchDirectory();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -401,6 +405,11 @@ export class ToolBarComponent {
         this.formData.flowunitPath.indexOf(this.formDataCreateFlowunit.path) < 0) {
         this.formData.flowunitPath += "\n" + this.formDataCreateFlowunit.path;
       }
+    }
+    let projectListPath = this.openProjectPath.substring(0,this.openProjectPath.lastIndexOf("/"));
+    if (projectListPath !== this.openProjectListPath){
+      this.openProjectListPath = projectListPath;
+      this.loadOpenProjectList();
     }
   }
 
@@ -426,7 +435,7 @@ export class ToolBarComponent {
 
   programLanguageValueChange2(value) {
     this.formDataCreateFlowunit.programLanguage = value;
-    if (value === "inference"){
+    if (value === "inference") {
       this.formDataCreateFlowunit.deviceType = 'cuda';
       this.portInfo.deviceType = 'cuda';
     }
@@ -603,7 +612,7 @@ export class ToolBarComponent {
   };
 
   handleRunButtonClick = event => {
-    this.onRunButtonClick && this.onRunButtonClick();
+    this.onRunButtonClick && this.onRunButtonClick(this.formData.graphName);
   };
 
   handleCreateProjectButtonClick = event => {
@@ -667,18 +676,13 @@ export class ToolBarComponent {
       });
   }
 
-  cellDBClick(e) {
-    if (e.rowIndex !== 0) {
-      this.openProjectPath = this.openProjectPath + "/" + e.rowItem.folder;
-      this.searchDirectory();
-    } else {
-      this.cellClick(e);
-    }
-  }
   cellClick(e) {
     if (e.rowIndex === 0) {
       let position = this.openProjectPath.lastIndexOf("/");
       this.openProjectPath = this.openProjectPath.substring(0, position);
+      this.searchDirectory();
+    } else {
+      this.openProjectPath = this.openProjectPath + "/" + e.rowItem.folder;
       this.searchDirectory();
     }
   }
@@ -687,10 +691,10 @@ export class ToolBarComponent {
     if (e.isChecked) {
       this.formDataCreateFlowunit.flowunitTypePro = this.flowunitTypeProDict[e.value];
       this.valuesCheckbox = [e.value];
-    }else{
+    } else {
       this.valuesCheckbox = [];
     }
-    
+
   }
 
   searchDirectory() {
@@ -720,6 +724,25 @@ export class ToolBarComponent {
       });
   }
 
+  loadOpenProjectList() {
+    this.basicService.loadTreeByPath(this.openProjectListPath).subscribe(
+      (data: any) => {
+        if (data.folder_list) {
+          this.openProjectList = [];
+
+          let temp = data.folder_list.filter(dir => dir != "." && dir != "..");
+
+          temp.forEach(element => {
+            this.openProjectList.push(this.openProjectListPath+"/"+element);
+          });
+        }
+      },
+      error => {
+        this.openProjectList = [];
+        return;
+      });
+  }
+
   openProject() {
     if (this.folderList.indexOf("src")) {
       this.basicService.openProject(this.openProjectPath).subscribe(
@@ -732,15 +755,23 @@ export class ToolBarComponent {
             //加载功能单元信息
             //加载图信息
             if (data.graphs && data.graphs[0] != null) {
-              this.formData.graphName = data.graphs[0].name;
-              this.formData.graphDesc = data.graphs[0].desc;
-              this.formData.flowunitPath = data.graphs[0].dir.substring(0, data.graphs[0].dir.length - 2);
-              this.formData.skipDefault = false;
-              this.formData.perfEnable = data.graphs[0].profile;
-              this.formData.perfTraceEnable = data.graphs[0].trace;
-              this.formData.perfSessionEnable = data.graphs[0].session;
-              this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
+
+
+              if (data.graphs[0].dotSrc) {
+                this.formData.graphName = data.graphs[0].name;
+                this.formData.graphDesc = data.graphs[0].desc;
+                this.formData.skipDefault = false;
+                this.formData.perfEnable = data.graphs[0].profile;
+                this.formData.perfTraceEnable = data.graphs[0].trace;
+                this.formData.perfSessionEnable = data.graphs[0].session;
+                this.dotSrcEmmiter.emit(data.graphs[0].dotSrc.substring(0, data.graphs[0].dotSrc.length - 2));
+                this.formData.flowunitPath = data.graphs[0].dir.substring(0, data.graphs[0].dir.length - 2);
+              } else {
+                this.initFormData();
+                this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+              }
             } else {
+              this.initFormData();
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
             }
             this.refreshFlowunit();
@@ -774,7 +805,7 @@ export class ToolBarComponent {
       backdropCloseable: true,
       dialogtype: 'standard',
       data: {
-        'graphName': this.oldName
+        'graphName': this.oldName ? this.oldName : ""
       },
       buttons: [{
         cssClass: 'danger',

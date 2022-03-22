@@ -209,7 +209,7 @@ export class MainComponent {
         this.saveCurrentProject();
         if (this.toolBar.model != "blank") {
           this.selectSolution(this.toolBar.model);
-        }else{
+        } else {
           this.dotSrc = this.dataService.defaultSrc;
         }
 
@@ -867,31 +867,38 @@ export class MainComponent {
   }
 
 
-  handleRunButtonClick = () => {
+  handleRunButtonClick = (graphName) => {
     //saveToBrowser
     this.graphs = {};
-    this.project.graph.name = this.graphName;
-    this.saveCurrentProject();
-    this.graphs[this.project.graph.name] = this.project;
-    this.saveGraphs();
-    //run
-    let option = this.createOptionFromProject(this.project);
-    this.basicService.createTask(option)
-      .subscribe((data: any) => {
-        //提示任务运行状态
-        this.toastService.open({
-          value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
-          life: 3000
-        });
-      }, error => {
-        if (error.error != null) {
+    if (graphName) {
+      this.project.graph.name = this.graphName;
+      this.saveCurrentProject();
+      this.graphs[this.project.graph.name] = this.project;
+      this.saveGraphs();
+      //run
+      let option = this.createOptionFromProject(this.project);
+      this.basicService.createTask(option)
+        .subscribe((data: any) => {
+          //提示任务运行状态
           this.toastService.open({
-            value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
+            value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
             life: 3000
           });
+        }, error => {
+          if (error.error != null) {
+            this.toastService.open({
+              value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
+              life: 3000
+            });
+          }
         }
-      }
-      );
+        );
+    }else{
+      this.toastService.open({
+        value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
+        life: 3000
+      });
+    }
   }
 
   createOptionFromProject = (item) => {
@@ -921,8 +928,8 @@ export class MainComponent {
     return params;
   }
 
-  handleGraphName(name){
-    if (name.indexOf(".toml")==-1){
+  handleGraphName(name) {
+    if (name.indexOf(".toml") == -1) {
       return name + ".toml";
     }
     return name;

@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
 })
 export class ModalSaveAsComponent {
   data: { graphName: string }
-  graphName: string
+  graphName = "";
   constructor() { }
   ngOnInit(): void {
     this.graphName = this.data.graphName;
