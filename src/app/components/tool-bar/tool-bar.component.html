@@ -37,7 +37,7 @@
             <img src={{switchSvg}} />
         </d-button>
         <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
-            (click)="handleRunButtonClick($event)">
+            (click)="handleRunButtonClick($event)" [disabled]="!formData.graphName">
             <img src={{runGraphSvg}} />
         </d-button>
     </div>
@@ -207,7 +207,11 @@
                 </d-form-label>
                 <d-form-control>
                     <div style="display: flex; justify-content:center">
-                        <input style="width:80%" dTextInput name="path" [(ngModel)]="openProjectPath" />
+                        <div class="devui-form-group" style="width:80%">
+                            <input dTextInput type="text" class="devui-form-control devui-dropdown-origin"
+                                name="language" placeholder="Search" [minLength]="0" [(ngModel)]="openProjectPath"
+                                dAutoComplete [source]="openProjectList" />
+                        </div>
                         <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"
                             (click)="searchDirectory()"></d-button>
                     </div>
@@ -216,7 +220,7 @@
             <d-form-item>
                 <d-form-control>
                     <d-data-table [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
-                        [borderType]="'borderless'" (cellClick)="cellClick($event)" (cellDBClick)="cellDBClick($event)">
+                        [borderType]="'borderless'" (cellClick)="cellClick($event)">
                         <d-column field="folder" [header]="'toolBar.modal.folder' | translate" style="cursor:pointer">
                         </d-column>
                     </d-data-table>
@@ -426,9 +430,8 @@
                         </d-tabs>
                     </div>
                     <div style="margin-left: 50px;display: inline-block;">
-                        <d-checkbox-group [(ngModel)]="valuesCheckbox" [name]="'type'"
-                            [options]="flowunitTypes2" [direction]="'row'" [isShowTitle]="true"
-                            (change)="onCheckbox2Change($event)">
+                        <d-checkbox-group [(ngModel)]="valuesCheckbox" [name]="'type'" [options]="flowunitTypes2"
+                            [direction]="'row'" [isShowTitle]="true" (change)="onCheckbox2Change($event)">
                         </d-checkbox-group>
                     </div>
                 </d-form-control>

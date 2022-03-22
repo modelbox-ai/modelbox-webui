@@ -129,6 +129,7 @@
   "message.createProjectFirst": "请先新建一个项目",
   "message.createProjectSuccess": "成功创建项目",
   "message.createProjectFail": "创建项目失败",
+  "message.saveYourProjectFirst": "请先保存您的项目。",
   "tutorial.toolbar": "工具栏",
   "tutorial.undoredo": "回退/重做",
   "tutorial.zoominout": "放大/缩小",
