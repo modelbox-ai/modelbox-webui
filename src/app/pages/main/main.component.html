@@ -27,7 +27,8 @@
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
               [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [graphs]="graphs"
-              (graphsEmmiter)="getToolBarGraphsChange($event)" (refreshEmmiter)="refreshFlowunit($event)" (dotSrcEmmiter)="dotSrcUpdate($event)"> 
+              (graphsEmmiter)="getToolBarGraphsChange($event)" (refreshEmmiter)="refreshFlowunit($event)" 
+              (dotSrcEmmiter)="dotSrcUpdate($event)" (createProjectEmmiter)="createProject($event)"> 
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">

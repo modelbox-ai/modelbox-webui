@@ -253,6 +253,24 @@ export class AttributePanelComponent {
     }
   ];
 
+  menu1 = [{
+    title: '配置',
+    children: [],
+  }];
+
+  menu2 = [{
+    title: '描述',
+    children: [],
+  }];
+
+  menuToggle1(event) {
+    console.log('menu toggle' + JSON.stringify(event));
+  }
+
+  menuToggle2(event) {
+    console.log('menu toggle' + JSON.stringify(event));
+  }
+
   constructor(
     private dataService: DataServiceService,
     private i18n: I18nService,

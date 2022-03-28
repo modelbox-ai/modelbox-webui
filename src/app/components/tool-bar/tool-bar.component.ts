@@ -70,6 +70,7 @@ export class ToolBarComponent {
   @Output() graphsEmmiter = new EventEmitter();
   @Output() refreshEmmiter = new EventEmitter();
   @Output() dotSrcEmmiter = new EventEmitter();
+  @Output() createProjectEmmiter = new EventEmitter();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -106,7 +107,14 @@ export class ToolBarComponent {
   projectName: string = "";
   path: string = "/home/modelbox_projects";
   model: string = "blank";
-  optionSolutionList: any = ["blank"];
+  optionSolutionList: any = [];
+  blank: any = {
+    checked: false,
+    desc: "",
+    file: "",
+    name: "blank"
+  };
+
 
   folderList: any = [];
 
@@ -117,13 +125,17 @@ export class ToolBarComponent {
       name: 'Python',
       value: 'python'
     },
-    // {
-    //   name: 'C++',
-    //   value: 'c++'
-    // },
+    {
+      name: 'C++',
+      value: 'c++'
+    },
     {
       name: this.i18n.getById("inference"),
       value: 'inference'
+    },
+    {
+      name: 'Yolo',
+      value: 'yolo'
     }];
 
   dataTableOptions = {
@@ -255,6 +267,7 @@ export class ToolBarComponent {
     projectName: this.projectName,
     projectDesc: this.projectDesc,
     path: this.path,
+    model: this.model
   };
 
   formDataCreateFlowunit = {
@@ -281,11 +294,31 @@ export class ToolBarComponent {
   }
 
   optionsInOut = ['input', 'output'];
-  optionsDataType = ['int', 'float', 'string', 'boolean', 'array', 'object']; //flowunit type
+  optionsDataType = ['int', 'float']; //flowunit type
   optionsDeviceType = ['cpu', 'cuda'];
   flowunitGroupOptions = ['Image', 'Input', 'Output', 'Video', 'Generic']
 
   portHeaderOptions = {
+    columns: [
+      {
+        field: 'inputOutput',
+        header: this.i18n.getById("toolBar.modal.inputOutput"),
+        fieldType: 'text'
+      },
+      {
+        field: 'deviceType',
+        header: this.i18n.getById("toolBar.modal.deviceType"),
+        fieldType: 'text'
+      },
+      {
+        field: 'operation',
+        header: this.i18n.getById("toolBar.select.operation"),
+        fieldType: 'customized'
+      }
+    ]
+  };
+
+  portHeaderFullOptions = {
     columns: [
       {
         field: 'inputOutput',
@@ -300,11 +333,6 @@ export class ToolBarComponent {
       {
         field: 'deviceType',
         header: this.i18n.getById("toolBar.modal.deviceType"),
-        fieldType: 'text'
-      },
-      {
-        field: 'deviceNum',
-        header: this.i18n.getById("toolBar.modal.deviceNum"),
         fieldType: 'text'
       },
       {
@@ -324,13 +352,19 @@ export class ToolBarComponent {
     {
       id: 'stream',
       title: 'STREAM'
+    },
+    {
+      id: 'condition',
+      title: 'IF_ELSE'
+    },
+    {
+      id: 'expand',
+      title: 'EXPAND'
+    },
+    {
+      id: 'collapse',
+      title: 'COLLAPSE'
     }
-  ];
-
-  flowunitTypes2 = [
-    'IF_ELSE',
-    'EXPAND',
-    'COLLAPSE'
   ];
 
   flowunitVirtualTypes = [
@@ -399,7 +433,7 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit.path = this.formDataCreateProject.path +
         "/" +
         this.formDataCreateProject.projectName +
-        "/src/flowunit";
+        "/src/"+ this.formDataCreateFlowunit.deviceType +"/flowunit";
 
       if (this.formDataCreateProject.projectName && typeof (this.formData.flowunitPath) === "string" &&
         this.formData.flowunitPath.indexOf(this.formDataCreateFlowunit.path) < 0) {
@@ -500,9 +534,12 @@ export class ToolBarComponent {
           this.solutionList.push(obj)
         });
         this.solutionList = this.solutionList.filter(e => e.file.search(/\/oneshot\//) === -1);
-        this.optionSolutionList = this.optionSolutionList.concat(this.solutionList.map(function (obj) {
-          return obj.name;
-        }));
+        this.solutionList.unshift(this.blank);
+        let result = [];
+        for(var i=0,len=this.solutionList.length;i<len;i+=2){
+          result.push(this.solutionList.slice(i,i+2));
+        }
+        this.optionSolutionList = this.optionSolutionList.concat(result);
       },
       (error) => {
         return null;
@@ -697,6 +734,12 @@ export class ToolBarComponent {
 
   }
 
+  onClickCard(e) {
+    this.formDataCreateProject.model = e;
+    debugger
+    this.createProjectEmmiter.emit(this.formDataCreateProject);
+  }
+
   searchDirectory() {
     this.basicService.loadTreeByPath(this.openProjectPath).subscribe(
       (data: any) => {
@@ -722,6 +765,11 @@ export class ToolBarComponent {
         this.folderList = [];
         return;
       });
+  }
+
+  onPathSelect(e){
+    this.openProjectPath = e;
+    this.searchDirectory();
   }
 
   loadOpenProjectList() {
