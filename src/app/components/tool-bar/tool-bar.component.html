@@ -37,7 +37,7 @@
             <img src={{switchSvg}} />
         </d-button>
         <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
-            (click)="handleRunButtonClick($event)" [disabled]="!formData.graphName">
+            (click)="handleRunButtonClick($event)">
             <img src={{runGraphSvg}} />
         </d-button>
     </div>
@@ -91,46 +91,9 @@
                 </li>
             </ul>
         </div>
-
-        <!-- <div class="btn-group" style="display:inline-block" dDropDown [trigger]="'hover'" appendToBody
-            [alignOrigin]="graphRef" [appendToBodyDirections]="['centerDown', 'centerUp']">
-            <span dDropDownToggle>
-                <button class="tool-bar-button">
-                    &nbsp;&nbsp;
-                    {{'toolBar.graph' | translate}}
-                    &nbsp;&nbsp;
-                </button>
-            </span>
-            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu"> -->
-        <!-- <li role="menuitem">
-                    <a class="devui-dropdown-item" id="new-graph" (click)="handleNewButtonClick($event)">
-                        {{'toolBar.newGraphButton' | translate}}
-                    </a>
-                </li> -->
-        <!-- <li role="menuitem">
-                    <a class="devui-dropdown-item" id="save-as" (click)="showSaveAsDialog()">
-                        {{'toolBar.saveGraphButton' | translate}}
-                    </a>
-                </li> -->
-        <!-- <li role="menuitem">
-                    <a class="devui-dropdown-item" id="open-graph-setting"
-                        (click)="showGraphSettingDialog(graphSetting)">
-                        {{'toolBar.graphSettingButton' | translate}}
-                    </a>
-                </li> -->
-        <!-- <li role="menuitem">
-                    <a class="devui-dropdown-item" id="open-select" (click)="showSelectDialog(graphSelect)">
-                        {{'toolBar.selectDialogButton' | translate}}
-                    </a>
-                </li> -->
-        <!-- </ul> 
-        </div>-->
         <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
             {{'toolBar.graphSettingButton' | translate}}
         </button>
-        <!-- <button id="open-solution" (click)="showSolutionDialog(solutionSelect)" class="tool-bar-button">
-            {{'toolBar.solutionDialogButton' | translate}}
-        </button> -->
     </div>
 
     <div class="tool-bar-mid">
@@ -175,13 +138,13 @@
                     <input dTextInput name="path" [(ngModel)]="formDataCreateProject.path" />
                 </d-form-control>
             </d-form-item>
-            <d-form-item>
+            <d-form-item *ngIf="false">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.model' | translate}}
                 </d-form-label>
                 <d-form-control>
                     <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
-                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="model"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="formDataCreateProject.model"
                         [placeholder]="'toolBar.modal.model' | translate" [options]="optionSolutionList">
                     </d-select>
                 </d-form-control>
@@ -193,6 +156,21 @@
                 <d-form-control>
                     <textarea dTextarea name="desc" [(ngModel)]="formDataCreateProject.projectDesc"></textarea>
                 </d-form-control>
+            </d-form-item>
+            <d-form-item *ngFor="let group of optionSolutionList">
+                <d-card class="card-container" *ngFor="let d of group" style="width:50%;height:100%"
+                        (click)="onClickCard(d.name)">
+                    <d-card-header>
+                        <d-avatar dCardAvatar [name]="d.name"></d-avatar>
+                        <d-card-title>
+                            {{d.name}}
+                        </d-card-title>
+                    </d-card-header>
+                    <d-card-content>
+                        <div>Description: {{d.desc}}</div>
+                        <div>Path: {{d.file}}</div>
+                    </d-card-content>
+                </d-card>
             </d-form-item>
         </form>
     </d-layout>
@@ -210,7 +188,8 @@
                         <div class="devui-form-group" style="width:80%">
                             <input dTextInput type="text" class="devui-form-control devui-dropdown-origin"
                                 name="language" placeholder="Search" [minLength]="0" [(ngModel)]="openProjectPath"
-                                dAutoComplete [source]="openProjectList" />
+                                dAutoComplete [source]="openProjectList" (selectValue)="onPathSelect($event)"
+                                (keyup)="($event.which === 13)?searchDirectory():0" />
                         </div>
                         <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"
                             (click)="searchDirectory()"></d-button>
@@ -297,20 +276,18 @@
                 <d-form-label></d-form-label>
                 <d-form-control>
                     <div style="display:flex; justify-content:space-between">
-                        <div style="width:80px; text-align:center">
+                        <div style="width:100px; text-align:center">
                             {{'toolBar.modal.portName' | translate}}
                         </div>
                         <div style="width:100px; text-align:center">
                             {{'toolBar.modal.inputOutput' | translate}}
                         </div>
-                        <div style="width:100px; text-align:center">
+                        <div *ngIf="formDataCreateFlowunit.programLanguage === 'inference'"
+                            style="width:100px; text-align:center">
                             {{'toolBar.modal.dataType' | translate}}
                         </div>
-                        <div style="width:80px; text-align:center">
+                        <div style="width:100px; text-align:center">
                             {{'toolBar.modal.deviceType' | translate}}
-                        </div>
-                        <div style="width:40px; text-align:center">
-                            {{'toolBar.modal.deviceNum' | translate}}
                         </div>
                         <div style="width:100px; text-align:center">
 
@@ -325,7 +302,7 @@
                 </d-form-label>
                 <d-form-control>
                     <div style="display:flex; justify-content:space-between">
-                        <div style="width:80px">
+                        <div style="width:100px">
                             <input type="text" id="name" name="name" required [(ngModel)]="portInfo.portName"
                                 placeholder="port name">
                         </div>
@@ -337,7 +314,7 @@
                             </d-select>
                         </div>
 
-                        <div style="width:100px">
+                        <div style="width:100px" *ngIf="formDataCreateFlowunit.programLanguage === 'inference'">
                             <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
                                 [(ngModel)]="portInfo.dataType" [ngModelOptions]="{ standalone: true }"
                                 [filterKey]="'id'" [placeholder]="'toolBar.modal.dataType' | translate"
@@ -348,18 +325,12 @@
                             </d-select>
                         </div>
 
-                        <div style="width:80px">
+                        <div style="width:100px">
                             <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
                                 [disabled]="portDeviceTypeAble" [(ngModel)]="portInfo.deviceType"
                                 [ngModelOptions]="{ standalone: true }"
                                 [placeholder]="'toolBar.modal.deviceType' | translate" [options]="optionsDeviceType">
                             </d-select>
-                        </div>
-
-                        <div style="width:40px">
-                            <d-input-number style="width:40px" [placeholder]="'toolBar.modal.deviceNum' | translate"
-                                [ngModelOptions]="{ standalone: true }" [(ngModel)]="portInfo.deviceNum"
-                                class="input-number"></d-input-number>
                         </div>
 
                         <button class="tool-bar-button" (click)="handleAddPortInfoClick()">
@@ -415,7 +386,8 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage !== 'inference'">
+            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage !== 'inference' && 
+                                formDataCreateFlowunit.programLanguage !== 'yolo'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitType' | translate}}
                 </d-form-label>
@@ -428,11 +400,6 @@
                                 </ng-template>
                             </d-tab>
                         </d-tabs>
-                    </div>
-                    <div style="margin-left: 50px;display: inline-block;">
-                        <d-checkbox-group [(ngModel)]="valuesCheckbox" [name]="'type'" [options]="flowunitTypes2"
-                            [direction]="'row'" [isShowTitle]="true" (change)="onCheckbox2Change($event)">
-                        </d-checkbox-group>
                     </div>
                 </d-form-control>
 
@@ -453,7 +420,7 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'c++'">
+            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'instance'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowUnitGroup' | translate}}
                 </d-form-label>
@@ -464,7 +431,9 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'inference'">
+            <d-form-item *ngIf="formDataCreateFlowunit.programLanguage === 'inference' && 
+                                (formDataCreateFlowunit.flowunitVirtualType === 'tensorflow' ||
+                                formDataCreateFlowunit.flowunitVirtualType === 'tensorrt')">
                 <d-form-label>
                     {{'enginePlugin' | translate}}
                 </d-form-label>
@@ -543,28 +512,11 @@
                 <ng-template dTabContent>
                     <form dForm [layout]="layoutDirection" ngForm>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.enable' | translate}}
-                            </d-form-label>
-                            <d-form-control>
-                                <d-checkbox [(ngModel)]="formData.perfEnable" name="perfEnable"
-                                    (change)="onCheckboxPerfEnableChange($event)"> </d-checkbox>
-                            </d-form-control>
-                        </d-form-item>
-                        <d-form-item>
                             <d-form-label>{{'toolBar.setting.perf.trace.enable' | translate}}
                             </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.perfTraceEnable" name="perfTraceEnable"
                                     (change)="onCheckboxPerfTraceEnableChange($event)">
-                                </d-checkbox>
-                            </d-form-control>
-                        </d-form-item>
-                        <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.session.enable' | translate}}
-                            </d-form-label>
-                            <d-form-control>
-                                <d-checkbox [(ngModel)]="formData.perfSessionEnable" name="perfSessionEnable"
-                                    (change)="onCheckboxPerfSessionEnableChange($event)">
                                 </d-checkbox>
                             </d-form-control>
                         </d-form-item>

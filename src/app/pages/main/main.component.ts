@@ -15,6 +15,7 @@ import { AttributePanelComponent } from '../../components/attribute-panel/attrib
 import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { indexOf } from 'lodash';
+import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
 
 @Component({
   selector: 'app-main',
@@ -79,9 +80,11 @@ export class MainComponent {
   modelFlowunitPath = [];
   InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
+  createProjectDialogResults;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
   @ViewChild('textEditor') editor: TextEditorComponent;
   @ViewChild('toolBar') toolBar: ToolBarComponent;
+  @ViewChild('header') header: HeaderMainComponent;
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
   handleNodeShapeDragEnd = () => { };
@@ -212,8 +215,8 @@ export class MainComponent {
         } else {
           this.dotSrc = this.dataService.defaultSrc;
         }
-
-        return
+        this.createProjectDialogResults.modalInstance.hide();
+        return;
       }
     }, error => {
       this.toastService.open({
@@ -635,7 +638,7 @@ export class MainComponent {
   }
 
   showCreateProjectDialog(content: TemplateRef<any>) {
-    const results = this.dialogService.open({
+    this.createProjectDialogResults = this.dialogService.open({
       id: 'createProject',
       width: '700px',
       title: this.i18n.getById('toolBar.newButton'),
@@ -650,8 +653,8 @@ export class MainComponent {
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
+          this.createProjectDialogResults.modalInstance.hide();
+          this.createProjectDialogResults.modalInstance.zIndex = -1;
           this.createProject(this.toolBar.formDataCreateProject);
         },
       },
@@ -660,8 +663,8 @@ export class MainComponent {
         cssClass: 'common',
         text: this.i18n.getById('modal.cancelButton'),
         handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
+          this.createProjectDialogResults.modalInstance.hide();
+          this.createProjectDialogResults.modalInstance.zIndex = -1;
         },
       },],
     });
@@ -669,7 +672,7 @@ export class MainComponent {
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
-      id: 'createProject',
+      id: 'openProject',
       width: '700px',
       title: this.i18n.getById('toolBar.openProjectButton'),
       showAnimate: false,
@@ -878,12 +881,15 @@ export class MainComponent {
       //run
       let option = this.createOptionFromProject(this.project);
       this.basicService.createTask(option)
-        .subscribe((data: any) => {
+        .subscribe(async (data: any) => {
           //提示任务运行状态
           this.toastService.open({
             value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
             life: 3000
           });
+          
+          await new Promise(r => setTimeout(r, 2000));
+          this.header.goTask();
         }, error => {
           if (error.error != null) {
             this.toastService.open({
@@ -898,6 +904,8 @@ export class MainComponent {
         value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
         life: 3000
       });
+      //open graph saving
+      this.toolBar.showSaveAsDialog();
     }
   }
 

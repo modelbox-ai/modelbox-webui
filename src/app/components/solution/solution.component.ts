@@ -7,6 +7,7 @@ import { AttributePanelComponent } from '../../components/attribute-panel/attrib
 import Driver from 'driver.js';
 import { I18nService } from '@core/i18n.service';
 import { DataServiceService } from '@shared/services/data-service.service';
+import { HeaderMainComponent } from '../header-main/header-main.component';
 
 @Component({
   selector: 'app-solution',
@@ -17,6 +18,7 @@ export class SolutionComponent implements OnInit {
   @ViewChild('textEditor') editor: TextEditorComponent;
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
+  @ViewChild('header') header: HeaderMainComponent;
   name: string = localStorage.getItem('projectSolution.name') || '';
   hasUndo = false;
   hasRedo = false;
@@ -361,12 +363,14 @@ export class SolutionComponent implements OnInit {
     //run
     let option = this.createOptionFromProject(this.project);
     this.basicService.createTask(option)
-      .subscribe((data: any) => {
+      .subscribe(async (data: any) => {
         //提示任务运行状态
         this.toastService.open({
           value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
           life: 3000
         });
+        await new Promise(r => setTimeout(r, 2000));
+        this.header.goTask();
       }, error => {
         if (error.error != null) {
           this.toastService.open({
