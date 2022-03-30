@@ -2,8 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { DataServiceService } from '@shared/services/data-service.service';
-import { indexOf } from 'lodash';
-import { first } from 'rxjs/operators';
 import { ToastService } from 'ng-devui/toast';
 
 declare const require: any
@@ -41,14 +39,16 @@ export class ToolBarSolutionComponent implements OnInit {
 
   solutionList = [];
   dirs = [];
-
+  showLoading;
 
   currentOption = localStorage.getItem('currentSolution') || {};
   
   constructor(private i18n: I18nService,
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
-    private toastService: ToastService) { }
+    private toastService: ToastService) { 
+      this.showLoading = true;
+    }
 
   ngOnInit(): void {
     this.dirs.push(this.dataService.commonFlowunitPath);
@@ -103,17 +103,19 @@ export class ToolBarSolutionComponent implements OnInit {
   loadSolutionData() {
     this.basicService.querySolutionList().subscribe(
       (data: any) => {
-        let solution = data.solution_list.filter(e => e.file.search(/\/oneshot\//) === -1);
+        let solution = data.demo_list;
         solution.forEach((item) => {
           let obj = { name: '', desc: '', file: '' };
           obj.name = item.name;
           obj.desc = item.desc;
-          obj.file = item.file;
+          obj.file = item.graphfile;
           this.solutionList.push(obj);
           let flowunitPath = this.getFlowunitPathFromGraphPath(obj.file, obj.name);
-          this.dirs.push(flowunitPath);
+          if (flowunitPath){
+            this.dirs.push(flowunitPath);
+          }
         });
-        this.dataService.loadFlowUnit(null, this.dirs);
+        this.dataService.loadFlowUnit(null, this.dirs, null);
       },
       (error) => {
         return null;
@@ -121,12 +123,9 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   getFlowunitPathFromGraphPath(graphPath, graphName){
-    let pos = graphPath.search(/\/graphs\//);
-    if (graphName.indexOf(".toml")){
-      graphName = graphName.slice(0,-5);
-    }
+    let pos = graphPath.search(/\/graph\//);
     if (pos > -1){
-      return graphPath.slice(0,pos + 1) + "flowunit/" + graphName;
+      return graphPath.slice(0,pos + 1) + "flowunit/";
     }
     return;
   }

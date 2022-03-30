@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
   ViewChild,
+  SimpleChanges,
 } from '@angular/core';
 import { DialogService, ModalService } from 'ng-devui/modal';
 import { InsertPanelsComponent } from '../../components/insert-panels/insert-panels.component';
@@ -16,6 +17,7 @@ import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { indexOf } from 'lodash';
 import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-main',
@@ -69,8 +71,8 @@ export class MainComponent {
   resetUndoAtNextTextChange: any;
   project: any = JSON.parse(localStorage.getItem('project')) || {};
   graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
-  projectName: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectName : "";
-  projectDesc: string = JSON.parse(localStorage.getItem('project')) ? this.project.projectDesc : "";
+  project_name: string = JSON.parse(localStorage.getItem('project')) ? this.project.name : "";
+  project_desc: string = JSON.parse(localStorage.getItem('project')) ? this.project.project_desc : "";
   graphName: string = JSON.parse(localStorage.getItem('project')) ? this.project.graph.graphName : "";
   path: string;
   desc: string;
@@ -96,6 +98,7 @@ export class MainComponent {
   handleSwitchButtonClick = () => { };
   graphDesc: string;
   flowunitPath: any;
+  projectPath: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -124,17 +127,21 @@ export class MainComponent {
     });
   }
 
+  updateProjectPath(e) {
+    this.projectPath = e;
+  }
+
   reloadInsertComponent() {
     if (typeof this.InsertPanels === 'undefined') {
       return
     }
-    this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs);
+    this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs, this.projectPath);
   }
 
   initCurrentProject() {
     localStorage.clear();
     this.graphName = this.createUntitledName(this.graphs); //graph
-    this.projectDesc = "";
+    this.project_desc = "";
     this.dotSrc = this.dataService.defaultSrc;
     this.dotSrcLastChangeTime = Date.now();
     this.svgString = '';
@@ -145,6 +152,7 @@ export class MainComponent {
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
     this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
+    this.projectPath = this.path + "/" + this.project_name;
     if (this.toolBar) {
       this.toolBar.initFormData();
     }
@@ -153,9 +161,9 @@ export class MainComponent {
 
   loadProjectFromJson(project) {
     this.graphName = project.graph.graphName;
-    this.projectName = project.projectName;
-    this.projectDesc = project.projectDesc;
-    this.path = project.path;
+    this.project_name = project.name;
+    this.project_desc = project.project_desc;
+    this.path = project.rootpath;
     this.dotSrc = project.graph.dotSrc;
     if (typeof this.dotSrc === 'undefined') {
       this.dotSrc = this.dataService.defaultSrc;
@@ -167,22 +175,22 @@ export class MainComponent {
     if (typeof this.skipDefault === 'undefined') {
       this.skipDefault = false;
     }
-    this.dirs = project.flowunit.path;
-    if (typeof this.dirs === 'undefined') {
-      this.dirs = []
-    }
+    this.dirs = project.graph.dirs;
     this.settingPerfEnable = project.graph.settingPerfEnable;
     this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
     this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
     this.settingPerfDir = project.graph.settingPerfDir;
+    this.projectPath = this.path + "/" + this.project_name;
     this.reloadInsertComponent();
   }
 
   getProjectJson() {
+    let path = this.toolBar.formDataCreateProject.rootpath + "/" +
+      this.toolBar.formDataCreateProject.name + "/src/flowunit";
     const projectdata = {
-      projectName: this.toolBar.formDataCreateProject.projectName,
-      projectDesc: this.toolBar.formDataCreateProject.projectDesc,
-      path: this.toolBar.formDataCreateProject.path,
+      name: this.toolBar.formDataCreateProject.name,
+      // project_desc: this.toolBar.formDataCreateProject.project_desc,
+      rootpath: this.toolBar.formDataCreateProject.rootpath,
       graph: {
         graphName: this.toolBar.formData.graphName,
         graphDesc: this.toolBar.formData.graphDesc,
@@ -190,7 +198,7 @@ export class MainComponent {
         dotSrcLastChangeTime: this.dotSrcLastChangeTime,
         svgString: this.getSvgString(),
         skipDefault: this.skipDefault,
-        dirs: this.toolBar.formData.flowunitPath,
+        dirs: [path],
         settingPerfEnable: this.toolBar.formData.perfEnable,
         settingPerfTraceEnable: this.toolBar.formData.perfTraceEnable,
         settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
@@ -206,22 +214,26 @@ export class MainComponent {
   createProject(param) {
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
-        this.projectName = param.projectName;
+        this.project_name = param.name;
         //after created successfully
         localStorage.removeItem("project");
         this.saveCurrentProject();
-        if (this.toolBar.model != "blank") {
-          this.selectSolution(this.toolBar.model);
-        } else {
-          this.dotSrc = this.dataService.defaultSrc;
-        }
+        // if (this.toolBar.formDataCreateProject.template != "" && this.toolBar.formDataCreateProject.template != "blank") {
+        //   this.selectSolution(this.toolBar.formDataCreateProject.template);
+        // } else {
+        //   this.dotSrc = this.dataService.defaultSrc;
+        // }
+        this.dotSrc = this.dataService.defaultSrc;
         this.createProjectDialogResults.modalInstance.hide();
+        this.toastService.open({
+          value: [{ severity: 'success', content: data.body.msg }],
+          life: 1500
+        });
         return;
       }
     }, error => {
-      this.toastService.open({
-        value: [{ severity: 'error', content: this.i18n.getById('message.createProjectFailedPleaseCheck') }],
-        life: 1500
+      const results = this.toastService.open({
+        value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
       });
     });
 
@@ -608,11 +620,7 @@ export class MainComponent {
     this.desc = context.graphDesc;
     let rankdir = context.radioValue;
     this.skipDefault = context.skipDefault;
-    if (typeof (context.flowunitPath) === "string") {
-      this.dirs = context.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
-    } else {
-      this.dirs = [];
-    }
+    this.dirs = context.flowunitPath;
     this.renameGraphSrc(newName);
     this.settingPerfEnable = context.perfEnable;
     this.settingPerfTraceEnable = context.perfTraceEnable;
@@ -629,11 +637,6 @@ export class MainComponent {
   }
 
   refreshFlowunit(e) {
-    if (typeof (this.toolBar.formData.flowunitPath) === "string") {
-      this.dirs = this.toolBar.formData.flowunitPath.replace(/\s\s*$/gm, "").split("\n");
-    } else {
-      this.dirs = [];
-    }
     this.reloadInsertComponent();
   }
 
@@ -719,9 +722,12 @@ export class MainComponent {
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
+
+          if (!this.toolBar.createFlowunit()) {
+            return;
+          }
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.toolBar.createFlowunit();
           //保存至本地
         },
       },
@@ -811,15 +817,6 @@ export class MainComponent {
     });
   }
 
-  saveSolutionFlowunitPath(dirs) {
-    let param = {};
-    param = {
-      dirs: dirs,
-      flowunitPath: this.toolBar.formDataCreateFlowunit.path
-    }
-    this.basicService.saveSolutionFlowunit(param).subscribe((data) => { });
-  }
-
   selectSolution(selectedName) {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
@@ -841,21 +838,19 @@ export class MainComponent {
         this.modelFlowunitPath = response.driver.dir;
         this.skipDefault = response.driver['skip-default'];
         this.dirs = [];
-        if (typeof (response.driver.dir) == 'string') {
-          this.dirs.push(response.driver.dir);
-        } else {
-          response.driver.dir.forEach(item => {
-            this.dirs.push(item);
-            this.toolBar.formData.flowunitPath += "\n" + item;
-          });
-        }
+        let path = this.toolBar.formDataCreateProject.rootpath + "/" + this.toolBar.formDataCreateProject.name + "/src/flowunit";
+        this.dirs.push(path);
       }
-      this.saveSolutionFlowunitPath(response.driver.dir);
       this.saveCurrentProject();
       this.reloadInsertComponent();
       this.handleZoomResetButtonClick();
     }
     )
+  }
+
+  updateDir(e) {
+    this.dirs = e;
+    this.reloadInsertComponent();
   }
 
   click(tab: string): void {
@@ -887,7 +882,7 @@ export class MainComponent {
             value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
             life: 3000
           });
-          
+
           await new Promise(r => setTimeout(r, 2000));
           this.header.goTask();
         }, error => {
@@ -899,7 +894,7 @@ export class MainComponent {
           }
         }
         );
-    }else{
+    } else {
       this.toastService.open({
         value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
         life: 3000
@@ -913,13 +908,13 @@ export class MainComponent {
     let params = {};
     params = {
       job_id: this.handleGraphName(item.graph.graphName),
-      job_graph: {
+      graph: {
         flow: {
           desc: item.graph.graphDesc,
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.graph.dirs.split("\n"),
+          dir: item.graph.dirs.push(...this.toolBar.flowunitDebugPath),
         },
         profile: {
           profile: item.graph.settingPerfEnable,

@@ -1,3 +1,7 @@
+<div style="margin:20px;margin-bottom:0;font-weight: 600;">
+  <span style="font-size:18px">功能单元列表</span>
+  <i class="icon icon-refresh" style="margin-left: 20px;margin-bottom: 5px;cursor:pointer" (click)="refreshFlowunit()"></i>
+</div>
 <d-accordion id="main-accrodition" [data]="nodeShapeCategories" [accordionType]="'embed'" [autoOpenActiveMenu]="true"
   [innerListTemplate]="innerListTemplate" [ngStyle]="classes.columns"></d-accordion>
 

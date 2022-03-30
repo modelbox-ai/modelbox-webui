@@ -229,7 +229,7 @@ export class ManagementComponent implements OnInit {
         if (!res && item) {
           params = {
             job_id: item.job_id,
-            job_graph: {
+            graph: {
               flow: {
                 desc: item.project.desc,
               },

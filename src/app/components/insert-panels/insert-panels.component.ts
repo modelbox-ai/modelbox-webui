@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
@@ -50,6 +50,9 @@ export class InsertPanelsComponent implements OnInit {
   @Input() onNodeShapeDragEnd: any;
   @Input() onClick: any;
   @Input() regFlowUnitPanel: any;
+  @Input() dirs: any;
+  @Input() projectPath: any;
+  @Output() refreshEmmiter = new EventEmitter();
   imgSvg = require("../../../assets/img.svg");
   videoSvg = require("../../../assets/video.svg");
   commonSvg = require("../../../assets/common.svg");
@@ -92,6 +95,8 @@ export class InsertPanelsComponent implements OnInit {
 
   trustHtml = this.sanitized.bypassSecurityTrustHtml;
   nodeShapeCategories: Array<any> = [];
+  flowunits: any;
+  transformedFlowunits: Array<any> = [];
   constructor(
     private sanitized: DomSanitizer,
     private dataService: DataServiceService,
@@ -126,7 +131,47 @@ export class InsertPanelsComponent implements OnInit {
     return false;
   }
 
-  public loadFlowUnit(skip, dirs) {
+  loadProjectFlowunit(path) {
+    this.basicService.openProject(path).subscribe(
+      (data: any) => {
+        if (data) {
+          this.flowunits = data.flowunits;
+        }
+      });
+  }
+
+  titleCase(str) {
+    let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+    return newStr;
+  }
+
+  transformFlowunit() {
+    this.flowunits.map(ele => {
+      let obj = {
+        descryption: "",
+        group: "",
+        name: "",
+        version: "",
+        type: "",
+        inputports: [],
+        outputports: []
+      };
+      obj.descryption = ele.base.description;
+      obj.group = this.titleCase(ele.base.group_type);
+      obj.name = ele.base.name;
+      obj.version = ele.base.version;
+      obj.type = ele.base.type;
+      for (let i in ele.input) {
+        obj.inputports.push(ele.input[i]);
+      }
+      for (let i in ele.output) {
+        obj.outputports.push(ele.output[i]);
+      }
+      this.transformedFlowunits.push(obj);
+    })
+  }
+
+  public loadFlowUnit(skip, dirs, path) {
     if (skip === null) {
       skip = false;
     }
@@ -135,15 +180,26 @@ export class InsertPanelsComponent implements OnInit {
       skip = false;
     }
 
+    let type = typeof (dirs);
+    if (type === "string") {
+      dirs = dirs.replace(/\s\s*$/gm, "").split("\n");
+    }
     let params = {
       "skip-default": skip,
       dir: dirs,
+    }
+    if (path != null) {
+      this.loadProjectFlowunit(path);
     }
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
       if (data.devices == null) {
         return;
+      }
+      if (this.flowunits && this.flowunits.length > 0) {
+        this.transformFlowunit();
+        data.flowunits.push(...this.transformedFlowunits);
       }
       data.flowunits.forEach(item => {
 
@@ -228,4 +284,9 @@ export class InsertPanelsComponent implements OnInit {
     document.body.removeChild(document.body.lastChild);
     document.body.removeChild(document.body.lastChild);
   };
+
+  refreshFlowunit(){
+    // this.dataService.loadFlowUnit(null, this.dirs, this.projectPath);
+    this.refreshEmmiter.emit("refresh");
+  }
 }

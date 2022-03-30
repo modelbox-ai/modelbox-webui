@@ -1,5 +1,5 @@
 <app-header-main #header [active]="page"></app-header-main>
-<div class="demo-page" id="demo-page">
+<div class="demo-page" id="demo-page" dLoading [showLoading]="showLoading" [positionType]="'relative'" [backdrop]="true">
   <as-split direction="horizontal">
     <as-split-area [size]="100" class="main-container-body">
       <as-split direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
