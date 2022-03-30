@@ -42,6 +42,7 @@ export class SolutionComponent implements OnInit {
   desc: any;
   dotSrcLastChangeTime: any;
   currentComponent: any;
+  showLoading;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
@@ -64,13 +65,16 @@ export class SolutionComponent implements OnInit {
   });
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
-    private dataService: DataServiceService) { }
+    private dataService: DataServiceService) {
+    this.showLoading = true;
+  }
 
   ngOnInit(): void {
     this.dataService.currentPage = "solution";
   }
 
-  ngAfterViewInit(): void {
+  ngAfterContentInit(): void{
+    this.showLoading = false;
   }
 
   handleTextChange = (text, undoRedoState) => {
@@ -199,7 +203,7 @@ export class SolutionComponent implements OnInit {
     this.currentComponent = e;
   }
 
-  handleCurrentProjectChange(e){
+  handleCurrentProjectChange(e) {
     this.dotSrc = e.graph.graphconf;
   }
 
@@ -257,7 +261,7 @@ export class SolutionComponent implements OnInit {
         element: '#toolBarSolution',
         popover: {
           title: this.i18n.getById('tutorial.toolbar'),
-          description:  this.i18n.getById("tutorial.toolbarGuide"),
+          description: this.i18n.getById("tutorial.toolbarGuide"),
           position: 'buttom'
         }
       },
@@ -265,7 +269,7 @@ export class SolutionComponent implements OnInit {
         element: '#undoredo',
         popover: {
           title: this.i18n.getById('tutorial.undoredo'),
-          description: this.i18n.getById( "tutorial.redoGuide"),
+          description: this.i18n.getById("tutorial.redoGuide"),
           position: 'buttom'
         }
       },
@@ -273,7 +277,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoominout',
         popover: {
           title: this.i18n.getById('tutorial.zoominout'),
-          description: this.i18n.getById( "tutorial.zoomGuide"),
+          description: this.i18n.getById("tutorial.zoomGuide"),
           position: 'buttom'
         }
       },
@@ -281,7 +285,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoom-reset',
         popover: {
           title: this.i18n.getById('toolBar.zoomResetButton'),
-          description: this.i18n.getById( "tutorial.restGuide"),
+          description: this.i18n.getById("tutorial.restGuide"),
           position: 'buttom'
         }
       },
@@ -289,7 +293,7 @@ export class SolutionComponent implements OnInit {
         element: '#zoom-fit',
         popover: {
           title: this.i18n.getById('toolBar.zoomFitButton'),
-          description: this.i18n.getById( "tutorial.fitGuide"),
+          description: this.i18n.getById("tutorial.fitGuide"),
           position: 'buttom'
         }
       },
@@ -297,7 +301,7 @@ export class SolutionComponent implements OnInit {
         element: '#switch',
         popover: {
           title: this.i18n.getById('toolBar.switchButton'),
-          description: this.i18n.getById( "tutorial.layoutGuide"),
+          description: this.i18n.getById("tutorial.layoutGuide"),
           position: 'buttom'
         }
       },
@@ -305,7 +309,7 @@ export class SolutionComponent implements OnInit {
         element: '#run',
         popover: {
           title: this.i18n.getById('toolBar.runGraphButton'),
-          description: this.i18n.getById( "tutorial.runGuide"),
+          description: this.i18n.getById("tutorial.runGuide"),
           position: 'buttom'
         }
       },
@@ -313,7 +317,7 @@ export class SolutionComponent implements OnInit {
         element: '#graph',
         popover: {
           title: '画布',
-          description: this.i18n.getById( "tutorial.graphGuide"),
+          description: this.i18n.getById("tutorial.graphGuide"),
           position: 'right'
         }
       }
@@ -347,12 +351,13 @@ export class SolutionComponent implements OnInit {
       this.focusedPane = newFocusedPane;
     }
   };
-  handleDotSrcChange(e){
+  handleDotSrcChange(e) {
     this.dotSrc = e;
   }
 
   handleRunButtonClick = () => {
     //saveToBrowser
+    this.showLoading = true;
     this.graphs = {};
     this.name = this.dataService.currentSolution;
     this.project = this.dataService.currentSolutionProject;
@@ -369,15 +374,17 @@ export class SolutionComponent implements OnInit {
           value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
           life: 3000
         });
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 1000));
+        this.showLoading = false;
         this.header.goTask();
       }, error => {
         if (error.error != null) {
           this.toastService.open({
             value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
-            life: 3000
+            life: 15000
           });
         }
+        this.showLoading = false;
       }
       );
   }
@@ -418,7 +425,7 @@ export class SolutionComponent implements OnInit {
     let params = {};
     params = {
       job_id: item.name,
-      job_graph: {
+      graph: {
         flow: {
           desc: item.flow.desc,
         },

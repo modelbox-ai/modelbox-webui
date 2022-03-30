@@ -36,6 +36,8 @@ import { NgbdTooltipCustomclass } from '../components/tooltip/tooltip-customclas
 import { PopoverModule } from 'ng-devui/popover';
 import { DropDownModule } from 'ng-devui/dropdown';
 import { BrowserModule } from '@angular/platform-browser';
+import { LoadingModule } from 'ng-devui/loading';
+import { StepsGuideModule } from 'ng-devui/steps-guide';
 // DevUI部分组件依赖angular动画，需要引入animations模块
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevUIModule } from 'ng-devui';
@@ -73,6 +75,8 @@ const COMPONENTS_NOROUNT = [];
     FormModule,
     AngularSplitModule,
     BrowserModule,
+    LoadingModule,
+    StepsGuideModule,
     BrowserAnimationsModule,
     DevUIModule
   ],

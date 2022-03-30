@@ -850,16 +850,16 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         return;
       }
       const linkName = nodeTitle + ':' + itemTitle;
-      const nodePortType = this.dataService.getPortType(nodeUnit, linkName);
+      const nodeport_type = this.dataService.getport_type(nodeUnit, linkName);
       if (!nodeUnit) {
         return;
       }
       // 起点
-      if (!this.isDrawingEdge && nodePortType === 'input') {
+      if (!this.isDrawingEdge && nodeport_type === 'input') {
         return;
       }
       // 终点
-      if (this.isDrawingEdge && nodePortType === 'output') {
+      if (this.isDrawingEdge && nodeport_type === 'output') {
         return;
       }
 
@@ -1348,11 +1348,11 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       endAttr['flowunit'],
       endAttr['device']
     );
-    const startPortType = this.dataService.getPortType(
+    const startport_type = this.dataService.getport_type(
       startUnit,
       startLinkName
     );
-    const endPortType = this.dataService.getPortType(endUnit, endLinkName);
+    const endport_type = this.dataService.getport_type(endUnit, endLinkName);
 
     for (let edge in this.dotGraph.edges) {
       const [start, end] = edge.split('->');

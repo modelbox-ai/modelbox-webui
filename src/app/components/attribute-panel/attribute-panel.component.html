@@ -8,24 +8,37 @@
             </p>
         </d-form-item>
         <d-form-item>
-            <d-accordion [data]="menu1" class="menu"
-                (menuToggle)="menuToggle1($event)"
-                [accordionType]="'embed'" [innerListTemplate]="innerListTemplate">
+            <d-accordion [data]="menu1" class="menu" [autoOpenActiveMenu]="true" [menuItemTemplate]="menutemplate"
+                [accordionType]="'embed'" [innerListTemplate]="innerListTemplate" [loadingTemplate]="loadingTemplate">
             </d-accordion>
-            <d-accordion [data]="menu2" class="menu"
-                (menuToggle)="menuToggle2($event)"
-                [accordionType]="'embed'" [innerListTemplate]="innerListTemplate2">
+            <d-accordion [data]="menu2" class="menu" [accordionType]="'embed'" [menuItemTemplate]="menutemplate"
+                [innerListTemplate]="innerListTemplate2" [loadingTemplate]="loadingTemplate">
             </d-accordion>
         </d-form-item>
         <d-form-item>
             <div>
-                <a class="devui-link" href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html" target="_blank">帮助文档</a>
-              </div>
-            
+                <a class="devui-link" href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html"
+                    target="_blank">
+                    帮助文档
+                </a>
+            </div>
         </d-form-item>
     </form>
 </div>
 
+<ng-template #loadingTemplate let-item="item">
+    <li class="devui-accordion-item">
+        <div class="loading">
+            <span class="circle-spinner">
+            </span> loading...
+            <!--正在用力地加载中...-->
+        </div>
+    </li>
+</ng-template>
+
+<ng-template #menutemplate let-item="item">
+    <span style="font-size: 20px;">{{ item.title }}</span>
+</ng-template>
 
 <ng-template #innerListTemplate let-item="item">
     <div style="margin:20px">

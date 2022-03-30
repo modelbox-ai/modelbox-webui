@@ -103,7 +103,7 @@ export class AttributePanelComponent {
     data: [],
     init: () => {
       this.unitOptions.data = [];
-      if (this.unit) {
+      if (this.unit && this.unit.options) {
         this.unit.options.forEach(item => {
           let formItem: any = {
             label: item.name.replace(/_/g, " "),
@@ -255,21 +255,13 @@ export class AttributePanelComponent {
 
   menu1 = [{
     title: '配置',
-    children: [],
+    children: [{active: true}],
   }];
 
   menu2 = [{
     title: '描述',
     children: [],
   }];
-
-  menuToggle1(event) {
-    console.log('menu toggle' + JSON.stringify(event));
-  }
-
-  menuToggle2(event) {
-    console.log('menu toggle' + JSON.stringify(event));
-  }
 
   constructor(
     private dataService: DataServiceService,
