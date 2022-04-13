@@ -157,8 +157,8 @@
                     <textarea dTextarea name="desc" [(ngModel)]="formDataCreateProject.project_desc"></textarea>
                 </d-form-control> -->
             </d-form-item>
-            <!-- <d-form-item *ngFor="let group of optionSolutionList">
-                <d-card class="card-container" *ngFor="let d of group" style="width:50%;height:100%"
+            <d-form-item>
+                <d-card class="card-container" *ngFor="let d of optionSolutionList" style="width:50%;height:100%"
                         (click)="onClickCard(d)">
                     <d-card-header>
                         <d-avatar dCardAvatar [name]="d.name"></d-avatar>
@@ -167,11 +167,10 @@
                         </d-card-title>
                     </d-card-header>
                     <d-card-content>
-                        <div>Description: {{d.desc}}</div>
-                        <div>Path: {{d.file}}</div>
+                        <div>{{d.desc}}</div>
                     </d-card-content>
                 </d-card>
-            </d-form-item> -->
+            </d-form-item>
         </form>
     </d-layout>
 </ng-template>
@@ -349,8 +348,7 @@
 
             <d-form-item>
                 <d-form-control>
-                    <d-data-table [dataSource]="formDataCreateFlowunit.port_infos" [scrollable]="true" maxHeight="200px"
-                        [borderType]="'bordered'">
+                    <d-data-table [dataSource]="formDataCreateFlowunit.port_infos" [scrollable]="true" maxHeight="200px">
                         <thead dTableHead>
                             <tr dTableRow>
                                 <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">
