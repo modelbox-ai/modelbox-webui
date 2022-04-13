@@ -110,7 +110,7 @@ export class ToolBarComponent {
   project_desc: string = "";
   project_name: string = "";
   path: string = this.dataService.defaultSearchPath;
-  template: string = "project";
+  template: string = "empty";
   optionSolutionList: any = [];
   blank: any = {
     checked: false,
@@ -270,7 +270,7 @@ export class ToolBarComponent {
   };
 
   formDataCreateFlowunit = {
-    name: 'defaultFlowunit',
+    name: 'flowunit',
     desc: '',
     lang: 'python',
     "project-path": this.formDataCreateProject.rootpath,
@@ -473,11 +473,14 @@ export class ToolBarComponent {
 
     this.loadGraphData();
     this.loadSolutionData();
-    this.searchDirectory();
-    this.flowunitDebugPath = ["/opt/modelbox/project/"+this.formDataCreateProject.name+"/lib",
-                              "/opt/modelbox/project/"+this.formDataCreateProject.name+"/python",
-                              "/opt/modelbox/project/"+this.formDataCreateProject.name+"/model"
-                              ];
+    this.flowunitDebugPath = ["/opt/modelbox/project/" + this.formDataCreateProject.name + "/lib",
+    "/opt/modelbox/project/" + this.formDataCreateProject.name + "/python",
+    "/opt/modelbox/project/" + this.formDataCreateProject.name + "/model"
+    ];
+    if (this.formDataCreateProject.name) {
+      this.searchDirectory();
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -531,7 +534,7 @@ export class ToolBarComponent {
     if (value === "yolo") {
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
     }
-    
+
     this.formDataCreateFlowunit.port_infos = [];
 
   }
@@ -588,22 +591,14 @@ export class ToolBarComponent {
   }
 
   loadSolutionData() {
-    this.basicService.querySolutionList().subscribe(
+    this.basicService.queryTemplate().subscribe(
       (data: any) => {
-        data.demo_list.forEach((item) => {
-          let obj = { name: '', desc: '', file: '', checked: false };
+        data.project_template_list.forEach((item) => {
+          let obj = { name: '', desc: ''};
           obj.name = item.name;
           obj.desc = item.desc;
-          obj.file = item.graphfile;
-          this.solutionList.push(obj)
+          this.optionSolutionList.push(obj)
         });
-        this.solutionList = this.solutionList.filter(e => e.file.search(/\/oneshot\//) === -1);
-        this.solutionList.unshift(this.blank);
-        let result = [];
-        for (var i = 0, len = this.solutionList.length; i < len; i += 2) {
-          result.push(this.solutionList.slice(i, i + 2));
-        }
-        this.optionSolutionList = this.optionSolutionList.concat(result);
       },
       (error) => {
         return null;
@@ -794,7 +789,7 @@ export class ToolBarComponent {
 
   initFormDataCreateFlowunit() {
     this.formDataCreateFlowunit = {
-      name: 'defaultFlowunit',
+      name: 'flowunit',
       desc: '',
       lang: 'python',
       "project-path": this.dataService.defaultSearchPath + this.project_name + '/src/flowunit',
@@ -915,7 +910,7 @@ export class ToolBarComponent {
       (error) => {
         this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 15000
+          life: 150000
         });
         return null;
       });
@@ -943,7 +938,7 @@ export class ToolBarComponent {
   }
 
   onClickCard(e) {
-    // this.formDataCreateProject.template = e.file;
+    this.formDataCreateProject.template = e.name;
     this.createProjectEmmiter.emit(this.formDataCreateProject);
   }
 
@@ -951,7 +946,7 @@ export class ToolBarComponent {
     this.basicService.loadTreeByPath(this.openproject_path).subscribe(
       (data: any) => {
         if (data.subdir) {
-          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return') }];
+          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": "是否modelbox项目" }];
           data.subdir.forEach(element => {
             if (element.isproject) {
               this.folderList.push({ "folder": element.dirname, "isProject": "✓" });
@@ -1075,6 +1070,9 @@ export class ToolBarComponent {
           this.loadGraphData();
           let param = JSON.parse(localStorage.getItem('project'));
           let ret = this.infoCreateProjectFirst();
+          if (!ret){
+            return;
+          }
           param = this.createProjectParam(param);
           this.basicService.saveAllProject(param).subscribe((data) => {
             if (data.status === 201) {
@@ -1087,7 +1085,7 @@ export class ToolBarComponent {
             (error) => {
               this.toastService.open({
                 value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-                life: 15000
+                life: 150000
               });
               return null;
             });
@@ -1138,7 +1136,7 @@ export class ToolBarComponent {
     if (!this.formDataCreateProject.name) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.createProjectFirst") }],
-        life: 1500
+        life: 3000
       });
       return false;
     } else {

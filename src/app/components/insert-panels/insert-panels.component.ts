@@ -137,7 +137,11 @@ export class InsertPanelsComponent implements OnInit {
         if (data) {
           this.flowunits = data.flowunits;
         }
-      });
+      },
+      (err) =>{
+        return;
+      }
+      );
   }
 
   titleCase(str) {

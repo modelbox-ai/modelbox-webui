@@ -234,6 +234,7 @@ export class MainComponent {
     }, error => {
       const results = this.toastService.open({
         value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+        life: 150000
       });
     });
 
@@ -351,15 +352,18 @@ export class MainComponent {
   setEditorMarkers(components) {
     let marks = []
     for (const component of components) {
-      for (const location of component.locations) {
-        let mark = {
-          startRow: location.start.line - 1,
-          startCol: location.start.column - 1,
-          endRow: location.end.line - 1,
-          endCol: location.end.column - 1,
+      if (component.locations) {
+        for (const location of component.locations) {
+          let mark = {
+            startRow: location.start.line - 1,
+            startCol: location.start.column - 1,
+            endRow: location.end.line - 1,
+            endCol: location.end.column - 1,
+          }
+          marks.push(mark);
         }
-        marks.push(mark);
       }
+
     }
     this.editor.handleMarkers(marks)
   }
@@ -888,7 +892,7 @@ export class MainComponent {
         }, error => {
           if (error.error != null) {
             this.toastService.open({
-              value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
+              value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
               life: 3000
             });
           }
@@ -957,7 +961,6 @@ export class MainComponent {
 
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-
           this.selectSolution(this.toolBar.selectedSolutionName);
         },
       },

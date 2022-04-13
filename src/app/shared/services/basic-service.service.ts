@@ -58,6 +58,10 @@ export class BasicServiceService {
     return this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).pipe(timeout(30000));
   }
 
+  queryTemplate(): Observable<any> {
+    return this.http.get(this.serviceRouter + '/editor/project/template').pipe(timeout(30000));
+  }
+
   // 创建任务
   createTask(paramData?: any): Observable<any> {
     return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData, {observe: 'response'}).pipe(timeout(30000));

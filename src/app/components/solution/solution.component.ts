@@ -380,8 +380,8 @@ export class SolutionComponent implements OnInit {
       }, error => {
         if (error.error != null) {
           this.toastService.open({
-            value: [{ severity: 'info', summary: error.error.error_code, content: error.error.error_msg }],
-            life: 15000
+            value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
+            life: 150000
           });
         }
         this.showLoading = false;
@@ -425,7 +425,7 @@ export class SolutionComponent implements OnInit {
     let params = {};
     params = {
       job_id: item.name,
-      graph: {
+      job_graph: {
         flow: {
           desc: item.flow.desc,
         },
