@@ -52,16 +52,20 @@ if (NOT EDITOR_UI_INSTALL_DIR)
 endif()
 
 set(EDITOR_UI_INSTALL_FLAG ${CMAKE_CURRENT_BINARY_DIR}/editorinstalled)
-add_custom_target(modelbox-editor-webui ALL)
-add_custom_command(TARGET modelbox-editor-webui 
+add_custom_target(modelbox-editor-webui  ALL
+    DEPENDS ${EDITOR_UI_OUTPUT_DIR}/index.html
+    )
+
+add_custom_command(
     COMMENT "Building modelbox editor ui package.."
+    OUTPUT ${EDITOR_UI_OUTPUT_DIR}/index.html
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMAND [ -d ${NODE_MODULES_PATH}/node_modules ] || mkdir -p ${NODE_MODULES_PATH}/node_modules
     COMMAND [ -d ${CMAKE_CURRENT_LIST_DIR}/node_modules ] || mv -f ${NODE_MODULES_PATH}/node_modules ${CMAKE_CURRENT_LIST_DIR}/
     COMMAND [ -e ${EDITOR_UI_INSTALL_FLAG} ] || ${NPM} install
     COMMAND ${NPM} run prepare
     COMMAND NG_CLI_ANALYTICS=ci ${NG} build --output-path ${EDITOR_UI_OUTPUT_DIR}
-    COMMAND mv -f ${CMAKE_CURRENT_LIST_DIR}/node_modules ${NODE_MODULES_PATH}/ 
+    COMMAND mv -f ${CMAKE_CURRENT_LIST_DIR}/node_modules ${NODE_MODULES_PATH}/
     COMMAND touch ${EDITOR_UI_INSTALL_FLAG}
     )
 
