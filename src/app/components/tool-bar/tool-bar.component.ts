@@ -262,6 +262,7 @@ export class ToolBarComponent {
     perfPath: this.dataService.defaultPerfDir
   };
   flowunitDebugPath: any;
+  flowunitReleasePath:any;
 
   formDataCreateProject = {
     name: this.project_name,
@@ -440,6 +441,7 @@ export class ToolBarComponent {
   openproject_path: string = this.dataService.defaultSearchPath;
   openProjectListPath: string = "/home";
   incomingGraphName: string = '';
+  isChangingPortName: boolean;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -458,6 +460,7 @@ export class ToolBarComponent {
       this.formData.graphName = current_project.graph.graphName;
       this.formData.graphDesc = current_project.graph.graphDesc;
       this.formData.flowunitPath = current_project.graph.dirs;
+      this.flowunitDebugPath = current_project.graph.dirs;
       this.formData.skipDefault = current_project.graph.skipDefault;
       this.formData.perfEnable = current_project.graph.settingPerfEnable;
       this.formData.perfTraceEnable = current_project.graph.settingPerfTraceEnable;
@@ -465,18 +468,19 @@ export class ToolBarComponent {
       this.formData.perfPath = current_project.graph.settingPerfDir;
 
       this.formDataCreateProject.name = current_project.name;
-      // this.formDataCreateProject.project_desc = current_project.project_desc;
       this.formDataCreateProject.rootpath = current_project.rootpath;
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
+
+      this.flowunitReleasePath = "/opt/modelbox/project/" + this.formDataCreateProject.name;
     }
 
     this.loadGraphData();
     this.loadSolutionData();
-    this.flowunitDebugPath = ["/opt/modelbox/project/" + this.formDataCreateProject.name + "/lib",
-    "/opt/modelbox/project/" + this.formDataCreateProject.name + "/python",
-    "/opt/modelbox/project/" + this.formDataCreateProject.name + "/model"
-    ];
+    // this.flowunitDebugPath = ["/opt/modelbox/project/" + this.formDataCreateProject.name + "/lib",
+    // "/opt/modelbox/project/" + this.formDataCreateProject.name + "/python",
+    // "/opt/modelbox/project/" + this.formDataCreateProject.name + "/model"
+    // ];
     if (this.formDataCreateProject.name) {
       this.searchDirectory();
     }
@@ -487,10 +491,7 @@ export class ToolBarComponent {
     if (this.formDataCreateProject) {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
-      // if (this.formDataCreateProject.project_name && typeof (this.formData.flowunitPath) === "string" &&
-      //   this.formData.flowunitPath.indexOf(this.formDataCreateFlowunit.path) < 0) {
-      //   this.formData.flowunitPath += "\n" + this.formDataCreateFlowunit.path;
-      // }
+      this.flowunitReleasePath = "/opt/modelbox/project/" + this.formDataCreateProject.name;
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -594,7 +595,7 @@ export class ToolBarComponent {
     this.basicService.queryTemplate().subscribe(
       (data: any) => {
         data.project_template_list.forEach((item) => {
-          let obj = { name: '', desc: ''};
+          let obj = { name: '', desc: '' };
           obj.name = item.name;
           obj.desc = item.desc;
           this.optionSolutionList.push(obj)
@@ -603,6 +604,10 @@ export class ToolBarComponent {
       (error) => {
         return null;
       })
+  }
+
+  onPortNameChange(e) {
+    this.isChangingPortName = true;
   }
 
   handleAddPortInfoClick(): void {
@@ -616,7 +621,7 @@ export class ToolBarComponent {
       for (let key in this.portInfo) {
         if (!this.portInfo[key]) {
           this.toastService.open({
-            value: [{ severity: 'warn', content: key + "必须要有值" }],
+            value: [{ severity: 'warn', content: key + this.i18n.getById("message.valueIsNecessary") }],
             life: 2000
           });
           return;
@@ -624,58 +629,59 @@ export class ToolBarComponent {
 
         if (this.formDataCreateFlowunit.lang === "inference" && !this.portInfo.data_type) {
           this.toastService.open({
-            value: [{ severity: 'warn', content: "数据类型必须要有值" }],
+            value: [{ severity: 'warn', content: this.i18n.getById("message.valueIsNecessaryForDataType") }],
             life: 2000
           });
           return;
         }
       }
 
-      if (this.portInfo.port_type === "input") {
+      if (this.portInfo.port_type === "input" && this.isChangingPortName == false) {
         this.in_num += 1;
         this.portInfo.port_name = "input" + this.in_num;
-      } else if (this.portInfo.port_type === "output") {
+      } else if (this.portInfo.port_type === "output" && this.isChangingPortName == false) {
         this.out_num += 1;
         this.portInfo.port_name = "output" + this.out_num;
       }
       this.formDataCreateFlowunit.port_infos.push({ ...this.portInfo });
     }
+    this.isChangingPortName = false;
   }
 
   checkFormDataCreateFlowunit() {
     if (!this.formDataCreateFlowunit.name) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "缺少功能单元的名字" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.nameOfFlowunitIsNecessary") }],
         life: 2000
       });
       return false;
     } else if (!this.formDataCreateFlowunit.lang) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "缺少功能单元的单元类型" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.langOfFlowunitIsNecessary") }],
         life: 2000
       });
       return false;
     } else if (!this.formDataCreateFlowunit.device) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "缺少功能单元的处理类型" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.deviceTypeOfFlowunitIsNecessary") }],
         life: 2000
       });
       return false;
     } else if (!this.formDataCreateFlowunit.type && !this.formDataCreateFlowunit["virtual-type"]) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "缺少功能单元的功能类型或者引擎类型" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.typeOfFlowunitIsNecessary") }],
         life: 2000
       });
       return false;
     } else if (!this.formDataCreateFlowunit["group-type"]) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "缺少功能单元分组" }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.groupOfFlowunitIsNecessary") }],
         life: 2000
       });
       return false;
     } else if (this.formDataCreateFlowunit.port_infos && this.formDataCreateFlowunit.port_infos.length === 0) {
       this.toastService.open({
-        value: [{ severity: 'warn', content: "至少要有一个input或者output." }],
+        value: [{ severity: 'warn', content: this.i18n.getById("message.atLeastOneInputOrOutput") }],
         life: 2000
       });
       return false;
@@ -963,6 +969,11 @@ export class ToolBarComponent {
               value: [{ severity: 'warn', content: this.i18n.getById('message.noFolder') }],
               life: 2000
             });
+          } else {
+            this.toastService.open({
+              value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+              life: 150000
+            });
           }
         }
         this.folderList = [];
@@ -1008,11 +1019,10 @@ export class ToolBarComponent {
             if (data.graphs && data.graphs[0] != null) {
               if (data.graphs[0].graph.graphconf) {
                 this.formData.graphName = data.graphs[0].name;
-                this.formData.graphDesc = data.graphs[0].flow.desc;
                 this.formData.skipDefault = false;
                 this.formData.perfEnable = data.graphs[0].profile.profile;
                 this.formData.perfTraceEnable = data.graphs[0].profile.trace;
-                this.formData.perfSessionEnable = data.graphs[0].profile.session;
+                // this.flowunitDebugPath = data.graphs[0].driver.dir;
 
                 this.dotSrcEmmiter.emit(data.graphs[0].graph.graphconf);
                 this.formData.flowunitPath = data.graphs[0].driver.dir;
@@ -1029,6 +1039,10 @@ export class ToolBarComponent {
           }
         },
         (error) => {
+          this.toastService.open({
+            value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+            life: 150000
+          });
           return;
         });
     }
@@ -1070,7 +1084,7 @@ export class ToolBarComponent {
           this.loadGraphData();
           let param = JSON.parse(localStorage.getItem('project'));
           let ret = this.infoCreateProjectFirst();
-          if (!ret){
+          if (!ret) {
             return;
           }
           param = this.createProjectParam(param);
@@ -1108,6 +1122,8 @@ export class ToolBarComponent {
     let params = {};
     params = {
       job_id: project.graph.graphName.indexOf(".toml") > 0 ? project.graph.graphName : project.graph.graphName + ".toml",
+      graph_name: "",
+      job_graph: {},
       graph: {
         flow: {
           desc: project.graph.graphDesc,
@@ -1129,6 +1145,8 @@ export class ToolBarComponent {
       },
       graph_path: project.rootpath + "/" + project.name
     }
+    params["graph_name"] = params["job_id"];
+    params["job_graph"] = params["graph"];
     return params;
   }
 

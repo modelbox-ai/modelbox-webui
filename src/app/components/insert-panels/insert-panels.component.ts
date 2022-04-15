@@ -138,10 +138,10 @@ export class InsertPanelsComponent implements OnInit {
           this.flowunits = data.flowunits;
         }
       },
-      (err) =>{
+      (err) => {
         return;
       }
-      );
+    );
   }
 
   titleCase(str) {
@@ -150,6 +150,7 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   transformFlowunit() {
+    this.transformedFlowunits = [];
     this.flowunits.map(ele => {
       let obj = {
         descryption: "",
@@ -198,12 +199,25 @@ export class InsertPanelsComponent implements OnInit {
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
+      let index = [];
       if (data.devices == null) {
         return;
       }
       if (this.flowunits && this.flowunits.length > 0) {
         this.transformFlowunit();
-        data.flowunits.push(...this.transformedFlowunits);
+        
+        for (let ele in this.transformedFlowunits) {
+          for (let ele2 of data.flowunits) {
+            if (this.transformedFlowunits[ele].name === ele2.name) {
+              index.push(ele);
+            }
+          }
+        }
+        for (let ele in this.transformedFlowunits) {
+          if (index.indexOf(ele) == -1){
+            data.flowunits.push(this.transformedFlowunits[ele]);
+          }
+        }
       }
       data.flowunits.forEach(item => {
 
@@ -289,8 +303,7 @@ export class InsertPanelsComponent implements OnInit {
     document.body.removeChild(document.body.lastChild);
   };
 
-  refreshFlowunit(){
-    // this.dataService.loadFlowUnit(null, this.dirs, this.projectPath);
+  refreshFlowunit() {
     this.refreshEmmiter.emit("refresh");
   }
 }

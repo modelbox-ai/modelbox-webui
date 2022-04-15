@@ -105,16 +105,18 @@ export class ToolBarSolutionComponent implements OnInit {
       (data: any) => {
         let solution = data.demo_list;
         solution.forEach((item) => {
-          let obj = { name: '', desc: '', file: '' };
-          obj.name = item.name;
+          let obj = { demo: '', desc: '', graphfile: '', name: '' };
+          obj.demo = item.demo;
           obj.desc = item.desc;
-          obj.file = item.graphfile;
+          obj.graphfile = item.graphfile;
+          obj.name = item.name;
           this.solutionList.push(obj);
-          let flowunitPath = this.getFlowunitPathFromGraphPath(obj.file, obj.name);
+          let flowunitPath = this.getFlowunitPathFromGraphPath(obj.graphfile, obj.name);
           if (flowunitPath){
             this.dirs.push(flowunitPath);
           }
         });
+        this.dataService.currentSolutionList = this.solutionList
         this.dataService.loadFlowUnit(null, this.dirs, null);
       },
       (error) => {
@@ -134,10 +136,11 @@ export class ToolBarSolutionComponent implements OnInit {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {
-        this.dataService.currentSolution = selectedName;
+        this.dataService.currentSolution = data.flow.name;
         this.dataService.currentSolutionProject = data;
+        
         this.sendCurrentProject(data);
-        this.currentOption = selectedName;
+        this.currentOption = data.flow.name;
       }else{
         this.toastService.open({
           value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],
@@ -153,6 +156,6 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   handleSelectChange(e) {
-    this.selectSolution(e.name);
+    this.selectSolution(e.demo + "/" + e.graphfile);
   }
 }

@@ -130,6 +130,17 @@
   "message.createProjectSuccess": "成功创建项目",
   "message.createProjectFail": "创建项目失败",
   "message.saveYourProjectFirst": "请先保存您的项目。",
+  "message.nameOfFlowunitIsNecessary": "缺少功能单元的名字",
+  "message.langOfFlowunitIsNecessary": "缺少功能单元的单元类型",
+  "message.valueIsNecessary": "必须要有值",
+  "message.valueIsNecessaryForDataType": "数据类型必须要有值",
+  "message.deviceTypeOfFlowunitIsNecessary": "缺少功能单元的处理类型",
+  "message.typeOfFlowunitIsNecessary": "缺少功能单元的功能类型或者引擎类型",
+  "message.groupOfFlowunitIsNecessary": "缺少功能单元分组",
+  "message.atLeastOneInputOrOutput": "至少要有一个input或者output.",
+
+  
+  
   "tutorial.toolbar": "工具栏",
   "tutorial.undoredo": "回退/重做",
   "tutorial.zoominout": "放大/缩小",
