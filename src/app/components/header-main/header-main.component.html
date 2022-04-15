@@ -6,26 +6,46 @@
     <div style="position: fixed;top:8px;left:40%;">
         <ul class="tabs">
             <li>
-                <a #firstPage id="firstPage" class="nav-link" href=" javascript:void(0);"
-                    [ngClass]="{'tab-active': active===''}" oncontext="return false" (click)="click('')">
+                <a
+                  #firstPage
+                  id="firstPage"
+                  class="nav-link"
+                  href=" javascript:void(0);"
+                  [ngClass]="{'tab-active': active===''}"
+                  oncontext="return false"
+                  (click)="click('')">
                     {{ 'firstPage' | translate}}
                 </a>
             </li>
             <li>
-                <a #exampleDisplay id="exampleDisplay" class="nav-link" href=" javascript:void(0);"
-                    [ngClass]="{'tab-active': active==='example'}" oncontext="return false" (click)="click('example')">
+                <a
+                  #exampleDisplay
+                  id="exampleDisplay"
+                  class="nav-link"
+                  href=" javascript:void(0);"
+                  [ngClass]="{'tab-active': active==='example'}"
+                  oncontext="return false"
+                  (click)="click('example')">
                     {{ 'exampleDisplay' | translate}}
                 </a>
             </li>
             <li>
-                <a class="nav-link" href=" javascript:void(0); " [ngClass]="{'tab-active': active==='editor'}"
-                    oncontext="return false" (click)="click('editor')">
+                <a
+                  class="nav-link"
+                  href=" javascript:void(0); "
+                  [ngClass]="{'tab-active': active==='editor'}"
+                  oncontext="return false"
+                  (click)="click('editor')">
                     {{'editor' | translate}}
                 </a>
             </li>
             <li>
-                <a class="nav-link" href=" javascript:void(0);" [ngClass]="{'tab-active': active==='task'}"
-                    oncontext="return false" (click)="click('task')">
+                <a
+                  class="nav-link"
+                  href=" javascript:void(0);"
+                  [ngClass]="{'tab-active': active==='task'}"
+                  oncontext="return false"
+                  (click)="click('task')">
                     {{'taskLists' | translate}}
                 </a>
             </li>
@@ -37,10 +57,9 @@
                 <span><i class="icon icon-help"></i>{{helpText}}</span>
             </a>
         </div>
-        <div class="links-first" style="display: inline-block;vertical-align: middle;" *ngIf="false">
-            <a href="/api/" target="_blank">
-                <img src={{apiSvg}} />
-                <span>&nbsp;&nbsp;API</span>
+        <div class="links-first" style="display: inline-block;">
+            <a href="/api" target="_blank">
+                <span><i class="icon icon-connect"></i>API</span>
             </a>
         </div>
     </div>

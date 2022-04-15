@@ -6,9 +6,15 @@
       <as-split-area [size]="leftSpliterSize">
         <as-split direction="vertical" style="width:100%">
           <as-split-area class="as-split-area-left">
-            <app-insert-panels [onClick]="handleInsertPanelsClick" [onNodeShapeClick]="handleNodeShapeClick"
-              [onNodeShapeDragStart]="handleNodeShapeDragStart" [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
-              [regFlowUnitPanel]="regFlowUnitPanel" [dirs]="dirs" (refreshEmmiter)="refreshFlowunit($event)"></app-insert-panels>
+            <app-insert-panels
+              [onClick]="handleInsertPanelsClick"
+              [onNodeShapeClick]="handleNodeShapeClick"
+              [onNodeShapeDragStart]="handleNodeShapeDragStart"
+              [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
+              [regFlowUnitPanel]="regFlowUnitPanel"
+              [dirs]="dirs"
+              (refreshEmmiter)="refreshFlowunit($event)">
+            </app-insert-panels>
           </as-split-area>
         </as-split>
       </as-split-area>
@@ -16,27 +22,49 @@
         <as-split #splitV direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
           (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
           <as-split-area [size]="centerSplitterSize">
-            <app-tool-bar #toolBar [hasUndo]="hasUndo" [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick"
-              [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
-              [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
-              [onZoomFitButtonClick]="handleZoomFitButtonClick" [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
-              [onNewButtonClick]="handleNewClick.bind(this)" [onRunButtonClick]="handleRunButtonClick"
+            <app-tool-bar
+              #toolBar
+              [hasUndo]="hasUndo"
+              [hasRedo]="hasRedo"
+              [graphs]="graphs"
+              [onUndoButtonClick]="handleUndoButtonClick"
+              [onRedoButtonClick]="handleRedoButtonClick"
+              [onZoomInButtonClick]="handleZoomInButtonClick"
+              [onZoomOutButtonClick]="handleZoomOutButtonClick"
+              [onZoomResetButtonClick]="handleZoomResetButtonClick"
+              [onZoomFitButtonClick]="handleZoomFitButtonClick"
+              [onConfirmNameChange]="handleSaveAsToBrowser.bind(this)"
+              [onNewButtonClick]="handleNewClick.bind(this)"
+              [onRunButtonClick]="handleRunButtonClick"
               [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
-              [onCreateProjectButtonClick]="createProject" [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
-              [showSelectDialog]="showSelectDialog.bind(this)" [showSolutionDialog]="showSolutionDialog.bind(this)"
+              [onCreateProjectButtonClick]="createProject"
+              [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
+              [showSelectDialog]="showSelectDialog.bind(this)"
+              [showSolutionDialog]="showSolutionDialog.bind(this)"
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
-              [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)" [graphs]="graphs"
-              (graphsEmmiter)="getToolBarGraphsChange($event)" (refreshEmmiter)="refreshFlowunit($event)"
-              (dotSrcEmmiter)="dotSrcUpdate($event)" (createProjectEmmiter)="createProject($event)"
-              (flowunitEmmiter)="updateDir($event)" (projectPathEmmiter)="updateProjectPath($event)">
+              [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)"
+              (graphsEmmiter)="getToolBarGraphsChange($event)"
+              (refreshEmmiter)="refreshFlowunit($event)"
+              (dotSrcEmmiter)="dotSrcUpdate($event)"
+              (createProjectEmmiter)="createProject($event)"
+              (flowunitEmmiter)="updateDir($event)"
+              (projectPathEmmiter)="updateProjectPath($event)">
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">
-              <app-graph [dotSrc]="dotSrc" [hasFocus]="focusedPane === 'Graph'" [onUndo]="handleUndoButtonClick"
-                style="z-index:-100" [onRedo]="handleRedoButtonClick" [onError]="handleError"
-                [onFocus]="handleGraphFocus" [onSelect]="handleGraphComponentSelect" [onTextChange]="handleTextChange"
-                [onInitialized]="handleGraphInitialized" [registerGetSvg]="registerGetSvg"
+              <app-graph
+                style="z-index:-100"
+                [dotSrc]="dotSrc"
+                [hasFocus]="focusedPane === 'Graph'"
+                [onUndo]="handleUndoButtonClick"
+                [onRedo]="handleRedoButtonClick"
+                [onError]="handleError"
+                [onFocus]="handleGraphFocus"
+                [onSelect]="handleGraphComponentSelect"
+                [onTextChange]="handleTextChange"
+                [onInitialized]="handleGraphInitialized"
+                [registerGetSvg]="registerGetSvg"
                 [registerNodeShapeClick]="registerNodeShapeClick"
                 [registerNodeShapeDragStart]="registerNodeShapeDragStart"
                 [registerNodeShapeDragEnd]="registerNodeShapeDragEnd"
@@ -44,24 +72,42 @@
                 [registerZoomOutButtonClick]="registerZoomOutButtonClick"
                 [registerZoomFitButtonClick]="registerZoomFitButtonClick"
                 [registerZoomResetButtonClick]="registerZoomResetButtonClick"
-                [registerNodeAttributeChange]="registerNodeAttributeChange" [isResizing]="isResizing"></app-graph>
+                [registerNodeAttributeChange]="registerNodeAttributeChange"
+                [isResizing]="isResizing"
+                (sendIsOpen)="updateIsOpen">
+              </app-graph>
             </div>
           </as-split-area>
           <as-split-area [size]="100-centerSplitterSize">
-            <app-text-editor #textEditor [dotSrc]="dotSrc" [onTextChange]="handleTextChange"
-              [onFocus]="handleTextEditorFocus" [onBlur]="handleTextEditorBlur" [error]="error"
-              [selectedGraphComponents]="selectedGraphComponents" [holdOff]="holdOff" [fontSize]="fontSize"
-              [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
+            <app-text-editor
+              #textEditor
+              [dotSrc]="dotSrc"
+              [onTextChange]="handleTextChange"
+              [onFocus]="handleTextEditorFocus"
+              [onBlur]="handleTextEditorBlur"
+              [error]="error"
+              [selectedGraphComponents]="selectedGraphComponents"
+              [holdOff]="holdOff"
+              [fontSize]="fontSize"
+              [registerUndo]="registerUndo"
+              [registerRedo]="registerRedo"
+              [registerUndoReset]="registerUndoReset"
               [registerResize]="registerEditorResize"
-              [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick"></app-text-editor>
+              [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick">
+            </app-text-editor>
           </as-split-area>
         </as-split>
       </as-split-area>
     </as-split>
   </div>
   <div>
-    <app-attribute-panel style="z-index:5" id="attribute-area" class="half-drawer" *ngIf="currentComponent"
-      [config]="currentComponent" [onNodeAttributeChange]="handleNodeAttributeChange"
+    <app-attribute-panel
+      style="z-index:5"
+      id="attribute-area"
+      class="half-drawer"
+      *ngIf="currentComponent"
+      [config]="currentComponent"
+      [onNodeAttributeChange]="handleNodeAttributeChange"
       (newItemEvent)="updateConfig($event)">
     </app-attribute-panel>
   </div>

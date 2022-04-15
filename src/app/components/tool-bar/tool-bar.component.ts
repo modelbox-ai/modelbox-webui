@@ -106,7 +106,6 @@ export class ToolBarComponent {
   valuedevice: any;
   isChangeGraphName: boolean = false;
   isCopy = true;
-
   project_desc: string = "";
   project_name: string = "";
   path: string = this.dataService.defaultSearchPath;
@@ -262,7 +261,7 @@ export class ToolBarComponent {
     perfPath: this.dataService.defaultPerfDir
   };
   flowunitDebugPath: any;
-  flowunitReleasePath:any;
+  flowunitReleasePath: any;
 
   formDataCreateProject = {
     name: this.project_name,
@@ -436,6 +435,7 @@ export class ToolBarComponent {
 
   in_num = 1;
   out_num = 2;
+  isOpen = false;
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
@@ -449,9 +449,6 @@ export class ToolBarComponent {
     private domSanitizer: DomSanitizer,
     private dataService: DataServiceService,
     private toastService: ToastService) {
-  }
-  onToggle(event) {
-    console.log(event);
   }
 
   ngOnInit() {
@@ -477,10 +474,6 @@ export class ToolBarComponent {
 
     this.loadGraphData();
     this.loadSolutionData();
-    // this.flowunitDebugPath = ["/opt/modelbox/project/" + this.formDataCreateProject.name + "/lib",
-    // "/opt/modelbox/project/" + this.formDataCreateProject.name + "/python",
-    // "/opt/modelbox/project/" + this.formDataCreateProject.name + "/model"
-    // ];
     if (this.formDataCreateProject.name) {
       this.searchDirectory();
     }
@@ -543,6 +536,16 @@ export class ToolBarComponent {
   deviceValueChange(value) {
     this.formDataCreateFlowunit.device = value;
     this.portInfo.device = value;
+  }
+
+  controlToggle(e) {
+    if (this.isOpen === true) {
+      this.isOpen = false;
+    } else {
+      if (e.currentTarget.innerText === this.i18n.getById("toolBar.flowunit")) {
+        this.isOpen = true;
+      }
+    }
   }
 
   handleValueChangeport_type(e) {
@@ -622,7 +625,8 @@ export class ToolBarComponent {
         if (!this.portInfo[key]) {
           this.toastService.open({
             value: [{ severity: 'warn', content: key + this.i18n.getById("message.valueIsNecessary") }],
-            life: 2000
+            life: 2000,
+            style: { top: '100px' }
           });
           return;
         }
@@ -630,7 +634,8 @@ export class ToolBarComponent {
         if (this.formDataCreateFlowunit.lang === "inference" && !this.portInfo.data_type) {
           this.toastService.open({
             value: [{ severity: 'warn', content: this.i18n.getById("message.valueIsNecessaryForDataType") }],
-            life: 2000
+            life: 2000,
+            style: { top: '100px' }
           });
           return;
         }
@@ -652,37 +657,43 @@ export class ToolBarComponent {
     if (!this.formDataCreateFlowunit.name) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.nameOfFlowunitIsNecessary") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     } else if (!this.formDataCreateFlowunit.lang) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.langOfFlowunitIsNecessary") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     } else if (!this.formDataCreateFlowunit.device) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.deviceTypeOfFlowunitIsNecessary") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     } else if (!this.formDataCreateFlowunit.type && !this.formDataCreateFlowunit["virtual-type"]) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.typeOfFlowunitIsNecessary") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     } else if (!this.formDataCreateFlowunit["group-type"]) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.groupOfFlowunitIsNecessary") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     } else if (this.formDataCreateFlowunit.port_infos && this.formDataCreateFlowunit.port_infos.length === 0) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.atLeastOneInputOrOutput") }],
-        life: 2000
+        life: 2000,
+        style: { top: '100px' }
       });
       return false;
     }
@@ -812,7 +823,7 @@ export class ToolBarComponent {
   }
 
 
-  createFlowunit() {
+  createFlowunit(comp) {
     if (!this.checkFormDataCreateFlowunit()) {
       return false;
     }
@@ -908,15 +919,20 @@ export class ToolBarComponent {
             this.refreshFlowunit();
             this.toastService.open({
               value: [{ severity: 'success', content: data.body.msg }],
-              life: 1500
+              life: 1500,
+              style: { top: '100px' }
             });
+
+            comp.modalInstance.hide();
+            comp.modalInstance.zIndex = -1;
           }
         }
       },
       (error) => {
         this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 150000
+          life: 150000,
+          style: { top: '100px' }
         });
         return null;
       });
@@ -967,12 +983,14 @@ export class ToolBarComponent {
           if (error.staus == 404) {
             this.toastService.open({
               value: [{ severity: 'warn', content: this.i18n.getById('message.noFolder') }],
-              life: 2000
+              life: 2000,
+              style: { top: '100px' }
             });
           } else {
             this.toastService.open({
               value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-              life: 150000
+              life: 150000,
+              style: { top: '100px' }
             });
           }
         }
@@ -1005,7 +1023,7 @@ export class ToolBarComponent {
       });
   }
 
-  openProject() {
+  openProject(comp) {
     if (this.folderList.indexOf("src")) {
       this.basicService.openProject(this.openproject_path).subscribe(
         (data: any) => {
@@ -1022,7 +1040,6 @@ export class ToolBarComponent {
                 this.formData.skipDefault = false;
                 this.formData.perfEnable = data.graphs[0].profile.profile;
                 this.formData.perfTraceEnable = data.graphs[0].profile.trace;
-                // this.flowunitDebugPath = data.graphs[0].driver.dir;
 
                 this.dotSrcEmmiter.emit(data.graphs[0].graph.graphconf);
                 this.formData.flowunitPath = data.graphs[0].driver.dir;
@@ -1036,12 +1053,16 @@ export class ToolBarComponent {
               this.initFormData();
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
             }
+
+            comp.modalInstance.hide();
+            comp.modalInstance.zIndex = -1;
           }
         },
         (error) => {
           this.toastService.open({
             value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-            life: 150000
+            life: 150000,
+            style: { top: '100px' }
           });
           return;
         });
@@ -1061,61 +1082,30 @@ export class ToolBarComponent {
   }
 
   showSaveAsDialog() {
-    const results = this.dialogService.open({
-      id: 'save-as-ok',
-      width: '400px',
-      showAnimation: true,
-      title: this.i18n.getById('toolBar.saveAsButton'),
-      content: ModalSaveAsComponent,
-      backdropCloseable: true,
-      dialogtype: 'standard',
-      data: {
-        'graphName': this.oldName ? this.oldName : ""
-      },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-          this.formData.graphName = results.modalContentInstance.graphName;
-          this.handleConfirmNameChange(results.modalContentInstance.graphName, '', false);
-          this.loadGraphData();
-          let param = JSON.parse(localStorage.getItem('project'));
-          let ret = this.infoCreateProjectFirst();
-          if (!ret) {
-            return;
-          }
-          param = this.createProjectParam(param);
-          this.basicService.saveAllProject(param).subscribe((data) => {
-            if (data.status === 201) {
-              this.toastService.open({
-                value: [{ severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }],
-                life: 1500
-              });
-            }
-          },
-            (error) => {
-              this.toastService.open({
-                value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-                life: 150000
-              });
-              return null;
-            });
-        },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-        },
-      },],
-    });
-
+    this.loadGraphData();
+    let param = JSON.parse(localStorage.getItem('project'));
+    let ret = this.infoCreateProjectFirst();
+    if (!ret) {
+      return;
+    }
+    param = this.createProjectParam(param);
+    this.basicService.saveAllProject(param).subscribe((data) => {
+      if (data.status === 201) {
+        this.toastService.open({
+          value: [{ severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }],
+          life: 1500,
+          style: { top: '100px' }
+        });
+      }
+    },
+      (error) => {
+        this.toastService.open({
+          value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+          life: 150000,
+          style: { top: '100px' }
+        });
+        return null;
+      });
   }
 
   createProjectParam(project) {
@@ -1154,7 +1144,8 @@ export class ToolBarComponent {
     if (!this.formDataCreateProject.name) {
       this.toastService.open({
         value: [{ severity: 'warn', content: this.i18n.getById("message.createProjectFirst") }],
-        life: 3000
+        life: 3000,
+        style: { top: '100px' }
       });
       return false;
     } else {

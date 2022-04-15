@@ -23,7 +23,6 @@ import { LayoutModule } from 'ng-devui';
 import { AttributePanelComponent } from '../components/attribute-panel/attribute-panel.component';
 import { FormsModule } from '@angular/forms';
 import { FormModule } from 'ng-devui/form';
-import { HeaderComponent } from '../components/header/header.component';
 import { HeaderMainComponent } from '../components/header-main/header-main.component';
 import { FirstComponent } from '../components/first/first.component';
 import { ButtonModule } from 'ng-devui/button';
@@ -88,7 +87,6 @@ const COMPONENTS_NOROUNT = [];
     GraphComponent,
     ToolBarComponent,
     AttributePanelComponent,
-    HeaderComponent,
     HeaderMainComponent,
     ToolBarSolutionComponent,
     FirstComponent,

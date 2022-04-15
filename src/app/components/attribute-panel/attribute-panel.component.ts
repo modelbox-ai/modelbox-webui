@@ -255,7 +255,7 @@ export class AttributePanelComponent {
 
   menu1 = [{
     title: '配置',
-    children: [{active: true}],
+    children: [{ active: true }],
   }];
 
   menu2 = [{

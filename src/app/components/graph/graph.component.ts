@@ -24,6 +24,8 @@ import {
   Input,
   SimpleChanges,
   OnChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { select as d3_select } from 'd3-selection';
 import { selectAll as d3_selectAll } from 'd3-selection';
@@ -86,7 +88,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() registerNodeAttributeChange: any;
   @Input() registerExtendDetail: any;
   @Input() isResizing: any;
-
+  @Output() sendIsOpen = new EventEmitter<any>();
   prevFit: any;
   prevEngine: any;
   prevDotSrc = '';
@@ -136,7 +138,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     private basicService: BasicServiceService) {
     this.toastService.open({
       value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
-      life: 1500
+      life: 1500,
+      style: { top: '100px' }
     });
   }
 
@@ -975,6 +978,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       this.onFocus();
     }
     this.blurActiveElement();
+    this.sendIsOpen.emit();
     this.isOnFocus = false;
     this.startPoints.forEach(item => item.remove());
     this.startPoints.length = 0;

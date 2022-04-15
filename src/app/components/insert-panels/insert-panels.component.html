@@ -1,18 +1,39 @@
 <div style="margin:20px;margin-bottom:0;font-weight: 600;">
-  <span style="font-size:18px">功能单元列表</span>
-  <i class="icon icon-refresh" style="margin-left: 20px;margin-bottom: 5px;cursor:pointer" (click)="refreshFlowunit()"></i>
+  <span style="font-size:18px">{{ 'insertPanel.flowunitList' | translate}}</span>
+  <i class="icon icon-refresh"
+    style="margin-left: 20px;margin-bottom: 5px;cursor:pointer"
+    (click)="refreshFlowunit()">
+  </i>
 </div>
-<d-accordion id="main-accrodition" [data]="nodeShapeCategories" [accordionType]="'embed'" [autoOpenActiveMenu]="true"
-  [innerListTemplate]="innerListTemplate" [ngStyle]="classes.columns"></d-accordion>
+<d-accordion
+  id="main-accrodition"
+  [data]="nodeShapeCategories"
+  [accordionType]="'embed'"
+  [autoOpenActiveMenu]="true"
+  [innerListTemplate]="innerListTemplate"
+  [ngStyle]="classes.columns">
+</d-accordion>
 
 <ng-template #innerListTemplate let-item="item">
-  <div class="devui-accordion-submenu menu-detail draggable" [ngStyle]="classes.column"
-    *ngFor="let child of item.children" [ngSwitch]="item.title" title="" draggable="true"
+  <div
+    class="devui-accordion-submenu menu-detail draggable"
+    [ngStyle]="classes.column"
+    *ngFor="let child of item.children"
+    [ngSwitch]="item.title"
+    title=""
+    draggable="true"
     (dragstart)="handleNodeShapeDragStart(child).call(this, $event)"
-    (drag)="handleNodeShapeDrag(child).call(this, $event)" (dragend)="handleNodeShapeDragEnd(child).call(this, $event)"
+    (drag)="handleNodeShapeDrag(child).call(this, $event)"
+    (dragend)="handleNodeShapeDragEnd(child).call(this, $event)"
     (dblclick)="handleNodeShapeClick(child)($event)">
-    <div class="menu-block" [ngbTooltip]="tipContent" #t1="ngbTooltip" (mouseenter)="toggleTip(t1, child)"
-      placement="right" container="body" tooltipClass="my-custom-class">
+    <div
+      class="menu-block"
+      [ngbTooltip]="tipContent"
+      #t1="ngbTooltip"
+      (mouseenter)="toggleTip(t1, child)"
+      placement="right"
+      container="body"
+      tooltipClass="my-custom-class">
       <img *ngSwitchCase="'Image'" src={{imgSvg}} />
       <img *ngSwitchCase="'Video'" src={{videoSvg}} />
       <img *ngSwitchCase="'Input'" src={{inputSvg}} />
