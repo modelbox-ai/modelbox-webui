@@ -179,39 +179,6 @@ export class ManagementComponent implements OnInit {
     this.getTaskslists();
   }
 
-  // 创建任务modal
-  // openCreateTask(content: TemplateRef<any>) {
-  //   this.getCurrentCreateTaskLists(this.graphs);
-  //   const results = this.dialogService.open({
-  //     id: this.i18n.getById('modal.createTaskModal'),
-  //     width: '550px',
-  //     showAnimation: true,
-  //     title: this.i18n.getById('modal.createTaskModal'),
-  //     contentTemplate: content,
-  //     backdropCloseable: true,
-  //     dialogtype: 'standard',
-  //     buttons: [{
-  //       cssClass: 'danger',
-  //       text: this.i18n.getById('modal.okButton'),
-  //       disabled: false,
-  //       handler: ($event: Event) => {
-  //         results.modalInstance.hide();
-  //         results.modalInstance.zIndex = -1;
-  //         this.createTask();
-  //       },
-  //     },
-  //     {
-  //       id: 'btn-cancel',
-  //       cssClass: 'common',
-  //       text: this.i18n.getById('modal.cancelButton'),
-  //       handler: ($event: Event) => {
-  //         results.modalInstance.hide();
-  //         results.modalInstance.zIndex = -1;
-  //       },
-  //     },],
-  //   });
-  // }
-
   createTask() {
     let params;
     this.checkedList.splice(0, this.checkedList.length);
@@ -249,6 +216,9 @@ export class ManagementComponent implements OnInit {
               },
             }
           }
+
+          params["graph_name"] = params["job_id"];
+          params["job_graph"] = params["graph"];
           this.createTaskResult(params);
         } else {
           if (!this.dialog) {

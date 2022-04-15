@@ -12,12 +12,12 @@ export class DataServiceService {
   nodeShapeCategories: any = [];
   public currentPage: any = "";
 
-  public defaultSolutionGraph = "mnist.toml";
+  public defaultSolutionGraph = "hello_world/hello_world.toml";
   public defaultFormat = "graphviz";
   public commonFlowunitPath = "/usr/local/lib";
   public defaultPerfDir = '/tmp/modelbox/perf/';
   public defaultFlowunitDir = "/usr/local/share/modelbox/solution/flowunit/";
-  public defaultSearchPath = "/root/modelbox-projects";
+  public defaultSearchPath = "/home";
   public defaultSrc: string = `digraph {
     node [shape=Mrecord];
   }`;
@@ -25,6 +25,8 @@ export class DataServiceService {
   public currentSolutionProject = {};
   public flowunits = [];
   public transformedFlowunits = [];
+  public currentSolutionList = [];
+  
 
   constructor(private sanitized: DomSanitizer,
     private basicService: BasicServiceService,
@@ -69,6 +71,7 @@ export class DataServiceService {
   }
 
   transformFlowunit() {
+    this.transformedFlowunits = [];
     this.flowunits.map(ele => {
       let obj = {
         descryption: "",

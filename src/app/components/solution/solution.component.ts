@@ -423,6 +423,11 @@ export class SolutionComponent implements OnInit {
 
   createOptionFromProject = (item) => {
     let params = {};
+    for (let ele of this.dataService.currentSolutionList){
+      if (ele.name === item.name){
+        item.name = ele.graphfile;
+      }
+    }
     params = {
       job_id: item.name,
       job_graph: {
@@ -445,6 +450,8 @@ export class SolutionComponent implements OnInit {
         },
       }
     }
+    params["graph_name"] = params["job_id"];
+    params["graph"] = params["job_graph"];
     return params;
   }
 }

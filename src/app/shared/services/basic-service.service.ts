@@ -51,10 +51,16 @@ export class BasicServiceService {
   }
 
   loadTreeByPath(paramData?: string): Observable<any> {
+    if (!paramData){
+      paramData = "/"
+    }
     return this.http.get(this.serviceRouter + '/editor/project/list/?path=' + paramData).pipe(timeout(30000));
   }
 
   openProject(paramData?: string): Observable<any> {
+    if (!paramData){
+      paramData = "/"
+    }
     return this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).pipe(timeout(30000));
   }
 

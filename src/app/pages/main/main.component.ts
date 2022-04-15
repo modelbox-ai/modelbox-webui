@@ -74,7 +74,7 @@ export class MainComponent {
   project_name: string = JSON.parse(localStorage.getItem('project')) ? this.project.name : "";
   project_desc: string = JSON.parse(localStorage.getItem('project')) ? this.project.project_desc : "";
   graphName: string = JSON.parse(localStorage.getItem('project')) ? this.project.graph.graphName : "";
-  path: string;
+  path: string = "/home";
   desc: string;
   state: any;
   currentComponent: any;
@@ -160,11 +160,12 @@ export class MainComponent {
   }
 
   loadProjectFromJson(project) {
-    this.graphName = project.graph.graphName;
+
     this.project_name = project.name;
     this.project_desc = project.project_desc;
     this.path = project.rootpath;
     this.dotSrc = project.graph.dotSrc;
+    this.graphName = this.getGraphNameFromGraph(this.dotSrc);
     if (typeof this.dotSrc === 'undefined') {
       this.dotSrc = this.dataService.defaultSrc;
     }
@@ -189,7 +190,6 @@ export class MainComponent {
       this.toolBar.formDataCreateProject.name + "/src/flowunit";
     const projectdata = {
       name: this.toolBar.formDataCreateProject.name,
-      // project_desc: this.toolBar.formDataCreateProject.project_desc,
       rootpath: this.toolBar.formDataCreateProject.rootpath,
       graph: {
         graphName: this.toolBar.formData.graphName,
@@ -218,17 +218,14 @@ export class MainComponent {
         //after created successfully
         localStorage.removeItem("project");
         this.saveCurrentProject();
-        // if (this.toolBar.formDataCreateProject.template != "" && this.toolBar.formDataCreateProject.template != "blank") {
-        //   this.selectSolution(this.toolBar.formDataCreateProject.template);
-        // } else {
-        //   this.dotSrc = this.dataService.defaultSrc;
-        // }
         this.dotSrc = this.dataService.defaultSrc;
         this.createProjectDialogResults.modalInstance.hide();
         this.toastService.open({
           value: [{ severity: 'success', content: data.body.msg }],
           life: 1500
         });
+        this.loadProject(param);
+        this.reloadInsertComponent();
         return;
       }
     }, error => {
@@ -237,10 +234,52 @@ export class MainComponent {
         life: 150000
       });
     });
-
   }
 
+  getGraphNameFromGraph(graph) {
+    let graphName = "";
+    var n = graph.match(/(?<=digraph ).*?(?= {)/gm);
+    if (n) {
+      graphName = n[0];
+    }
+    return graphName;
+  }
 
+  loadProject(param) {
+    this.basicService.openProject(param.rootpath + "/" + param.name).subscribe(
+      (data: any) => {
+        this.toolBar.formDataCreateProject.name = data.project_name;
+        this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
+        if (data.graphs && data.graphs[0] != null) {
+          if (data.graphs[0].graph.graphconf) {
+            this.dotSrc = data.graphs[0].graph.graphconf;
+            this.toolBar.formData.graphName = this.getGraphNameFromGraph(data.graphs[0].graph.graphconf);
+            this.toolBar.formData.graphDesc = "";
+            this.toolBar.formData.skipDefault = false;
+            this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
+            this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
+            this.dirs = data.graphs[0].driver.dir;
+            // this.toolBar.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit"
+            // this.toolBar.formData.flowunitPath = this.toolBar.flowunitDebugPath;
+            this.project_name = data.project_name;
+          } else {
+            this.toolBar.initFormData();
+            this.dotSrc = this.dataService.defaultSrc;
+          }
+        } else {
+          this.toolBar.initFormData();
+          this.dotSrc = this.dataService.defaultSrc;
+        }
+        this.saveCurrentProject();
+
+      }, error => {
+        const results = this.toastService.open({
+          value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+          life: 150000
+        });
+      });
+
+  }
 
   saveCurrentProject() {
     this.setPersistentState(
@@ -618,7 +657,6 @@ export class MainComponent {
   }
 
   saveSetting(context: any) {
-
     let newName = context.graphName;
     this.graphName = newName;
     this.desc = context.graphDesc;
@@ -678,6 +716,7 @@ export class MainComponent {
   }
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
+    this.toolBar.searchDirectory();
     const results = this.dialogService.open({
       id: 'openProject',
       width: '700px',
@@ -893,7 +932,7 @@ export class MainComponent {
           if (error.error != null) {
             this.toastService.open({
               value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-              life: 3000
+              life: 150000
             });
           }
         }
@@ -912,13 +951,14 @@ export class MainComponent {
     let params = {};
     params = {
       job_id: this.handleGraphName(item.graph.graphName),
+      graph_name: this.handleGraphName(item.graph.graphName),
       graph: {
         flow: {
           desc: item.graph.graphDesc,
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.graph.dirs.push(...this.toolBar.flowunitDebugPath),
+          // dir: item.graph.dirs.push(...this.toolBar.flowunitDebugPath),
         },
         profile: {
           profile: item.graph.settingPerfEnable,
@@ -932,6 +972,9 @@ export class MainComponent {
         },
       }
     }
+
+    params["graph_name"] = params["job_id"];
+    params["job_graph"] = params["graph"];
     return params;
   }
 
