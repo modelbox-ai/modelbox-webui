@@ -47,7 +47,8 @@ export class DataServiceService {
           if (it.type !== type && it.types.indexOf(type) === -1) {
             this.toastService.open({
               value: [{ severity: 'warn', content: unit.name + "顶点类型错误。请选择带有GPU的设备。" }],
-              life: 3000
+              life: 3000,
+              style: { top: '100px' }
             });
           }
         }

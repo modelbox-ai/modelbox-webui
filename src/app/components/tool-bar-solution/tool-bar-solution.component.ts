@@ -144,7 +144,8 @@ export class ToolBarSolutionComponent implements OnInit {
       }else{
         this.toastService.open({
           value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],
-          life: 3000
+          life: 3000,
+          style: { top: '100px' }
         });
       }
       

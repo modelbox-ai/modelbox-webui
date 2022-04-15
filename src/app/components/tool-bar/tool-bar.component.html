@@ -74,7 +74,7 @@
         <div class="btn-group" style="display:inline-block" dDropDown appendToBody [alignOrigin]="flowunitRef"
             [appendToBodyDirections]="['centerDown', 'centerUp']">
             <span dDropDownToggle>
-                <button class="tool-bar-button">
+                <button class="tool-bar-button" (click)="controlToggle($event)">
                     {{'toolBar.flowunit' | translate}}
                 </button>
             </span>
@@ -97,18 +97,9 @@
     </div>
 
     <div class="tool-bar-mid">
-        <span style="font-size:28px; font-weight:500;" dPopover bsStyle="common" [content]="titleTemplate"
-            [position]="'left'" [controlled]="true" [popoverStyle]="{ backgroundColor: 'white', color: 'black' }">
+        <span style="font-size:28px; font-weight:500;">
 
             {{formDataCreateProject.name}}
-        </span>
-
-        <span style="margin-left:30px;">
-            {{'toolBar.nameLabel' | translate}}
-        </span>
-
-        <span>
-            {{formData.graphName}}
         </span>
     </div>
 </div>
@@ -460,8 +451,8 @@
                             </d-form-label>
                             <d-form-control>
                                 <div>
-                                    <input type="text" [(ngModel)]="formData.graphName"
-                                        [ngModelOptions]="{standalone: true}">
+                                    <input dTextInput type="text" [(ngModel)]="formData.graphName"
+                                        [ngModelOptions]="{standalone: true}" [disabled]="true">
                                 </div>
                             </d-form-control>
                         </d-form-item>
@@ -480,13 +471,13 @@
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>发布功能单元路径</d-form-label>
+                            <d-form-label>{{'toolBar.reLeaseFlowunitPath' | translate}}</d-form-label>
                             <d-form-control>
                                 <textarea dTextarea name="dir2" [(ngModel)]="flowunitReleasePath"></textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>调试功能单元路径</d-form-label>
+                            <d-form-label>{{'toolBar.debugFlowunitPath' | translate}}</d-form-label>
                             <d-form-control>
                                 <textarea dTextarea name="dir" [(ngModel)]="formData.flowunitPath"></textarea>
                             </d-form-control>

@@ -205,7 +205,7 @@ export class InsertPanelsComponent implements OnInit {
       }
       if (this.flowunits && this.flowunits.length > 0) {
         this.transformFlowunit();
-        
+
         for (let ele in this.transformedFlowunits) {
           for (let ele2 of data.flowunits) {
             if (this.transformedFlowunits[ele].name === ele2.name) {
@@ -214,7 +214,7 @@ export class InsertPanelsComponent implements OnInit {
           }
         }
         for (let ele in this.transformedFlowunits) {
-          if (index.indexOf(ele) == -1){
+          if (index.indexOf(ele) == -1) {
             data.flowunits.push(this.transformedFlowunits[ele]);
           }
         }

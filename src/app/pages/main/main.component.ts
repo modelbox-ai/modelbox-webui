@@ -99,6 +99,8 @@ export class MainComponent {
   graphDesc: string;
   flowunitPath: any;
   projectPath: any;
+  openProjectDialogResults: any;
+  createFlowunitDialogResults: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -114,7 +116,6 @@ export class MainComponent {
   }
 
   ngOnInit(): void {
-    //this.reloadInsertComponent();
     this.dataService.currentPage = "main";
     //加载既存project
   }
@@ -222,16 +223,21 @@ export class MainComponent {
         this.createProjectDialogResults.modalInstance.hide();
         this.toastService.open({
           value: [{ severity: 'success', content: data.body.msg }],
-          life: 1500
+          life: 1500,
+          style: { top: '100px' }
         });
         this.loadProject(param);
         this.reloadInsertComponent();
+        
+        this.createProjectDialogResults.modalInstance.hide();
+        this.createProjectDialogResults.modalInstance.zIndex = -1;
         return;
       }
     }, error => {
       const results = this.toastService.open({
         value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-        life: 150000
+        life: 150000,
+        style: { top: '100px' }
       });
     });
   }
@@ -259,8 +265,6 @@ export class MainComponent {
             this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
             this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
             this.dirs = data.graphs[0].driver.dir;
-            // this.toolBar.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit"
-            // this.toolBar.formData.flowunitPath = this.toolBar.flowunitDebugPath;
             this.project_name = data.project_name;
           } else {
             this.toolBar.initFormData();
@@ -275,7 +279,8 @@ export class MainComponent {
       }, error => {
         const results = this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 150000
+          life: 150000,
+          style: { top: '100px' }
         });
       });
 
@@ -386,6 +391,10 @@ export class MainComponent {
 
   dotSrcUpdate(e) {
     this.dotSrc = e;
+  }
+
+  updateIsOpen(){
+    this.toolBar.isOpen = false;
   }
 
   setEditorMarkers(components) {
@@ -698,8 +707,6 @@ export class MainComponent {
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
-          this.createProjectDialogResults.modalInstance.hide();
-          this.createProjectDialogResults.modalInstance.zIndex = -1;
           this.createProject(this.toolBar.formDataCreateProject);
         },
       },
@@ -717,7 +724,7 @@ export class MainComponent {
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
     this.toolBar.searchDirectory();
-    const results = this.dialogService.open({
+    this.openProjectDialogResults = this.dialogService.open({
       id: 'openProject',
       width: '700px',
       title: this.i18n.getById('toolBar.openProjectButton'),
@@ -732,9 +739,7 @@ export class MainComponent {
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-          this.toolBar.openProject();
+          this.toolBar.openProject(this.openProjectDialogResults);
         },
       },
       {
@@ -742,15 +747,15 @@ export class MainComponent {
         cssClass: 'common',
         text: this.i18n.getById('modal.cancelButton'),
         handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
+          this.openProjectDialogResults.modalInstance.hide();
+          this.openProjectDialogResults.modalInstance.zIndex = -1;
         },
       },],
     });
   }
 
   showCreateFlowunitDialog(content: TemplateRef<any>) {
-    const results = this.dialogService.open({
+    this.createFlowunitDialogResults = this.dialogService.open({
       id: 'createFlowunit',
       width: '700px',
       title: this.i18n.getById('toolBar.newFlowunitButton'),
@@ -766,11 +771,9 @@ export class MainComponent {
         disabled: false,
         handler: ($event: Event) => {
 
-          if (!this.toolBar.createFlowunit()) {
+          if (!this.toolBar.createFlowunit(this.createFlowunitDialogResults)) {
             return;
           }
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
           //保存至本地
         },
       },
@@ -779,8 +782,8 @@ export class MainComponent {
         cssClass: 'common',
         text: this.i18n.getById('modal.cancelButton'),
         handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
+          this.createFlowunitDialogResults.modalInstance.hide();
+          this.createFlowunitDialogResults.modalInstance.zIndex = -1;
         },
       },],
     });
@@ -923,7 +926,8 @@ export class MainComponent {
           //提示任务运行状态
           this.toastService.open({
             value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
-            life: 3000
+            life: 3000,
+            style: { top: '100px' }
           });
 
           await new Promise(r => setTimeout(r, 2000));
@@ -932,7 +936,8 @@ export class MainComponent {
           if (error.error != null) {
             this.toastService.open({
               value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-              life: 150000
+              life: 150000,
+              style: { top: '100px' }
             });
           }
         }
@@ -940,7 +945,8 @@ export class MainComponent {
     } else {
       this.toastService.open({
         value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
-        life: 3000
+        life: 3000,
+        style: { top: '100px' }
       });
       //open graph saving
       this.toolBar.showSaveAsDialog();
@@ -958,7 +964,6 @@ export class MainComponent {
         },
         driver: {
           "skip-default": item.skipDefault,
-          // dir: item.graph.dirs.push(...this.toolBar.flowunitDebugPath),
         },
         profile: {
           profile: item.graph.settingPerfEnable,

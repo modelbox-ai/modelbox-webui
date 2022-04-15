@@ -372,7 +372,8 @@ export class SolutionComponent implements OnInit {
         //提示任务运行状态
         this.toastService.open({
           value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
-          life: 3000
+          life: 3000,
+          style: { top: '100px' }
         });
         await new Promise(r => setTimeout(r, 1000));
         this.showLoading = false;
@@ -381,7 +382,8 @@ export class SolutionComponent implements OnInit {
         if (error.error != null) {
           this.toastService.open({
             value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-            life: 150000
+            life: 150000,
+            style: { top: '100px' }
           });
         }
         this.showLoading = false;
