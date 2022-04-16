@@ -42,3 +42,16 @@
     }
   }
 }
+
+d-card {
+  cursor: pointer;
+  display: inline-block;
+  transition:
+      box-shadow 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
+
+  &:hover {
+      box-shadow: 0 4px 16px 0 rgba(17, 18, 19, 0.5);
+      transform : translateY(-5px);
+  }
+}

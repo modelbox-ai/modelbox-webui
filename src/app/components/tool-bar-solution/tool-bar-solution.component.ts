@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
+import { DialogService, ModalService } from 'ng-devui/modal';
 
 declare const require: any
 @Component({
@@ -24,7 +25,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onRunButtonClick: any;
   @Input() onOpenTutorial: any;
-  @Output() currentProjectEmitter = new EventEmitter<any>(); 
+  @Output() currentProjectEmitter = new EventEmitter<any>();
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -35,20 +36,22 @@ export class ToolBarSolutionComponent implements OnInit {
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
-  
+
 
   solutionList = [];
   dirs = [];
   showLoading;
 
   currentOption = localStorage.getItem('currentSolution') || {};
-  
-  constructor(private i18n: I18nService,
+  selectDemoDialog: any;
+
+  constructor(private dialogService: DialogService,
+    private i18n: I18nService,
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
-    private toastService: ToastService) { 
-      this.showLoading = true;
-    }
+    private toastService: ToastService) {
+    this.showLoading = true;
+  }
 
   ngOnInit(): void {
     this.dirs.push(this.dataService.commonFlowunitPath);
@@ -112,7 +115,7 @@ export class ToolBarSolutionComponent implements OnInit {
           obj.name = item.name;
           this.solutionList.push(obj);
           let flowunitPath = this.getFlowunitPathFromGraphPath(obj.graphfile, obj.name);
-          if (flowunitPath){
+          if (flowunitPath) {
             this.dirs.push(flowunitPath);
           }
         });
@@ -124,12 +127,51 @@ export class ToolBarSolutionComponent implements OnInit {
       });
   }
 
-  getFlowunitPathFromGraphPath(graphPath, graphName){
+  getFlowunitPathFromGraphPath(graphPath, graphName) {
     let pos = graphPath.search(/\/graph\//);
-    if (pos > -1){
-      return graphPath.slice(0,pos + 1) + "flowunit/";
+    if (pos > -1) {
+      return graphPath.slice(0, pos + 1) + "flowunit/";
     }
     return;
+  }
+
+  onClickCard(e) {
+    this.currentOption = e;
+    this.handleSelectChange(e);
+    this.selectDemoDialog.modalInstance.hide();
+    this.selectDemoDialog.modalInstance.zIndex = -1;
+  }
+
+  showSelectDemoDialog(content: TemplateRef<any>) {
+    this.selectDemoDialog = this.dialogService.open({
+      id: 'graphSelect',
+      width: '900px',
+      title: this.i18n.getById('toolBar.chooseDemo'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          this.selectDemoDialog.modalInstance.hide();
+          this.selectDemoDialog.modalInstance.zIndex = -1;
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          this.selectDemoDialog.modalInstance.hide();
+          this.selectDemoDialog.modalInstance.zIndex = -1;
+        },
+      },],
+    });
   }
 
   selectSolution(selectedName) {
@@ -138,21 +180,21 @@ export class ToolBarSolutionComponent implements OnInit {
       if (response.graph) {
         this.dataService.currentSolution = data.flow.name;
         this.dataService.currentSolutionProject = data;
-        
+
         this.sendCurrentProject(data);
         this.currentOption = data.flow.name;
-      }else{
+      } else {
         this.toastService.open({
           value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],
           life: 3000,
           style: { top: '100px' }
         });
       }
-      
+
     });
   }
 
-  sendCurrentProject(data){
+  sendCurrentProject(data) {
     this.currentProjectEmitter.emit(data);
   }
 

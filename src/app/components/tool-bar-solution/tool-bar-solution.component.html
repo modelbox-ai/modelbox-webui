@@ -46,13 +46,30 @@
     </d-button>
   </div>
   <div class="tool-bar-right" style="margin: 0 20px 0 20px;">
-    <span style="font-size: 16px;">{{'example' | translate}}: &nbsp;&nbsp;&nbsp;</span>
     <div style="display: inline-block;">
-      <d-select [options]="solutionList" [isSearch]="true" [filterKey]="'name'" [(ngModel)]="currentOption"
-        (valueChange)="handleSelectChange($event)"></d-select>
+      <button id="selectDemo" (click)="showSelectDemoDialog(selectDemo)" class="tool-bar-button"
+        style="display: inline-block;">
+        {{'toolBar.selectDemo' | translate}}
+      </button>
     </div>
     <button id="tutorial" (click)="openTutorial($event)" class="tool-bar-button" style="display: inline-block;">
       {{'toolBar.openTutorial' | translate}}
     </button>
   </div>
 </div>
+
+<ng-template #selectDemo id="selectDemo">
+  <d-card class="card-container" *ngFor="let d of solutionList" style="width:50%;height:100%"
+    (click)="onClickCard(d)">
+    <d-card-header>
+      <d-avatar dCardAvatar [name]="d.name"></d-avatar>
+      <d-card-title>
+        {{d.name}}
+      </d-card-title>
+    </d-card-header>
+    <d-card-content>
+      <div>{{d.desc}}</div>
+    </d-card-content>
+  </d-card>
+
+</ng-template>
