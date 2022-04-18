@@ -274,7 +274,9 @@ export class MainComponent {
               this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
               this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
             }
-            this.dirs = data.graphs[0].driver.dir;
+            this.toolBar.formData.flowunitReleasePath = data.graphs[0].driver.dir;
+            this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit";
+            this.dirs = this.toolBar.formData.flowunitDebugPath;
             this.project_name = data.project_name;
           } else {
             this.toolBar.initFormData();
@@ -712,23 +714,7 @@ export class MainComponent {
       onClose: () => {
 
       },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          this.createProject(this.toolBar.formDataCreateProject);
-        },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          this.createProjectDialogResults.modalInstance.hide();
-          this.createProjectDialogResults.modalInstance.zIndex = -1;
-        },
-      },],
+      buttons: [ ],
     });
   }
 

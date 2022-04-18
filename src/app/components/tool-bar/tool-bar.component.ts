@@ -258,7 +258,9 @@ export class ToolBarComponent {
     perfEnable: false,
     perfTraceEnable: false,
     perfSessionEnable: false,
-    perfPath: this.dataService.defaultPerfDir
+    perfPath: this.dataService.defaultPerfDir,
+    flowunitDebugPath: '',
+    flowunitReleasePath: ''
   };
   flowunitDebugPath: any;
   flowunitReleasePath: any;
@@ -748,7 +750,9 @@ export class ToolBarComponent {
       perfEnable: false,
       perfTraceEnable: false,
       perfSessionEnable: false,
-      perfPath: this.dataService.defaultPerfDir
+      perfPath: this.dataService.defaultPerfDir,
+      flowunitDebugPath: '',
+      flowunitReleasePath: ''
     };
   }
 
@@ -917,6 +921,7 @@ export class ToolBarComponent {
             } else {
               dirs = [];
             }
+
             dirs.push(param["project-path"] + "/src/flowunit/");
             this.formData.flowunitPath = dirs.join("\n");
             this.flowunitEmmiter.emit(this.formData.flowunitPath);
