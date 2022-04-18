@@ -137,18 +137,34 @@
                 </d-form-control>
             </d-form-item>
             <d-form-item>
-                <d-card class="card-container" *ngFor="let d of optionSolutionList" style="width:50%;height:100%"
-                    (click)="onClickCard(d)">
-                    <d-card-header>
-                        <d-avatar dCardAvatar [name]="d.name"></d-avatar>
-                        <d-card-title>
-                            {{d.name}}
-                        </d-card-title>
-                    </d-card-header>
-                    <d-card-content>
-                        <div>{{d.desc}}</div>
-                    </d-card-content>
-                </d-card>
+                <div>
+                    <d-card class="card-container" *ngFor="let d of optionSolutionList[0]"
+                        (click)="onClickCard(d)">
+                        <d-card-header>
+                            <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                            <d-card-title>
+                                {{d.name}}
+                            </d-card-title>
+                        </d-card-header>
+                        <d-card-content>
+                            <div>{{d.desc}}</div>
+                        </d-card-content>
+                    </d-card>
+                </div>
+                <div>
+                    <d-card class="card-container" *ngFor="let d of optionSolutionList[1]"
+                        (click)="onClickCard(d)">
+                        <d-card-header>
+                            <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                            <d-card-title>
+                                {{d.name}}
+                            </d-card-title>
+                        </d-card-header>
+                        <d-card-content>
+                            <div>{{d.desc}}</div>
+                        </d-card-content>
+                    </d-card>
+                </div>
             </d-form-item>
         </form>
     </d-layout>
@@ -170,7 +186,8 @@
                                 (keyup)="($event.which === 13)?searchDirectory():0" />
                         </div>
                         <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"
-                            (click)="searchDirectory()"></d-button>
+                            (click)="searchDirectory()">
+                        </d-button>
                     </div>
                 </d-form-control>
             </d-form-item>
@@ -247,7 +264,8 @@
                     拷贝模型
                 </d-form-label>
                 <d-form-control>
-                    <d-toggle [(ngModel)]="isCopy" [size]="'sm'" [ngModelOptions]="{standalone: true}"></d-toggle>
+                    <d-toggle [(ngModel)]="isCopy" [size]="'sm'" [ngModelOptions]="{standalone: true}">
+                    </d-toggle>
                 </d-form-control>
             </d-form-item>
 
@@ -467,7 +485,8 @@
                             </d-form-label>
                             <d-form-control>
                                 <d-checkbox [(ngModel)]="formData.skipDefault" name="skipDefault"
-                                    (change)="onCheckboxSkipDefaultChange($event)"> </d-checkbox>
+                                    (change)="onCheckboxSkipDefaultChange($event)">
+                                </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>

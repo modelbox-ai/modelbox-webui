@@ -73,7 +73,7 @@ export class MainComponent {
   graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   project_name: string = JSON.parse(localStorage.getItem('project')) ? this.project.name : "";
   project_desc: string = JSON.parse(localStorage.getItem('project')) ? this.project.project_desc : "";
-  graphName: string = JSON.parse(localStorage.getItem('project')) ? this.project.graph.graphName : "";
+  graphName: string;
   path: string = "/home";
   desc: string;
   state: any;
@@ -187,8 +187,7 @@ export class MainComponent {
   }
 
   getProjectJson() {
-    let path = this.toolBar.formDataCreateProject.rootpath + "/" +
-      this.toolBar.formDataCreateProject.name + "/src/flowunit";
+    let path = this.dirs;
     const projectdata = {
       name: this.toolBar.formDataCreateProject.name,
       rootpath: this.toolBar.formDataCreateProject.rootpath,
@@ -199,7 +198,7 @@ export class MainComponent {
         dotSrcLastChangeTime: this.dotSrcLastChangeTime,
         svgString: this.getSvgString(),
         skipDefault: this.skipDefault,
-        dirs: [path],
+        dirs: path,
         settingPerfEnable: this.toolBar.formData.perfEnable,
         settingPerfTraceEnable: this.toolBar.formData.perfTraceEnable,
         settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
@@ -218,7 +217,6 @@ export class MainComponent {
         this.project_name = param.name;
         //after created successfully
         localStorage.removeItem("project");
-        this.saveCurrentProject();
         this.dotSrc = this.dataService.defaultSrc;
         this.createProjectDialogResults.modalInstance.hide();
         this.toastService.open({
@@ -228,7 +226,7 @@ export class MainComponent {
         });
         this.loadProject(param);
         this.reloadInsertComponent();
-        
+
         this.createProjectDialogResults.modalInstance.hide();
         this.createProjectDialogResults.modalInstance.zIndex = -1;
         return;
@@ -251,6 +249,16 @@ export class MainComponent {
     return graphName;
   }
 
+  insertNodeType(graph) {
+    let pos;
+    let newGraph = graph;
+    if (graph.indexOf("node [shape=Mrecord]") === -1) {
+      pos = graph.indexOf("{") + 1;
+      newGraph = graph.slice(0, pos) + "\n\tnode [shape=Mrecord]" + graph.slice(pos);
+    }
+    return newGraph;
+  }
+
   loadProject(param) {
     this.basicService.openProject(param.rootpath + "/" + param.name).subscribe(
       (data: any) => {
@@ -258,12 +266,14 @@ export class MainComponent {
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
         if (data.graphs && data.graphs[0] != null) {
           if (data.graphs[0].graph.graphconf) {
-            this.dotSrc = data.graphs[0].graph.graphconf;
+            this.dotSrc = this.insertNodeType(data.graphs[0].graph.graphconf);
             this.toolBar.formData.graphName = this.getGraphNameFromGraph(data.graphs[0].graph.graphconf);
             this.toolBar.formData.graphDesc = "";
             this.toolBar.formData.skipDefault = false;
-            this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
-            this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
+            if (data.graphs[0].profile) {
+              this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
+              this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
+            }
             this.dirs = data.graphs[0].driver.dir;
             this.project_name = data.project_name;
           } else {
@@ -393,7 +403,7 @@ export class MainComponent {
     this.dotSrc = e;
   }
 
-  updateIsOpen(){
+  updateIsOpen() {
     this.toolBar.isOpen = false;
   }
 
@@ -921,6 +931,8 @@ export class MainComponent {
       this.saveGraphs();
       //run
       let option = this.createOptionFromProject(this.project);
+
+
       this.basicService.createTask(option)
         .subscribe(async (data: any) => {
           //提示任务运行状态
@@ -964,6 +976,7 @@ export class MainComponent {
         },
         driver: {
           "skip-default": item.skipDefault,
+          dir: item.graph.dirs,
         },
         profile: {
           profile: item.graph.settingPerfEnable,

@@ -4,13 +4,24 @@
     <div class="tasklist-search-box-block">
     </div>
     <div class="tasklist-search-box-block">
-      <d-search style="width: 300px; height:28px" [placeholder]="placeholder" [(ngModel)]="sreachValue"
-        (clear)="onClear($event)" [isKeyupSearch]="true" (searchFn)="onSearch($event)">
+      <d-search
+        style="width: 300px; height:28px"
+        [placeholder]="placeholder"
+        [(ngModel)]="sreachValue"
+        (clear)="onClear($event)"
+        [isKeyupSearch]="true"
+        (searchFn)="onSearch($event)">
       </d-search>
     </div>
   </div>
-  <d-data-table [fixHeader]="true" tableHeight="360px" [containFixHeaderHeight]="true" [scrollable]="true"
-    [headerBg]="true" [colDraggable]="true" [dataSource]="tableData.srcData.data"
+  <d-data-table
+    [fixHeader]="true"
+    tableHeight="360px"
+    [containFixHeaderHeight]="true"
+    [scrollable]="true"
+    [headerBg]="true"
+    [colDraggable]="true"
+    [dataSource]="tableData.srcData.data"
     [tableWidthConfig]="mainTableWidthConfig">
     <thead dTableHead>
       <tr dTableRow>
@@ -51,8 +62,14 @@
 
 <ng-template #createTaskModal let-context='context'>
   <d-content>
-    <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
-      [colDraggable]="true" [dataSource]="taskData.srcData.data" [tableWidthConfig]="tableWidthConfig">
+    <d-data-table
+      [fixHeader]="true"
+      [containFixHeaderHeight]="true"
+      [scrollable]="true"
+      [headerBg]="true"
+      [colDraggable]="true"
+      [dataSource]="taskData.srcData.data"
+      [tableWidthConfig]="tableWidthConfig">
       <thead dTableHead>
         <tr dTableRow>
           <th dHeadCell *ngFor="let colOption of taskData.columns">{{ colOption.header }}</th>
@@ -62,8 +79,11 @@
         <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
           <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
             <td dTableCell *ngFor="let colOption of taskData.columns">
-              <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)" [ngModel]="rowItem.checked">
+              <d-checkbox
+                *ngIf="colOption.field === 'checked'"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+                [ngModel]="rowItem.checked">
               </d-checkbox>
               <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
                 {{ rowItem.job_id }}

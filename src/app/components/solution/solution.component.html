@@ -1,33 +1,62 @@
 <app-header-main #header [active]="page"></app-header-main>
-<div class="demo-page" id="demo-page" dLoading [showLoading]="showLoading" [positionType]="'relative'" [backdrop]="true">
+<div
+  class="demo-page"
+  id="demo-page"
+  dLoading
+  [showLoading]="showLoading"
+  [positionType]="'relative'"
+  [backdrop]="true">
   <as-split direction="horizontal">
     <as-split-area [size]="100" class="main-container-body">
-      <as-split direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
-        (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
-        <app-tool-bar-solution #toolBarSolution id="toolBarSolution"
-          [hasUndo]="hasUndo" [hasRedo]="hasRedo" [onUndoButtonClick]="handleUndoButtonClick"
-          [onRedoButtonClick]="handleRedoButtonClick" [onZoomInButtonClick]="handleZoomInButtonClick"
-          [onZoomOutButtonClick]="handleZoomOutButtonClick" [onZoomResetButtonClick]="handleZoomResetButtonClick"
+      <as-split
+        direction="vertical"
+        (dragEnd)="handleGutterEnd($event, 'center')"
+        (dragStart)="handleGutterStart($event)"
+        gutterDblClickDuration="500">
+        <app-tool-bar-solution
+          #toolBarSolution
+          id="toolBarSolution"
+          [hasUndo]="hasUndo"
+          [hasRedo]="hasRedo"
+          [onUndoButtonClick]="handleUndoButtonClick"
+          [onRedoButtonClick]="handleRedoButtonClick"
+          [onZoomInButtonClick]="handleZoomInButtonClick"
+          [onZoomOutButtonClick]="handleZoomOutButtonClick"
+          [onZoomResetButtonClick]="handleZoomResetButtonClick"
           [onZoomFitButtonClick]="handleZoomFitButtonClick"
-          [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick" [onRunButtonClick]="handleRunButtonClick"
-          [onOpenTutorial]="handleTutorials" (currentProjectEmitter)="handleCurrentProjectChange($event)">
+          [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
+          [onRunButtonClick]="handleRunButtonClick"
+          [onOpenTutorial]="handleTutorials"
+          (currentProjectEmitter)="handleCurrentProjectChange($event)">
         </app-tool-bar-solution>
         <as-split-area [size]="80">
           <div class="graph" id="graph">
-            <app-graph [dotSrc]="dotSrc" [isResizing]="isResizing" [onInitialized]="handleGraphInitialized"
-              [onSelect]="handleGraphComponentSelect" [registerGetSvg]="registerGetSvg"
+            <app-graph
+              [dotSrc]="dotSrc"
+              [isResizing]="isResizing"
+              [onInitialized]="handleGraphInitialized"
+              [onSelect]="handleGraphComponentSelect"
+              [registerGetSvg]="registerGetSvg"
               [registerZoomInButtonClick]="registerZoomInButtonClick"
               [registerZoomOutButtonClick]="registerZoomOutButtonClick"
               [registerZoomFitButtonClick]="registerZoomFitButtonClick"
               [registerZoomResetButtonClick]="registerZoomResetButtonClick"
               [registerNodeShapeClick]="registerNodeShapeClick"
-              [registerNodeAttributeChange]="registerNodeAttributeChange" [onTextChange]="handleTextChange"></app-graph>
+              [registerNodeAttributeChange]="registerNodeAttributeChange"
+              [onTextChange]="handleTextChange">
+            </app-graph>
           </div>
         </as-split-area>
         <as-split-area [size]="20">
-          <app-text-editor [dotSrc]="dotSrc" [onTextChange]="handleTextChange" [onFocus]="handleTextEditorFocus"
-            [onBlur]="handleTextEditorBlur" [selectedGraphComponents]="selectedGraphComponents"
-            [registerUndo]="registerUndo" [registerRedo]="registerRedo" [registerUndoReset]="registerUndoReset"
+          <app-text-editor
+            [dotSrc]="dotSrc"
+            [onTextChange]="handleTextChange"
+            [onFocus]="handleTextEditorFocus"
+            [onBlur]="handleTextEditorBlur"
+            [selectedGraphComponents]="selectedGraphComponents"
+            [registerUndo]="registerUndo"
+            [registerRedo]="registerRedo"
+            [registerUndoReset]="registerUndoReset"
             [registerResize]="registerEditorResize"
             [registerSwitchDirectionButtonClick]="registerSwitchDirectionButtonClick">
           </app-text-editor>
@@ -37,7 +66,12 @@
   </as-split>
 </div>
 <div>
-  <app-attribute-panel style="z-index:100" class="half-drawer" *ngIf="currentComponent" [config]="currentComponent"
-    [onNodeAttributeChange]="handleNodeAttributeChange" (newItemEvent)="updateConfig($event)">
+  <app-attribute-panel
+    style="z-index:100"
+    class="half-drawer"
+    *ngIf="currentComponent"
+    [config]="currentComponent"
+    [onNodeAttributeChange]="handleNodeAttributeChange"
+    (newItemEvent)="updateConfig($event)">
   </app-attribute-panel>
 </div>
