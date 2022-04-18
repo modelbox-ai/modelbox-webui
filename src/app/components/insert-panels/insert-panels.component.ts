@@ -145,10 +145,10 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   titleCase(str) {
-    if (str){
+    if (str) {
       let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
       return newStr;
-    }else{
+    } else {
       return str;
     }
   }
@@ -167,7 +167,7 @@ export class InsertPanelsComponent implements OnInit {
       };
       obj.descryption = ele.base.description;
       obj.group = this.titleCase(ele.base.group_type);
-      if (!obj.group){
+      if (!obj.group) {
         obj.group = "Generic";
       }
       obj.name = ele.base.name;

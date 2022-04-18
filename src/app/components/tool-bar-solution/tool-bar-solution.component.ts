@@ -152,24 +152,7 @@ export class ToolBarSolutionComponent implements OnInit {
       onClose: () => {
 
       },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          this.selectDemoDialog.modalInstance.hide();
-          this.selectDemoDialog.modalInstance.zIndex = -1;
-        },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          this.selectDemoDialog.modalInstance.hide();
-          this.selectDemoDialog.modalInstance.zIndex = -1;
-        },
-      },],
+      buttons: [],
     });
   }
 
