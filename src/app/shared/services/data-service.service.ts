@@ -89,6 +89,9 @@ export class DataServiceService {
       };
       obj.descryption = ele.base.description;
       obj.group = this.titleCase(ele.base.group_type);
+      if (!obj.group){
+        obj.group = "Generic";
+      }
       obj.name = ele.base.name;
       obj.version = ele.base.version;
       obj.type = ele.base.type;

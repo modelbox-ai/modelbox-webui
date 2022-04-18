@@ -56,7 +56,6 @@ export class ToolBarSolutionComponent implements OnInit {
   ngOnInit(): void {
     this.dirs.push(this.dataService.commonFlowunitPath);
     this.loadSolutionData();
-    this.selectSolution(this.dataService.defaultSolutionGraph);
   }
 
   handleUndoButtonClick = event => {
