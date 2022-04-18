@@ -225,7 +225,6 @@ export class MainComponent {
           style: { top: '100px' }
         });
         this.loadProject(param);
-        this.reloadInsertComponent();
 
         this.createProjectDialogResults.modalInstance.hide();
         this.createProjectDialogResults.modalInstance.zIndex = -1;
@@ -287,6 +286,8 @@ export class MainComponent {
           this.dotSrc = this.dataService.defaultSrc;
         }
         this.saveCurrentProject();
+
+        this.reloadInsertComponent();
 
       }, error => {
         const results = this.toastService.open({
@@ -714,7 +715,7 @@ export class MainComponent {
       onClose: () => {
 
       },
-      buttons: [ ],
+      buttons: [],
     });
   }
 

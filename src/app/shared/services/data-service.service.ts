@@ -26,7 +26,7 @@ export class DataServiceService {
   public flowunits = [];
   public transformedFlowunits = [];
   public currentSolutionList = [];
-  
+
 
   constructor(private sanitized: DomSanitizer,
     private basicService: BasicServiceService,
@@ -67,10 +67,10 @@ export class DataServiceService {
   }
 
   titleCase(str) {
-    if (str){
+    if (str) {
       let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
       return newStr;
-    }else{
+    } else {
       return str;
     }
   }
@@ -89,7 +89,7 @@ export class DataServiceService {
       };
       obj.descryption = ele.base.description;
       obj.group = this.titleCase(ele.base.group_type);
-      if (!obj.group){
+      if (!obj.group) {
         obj.group = "Generic";
       }
       obj.name = ele.base.name;
@@ -127,7 +127,7 @@ export class DataServiceService {
       if (data.devices == null) {
         return;
       }
-      if (this.flowunits &&  this.flowunits.length > 0) {
+      if (this.flowunits && this.flowunits.length > 0) {
         this.transformFlowunit();
         data.flowunits.push(...this.transformedFlowunits);
       }
