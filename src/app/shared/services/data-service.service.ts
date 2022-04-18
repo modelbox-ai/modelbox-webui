@@ -67,8 +67,12 @@ export class DataServiceService {
   }
 
   titleCase(str) {
-    let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
-    return newStr;
+    if (str){
+      let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+      return newStr;
+    }else{
+      return str;
+    }
   }
 
   transformFlowunit() {

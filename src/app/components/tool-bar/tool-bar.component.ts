@@ -469,7 +469,7 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
 
-      this.flowunitReleasePath = "/opt/modelbox/project/" + this.formDataCreateProject.name;
+      this.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
     }
 
     this.loadGraphData();
@@ -484,7 +484,7 @@ export class ToolBarComponent {
     if (this.formDataCreateProject) {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
-      this.flowunitReleasePath = "/opt/modelbox/project/" + this.formDataCreateProject.name;
+      this.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -598,11 +598,17 @@ export class ToolBarComponent {
     this.basicService.queryTemplate().subscribe(
       (data: any) => {
         data.project_template_list.forEach((item) => {
-          let obj = { name: '', desc: '' };
+          let obj = { name: '', desc: '', dirname: '' };
           obj.name = item.name;
           obj.desc = item.desc;
+          obj.dirname = item.dirname;
           this.optionSolutionList.push(obj)
         });
+        let tmp = [];
+        for (var i = 0, len = this.optionSolutionList.length; i < len; i += 2) {
+          tmp.push(this.optionSolutionList.slice(i, i + 2));
+        }
+        this.optionSolutionList = tmp;
       },
       (error) => {
         return null;
@@ -960,7 +966,7 @@ export class ToolBarComponent {
   }
 
   onClickCard(e) {
-    this.formDataCreateProject.template = e.name;
+    this.formDataCreateProject.template = e.dirname;
     this.createProjectEmmiter.emit(this.formDataCreateProject);
   }
 
@@ -1038,9 +1044,11 @@ export class ToolBarComponent {
               if (data.graphs[0].graph.graphconf) {
                 this.formData.graphName = data.graphs[0].name;
                 this.formData.skipDefault = false;
-                this.formData.perfEnable = data.graphs[0].profile.profile;
-                this.formData.perfTraceEnable = data.graphs[0].profile.trace;
+                if (data.graphs[0].profile) {
+                  this.formData.perfEnable = data.graphs[0].profile.profile;
 
+                  this.formData.perfTraceEnable = data.graphs[0].profile.trace;
+                }
                 this.dotSrcEmmiter.emit(data.graphs[0].graph.graphconf);
                 this.formData.flowunitPath = data.graphs[0].driver.dir;
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
@@ -1108,10 +1116,19 @@ export class ToolBarComponent {
       });
   }
 
+  getGraphNameFromGraph(graph) {
+    let graphName = "";
+    var n = graph.match(/(?<=digraph ).*?(?= {)/gm);
+    if (n) {
+      graphName = n[0];
+    }
+    return graphName;
+  }
+
   createProjectParam(project) {
     let params = {};
     params = {
-      job_id: project.graph.graphName.indexOf(".toml") > 0 ? project.graph.graphName : project.graph.graphName + ".toml",
+      job_id: this.getGraphNameFromGraph(project.graph.dotSrc),
       graph_name: "",
       job_graph: {},
       graph: {

@@ -33,9 +33,11 @@
         </d-form-item>
         <d-form-item>
             <div>
-                <a class="devui-link" href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html"
-                    target="_blank">
-                    帮助文档
+                <a
+                  class="devui-link"
+                  href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html"
+                  target="_blank">
+                    {{"attribute.helpText" | translate}}
                 </a>
             </div>
         </d-form-item>
@@ -84,7 +86,11 @@
         <d-form-item *ngFor="let item of unitOptions.data">
             <div class="form-item">
                 <d-form-label [required]="item.required">
-                    <div class="title-label" style="padding-bottom: 8px; display: inline-block;">{{item.label}}</div>
+                    <div
+                      class="title-label"
+                      style="padding-bottom: 8px; display: inline-block;">
+                      {{item.label}}
+                    </div>
                 </d-form-label>
                 <d-form-control>
                     <ng-container *ngIf="item.type === 'string'">
@@ -128,16 +134,24 @@
                           [name]="'option-' + item.label.replaceAll(' ', '_')"
                           [(ngModel)]="item.selected"
                           (ngModelChange)="attributeModel.blur(myForm1.form)">
-                            <option [ngValue]="op" *ngFor="let op of item.options">{{op.label}}</option>
+                            <option [ngValue]="op" *ngFor="let op of item.options">
+                                {{op.label}}
+                            </option>
                         </select>
-                        <span style="color:#adb0b8">{{item.desc}}</span>
+                        <span style="color:#adb0b8">
+                            {{item.desc}}
+                        </span>
                     </ng-container>
                 </d-form-control>
             </div>
         </d-form-item>
 
         <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label><span class="title-label">{{'insertPanels.tip.topType'|translate}}</span></d-form-label>
+            <d-form-label>
+                <span class="title-label">
+                    {{'insertPanels.tip.topType'|translate}}
+                </span>
+            </d-form-label>
             <d-form-control>
                 <select
                   id="typeSelect"

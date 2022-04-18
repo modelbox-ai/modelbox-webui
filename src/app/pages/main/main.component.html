@@ -1,7 +1,13 @@
 <app-header-main #header [active]="page"></app-header-main>
 <div class="demo-page">
-  <div class="task-scheduling-panel" style="height: 100%; width: 100%;" [ngClass]="{'editor-disactive': !activeEditor}">
-    <as-split #splitH direction="horizontal" (dragEnd)="handleGutterEnd($event, 'left')"
+  <div
+    class="task-scheduling-panel"
+    style="height: 100%; width: 100%;"
+    [ngClass]="{'editor-disactive': !activeEditor}">
+    <as-split
+      #splitH
+      direction="horizontal"
+      (dragEnd)="handleGutterEnd($event, 'left')"
       (dragStart)="handleGutterStart($event)">
       <as-split-area [size]="leftSpliterSize">
         <as-split direction="vertical" style="width:100%">
@@ -19,8 +25,12 @@
         </as-split>
       </as-split-area>
       <as-split-area [size]="100 - leftSpliterSize" class="main-container-body">
-        <as-split #splitV direction="vertical" (dragEnd)="handleGutterEnd($event, 'center')"
-          (dragStart)="handleGutterStart($event)" gutterDblClickDuration="500">
+        <as-split
+          #splitV
+          direction="vertical"
+          (dragEnd)="handleGutterEnd($event, 'center')"
+          (dragStart)="handleGutterStart($event)"
+          gutterDblClickDuration="500">
           <as-split-area [size]="centerSplitterSize">
             <app-tool-bar
               #toolBar
