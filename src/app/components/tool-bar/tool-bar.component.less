@@ -11,6 +11,9 @@
 }
 
 .basic-usage {
+    td{
+        cursor: pointer;
+    }
 
     li>a {
         color: #252B3A;
@@ -29,6 +32,7 @@
         display: none;
     }
 }
+
 
 .nav-tab {
     border       : 1px solid transparent;
@@ -125,4 +129,8 @@ d-card {
         box-shadow: 0 4px 16px 0 rgba(17, 18, 19, 0.5);
         transform : translateY(-5px);
     }
+}
+
+.table-style ::ng-deep td.cell-style.ng-star-inserted{
+    cursor:pointer !important;
 }

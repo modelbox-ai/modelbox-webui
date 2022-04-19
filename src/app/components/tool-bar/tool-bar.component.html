@@ -266,11 +266,11 @@
             </d-form-item>
             <d-form-item>
                 <d-form-control>
-                    <d-data-table [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
+                    <d-data-table class="table-style" [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
                         [borderType]="'borderless'" (cellClick)="cellClick($event)" maxHeight="360px">
-                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" style="cursor:pointer">
+                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" [cellClass]="'cell-style'">
                         </d-column>
-                        <d-column field="isProject">
+                        <d-column field="isProject" [cellClass]="'cell-style'">
                         </d-column>
                     </d-data-table>
 
