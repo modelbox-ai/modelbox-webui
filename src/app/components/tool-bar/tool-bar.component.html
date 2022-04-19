@@ -90,6 +90,13 @@
         </d-button>
     </div>
 
+    <div class="tool-bar-mid">
+        <span style="font-size:28px; font-weight:500;">
+
+            {{formDataCreateProject.name}}
+        </span>
+    </div>
+
     <div class="tool-bar-right">
         <div
           class="btn-group"
@@ -145,7 +152,6 @@
           [alignOrigin]="flowunitRef"
           [appendToBodyDirections]="['centerDown', 'centerUp']"
           >
-          <!-- (click)="controlToggle($event)" -->
             <span dDropDownToggle>
                 <button class="tool-bar-button">
                     {{'toolBar.flowunit' | translate}}
@@ -169,12 +175,6 @@
         </button>
     </div>
 
-    <div class="tool-bar-mid">
-        <span style="font-size:28px; font-weight:500;">
-
-            {{formDataCreateProject.name}}
-        </span>
-    </div>
 </div>
 <ng-template #titleTemplate>
     <h1>{{formDataCreateProject.name}}</h1>
