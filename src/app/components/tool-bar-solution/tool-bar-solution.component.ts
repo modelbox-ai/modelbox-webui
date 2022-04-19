@@ -45,6 +45,9 @@ export class ToolBarSolutionComponent implements OnInit {
   currentOption = localStorage.getItem('currentSolution') || {};
   selectDemoDialog: any;
 
+  currentStep: any;
+  currentStepOutPut: any;
+
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,

@@ -438,12 +438,14 @@ export class ToolBarComponent {
   in_num = 1;
   out_num = 2;
   isOpen = false;
+  isOpen2 = false;
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
   openProjectListPath: string = "/home";
   incomingGraphName: string = '';
   isChangingPortName: boolean;
+  
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -540,14 +542,24 @@ export class ToolBarComponent {
     this.portInfo.device = value;
   }
 
-  controlToggle(e) {
-    if (this.isOpen === true) {
-      this.isOpen = false;
-    } else {
-      if (e.currentTarget.innerText === this.i18n.getById("toolBar.flowunit")) {
-        this.isOpen = true;
-      }
+  onToggle(event) {
+    if (this.isOpen != event) {
+      this.isOpen = event;
     }
+  }
+
+  toggleIsOpen() {
+    this.isOpen = !this.isOpen;
+  }
+
+  onToggle2(event) {
+    if (this.isOpen2 != event) {
+      this.isOpen2 = event;
+    }
+  }
+
+  toggleIsOpen2() {
+    this.isOpen2 = !this.isOpen2;
   }
 
   handleValueChangeport_type(e) {

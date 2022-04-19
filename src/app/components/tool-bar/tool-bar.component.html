@@ -1,50 +1,109 @@
 <div id="tool-bar" class="tool-bar">
     <div class="tool-bar-left btn-group">
-        <d-button id="undo" *ngIf="hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
-            [disabled]="!hasUndo" (click)="handleUndoButtonClick($event)">
+        <d-button
+          id="undo"
+          *ngIf="hasUndo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.backButton' | translate"
+          [disabled]="!hasUndo"
+          (click)="handleUndoButtonClick($event)">
             <img src={{backSvg}} />
         </d-button>
-        <d-button id="undo" *ngIf="!hasUndo" dTooltip bsStyle="text-dark" [content]="'toolBar.backButton' | translate"
-            [disabled]="!hasUndo" (click)="handleUndoButtonClick($event)">
+        <d-button
+          id="undo"
+          *ngIf="!hasUndo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.backButton' | translate"
+          [disabled]="!hasUndo"
+          (click)="handleUndoButtonClick($event)">
             <img src={{backDisabledSvg}} />
         </d-button>
-        <d-button id="redo" *ngIf="hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
-            [disabled]="!hasRedo" (click)="handleRedoButtonClick($event)">
+        <d-button
+          id="redo"
+          *ngIf="hasRedo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.redoButton' | translate"
+          [disabled]="!hasRedo"
+          (click)="handleRedoButtonClick($event)">
             <img src={{redoSvg}} />
         </d-button>
-        <d-button id="redo" *ngIf="!hasRedo" dTooltip bsStyle="text-dark" [content]="'toolBar.redoButton' | translate"
-            [disabled]="!hasRedo" (click)="handleRedoButtonClick($event)">
+        <d-button
+          id="redo"
+          *ngIf="!hasRedo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.redoButton' | translate"
+          [disabled]="!hasRedo"
+          (click)="handleRedoButtonClick($event)">
             <img src={{redoDisabledSvg}} />
         </d-button>
-        <d-button id="zoom-in" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomInButton' | translate"
-            (click)="handleZoomInButtonClick($event)">
+        <d-button
+          id="zoom-in"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomInButton' | translate"
+          (click)="handleZoomInButtonClick($event)">
             <img src={{zoomInSvg}} />
         </d-button>
-        <d-button id="zoom-out" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomOutButton' | translate"
-            (click)="handleZoomOutButtonClick($event)">
+        <d-button
+          id="zoom-out"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomOutButton' | translate"
+          (click)="handleZoomOutButtonClick($event)">
             <img src={{zoomOutSvg}} />
         </d-button>
-        <d-button id="zoom-reset" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomResetButton' | translate"
-            (click)="handleZoomResetButtonClick($event)">
+        <d-button
+          id="zoom-reset"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomResetButton' | translate"
+          (click)="handleZoomResetButtonClick($event)">
             <img src={{zoomResetSvg}} />
         </d-button>
-        <d-button id="zoom-fit" dTooltip bsStyle="text-dark" [content]="'toolBar.zoomFitButton' | translate"
-            (click)="handleZoomFitButtonClick($event)">
+        <d-button
+          id="zoom-fit"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomFitButton' | translate"
+          (click)="handleZoomFitButtonClick($event)">
             <img src={{zoomFitSvg}} />
         </d-button>
-        <d-button id="switch" dTooltip bsStyle="text-dark" [content]="'toolBar.switchButton' | translate"
-            (click)="handleSwitchDirectionButtonClick($event)">
+        <d-button
+          id="switch"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.switchButton' | translate"
+          (click)="handleSwitchDirectionButtonClick($event)">
             <img src={{switchSvg}} />
         </d-button>
-        <d-button id="run" dTooltip bsStyle="text-dark" [content]="'toolBar.runGraphButton' | translate"
-            (click)="handleRunButtonClick($event)">
+        <d-button
+          id="run"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.runGraphButton' | translate"
+          (click)="handleRunButtonClick($event)">
             <img src={{runGraphSvg}} />
         </d-button>
     </div>
 
     <div class="tool-bar-right">
-        <div class="btn-group" style="display:inline-block" dDropDown appendToBody [alignOrigin]="projectRef"
-            [appendToBodyDirections]="['centerDown', 'centerUp']">
+        <div
+          class="btn-group"
+          style="display:inline-block"
+          dDropDown
+          appendToBody
+          [isOpen]="isOpen" 
+          [trigger]="'manually'" 
+          #myDropdown="d-dropdown" 
+          [closeScope]="'blank'"
+          [alignOrigin]="projectRef"
+          [appendToBodyDirections]="['centerDown', 'centerUp']"
+          (toggleEvent)="onToggle($event)"
+          (click)="toggleIsOpen()">
             <span dDropDownToggle>
                 <button class="tool-bar-button">
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -71,10 +130,24 @@
             </ul>
         </div>
 
-        <div class="btn-group" style="display:inline-block" dDropDown appendToBody [alignOrigin]="flowunitRef"
-            [appendToBodyDirections]="['centerDown', 'centerUp']">
+        <div
+          class="btn-group"
+          style="display:inline-block"
+          dDropDown
+          appendToBody
+          [isOpen]="isOpen2" 
+          [trigger]="'manually'" 
+          #myDropdown="d-dropdown" 
+          [closeScope]="'blank'"
+          (toggleEvent)="onToggle2($event)"
+          (click)="toggleIsOpen2()"
+          
+          [alignOrigin]="flowunitRef"
+          [appendToBodyDirections]="['centerDown', 'centerUp']"
+          >
+          <!-- (click)="controlToggle($event)" -->
             <span dDropDownToggle>
-                <button class="tool-bar-button" (click)="controlToggle($event)">
+                <button class="tool-bar-button">
                     {{'toolBar.flowunit' | translate}}
                 </button>
             </span>
