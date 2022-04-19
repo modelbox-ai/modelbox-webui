@@ -406,8 +406,9 @@ export class MainComponent {
     this.dotSrc = e;
   }
 
-  updateIsOpen() {
+  updateIsOpen(e) {
     this.toolBar.isOpen = false;
+    this.toolBar.isOpen2 = false;
   }
 
   setEditorMarkers(components) {
