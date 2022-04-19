@@ -706,6 +706,8 @@ export class MainComponent {
   }
 
   showCreateProjectDialog(content: TemplateRef<any>) {
+    this.toolBar.isOpen = false;
+    this.toolBar.isOpen2 = false;
     this.createProjectDialogResults = this.dialogService.open({
       id: 'createProject',
       width: '700px',
@@ -721,6 +723,8 @@ export class MainComponent {
   }
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
+    this.toolBar.isOpen = false;
+    this.toolBar.isOpen2 = false;
     this.toolBar.searchDirectory();
     this.openProjectDialogResults = this.dialogService.open({
       id: 'openProject',
@@ -753,6 +757,8 @@ export class MainComponent {
   }
 
   showCreateFlowunitDialog(content: TemplateRef<any>) {
+    this.toolBar.isOpen = false;
+    this.toolBar.isOpen2 = false;
     this.createFlowunitDialogResults = this.dialogService.open({
       id: 'createFlowunit',
       width: '700px',
