@@ -62,9 +62,6 @@ export class DataServiceService {
             this.sleep(3000).then(() => {
               this.warningMessage = false;
             });
-
-
-
           }
         }
       });
