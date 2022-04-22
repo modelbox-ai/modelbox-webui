@@ -4,7 +4,7 @@
   "scripts": {
     "start": "npm run prepare && ng serve",
     "prepare": "mkdir dist -p && pegjs src/app/components/graph/dotParser.pegjs dist/dotParser.js",
-    "build": "npm run prepare && ng build",
+    "build": "npm run prepare && ng build --configuration production",
     "serve": "ng serve --configuration development"
   },
   "private": true,
