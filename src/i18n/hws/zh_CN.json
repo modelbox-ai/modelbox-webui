@@ -137,7 +137,7 @@
   "message.checkInTaskPage": "请前往任务管理页面查看明细",
   "message.selectedSolutionNotFound": "未找到所选样例",
   "message.createProjectFirst": "请先新建一个项目",
-  "message.createProjectSuccess": "成功创建项目",
+  "message.createProjectSuccess": "成功保存Graph",
   "message.createProjectFail": "创建项目失败",
   "message.saveYourProjectFirst": "请先保存您的项目。",
   "message.nameOfFlowunitIsNecessary": "缺少功能单元的名字",

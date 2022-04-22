@@ -262,8 +262,6 @@ export class ToolBarComponent {
     flowunitDebugPath: '',
     flowunitReleasePath: ''
   };
-  flowunitDebugPath: any;
-  flowunitReleasePath: any;
 
   formDataCreateProject = {
     name: this.project_name,
@@ -461,7 +459,7 @@ export class ToolBarComponent {
       this.formData.graphName = current_project.graph.graphName;
       this.formData.graphDesc = current_project.graph.graphDesc;
       this.formData.flowunitPath = current_project.graph.dirs;
-      this.flowunitDebugPath = current_project.graph.dirs;
+      this.formData.flowunitDebugPath = current_project.graph.dirs;
       this.formData.skipDefault = current_project.graph.skipDefault;
       this.formData.perfEnable = current_project.graph.settingPerfEnable;
       this.formData.perfTraceEnable = current_project.graph.settingPerfTraceEnable;
@@ -473,7 +471,7 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
 
-      this.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
+      this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
     }
 
     this.loadGraphData();
@@ -488,7 +486,7 @@ export class ToolBarComponent {
     if (this.formDataCreateProject) {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
-      this.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
+      this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {

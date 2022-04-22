@@ -241,9 +241,11 @@ export class MainComponent {
 
   getGraphNameFromGraph(graph) {
     let graphName = "";
-    var n = graph.match(/(?<=digraph ).*?(?= {)/gm);
-    if (n) {
-      graphName = n[0];
+    if (graph) {
+      let n = graph.match(/(?<=digraph ).*?(?= {)/gm);
+      if (n) {
+        graphName = n[0];
+      }
     }
     return graphName;
   }
@@ -931,11 +933,16 @@ export class MainComponent {
   }
 
 
+
   handleRunButtonClick = (graphName) => {
     //saveToBrowser
+    if (!graphName && this.project && this.project.graph) {
+      graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
+    }
     this.graphs = {};
     if (graphName) {
       this.project.graph.name = this.graphName;
+      this.toolBar.formData.graphName = this.graphName;
       this.saveCurrentProject();
       this.graphs[this.project.graph.name] = this.project;
       this.saveGraphs();
