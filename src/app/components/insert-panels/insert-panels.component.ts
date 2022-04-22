@@ -172,7 +172,7 @@ export class InsertPanelsComponent implements OnInit {
       }
       obj.name = ele.base.name;
       obj.version = ele.base.version;
-      obj.type = ele.base.type;
+      obj.type = ele.base.device;
       for (let i in ele.input) {
         obj.inputports.push(ele.input[i]);
       }
