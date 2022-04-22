@@ -849,29 +849,30 @@ export class ToolBarComponent {
     if (!this.checkFormDataCreateFlowunit()) {
       return false;
     }
-    let param;
+    
+    let param = JSON.parse(JSON.stringify(this.formDataCreateFlowunit));
     if (this.isCopy === true) {
-      this.formDataCreateFlowunit["copy-model"] = null;
+      param["copy-model"] = null;
     } else {
-      delete this.formDataCreateFlowunit["copy-model"];
+      delete param["copy-model"];
     }
-    if (this.formDataCreateFlowunit.lang !== "inference") {
-      delete this.formDataCreateFlowunit.plugin;
-      delete this.formDataCreateFlowunit.model;
-      delete this.formDataCreateFlowunit["copy-model"];
-      if (this.formDataCreateFlowunit.lang !== "yolo") {
-        delete this.formDataCreateFlowunit["virtual-type"];
-        delete this.formDataCreateFlowunit["copy-model"];
+    if (param.lang !== "inference") {
+      delete param.plugin;
+      delete param.model;
+      delete param["copy-model"];
+      if (param.lang !== "yolo") {
+        delete param["virtual-type"];
+        delete param["copy-model"];
       }
     } else {
-      this.formDataCreateFlowunit.lang = "infer";
-      this.formDataCreateFlowunit["group-type"] = "inference";
+      param.lang = "infer";
+      param["group-type"] = "inference";
     }
 
-    if (this.formDataCreateFlowunit.type === "normal") {
-      delete this.formDataCreateFlowunit.type;
+    if (param.type === "normal") {
+      delete param.type;
     }
-    param = this.formDataCreateFlowunit;
+
     let ret = this.infoCreateProjectFirst();
     if (!ret) {
       return;
@@ -879,9 +880,7 @@ export class ToolBarComponent {
     let input = [];
     let output = [];
 
-
-
-    this.formDataCreateFlowunit.port_infos.forEach(ele => {
+    param.port_infos.forEach(ele => {
 
       if (ele.port_type === "input") {
         input.push({
@@ -912,12 +911,11 @@ export class ToolBarComponent {
 
     delete param.port_infos;
     if (input.length > 0) {
-      param.input = input;
+      param['input'] = input;
     }
     if (output.length > 0) {
-      param.output = output;
+      param['output'] = output;
     }
-    this.initFormDataCreateFlowunit();
 
     this.basicService.createFlowunit(param).subscribe(
       (data: any) => {
@@ -982,9 +980,14 @@ export class ToolBarComponent {
 
   }
 
-  onClickCard(e) {
+  onClickCard(e, event) {
     this.formDataCreateProject.template = e.dirname;
-    this.createProjectEmmiter.emit(this.formDataCreateProject);
+    for (let ele of event.currentTarget.parentElement.parentElement.children){
+      for (let cd of ele.children){
+        cd.classList.remove("card-focus");
+      }
+    }
+    event.currentTarget.classList.add("card-focus");
   }
 
   searchDirectory() {
@@ -1103,10 +1106,14 @@ export class ToolBarComponent {
   }
 
   refreshFlowunit() {
+    this.isOpen = false;
+    this.isOpen2 = false;
     this.refreshEmmiter.emit("refresh");
   }
 
   showSaveAsDialog() {
+    this.isOpen = false;
+    this.isOpen2 = false;
     this.loadGraphData();
     let param = JSON.parse(localStorage.getItem('project'));
     let ret = this.infoCreateProjectFirst();

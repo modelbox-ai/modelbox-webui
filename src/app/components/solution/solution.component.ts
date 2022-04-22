@@ -19,7 +19,7 @@ export class SolutionComponent implements OnInit {
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
   @ViewChild('header') header: HeaderMainComponent;
-  name: string = localStorage.getItem('projectSolution.name') || '';
+  name: string = sessionStorage.getItem('projectSolution.name') || '';
   hasUndo = false;
   hasRedo = false;
   page = "example";
@@ -37,8 +37,8 @@ export class SolutionComponent implements OnInit {
   isResizing = false;
   focusedPane: any = '';
   selectedGraphComponents: any = [];
-  project: any = JSON.parse(localStorage.getItem('projectSolution')) || {};
-  graphs: any = JSON.parse(localStorage.getItem('graphsSolution')) || {};
+  project: any = JSON.parse(sessionStorage.getItem('projectSolution')) || {};
+  graphs: any = JSON.parse(sessionStorage.getItem('graphsSolution')) || {};
   desc: any;
   dotSrcLastChangeTime: any;
   currentComponent: any;
@@ -71,10 +71,19 @@ export class SolutionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.currentPage = "solution";
+    if (Object.keys(this.project).length !== 0) {
+      this.dotSrc = this.project.dotSrc;
+    }
   }
 
-  ngAfterContentInit(): void{
+  ngAfterContentInit(): void {
     this.showLoading = false;
+  }
+
+  ngAfterViewInit(): void {
+    if (Object.keys(this.project).length === 0) {
+      this.tool.showSelectDemoDialog(this.tool.selectDemo);
+    }
   }
 
   handleTextChange = (text, undoRedoState) => {
@@ -116,23 +125,23 @@ export class SolutionComponent implements OnInit {
 
   handleGutterEnd = (event, name) => {
     this.isResizing = false;
-    if (event) {
+    if (event && document.getElementsByTagName('svg').length > 0) {
       const svgDomW = document.getElementsByTagName('svg')[0];
       svgDomW.setAttribute('width', "100%");
       svgDomW.setAttribute('height', "100%");
     }
 
     if (name === "left") {
-      localStorage.setItem('leftSpliterSize', String(event.sizes[0]))
+      sessionStorage.setItem('leftSpliterSize', String(event.sizes[0]))
     } else if (name === "center") {
-      localStorage.setItem('centerSplitterSize', String(event.sizes[0]))
+      sessionStorage.setItem('centerSplitterSize', String(event.sizes[0]))
     }
     this.editorResize();
   }
 
   handleGutterStart = (event) => {
     this.isResizing = true;
-    if (event) {
+    if (event && document.getElementsByTagName('svg').length > 0) {
       const svgDomW = document.getElementsByTagName('svg')[0];
       svgDomW.setAttribute('width', "100%");
       svgDomW.setAttribute('height', "100%");
@@ -204,7 +213,9 @@ export class SolutionComponent implements OnInit {
   }
 
   handleCurrentProjectChange(e) {
-    this.dotSrc = e.graph.graphconf;
+    if (e && e.graph) {
+      this.dotSrc = e.graph.graphconf;
+    }
   }
 
   saveCurrentProject() {
@@ -247,7 +258,7 @@ export class SolutionComponent implements OnInit {
         } else if (typeof value === 'object') {
           value = JSON.stringify(value);
         }
-        localStorage.setItem(key, value);
+        sessionStorage.setItem(key, value);
       });
     }
     return obj;
@@ -425,8 +436,8 @@ export class SolutionComponent implements OnInit {
 
   createOptionFromProject = (item) => {
     let params = {};
-    for (let ele of this.dataService.currentSolutionList){
-      if (ele.name === item.name){
+    for (let ele of this.dataService.currentSolutionList) {
+      if (ele.name === item.name) {
         item.name = ele.graphfile;
       }
     }

@@ -718,7 +718,23 @@ export class MainComponent {
       onClose: () => {
 
       },
-      buttons: [],
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          this.createProject(this.toolBar.formDataCreateProject);
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          this.createProjectDialogResults.modalInstance.hide();
+          this.createProjectDialogResults.modalInstance.zIndex = -1;
+        },
+      },],
     });
   }
 

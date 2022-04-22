@@ -136,11 +136,16 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     private toastService: ToastService,
     private dialogService: DialogService,
     private basicService: BasicServiceService) {
-    this.toastService.open({
-      value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
-      life: 1500,
-      style: { top: '100px' }
-    });
+
+    let visited = localStorage.getItem("visited");
+    if (!visited){
+      this.toastService.open({
+        value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
+        life: 5000,
+        style: { top: '100px' }
+      });
+    }
+    localStorage.setItem('visited', 'true');
   }
 
   ngAfterViewInit(): void {

@@ -4,6 +4,7 @@ import units from './units.json';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { SolutionComponent } from 'src/app/components/solution/solution.component';
+import { I18nService } from '@core/i18n.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,12 +27,19 @@ export class DataServiceService {
   public flowunits = [];
   public transformedFlowunits = [];
   public currentSolutionList = [];
+  warningMessage = false;
 
 
   constructor(private sanitized: DomSanitizer,
     private basicService: BasicServiceService,
-    private toastService: ToastService) {
+    private toastService: ToastService,
+    private i18n: I18nService) {
     this.nodeShapeCategories.length = 0;
+  }
+
+  // sleep time expects milliseconds
+  sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
   }
 
   // 使用 unit name 及 type获取 对应的 unit
@@ -44,12 +52,19 @@ export class DataServiceService {
       cat.children.forEach(it => {
         if (it.name === name) {
           unit = it;
-          if (it.type !== type && it.types.indexOf(type) === -1) {
+          if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage) {
             this.toastService.open({
-              value: [{ severity: 'warn', content: unit.name + "顶点类型错误。请选择带有GPU的设备。" }],
+              value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
               life: 3000,
               style: { top: '100px' }
             });
+            this.warningMessage = true;
+            this.sleep(3000).then(() => {
+              this.warningMessage = false;
+            });
+
+
+
           }
         }
       });

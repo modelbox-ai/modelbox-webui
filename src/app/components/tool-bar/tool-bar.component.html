@@ -98,27 +98,25 @@
     </div>
 
     <div class="tool-bar-right">
-        <div
-          class="btn-group"
-          style="display:inline-block"
-          dDropDown
-          appendToBody
-          [isOpen]="isOpen" 
-          [trigger]="'manually'" 
-          #myDropdown="d-dropdown" 
-          [closeScope]="'blank'"
-          [alignOrigin]="projectRef"
-          [appendToBodyDirections]="['centerDown', 'centerUp']"
-          (toggleEvent)="onToggle($event)"
-          (click)="toggleIsOpen()">
-            <span dDropDownToggle>
-                <button class="tool-bar-button">
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    {{'toolBar.project' | translate}}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                </button>
-            </span>
-            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu" style="z-index:100">
+        <div 
+            class="btn-group" 
+            style="display:inline-block"
+            dDropDown 
+            [isOpen]="isOpen" 
+            [trigger]="'manually'" 
+            [closeScope]="'blank'"
+            appendToBody
+            [appendToBodyDirections]="['centerDown', 'centerUp']"
+            (toggleEvent)="onToggle($event)"
+            (click)="toggleIsOpen()">
+            <a dDropDownToggle class="devui-dropdown-default devui-dropdown-origin">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{'toolBar.project' | translate}}
+                <span class="icon-select-arrow"></span>
+                &nbsp;&nbsp;
+            </a>
+      
+            <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
                 <li role="menuitem">
                     <a class="devui-dropdown-item" id="createProject" (click)="showCreateProjectDialog(createProject)">
                         {{'toolBar.newButton' | translate}}
@@ -136,27 +134,23 @@
                 </li>
             </ul>
         </div>
-
-        <div
-          class="btn-group"
-          style="display:inline-block"
-          dDropDown
-          appendToBody
-          [isOpen]="isOpen2" 
-          [trigger]="'manually'" 
-          #myDropdown="d-dropdown" 
-          [closeScope]="'blank'"
-          (toggleEvent)="onToggle2($event)"
-          (click)="toggleIsOpen2()"
-          
-          [alignOrigin]="flowunitRef"
-          [appendToBodyDirections]="['centerDown', 'centerUp']"
-          >
-            <span dDropDownToggle>
-                <button class="tool-bar-button">
-                    {{'toolBar.flowunit' | translate}}
-                </button>
-            </span>
+        
+        <div 
+            class="btn-group" 
+            style="display:inline-block"
+            dDropDown 
+            [isOpen]="isOpen2" 
+            [trigger]="'manually'" 
+            [closeScope]="'blank'"
+            appendToBody
+            [appendToBodyDirections]="['centerDown', 'centerUp']"
+            (toggleEvent)="onToggle2($event)"
+            (click)="toggleIsOpen2()">
+            <a dDropDownToggle class="devui-dropdown-default devui-dropdown-origin">
+                {{'toolBar.flowunit' | translate}}
+                <span class="icon-select-arrow"></span>
+            </a>
+      
             <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu">
                 <li role="menuitem">
                     <a class="devui-dropdown-item" id="new" (click)="showCreateFlowunitDialog(createFlowunit)">
@@ -170,6 +164,7 @@
                 </li>
             </ul>
         </div>
+
         <button id="open-graph-setting" (click)="showGraphSettingDialog(graphSetting)" class="tool-bar-button">
             {{'toolBar.graphSettingButton' | translate}}
         </button>
@@ -210,34 +205,39 @@
                 </d-form-control>
             </d-form-item>
             <d-form-item>
-                <div>
-                    <d-card class="card-container" *ngFor="let d of optionSolutionList[0]"
-                        (click)="onClickCard(d)">
-                        <d-card-header>
-                            <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
-                            <d-card-title>
-                                {{d.name}}
-                            </d-card-title>
-                        </d-card-header>
-                        <d-card-content>
-                            <div>{{d.desc}}</div>
-                        </d-card-content>
-                    </d-card>
-                </div>
-                <div>
-                    <d-card class="card-container" *ngFor="let d of optionSolutionList[1]"
-                        (click)="onClickCard(d)">
-                        <d-card-header>
-                            <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
-                            <d-card-title>
-                                {{d.name}}
-                            </d-card-title>
-                        </d-card-header>
-                        <d-card-content>
-                            <div>{{d.desc}}</div>
-                        </d-card-content>
-                    </d-card>
-                </div>
+                <d-form-label [required]="true">
+                    {{'toolBar.setting.template' | translate}}
+                </d-form-label>
+                <d-form-control style="height:300px;">
+                    <div style="width: 48%;display:inline-block">
+                        <d-card class="card-container" *ngFor="let d of optionSolutionList[0]"
+                            (click)="onClickCard(d, $event)" style="height:160px;margin:8px;border: 5px solid white;">
+                            <d-card-header>
+                                <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                                <d-card-title>
+                                    {{d.name}}
+                                </d-card-title>
+                            </d-card-header>
+                            <d-card-content>
+                                <div>{{d.desc}}</div>
+                            </d-card-content>
+                        </d-card>
+                    </div>
+                    <div style="width: 48%;display:inline-block">
+                        <d-card class="card-container" *ngFor="let d of optionSolutionList[1]"
+                            (click)="onClickCard(d, $event)" style="height:160px;margin:8px;border: 5px solid white;">
+                            <d-card-header>
+                                <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                                <d-card-title>
+                                    {{d.name}}
+                                </d-card-title>
+                            </d-card-header>
+                            <d-card-content>
+                                <div>{{d.desc}}</div>
+                            </d-card-content>
+                        </d-card>
+                    </div>
+                </d-form-control>
             </d-form-item>
         </form>
     </d-layout>
@@ -334,7 +334,7 @@
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang === 'inference'">
                 <d-form-label>
-                    拷贝模型
+                    {{"toolBar.copyModel" | translate}}
                 </d-form-label>
                 <d-form-control>
                     <d-toggle [(ngModel)]="isCopy" [size]="'sm'" [ngModelOptions]="{standalone: true}">

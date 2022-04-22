@@ -53,6 +53,7 @@
   "toolBar.deleteDialogButton": "删除",
   "toolBar.setting.name": "名称",
   "toolBar.setting.desc": "描述",
+  "toolBar.setting.template": "项目模板",
   "toolBar.setting.basic": "通用设置",
   "toolBar.setting.skipDefault": "禁用系统功能单元",
   "toolBar.setting.graphRankdir": "图布局",
@@ -90,6 +91,9 @@
   "toolBar.modal.deviceNum": "设备号",
   "toolBar.reLeaseFlowunitPath":"发布功能单元路径",
   "toolBar.debugFlowunitPath":"调试功能单元路径",
+  "toolBar.copyModel":"拷贝模型",
+
+
   "insertPanel.flowunitList":"功能单元列表",
   "modal.okButton": "确认",
   "modal.cancelButton": "取消",
@@ -97,15 +101,15 @@
   "panelEar.componentLabel": "组件库",
   "panelEar.editToolLabel": "编辑器",
   "insertPanels.tip.version": "版本：",
-  "insertPanels.tip.name": "名称：",
-  "insertPanels.tip.topType": "顶点类型：",
+  "insertPanels.tip.name": "功能单元：",
+  "insertPanels.tip.topType": "功能单元类型：",
   "insertPanels.tip.description": "描述：",
   "insertPanels.tip.portDetail": "端口详情: ",
   "insertPanels.tip.constraint": "约束: ",
   "insertPanels.tip.isVirtualmodel": "是否虚拟模块：",
   "insertPanels.tip.yes": "是",
   "insertPanels.tip.no": "否",
-  "attributePanel.title": "节点（",
+  "attributePanel.title": "功能单元（",
   "attributePanel.title1": "）配置",
   "attributePanel.namePlaceholder": "请输入名称",
   "attributePanel.topName": "功能单元名称：",
@@ -143,8 +147,8 @@
   "message.deviceTypeOfFlowunitIsNecessary": "缺少功能单元的处理类型",
   "message.typeOfFlowunitIsNecessary": "缺少功能单元的功能类型或者引擎类型",
   "message.groupOfFlowunitIsNecessary": "缺少功能单元分组",
-  "message.atLeastOneInputOrOutput": "至少要有一个input或者output.",
-
+  "message.atLeastOneInputOrOutput": "至少要有一个input或者output",
+  "message.wrongFlowunitTypePleaseChooseGPUDevice": "功能单元类型错误，请选择带有GPU的设备",
   
   
   "tutorial.toolbar": "工具栏",
