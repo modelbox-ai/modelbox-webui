@@ -32,7 +32,7 @@ declare const require: any
   styleUrls: ['./insert-panels.component.less'],
   encapsulation: ViewEncapsulation.None,
   styles: [`
-    .my-custom-class .tooltip-inner {
+     .tooltip-inner {
       background-color: #333854;
       font-size: 75%;
       max-width: 280px;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { DataServiceService } from '@shared/services/data-service.service';
@@ -26,6 +26,9 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onRunButtonClick: any;
   @Input() onOpenTutorial: any;
   @Output() currentProjectEmitter = new EventEmitter<any>();
+
+  @ViewChild('selectDemo') selectDemo: TemplateRef<any>;
+
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
