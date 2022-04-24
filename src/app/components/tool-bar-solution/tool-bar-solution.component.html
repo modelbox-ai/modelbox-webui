@@ -85,13 +85,23 @@
       <img src={{switchSvg}} />
     </d-button>
     <d-button
-      id="run"
+    id="run"
+    *ngIf="!statusGraph"
+    dTooltip
+    bsStyle="text-dark"
+    [content]="'toolBar.runGraphButton' | translate"
+    (click)="handleRunButtonClick($event)">
+      <img src={{runGraphSvg}} />
+  </d-button>
+  <d-button
+      id="stop"
+      *ngIf="statusGraph"
       dTooltip
       bsStyle="text-dark"
       [content]="'toolBar.runGraphButton' | translate"
-      (click)="handleRunButtonClick($event)">
-      <img src={{runGraphSvg}} />
-    </d-button>
+      (click)="handleStopButtonClick($event)">
+      <img src={{stopSvg}} />
+  </d-button>
   </div>
   <div class="tool-bar-right" style="margin: 0 20px 0 20px;">
     <div style="display: inline-block;">
@@ -113,20 +123,23 @@
 </div>
 
 <ng-template #selectDemo id="selectDemo">
-  <d-card
-    class="card-container"
-    *ngFor="let d of solutionList"
-    style="width:50%;height:100%"
-    (click)="onClickCard(d)">
-    <d-card-header>
-      <d-avatar dCardAvatar [name]="d.name"></d-avatar>
-      <d-card-title>
-        {{d.name}}
-      </d-card-title>
-    </d-card-header>
-    <d-card-content>
-      <div>{{d.desc}}</div>
-    </d-card-content>
-  </d-card>
-
+  <div
+    dLoading
+    [showLoading]="showLoading">
+    <d-card 
+      class="card-container"
+      *ngFor="let d of solutionList"
+      style="width:50%;height:100%"
+      (click)="onClickCard(d)">
+      <d-card-header>
+        <d-avatar dCardAvatar [name]="d.name"></d-avatar>
+        <d-card-title>
+          {{d.name}}
+        </d-card-title>
+      </d-card-header>
+      <d-card-content>
+        <div>{{d.desc}}</div>
+      </d-card-content>
+    </d-card>
+  </div>
 </ng-template>

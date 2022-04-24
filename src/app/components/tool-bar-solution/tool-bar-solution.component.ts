@@ -12,6 +12,9 @@ declare const require: any
   styleUrls: ['./tool-bar-solution.component.less']
 })
 export class ToolBarSolutionComponent implements OnInit {
+
+  @ViewChild('selectDemo') selectDemo: TemplateRef<any>;
+
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() onUndoButtonClick: any;
@@ -24,10 +27,11 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onNewButtonClick: any;
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onRunButtonClick: any;
+  @Input() onStopButtonClick: any;
   @Input() onOpenTutorial: any;
-  @Output() currentProjectEmitter = new EventEmitter<any>();
+  @Input() statusGraph: any;
 
-  @ViewChild('selectDemo') selectDemo: TemplateRef<any>;
+  @Output() currentProjectEmitter = new EventEmitter<any>();
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -39,13 +43,12 @@ export class ToolBarSolutionComponent implements OnInit {
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
-
+  stopSvg = require("../../../assets/stop.svg");
 
   solutionList = [];
   dirs = [];
   showLoading;
 
-  currentOption = localStorage.getItem('currentSolution') || {};
   selectDemoDialog: any;
 
   currentStep: any;
@@ -104,6 +107,10 @@ export class ToolBarSolutionComponent implements OnInit {
     this.onRunButtonClick && this.onRunButtonClick();
   };
 
+  handleStopButtonClick = event => {
+    this.onStopButtonClick && this.onStopButtonClick();
+  };
+
   openTutorial = event => {
     this.onOpenTutorial && this.onOpenTutorial();
   };
@@ -124,8 +131,8 @@ export class ToolBarSolutionComponent implements OnInit {
             this.dirs.push(flowunitPath);
           }
         });
-        this.dataService.currentSolutionList = this.solutionList
         this.dataService.loadFlowUnit(null, this.dirs, null);
+        this.showLoading = false;
       },
       (error) => {
         return null;
@@ -141,7 +148,6 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   onClickCard(e) {
-    this.currentOption = e;
     this.handleSelectChange(e);
     this.selectDemoDialog.modalInstance.hide();
     this.selectDemoDialog.modalInstance.zIndex = -1;
@@ -166,11 +172,7 @@ export class ToolBarSolutionComponent implements OnInit {
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {
-        this.dataService.currentSolution = data.flow.name;
-        this.dataService.currentSolutionProject = data;
-
         this.sendCurrentProject(data);
-        this.currentOption = data.flow.name;
       } else {
         this.toastService.open({
           value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],

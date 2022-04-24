@@ -19,30 +19,6 @@ export class SolutionComponent implements OnInit {
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
   @ViewChild('header') header: HeaderMainComponent;
-  name: string = sessionStorage.getItem('projectSolution.name') || '';
-  hasUndo = false;
-  hasRedo = false;
-  page = "example";
-
-  undo: any;
-  redo: any;
-  switchDirection: any;
-  editorResize: any;
-  getSvg: any;
-  resetUndoStack: any;
-  resetUndoAtNextTextChange: any;
-
-  svgString: string = '';
-  dotSrc: string;
-  isResizing = false;
-  focusedPane: any = '';
-  selectedGraphComponents: any = [];
-  project: any = JSON.parse(sessionStorage.getItem('projectSolution')) || {};
-  graphs: any = JSON.parse(sessionStorage.getItem('graphsSolution')) || {};
-  desc: any;
-  dotSrcLastChangeTime: any;
-  currentComponent: any;
-  showLoading;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
@@ -51,18 +27,40 @@ export class SolutionComponent implements OnInit {
   handleNodeAttributeChange = () => { };
   handleNodeShapeClick = () => { };
 
-  introduce: any = new Driver({
-    opacity: 0.5,
-    onHighlighted: (element) => {
-      const header = document.getElementById('header-nav');
-      if (header.contains(element.getNode())) {
-        const stage = document.getElementById('driver-highlighted-element-stage');
-        stage.style.backgroundColor = 'rgba(255, 255, 255,0.15)';
-      }
-      const body = document.getElementsByTagName('body');
-      body[0].style.overflowY = 'hidden';
-    }
-  });
+  hasUndo = false;
+  hasRedo = false;
+  undo: any;
+  redo: any;
+  switchDirection: any;
+  editorResize: any;
+  getSvg: any;
+  resetUndoStack: any;
+  resetUndoAtNextTextChange: any;
+
+  page = "example";
+
+  project: any = JSON.parse(sessionStorage.getItem('projectSolution')) || {};
+  name;
+  driver;
+  flow;
+  graph;
+  profile;
+
+  graphs: any = JSON.parse(sessionStorage.getItem('graphsSolution')) || {};
+
+
+
+  svgString: string = '';
+  dotSrc: string;
+  isResizing = false;
+  focusedPane: any = '';
+  selectedGraphComponents: any = [];
+  desc: any;
+  dotSrcLastChangeTime: any;
+  currentComponent: any;
+  showLoading;
+  statusGraph;
+
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
     private dataService: DataServiceService) {
@@ -71,9 +69,16 @@ export class SolutionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.currentPage = "solution";
+
     if (Object.keys(this.project).length !== 0) {
+      this.name = this.project.name;
       this.dotSrc = this.project.dotSrc;
+      this.flow = this.project.flow;
+      this.driver = this.project.driver;
+      this.graph = this.project.graph;
+      this.profile = this.project.profile;
     }
+
   }
 
   ngAfterContentInit(): void {
@@ -83,6 +88,14 @@ export class SolutionComponent implements OnInit {
   ngAfterViewInit(): void {
     if (Object.keys(this.project).length === 0) {
       this.tool.showSelectDemoDialog(this.tool.selectDemo);
+    }else{
+      this.basicService.getTaskLists().subscribe((data: any) => {
+        for (let i of data.job_list) {
+          if (i.job_id === this.project.name){
+            this.statusGraph = true;
+          }
+        }
+      });
     }
   }
 
@@ -215,6 +228,10 @@ export class SolutionComponent implements OnInit {
   handleCurrentProjectChange(e) {
     if (e && e.graph) {
       this.dotSrc = e.graph.graphconf;
+      this.driver = e.driver;
+      this.flow = e.flow;
+      this.graph = e.graph;
+      this.profile = e.profile;
     }
   }
 
@@ -241,13 +258,28 @@ export class SolutionComponent implements OnInit {
 
   getProjectJson() {
     const projectdata = {
-      name: this.name,
-      desc: this.desc,
+      name: this.getGraphNameFromGraph(this.dotSrc),
       dotSrc: this.dotSrc,
+      driver: this.driver,
+      graph: this.graph,
+      flow: this.flow,
+      profile: this.profile
     }
 
     return projectdata;
   }
+
+  getGraphNameFromGraph(graph) {
+    let graphName = "";
+    if (graph) {
+      let n = graph.match(/(?<=digraph ).*?(?= {)/gm);
+      if (n) {
+        graphName = n[0];
+      }
+    }
+    return graphName;
+  }
+
   setPersistentState(obj) {
     if (obj !== null) {
       Object.keys(obj).forEach(key => {
@@ -337,6 +369,19 @@ export class SolutionComponent implements OnInit {
     driver.start();
   }
 
+  introduce: any = new Driver({
+    opacity: 0.5,
+    onHighlighted: (element) => {
+      const header = document.getElementById('header-nav');
+      if (header.contains(element.getNode())) {
+        const stage = document.getElementById('driver-highlighted-element-stage');
+        stage.style.backgroundColor = 'rgba(255, 255, 255,0.15)';
+      }
+      const body = document.getElementsByTagName('body');
+      body[0].style.overflowY = 'hidden';
+    }
+  });
+
   createUntitledName = (graphs, currentName?) => {
     const baseName = 'Untitled';
     let newName = baseName;
@@ -369,10 +414,9 @@ export class SolutionComponent implements OnInit {
   handleRunButtonClick = () => {
     //saveToBrowser
     this.showLoading = true;
+    this.statusGraph = true;
     this.graphs = {};
-    this.name = this.dataService.currentSolution;
-    this.project = this.dataService.currentSolutionProject;
-    this.project.name = this.name;
+    this.project = JSON.parse(sessionStorage.getItem("projectSolution"));
     this.saveCurrentProject();
     this.graphs[this.project.name] = this.project;
     this.saveGraphs();
@@ -400,6 +444,29 @@ export class SolutionComponent implements OnInit {
         this.showLoading = false;
       }
       );
+  }
+
+  handleStopButtonClick = (graphName) => {
+    //saveToBrowser
+    if (!graphName && this.project && this.project.graph) {
+      graphName = this.getGraphNameFromGraph(this.project.graph.graphconf);
+    }
+
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      for (let i of data.job_list) {
+        if (graphName === i.job_id) {
+          this.basicService.deleteTask(i.job_id).subscribe(data => {
+            this.toastService.open({
+              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
+              life: 1500,
+              style: { top: '100px' }
+            });
+            this.statusGraph = false;
+          });
+        }
+      }
+    });
+
   }
 
   handleGraphComponentSelect = components => {
@@ -436,7 +503,7 @@ export class SolutionComponent implements OnInit {
 
   createOptionFromProject = (item) => {
     let params = {};
-    for (let ele of this.dataService.currentSolutionList) {
+    for (let ele of this.tool.solutionList) {
       if (ele.name === item.name) {
         item.name = ele.graphfile;
       }

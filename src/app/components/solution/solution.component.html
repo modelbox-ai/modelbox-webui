@@ -18,6 +18,7 @@
           id="toolBarSolution"
           [hasUndo]="hasUndo"
           [hasRedo]="hasRedo"
+          [statusGraph]="statusGraph"
           [onUndoButtonClick]="handleUndoButtonClick"
           [onRedoButtonClick]="handleRedoButtonClick"
           [onZoomInButtonClick]="handleZoomInButtonClick"
@@ -26,6 +27,7 @@
           [onZoomFitButtonClick]="handleZoomFitButtonClick"
           [onSwitchDirectionButtonClick]="handleSwitchDirectionButtonClick"
           [onRunButtonClick]="handleRunButtonClick"
+          [onStopButtonClick]="handleStopButtonClick"
           [onOpenTutorial]="handleTutorials"
           (currentProjectEmitter)="handleCurrentProjectChange($event)">
         </app-tool-bar-solution>

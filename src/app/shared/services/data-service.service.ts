@@ -13,7 +13,6 @@ export class DataServiceService {
   nodeShapeCategories: any = [];
   public currentPage: any = "";
 
-  public defaultSolutionGraph = "hello_world/hello_world.toml";
   public defaultFormat = "graphviz";
   public commonFlowunitPath = "/usr/local/lib";
   public defaultPerfDir = '/tmp/modelbox/perf/';
@@ -22,7 +21,7 @@ export class DataServiceService {
   public defaultSrc: string = `digraph {
     node [shape=Mrecord];
   }`;
-  public currentSolution = this.defaultSolutionGraph;
+  public currentSolution;
   public currentSolutionProject = {};
   public flowunits = [];
   public transformedFlowunits = [];
