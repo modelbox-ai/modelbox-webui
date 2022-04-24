@@ -65,8 +65,10 @@ export class ToolBarComponent {
   @Input() showOpenProjectButtonDialog: any;
   @Input() showCreateFlowunitDialog: any;
   @Input() onRunButtonClick: any;
+  @Input() onStopButtonClick: any;
 
   @Input() projectInfo: any;
+  @Input() statusGraph: any;
 
   @Output() graphsEmmiter = new EventEmitter();
   @Output() refreshEmmiter = new EventEmitter();
@@ -84,6 +86,7 @@ export class ToolBarComponent {
   zoomFitSvg = require("../../../assets/zoom-out-map.svg");
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
+  stopSvg = require("../../../assets/stop.svg");
 
   openProjectList = [];
 
@@ -443,7 +446,7 @@ export class ToolBarComponent {
   openProjectListPath: string = "/home";
   incomingGraphName: string = '';
   isChangingPortName: boolean;
-  
+
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -820,6 +823,10 @@ export class ToolBarComponent {
     this.onRunButtonClick && this.onRunButtonClick(this.formData.graphName);
   };
 
+  handleStopButtonClick = event => {
+    this.onStopButtonClick && this.onStopButtonClick(this.formData.graphName);
+  };
+
   handleCreateProjectButtonClick = event => {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
@@ -847,7 +854,7 @@ export class ToolBarComponent {
     if (!this.checkFormDataCreateFlowunit()) {
       return false;
     }
-    
+
     let param = JSON.parse(JSON.stringify(this.formDataCreateFlowunit));
     if (this.isCopy === true) {
       param["copy-model"] = null;
@@ -980,8 +987,8 @@ export class ToolBarComponent {
 
   onClickCard(e, event) {
     this.formDataCreateProject.template = e.dirname;
-    for (let ele of event.currentTarget.parentElement.parentElement.children){
-      for (let cd of ele.children){
+    for (let ele of event.currentTarget.parentElement.parentElement.children) {
+      for (let cd of ele.children) {
         cd.classList.remove("card-focus");
       }
     }

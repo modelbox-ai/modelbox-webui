@@ -101,6 +101,7 @@ export class MainComponent {
   projectPath: any;
   openProjectDialogResults: any;
   createFlowunitDialogResults: any;
+  statusGraph = false;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -118,6 +119,10 @@ export class MainComponent {
   ngOnInit(): void {
     this.dataService.currentPage = "main";
     //加载既存project
+    let item = JSON.parse(sessionStorage.getItem('statusGraph')) || undefined;
+    if (item !== undefined) {
+      this.statusGraph = item[this.graphName];
+    }
   }
 
   ngAfterViewInit() {
@@ -161,29 +166,30 @@ export class MainComponent {
   }
 
   loadProjectFromJson(project) {
+    if (project) {
+      this.project_name = project.name;
+      this.project_desc = project.project_desc;
+      this.path = project.rootpath;
+      this.dotSrc = project.graph.dotSrc;
+      this.graphName = this.getGraphNameFromGraph(this.dotSrc);
+      if (typeof this.dotSrc === 'undefined') {
+        this.dotSrc = this.dataService.defaultSrc;
+      }
 
-    this.project_name = project.name;
-    this.project_desc = project.project_desc;
-    this.path = project.rootpath;
-    this.dotSrc = project.graph.dotSrc;
-    this.graphName = this.getGraphNameFromGraph(this.dotSrc);
-    if (typeof this.dotSrc === 'undefined') {
-      this.dotSrc = this.dataService.defaultSrc;
+      this.dotSrcLastChangeTime = project.dotSrcLastChangeTime;
+      this.svgString = project.svgString;
+      this.skipDefault = project.skipDefault;
+      if (typeof this.skipDefault === 'undefined') {
+        this.skipDefault = false;
+      }
+      this.dirs = project.graph.dirs;
+      this.settingPerfEnable = project.graph.settingPerfEnable;
+      this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
+      this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
+      this.settingPerfDir = project.graph.settingPerfDir;
+      this.projectPath = this.path + "/" + this.project_name;
+      this.reloadInsertComponent();
     }
-
-    this.dotSrcLastChangeTime = project.dotSrcLastChangeTime;
-    this.svgString = project.svgString;
-    this.skipDefault = project.skipDefault;
-    if (typeof this.skipDefault === 'undefined') {
-      this.skipDefault = false;
-    }
-    this.dirs = project.graph.dirs;
-    this.settingPerfEnable = project.graph.settingPerfEnable;
-    this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
-    this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
-    this.settingPerfDir = project.graph.settingPerfDir;
-    this.projectPath = this.path + "/" + this.project_name;
-    this.reloadInsertComponent();
   }
 
   getProjectJson() {
@@ -949,7 +955,10 @@ export class MainComponent {
       //run
       let option = this.createOptionFromProject(this.project);
 
-
+      this.statusGraph = true;
+      let obj = {};
+      obj[this.graphName] = "true";
+      sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       this.basicService.createTask(option)
         .subscribe(async (data: any) => {
           //提示任务运行状态
@@ -977,9 +986,36 @@ export class MainComponent {
         life: 3000,
         style: { top: '100px' }
       });
+      this.statusGraph = false;
+      let obj = {};
+      obj[this.graphName] = "true";
+      sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       //open graph saving
       this.toolBar.showSaveAsDialog();
     }
+  }
+
+  handleStopButtonClick = (graphName) => {
+    //saveToBrowser
+    if (!graphName && this.project && this.project.graph) {
+      graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
+    }
+
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      for (let i of data.job_list) {
+        if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
+          this.basicService.deleteTask(i.job_id).subscribe(data => {
+            this.toastService.open({
+              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
+              life: 1500,
+              style: { top: '100px' }
+            });
+            this.statusGraph = false;
+          });
+        }
+      }
+    });
+
   }
 
   createOptionFromProject = (item) => {

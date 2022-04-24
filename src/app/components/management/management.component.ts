@@ -122,6 +122,7 @@ export class ManagementComponent implements OnInit {
   @Input() graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   selectedProject: any;
   dialog: boolean = false;
+  currentRow;
 
   constructor(
     private dialogService: DialogService,
@@ -306,7 +307,7 @@ export class ManagementComponent implements OnInit {
   }
 
   // 获取任务列表
-  private getTaskslists() {
+  public getTaskslists() {
     this.basicService.getTaskLists().subscribe((data: any) => {
       //
       this.tableData.srcData.data = this.tasksListparse(data.job_list);
@@ -321,6 +322,7 @@ export class ManagementComponent implements OnInit {
 
   // 删除任务
   deleteData(row: any) {
+    this.currentRow = row;
     const results = this.dialogService.open({
       id: 'management-delete',
       width: '400px',
@@ -395,11 +397,13 @@ export class ManagementComponent implements OnInit {
   }
 
   // 删除任务
-  private deleteTask(option) {
+  public deleteTask(option) {
 
     this.basicService.deleteTask(option.job_id)
       .subscribe(data => {
-
+        let obj = {};
+        obj[option.job_id.substring(0, option.job_id - ".toml".length)] = false;
+        sessionStorage.setItem('statusGraph', JSON.stringify(obj));
         if (data && data.status === 204) {
           const results = this.dialogService.open({
             id: 'task-delete-success',

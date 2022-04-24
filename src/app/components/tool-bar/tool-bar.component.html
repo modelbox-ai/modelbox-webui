@@ -82,11 +82,21 @@
         </d-button>
         <d-button
           id="run"
+          *ngIf="!statusGraph"
           dTooltip
           bsStyle="text-dark"
           [content]="'toolBar.runGraphButton' | translate"
           (click)="handleRunButtonClick($event)">
             <img src={{runGraphSvg}} />
+        </d-button>
+        <d-button
+            id="stop"
+            *ngIf="statusGraph"
+            dTooltip
+            bsStyle="text-dark"
+            [content]="'toolBar.runGraphButton' | translate"
+            (click)="handleStopButtonClick($event)">
+            <img src={{stopSvg}} />
         </d-button>
     </div>
 
