@@ -96,7 +96,12 @@ export default class DotGraph {
             continue
           }
           newEdgeString += " -> ";
-          newEdgeString += nodeid + ":\"" + edge.port.id + "\"";
+          if (edge.port){
+            newEdgeString += nodeid + ":\"" + edge.port.id + "\"";
+          }
+          else{
+            newEdgeString += nodeid + "\"";
+          }
         } 
 
         if (changed) {

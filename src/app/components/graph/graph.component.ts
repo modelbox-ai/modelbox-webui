@@ -138,7 +138,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     private basicService: BasicServiceService) {
 
     let visited = localStorage.getItem("visited");
-    if (!visited){
+    if (!visited) {
       this.toastService.open({
         value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
         life: 5000,

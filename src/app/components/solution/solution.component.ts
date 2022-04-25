@@ -88,10 +88,10 @@ export class SolutionComponent implements OnInit {
   ngAfterViewInit(): void {
     if (Object.keys(this.project).length === 0) {
       this.tool.showSelectDemoDialog(this.tool.selectDemo);
-    }else{
+    } else {
       this.basicService.getTaskLists().subscribe((data: any) => {
         for (let i of data.job_list) {
-          if (i.job_id === this.project.name){
+          if (i.job_id === this.project.name) {
             this.statusGraph = true;
           }
         }
@@ -451,6 +451,7 @@ export class SolutionComponent implements OnInit {
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.graphconf);
     }
+    this.statusGraph = false;
 
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
