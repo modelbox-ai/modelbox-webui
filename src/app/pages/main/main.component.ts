@@ -101,7 +101,7 @@ export class MainComponent {
   projectPath: any;
   openProjectDialogResults: any;
   createFlowunitDialogResults: any;
-  statusGraph = false;
+  statusGraph = 0;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -955,9 +955,9 @@ export class MainComponent {
       //run
       let option = this.createOptionFromProject(this.project);
 
-      this.statusGraph = true;
+      this.statusGraph = 1;
       let obj = {};
-      obj[this.graphName] = "true";
+      obj[this.graphName] = 1;
       sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       this.basicService.createTask(option)
         .subscribe(async (data: any) => {
@@ -986,9 +986,9 @@ export class MainComponent {
         life: 3000,
         style: { top: '100px' }
       });
-      this.statusGraph = false;
+      this.statusGraph = 0;
       let obj = {};
-      obj[this.graphName] = "true";
+      obj[this.graphName] = 0;
       sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       //open graph saving
       this.toolBar.showSaveAsDialog();
@@ -1001,6 +1001,11 @@ export class MainComponent {
       graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
     }
 
+    this.statusGraph = 0;
+    let obj = {};
+    obj[graphName] = 0;
+    sessionStorage.setItem('statusGraph', JSON.stringify(obj));
+
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
         if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
@@ -1010,7 +1015,6 @@ export class MainComponent {
               life: 1500,
               style: { top: '100px' }
             });
-            this.statusGraph = false;
           });
         }
       }

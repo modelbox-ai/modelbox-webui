@@ -1,10 +1,14 @@
 .tool-bar {
-  height       : 44px;
-  width        : 100%;
-  right        : 10px;
-  background   : #FFFFFF;
-  box-shadow   : 0 1px 0 0 #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
-  border-radius: 0 2px 0 0;
+  height         : 44px;
+  width          : 100%;
+  right          : 10px;
+  background     : #FFFFFF;
+  box-shadow     : 0 1px 0 0 #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
+  border-radius  : 0 2px 0 0;
+  display        : flex;
+  justify-content: space-between;
+  align-items: baseline;
+
 
   .tool-bar-left {
     float      : left;
@@ -25,8 +29,12 @@
   }
 
   .tool-bar-right {
-    float  : right;
-    padding: 8px;
+    display     : inline-block;
+    width       : 40%;
+    text-align  : right;
+    right       : 0;
+    top         : 0;
+    margin-right: 24px;
 
     & .tool-bar-button {
       margin          : 0 4px 0 4px;
@@ -43,14 +51,14 @@
 }
 
 d-card {
-  cursor: pointer;
+  cursor : pointer;
   display: inline-block;
   transition:
-      box-shadow 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
+    box-shadow 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 
   &:hover {
-      box-shadow: 0 4px 16px 0 rgba(17, 18, 19, 0.5);
-      transform : translateY(-5px);
+    box-shadow: 0 4px 16px 0 rgba(17, 18, 19, 0.5);
+    transform : translateY(-5px);
   }
 }

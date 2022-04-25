@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Component, Input, Output, ViewChild, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter, ElementRef, SimpleChanges, TemplateRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { I18nService } from '@core/i18n.service';
 import { DialogService } from 'ng-devui/modal';
@@ -42,6 +42,10 @@ export class ToolBarComponent {
   @ViewChild('project') projectRef: ElementRef;
   @ViewChild('flowunit') flowunitRef: ElementRef;
   @ViewChild('graph') graphRef: ElementRef;
+  @ViewChild('createProject') createProjectTemplate: TemplateRef<any>;
+  @ViewChild('openProject') openProjectTemplate: TemplateRef<any>;
+  @ViewChild('createFlowunit') createFlowunitTemplate: TemplateRef<any>;
+
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -447,6 +451,32 @@ export class ToolBarComponent {
   incomingGraphName: string = '';
   isChangingPortName: boolean;
 
+  currentOption1 = "项目";
+  options1 = [{
+    name: this.i18n.getById('toolBar.newButton'),
+    value: 1,
+    specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.openProjectButton'),
+    value: 2,
+    specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.saveAsButton'),
+    value: 3,
+    specialContent: '项目'
+  }];
+
+  currentOption2 = "功能单元";
+  options2 = [{
+    name: this.i18n.getById('toolBar.newFlowunitButton'),
+    value: 1,
+    specialContent: '功能单元'
+  }, {
+    name: this.i18n.getById('toolBar.refreshFlowunitButton'),
+    value: 2,
+    specialContent: '功能单元'
+  }];
+
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -516,6 +546,24 @@ export class ToolBarComponent {
 
   getFormDataCreateProject() {
     return this.formDataCreateProject;
+  }
+
+  handleProjectDropDown(e) {
+    if (e.value === 1) {
+      this.showCreateProjectDialog(this.createProjectTemplate);
+    } else if (e.value === 2) {
+      this.showOpenProjectButtonDialog(this.openProjectTemplate);
+    } else if (e.value === 3) {
+      this.saveAllProject();
+    }
+  }
+
+  handleFlowunitDropDown(e) {
+    if (e.value === 1) {
+      this.showCreateFlowunitDialog(this.createFlowunitTemplate);
+    } else if (e.value === 2) {
+      this.refreshFlowunit();
+    }
   }
 
   langValueChange2(value) {

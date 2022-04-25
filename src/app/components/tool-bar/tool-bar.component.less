@@ -10,12 +10,12 @@
     border-radius   : 2px;
 }
 
-.card-focus{
-    border          : 5px solid #5e7ce0 !important;
+.card-focus {
+    border: 5px solid #5e7ce0 !important;
 }
 
 .basic-usage {
-    td{
+    td {
         cursor: pointer;
     }
 
@@ -53,22 +53,22 @@
 }
 
 .tool-bar {
-    height       : 44px;
-    width        : 100%;
-    right        : 10px;
-    background   : #FFFFFF;
-    box-shadow   : 0 1px 0 0 #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
-    border-radius: 0 2px 0 0;
-    display: flex;
+    height         : 44px;
+    width          : 100%;
+    right          : 10px;
+    background     : #FFFFFF;
+    box-shadow     : 0 1px 0 0 #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
+    border-radius  : 0 2px 0 0;
+    display        : flex;
     justify-content: space-between;
-    align-items: center;
+    align-items    : center;
 
     .tool-bar-left {
-        display:inline-block;
+        display    : inline-block;
         width      : 40%;
         user-select: none;
         margin-left: 24px;
-        left: 0;
+        left       : 0;
 
         & d-button {
             margin          : 0 4px 0 4px;
@@ -85,12 +85,15 @@
     }
 
     .tool-bar-right {
-        display:inline-block;
-        width     : 40%;
-        text-align: right;
-        right:0;
-        top:0;
-        margin-right: 24px;
+        display        : inline-flex;
+        width          : 40%;
+        text-align     : right;
+        right          : 0;
+        top            : 0;
+        margin-right   : 24px;
+        justify-content: flex-end;
+        align-items    : center;
+
 
         & d-button {
             margin        : 0 4px 0 4px;
@@ -107,7 +110,7 @@
     }
 
     .tool-bar-mid {
-        display:inline-block;
+        display   : inline-block;
         text-align: center;
     }
 
@@ -141,6 +144,14 @@ d-card {
     }
 }
 
-.table-style ::ng-deep td.cell-style.ng-star-inserted{
-    cursor:pointer !important;
+.btn-group ::ng-deep .devui-dropdown-menu {
+    text-align: center;
+}
+
+.table-style ::ng-deep td.cell-style.ng-star-inserted {
+    cursor: pointer !important;
+}
+
+.basic-usage ::ng-deep .devui-form-horizontal.devui-form-item {
+    display: contents;
 }
