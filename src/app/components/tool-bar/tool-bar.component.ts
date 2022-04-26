@@ -146,6 +146,10 @@ export class ToolBarComponent {
     {
       name: 'Yolo',
       value: 'yolo'
+    },
+    {
+      name: 'Virtual',
+      value: 'virtual'
     }
   ];
 
@@ -300,7 +304,9 @@ export class ToolBarComponent {
   optionsInOut = ['input', 'output'];
   optionsdata_type = ['int', 'float']; //flowunit type
   optionsdevice = ['cpu', 'cuda'];
-  flowunitGroupOptions = ['generic', 'video', 'inference']
+  flowunitGroupOptions = ['generic', 'video', 'inference'];
+  virtualOptions = ['Input', 'Output'];
+  virtualType = 'Input';
 
   portHeaderOptions = {
     columns: [
@@ -580,6 +586,11 @@ export class ToolBarComponent {
     }
     if (value === "yolo") {
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
+    }
+    if (value === "virtual") {
+      this.formDataCreateFlowunit.name = 'Input';
+    } else {
+      this.formDataCreateFlowunit.name = 'flowunit';
     }
 
     this.formDataCreateFlowunit.port_infos = [];
@@ -897,8 +908,50 @@ export class ToolBarComponent {
     this.out_num = 1;
   }
 
+  titleCase(str) {
+    if (str) {
+      let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+      return newStr;
+    } else {
+      return str;
+    }
+  }
 
   createFlowunit(comp) {
+    if (this.formDataCreateFlowunit.lang === "virtual") {
+      // add node directly in insert-panel
+      let obj = {};
+      obj['name'] = this.formDataCreateFlowunit.name;
+      obj['type'] = this.virtualType;
+      obj['group'] = this.titleCase(this.formDataCreateFlowunit["group-type"]);
+      obj['title'] = obj['name'];
+      obj['version'] = "";
+      obj['types'] = "";
+      obj['descryption'] = "";
+      obj['virtual'] = true;
+      let flag = false;
+      for (let i of this.dataService.virtualFlowunits) {
+        if (i['name'] === obj['name']) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag){
+        this.toastService.open({
+          value: [{ severity: 'error', content: "已存在同名虚拟单元" }],
+          life: 3000,
+          style: { top: '100px' }
+        });
+      }else{
+        this.dataService.virtualFlowunits.push(obj);
+        this.refreshFlowunit();
+      }
+      comp.modalInstance.hide();
+      comp.modalInstance.zIndex = -1;
+      return;
+    }
+
+
     if (!this.checkFormDataCreateFlowunit()) {
       return false;
     }
