@@ -283,7 +283,24 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item>
+            <d-form-item *ngIf="formDataCreateFlowunit.lang === 'virtual'">
+                <d-form-label [required]="true">
+                    虚拟单元类型
+                </d-form-label>
+                <d-form-control>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <d-select 
+                                [options]="virtualOptions" 
+                                [ngModelOptions]="{ standalone: true }"
+                                [(ngModel)]="virtualType">
+                            </d-select>
+                        </div>
+                    </div>
+                </d-form-control>
+            </d-form-item>
+
+            <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.device' | translate}}
                 </d-form-label>
@@ -311,12 +328,17 @@
                     {{"toolBar.copyModel" | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-toggle [(ngModel)]="isCopy" [size]="'sm'" [ngModelOptions]="{standalone: true}">
+                    <d-toggle 
+                        [(ngModel)]="isCopy" 
+                        [size]="'sm'" 
+                        [ngModelOptions]="{standalone: true}">
                     </d-toggle>
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item style="margin-bottom: 0 !important;">
+            <d-form-item 
+                style="margin-bottom: 0 !important;" 
+                *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-label></d-form-label>
                 <d-form-control>
                     <div style="display:flex; justify-content:space-between">
@@ -339,7 +361,7 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item>
+            <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.portOption' | translate}}
                 </d-form-label>
@@ -386,7 +408,7 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item>
+            <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-control>
                     <d-data-table [dataSource]="formDataCreateFlowunit.port_infos" [scrollable]="true"
                         maxHeight="200px">
@@ -425,7 +447,8 @@
             </d-form-item>
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'inference' && 
-                                formDataCreateFlowunit.lang !== 'yolo'">
+                                formDataCreateFlowunit.lang !== 'yolo' && 
+                                formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-label [required]="true">
                     {{'toolBar.modal.flowunit_type' | translate}}
                 </d-form-label>

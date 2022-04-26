@@ -125,9 +125,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   endPoints: any = [];
   pointCr: any = 6;
   maxHeight: any = 150;
-  extended: any = false;
+  extended: any = true;
   msgs: Array<Object> = [];
   nodeBbox: any;
+  extendedNum = 2;
 
 
   constructor(
@@ -229,6 +230,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         let flowunit = attr['flowunit'];
         let device = attr['device'];
         if (flowunit) {
+          if (attr["label"] === undefined) {
+            this.extended = false;
+          }
           attr["label"] = this.dataService.getLabel(flowunit, device, node);
           if (attr["label"] == "") {
             attr["label"] = this.getLabelFromEdge(node, edges);
@@ -237,6 +241,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         this.dotGraph.updateNode(node, attr);
         this.dotGraph.reparse();
       }
+
+      if (this.extended === false) {
+        this.extendedNum = 0;
+      } else {
+        this.extendedNum += 1;
+      }
+      this.extended = true;
     }
   }
 
@@ -1127,9 +1138,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     const titles = [];
     const self = this;
     let pattern = /label="*"/;
-    if (!this.extended && !pattern.test(this.dotSrc)) {
-      extendSelection = true;
-      this.extended = true;
+    if (this.extended && pattern.test(this.dotSrc) && this.extendedNum === 2) {
+      this.extendedNum += 1;
+      return;
     }
     components.each(function (d, i) {
       const component = d3_select(this);
@@ -1198,7 +1209,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
 
     );
-
 
     if (extendSelection) {
       this.selectRects = d3_selectAll(

@@ -226,6 +226,9 @@ export class InsertPanelsComponent implements OnInit {
           }
         }
       }
+      if (this.dataService.virtualFlowunits.length > 0){
+        data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
+      }
       data.flowunits.forEach(item => {
 
         const group = this.nodeShapeCategories.find(i => i.title === item.group);

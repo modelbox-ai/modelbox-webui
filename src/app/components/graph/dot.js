@@ -91,18 +91,18 @@ export default class DotGraph {
             changed = true;
           }
 
-          if (newEdgeString.length == 0) {
+          if (newEdgeString.length == 0 && edge.port) {
             newEdgeString = nodeid + ":\"" + edge.port.id + "\"";
             continue
           }
           newEdgeString += " -> ";
-          if (edge.port){
+          if (edge.port) {
             newEdgeString += nodeid + ":\"" + edge.port.id + "\"";
           }
-          else{
+          else {
             newEdgeString += nodeid + "\"";
           }
-        } 
+        }
 
         if (changed) {
           this.skipLocation(statement, true, true);
@@ -113,7 +113,7 @@ export default class DotGraph {
         } else {
           this.skipLocation(statement, false, true);
         }
-        
+
       } else if (statement.type === 'subgraph') {
         this.skipOptional('subgraph');
         if (statement.id) {
@@ -576,10 +576,10 @@ export default class DotGraph {
       if (!options.optional) {
         throw Error(
           'Expected "' +
-            string +
-            '", found: "' +
-            this.dotSrc.slice(index, index + 40) +
-            '..."'
+          string +
+          '", found: "' +
+          this.dotSrc.slice(index, index + 40) +
+          '..."'
         );
       }
     } else {

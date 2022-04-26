@@ -27,6 +27,7 @@ export class DataServiceService {
   public transformedFlowunits = [];
   public currentSolutionList = [];
   warningMessage = false;
+  public virtualFlowunits = [];
 
 
   constructor(private sanitized: DomSanitizer,

@@ -178,9 +178,16 @@ export class TextEditorComponent {
   undo = () => {
     this.editor.getSession().getUndoManager().undo();
   };
-
+  sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
   redo = () => {
     this.editor.getSession().getUndoManager().redo();
+    if (!this.dotSrc) {
+      this.sleep(1000).then(() => {
+        location.reload();
+      });
+    }
   };
 
   resetUndoStack = () => {
