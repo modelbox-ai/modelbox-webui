@@ -717,6 +717,18 @@ export class ToolBarComponent {
         }
       }
 
+      for (let p of this.formDataCreateFlowunit.port_infos) {
+        if (p.port_name === this.portInfo.port_name) {
+          this.toastService.open({
+            value: [{ severity: 'warn', content: this.i18n.getById("message.duplicatePortName") }],
+            life: 2000,
+            style: { top: '100px' }
+          });
+
+          return;
+        }
+      }
+
       if (this.portInfo.port_type === "input" && this.isChangingPortName == false) {
         this.in_num += 1;
         this.portInfo.port_name = "input" + this.in_num;
