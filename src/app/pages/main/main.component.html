@@ -31,7 +31,7 @@
           (dragEnd)="handleGutterEnd($event, 'center')"
           (dragStart)="handleGutterStart($event)"
           gutterDblClickDuration="500">
-          <as-split-area [size]="centerSplitterSize">
+          <as-split-area [size]="centerSplitterSize" style="overflow:hidden">
             <app-tool-bar
               #toolBar
               [hasUndo]="hasUndo"

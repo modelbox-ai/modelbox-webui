@@ -146,10 +146,6 @@ export class ToolBarComponent {
     {
       name: 'Yolo',
       value: 'yolo'
-    },
-    {
-      name: 'Virtual',
-      value: 'virtual'
     }
   ];
 
@@ -936,13 +932,13 @@ export class ToolBarComponent {
           break;
         }
       }
-      if (flag){
+      if (flag) {
         this.toastService.open({
           value: [{ severity: 'error', content: "已存在同名虚拟单元" }],
           life: 3000,
           style: { top: '100px' }
         });
-      }else{
+      } else {
         this.dataService.virtualFlowunits.push(obj);
         this.refreshFlowunit();
       }
