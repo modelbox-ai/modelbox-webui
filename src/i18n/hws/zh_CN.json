@@ -150,6 +150,7 @@
   "message.atLeastOneInputOrOutput": "至少要有一个input或者output",
   "message.wrongFlowunitTypePleaseChooseGPUDevice": "功能单元类型错误，请选择带有GPU的设备",
   "message.duplicatePortName": "端口名重复",
+  "message.duplicateVirtualFlowunit": "已存在同名虚拟单元",
   
   
   "tutorial.toolbar": "工具栏",
