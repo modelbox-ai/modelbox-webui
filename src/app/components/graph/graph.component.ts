@@ -359,12 +359,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   formAttribute(data) {
-    return {
+    let obj = {
       type: 'flowunit',
       flowunit: data.name,
       device: data.type,
       deviceid: 0,
-    };
+    }
+
+    return this.formateVirtualNode(obj);
   }
 
   handleNodeShapeClick = (event, data) => {
@@ -861,24 +863,48 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     // handle start points
     const textNodes = component.selectAll('text');
     const cr = this.pointCr;
+    let isVirtual = false;
+    if (nodeUnit === undefined &&
+      nodeAttr.type === "Output" ||
+      nodeAttr.type === "output" ||
+      nodeAttr.type === "Input" ||
+      nodeAttr.type === "input") {
+      isVirtual = true;
+    } else {
+      if (nodeUnit.virtual) {
+        isVirtual = true;
+      }
+    }
     textNodes.nodes().forEach(item => {
       const itemComponent = d3_select(item);
       const itemBbox = itemComponent.node().getBBox();
       const itemTitle = itemComponent.text();
-      if (nodeTitle === itemTitle) {
+      if (nodeTitle === itemTitle && !isVirtual) {
         return;
       }
-      const linkName = nodeTitle + ':' + itemTitle;
+      let linkName = "";
+      if (isVirtual) {
+        // linkName = nodeTitle + ':' + itemTitle;
+      } else {
+        linkName = nodeTitle + ':' + itemTitle;
+      }
+
       const nodeport_type = this.dataService.getport_type(nodeUnit, linkName);
-      if (!nodeUnit) {
+      if (!nodeUnit && !isVirtual) {
         return;
       }
       // 起点
       if (!this.isDrawingEdge && nodeport_type === 'input') {
         return;
       }
+      if (this.isDrawingEdge && nodeUnit.type === 'Input') {
+        return;
+      }
       // 终点
       if (this.isDrawingEdge && nodeport_type === 'output') {
+        return;
+      }
+      if (!this.isDrawingEdge && nodeUnit.type === 'Output') {
         return;
       }
 
@@ -1401,6 +1427,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       let endNode = d3_select(nodes[i]);
       let startNodeName = this.startNode.attr('data-link-name');
       let endNodeName = endNode.attr('data-link-name');
+      if (startNodeName == ""){
+        startNodeName = this.startNode._groups[0][0].__data__.key;
+      }
+      if (endNodeName == ""){
+        endNodeName = endNode._groups[0][0].__data__.key;
+      }
       // 限制连接
       if (!this.canLink(startNodeName, endNodeName)) {
         return;
@@ -1410,6 +1442,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       let endnode = endNodeName.split(':');
       startNodeName = startnode[0] + ':\"' + startnode[1] + '\"';
       endNodeName = endnode[0] + ':\"' + endnode[1] + '\"';
+      if (startnode.length === 1){
+        startNodeName = startnode[0]
+      }
+      if (endnode.length === 1){
+        endNodeName = endnode[0]
+      }
       this.graphviz.insertDrawnEdge(startNodeName + '->' + endNodeName);
       this.latestEdgeAttributes = Object.assign({}, this.defaultEdgeAttributes);
       this.dotGraph.insertEdge(
@@ -1440,5 +1478,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.latestEdgeAttributes.id = 'edge' + (this.edgeIndex + 1);
     this.graphviz.drawEdge(x0, y0, x0, y0, this.latestEdgeAttributes);
     this.isDrawingEdge = true;
+  }
+
+  formateVirtualNode(node) {
+    if (node.device === "Input" || node.device === "Output") {
+      node.type = node.device;
+      node.device = null;
+      node.deviceid = null;
+    }
+    return node;
   }
 }

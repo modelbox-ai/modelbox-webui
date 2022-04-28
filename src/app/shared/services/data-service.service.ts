@@ -52,7 +52,7 @@ export class DataServiceService {
       cat.children.forEach(it => {
         if (it.name === name) {
           unit = it;
-          if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage) {
+          if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
             this.toastService.open({
               value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
               life: 3000,

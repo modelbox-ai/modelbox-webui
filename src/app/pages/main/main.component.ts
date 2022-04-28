@@ -444,15 +444,16 @@ export class MainComponent {
 
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
-      this.currentComponent.attributes = Object.keys(
-        this.currentComponent.attributes
-      ).map(k => {
-        return {
-          key: k,
-          value: this.currentComponent.attributes[k],
-        };
-      });
-
+      if (this.currentComponent.attributes){
+        this.currentComponent.attributes = Object.keys(
+          this.currentComponent.attributes
+        ).map(k => {
+          return {
+            key: k,
+            value: this.currentComponent.attributes[k],
+          };
+        });
+      }
       try {
         let flowunit = ""
         let device = "cpu"

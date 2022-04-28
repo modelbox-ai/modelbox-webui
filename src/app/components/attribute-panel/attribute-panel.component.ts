@@ -352,66 +352,71 @@ export class AttributePanelComponent {
     this.unit = this.getUnit(config);
     this.unitType.init();
     this.unitOptions.init();
-    if (!this.unit && this.warnNoNode && this.config.attributes.length === 0) {
-      this.newItemEvent.emit(null);
-      this.warnNoNode = false;
-      const results = this.dialogService.open({
-        id: 'dialog-service',
-        width: '346px',
-        maxHeight: '600px',
-        title: '',
-        content: this.i18n.getById('message.cannotFindCorrespondingDefinition'),
-        backdropCloseable: true,
-        dialogtype: 'failed',
-        buttons: [
-          {
-            cssClass: 'primary',
-            text: 'Ok',
-            handler: ($event: Event) => {
-              results.modalInstance.hide();
-              results.modalInstance.zIndex = -1;
-            },
-          }
-        ],
-      });
-
+    if (!this.unit && this.warnNoNode && this.config['attributes']) {
+      if (this.config['attributes'].length === 0) {
+        this.newItemEvent.emit(null);
+        this.warnNoNode = false;
+        const results = this.dialogService.open({
+          id: 'dialog-service',
+          width: '346px',
+          maxHeight: '600px',
+          title: '',
+          content: this.i18n.getById('message.cannotFindCorrespondingDefinition'),
+          backdropCloseable: true,
+          dialogtype: 'failed',
+          buttons: [
+            {
+              cssClass: 'primary',
+              text: 'Ok',
+              handler: ($event: Event) => {
+                results.modalInstance.hide();
+                results.modalInstance.zIndex = -1;
+              },
+            }
+          ],
+        });
+      }
       return;
     }
     this.handleTipText(this.unit);
     // type
-    this.config.attributes.forEach(item => {
-      if (item.key === 'device') {
-        this.unitType.selected = this.unitType.options.find(
-          it => it.id === item.value
-        );
-      }
-      this.unitOptions.data.forEach(it => {
-        if (it.label.replaceAll(" ", "_") === item.key) {
-          if (['string', 'int', 'integer'].includes(it.type)) {
-            it.value = item.value;
-          } else if (it.type === 'bool') {
-            if (item.value.toLowerCase() === "true") {
-              it.value = true;
-            } else {
-              it.value = false;
-            }
-          } else if (it.type === 'list') {
-            it.selected = it.options.find(i => i.id === item.value);
-          }
+    if (this.config['attributes']) {
+      this.config.attributes.forEach(item => {
+        if (item.key === 'device') {
+          this.unitType.selected = this.unitType.options.find(
+            it => it.id === item.value
+          );
         }
+        this.unitOptions.data.forEach(it => {
+          if (it.label.replaceAll(" ", "_") === item.key) {
+            if (['string', 'int', 'integer'].includes(it.type)) {
+              it.value = item.value;
+            } else if (it.type === 'bool') {
+              if (item.value.toLowerCase() === "true") {
+                it.value = true;
+              } else {
+                it.value = false;
+              }
+            } else if (it.type === 'list') {
+              it.selected = it.options.find(i => i.id === item.value);
+            }
+          }
+        });
       });
-    });
+      this.newName =
+        config?.name ||
+        config?.attributes.find(item => item.key === 'label')?.value;
+    }
 
-    this.newName =
-      config?.name ||
-      config?.attributes.find(item => item.key === 'label')?.value;
   }
 
   getUnit(config) {
-    const flowUnit = config.attributes.find(item => item.key === 'flowunit')
-      ?.value;
-    const unitType = config.attributes.find(item => item.key === 'device')
-      ?.value;
-    return this.dataService.getUnit(flowUnit, unitType);
+    if (config.attributes) {
+      const flowUnit = config.attributes.find(item => item.key === 'flowunit')
+        ?.value;
+      const unitType = config.attributes.find(item => item.key === 'device')
+        ?.value;
+      return this.dataService.getUnit(flowUnit, unitType);
+    }
   }
 }

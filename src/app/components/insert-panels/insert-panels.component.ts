@@ -229,6 +229,27 @@ export class InsertPanelsComponent implements OnInit {
       if (this.dataService.virtualFlowunits.length > 0){
         data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
       }
+      let objInput = {
+        descryption: "",
+        group: "Virtual",
+        name: "Input",
+        title: "Input",
+        type: "Input",
+        types: "",
+        version: "",
+        virtual: true
+      }
+      let objOutput = {
+        descryption: "",
+        group: "Virtual",
+        name: "Output",
+        title: "Output",
+        type: "Output",
+        types: "",
+        version: "",
+        virtual: true
+      }
+      data.flowunits.push.apply(data.flowunits, [objInput, objOutput]);
       data.flowunits.forEach(item => {
 
         const group = this.nodeShapeCategories.find(i => i.title === item.group);
