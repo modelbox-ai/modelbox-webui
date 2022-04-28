@@ -573,22 +573,22 @@ export class ToolBarComponent {
     if (value === "inference") {
       this.formDataCreateFlowunit.device = 'cuda';
       this.portInfo.device = 'cuda';
-
     }
+
     if (this.formDataCreateFlowunit.lang === "inference") {
       this.portHeaderOptions = this.portHeaderFullOptions;
-    } else {
-      this.portHeaderOptions = this.defaultPortHeaderOptions;
     }
+    this.portHeaderOptions = this.defaultPortHeaderOptions;
+
     if (value === "yolo") {
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
     }
+
     if (value === "virtual") {
       this.formDataCreateFlowunit.name = 'Input';
-    } else {
-      this.formDataCreateFlowunit.name = 'flowunit';
     }
 
+    this.formDataCreateFlowunit.name = 'flowunit';
     this.formDataCreateFlowunit.port_infos = [];
 
   }
@@ -622,10 +622,11 @@ export class ToolBarComponent {
     if (e === "output") {
       this.portdeviceAble = true;
       this.portInfo.port_name = "output" + this.out_num;
-    } else {
-      this.portdeviceAble = false;
-      this.portInfo.port_name = "input" + this.in_num;
     }
+
+    this.portdeviceAble = false;
+    this.portInfo.port_name = "input" + this.in_num;
+
     this.portInfo.device = this.formDataCreateFlowunit.device;
 
   }
@@ -920,9 +921,8 @@ export class ToolBarComponent {
     if (str) {
       let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
       return newStr;
-    } else {
-      return str;
     }
+    return str;
   }
 
   createFlowunit(comp) {
@@ -946,14 +946,13 @@ export class ToolBarComponent {
       }
       if (flag) {
         this.toastService.open({
-          value: [{ severity: 'error', content: "已存在同名虚拟单元" }],
+          value: [{ severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }],
           life: 3000,
           style: { top: '100px' }
         });
-      } else {
-        this.dataService.virtualFlowunits.push(obj);
-        this.refreshFlowunit();
       }
+      this.dataService.virtualFlowunits.push(obj);
+      this.refreshFlowunit();
       comp.modalInstance.hide();
       comp.modalInstance.zIndex = -1;
       return;
