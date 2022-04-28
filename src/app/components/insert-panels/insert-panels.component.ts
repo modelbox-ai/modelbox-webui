@@ -331,7 +331,6 @@ export class InsertPanelsComponent implements OnInit {
     this.onNodeShapeDragEnd(event);
     event.currentTarget.style.opacity = "1";
     document.body.removeChild(document.body.lastChild);
-    document.body.removeChild(document.body.lastChild);
   };
 
   refreshFlowunit() {

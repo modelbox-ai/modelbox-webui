@@ -739,7 +739,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     self.dotGraph.reparse();
     this.formatDotSrc();
     this.onTextChange(this.dotGraph.dotSrc);
-    this.unSelectComponents();
+    this.handleClickDiv(null, null, null);
   }
 
   selectAllComponents() {
