@@ -1169,7 +1169,7 @@ export class ToolBarComponent {
         (data: any) => {
           if (data) {
             //加载项目信息
-            this.formDataCreateProject.name = data.project_name;
+            this.formDataCreateProject.name = data.project_name.substring;
             this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
 
             //加载功能单元信息
