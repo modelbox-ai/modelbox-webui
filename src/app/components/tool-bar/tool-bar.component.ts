@@ -550,6 +550,10 @@ export class ToolBarComponent {
     return this.formDataCreateProject;
   }
 
+  closeInput() {
+    document.getElementById('projectDropDown').click();
+  }
+
   handleProjectDropDown(e) {
     if (e.value === 1) {
       this.showCreateProjectDialog(this.createProjectTemplate);
