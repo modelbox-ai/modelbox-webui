@@ -1,5 +1,6 @@
 {
   "attribute.helpText": "帮助文档",
+  "attribute.deviceId": "设备号",
   "common.home": "首页",
   "common.back": "返回",
   "common.help": "帮助",

@@ -1427,10 +1427,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       let endNode = d3_select(nodes[i]);
       let startNodeName = this.startNode.attr('data-link-name');
       let endNodeName = endNode.attr('data-link-name');
-      if (startNodeName == ""){
+      if (startNodeName == "") {
         startNodeName = this.startNode._groups[0][0].__data__.key;
       }
-      if (endNodeName == ""){
+      if (endNodeName == "") {
         endNodeName = endNode._groups[0][0].__data__.key;
       }
       // 限制连接
@@ -1442,10 +1442,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       let endnode = endNodeName.split(':');
       startNodeName = startnode[0] + ':\"' + startnode[1] + '\"';
       endNodeName = endnode[0] + ':\"' + endnode[1] + '\"';
-      if (startnode.length === 1){
+      if (startnode.length === 1) {
         startNodeName = startnode[0]
       }
-      if (endnode.length === 1){
+      if (endnode.length === 1) {
         endNodeName = endnode[0]
       }
       this.graphviz.insertDrawnEdge(startNodeName + '->' + endNodeName);

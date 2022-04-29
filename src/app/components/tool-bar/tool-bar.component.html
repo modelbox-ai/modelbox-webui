@@ -101,14 +101,15 @@
     </div>
 
     <div class="tool-bar-mid">
-        <span style="font-size:28px; font-weight:500;">
+        <span style="font-size:28px; font-weight:500; width:100%; word-wrap:break-word;">
 
-            {{formDataCreateProject.name.substring(0,31)}}
+            {{formDataCreateProject.name}}
         </span>
     </div>
 
     <div class="tool-bar-right">
         <d-select
+            id="projectDropDown"
             class="btn-group" 
             style="display:inline-block; width: 70px; margin-right: 4px"
             [options]="options1"

@@ -417,6 +417,7 @@ export class MainComponent {
   updateIsOpen(e) {
     this.toolBar.isOpen = false;
     this.toolBar.isOpen2 = false;
+    this.toolBar.closeInput();
   }
 
   setEditorMarkers(components) {
@@ -444,7 +445,7 @@ export class MainComponent {
 
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
-      if (this.currentComponent.attributes){
+      if (this.currentComponent.attributes) {
         this.currentComponent.attributes = Object.keys(
           this.currentComponent.attributes
         ).map(k => {

@@ -226,7 +226,7 @@ export class InsertPanelsComponent implements OnInit {
           }
         }
       }
-      if (this.dataService.virtualFlowunits.length > 0){
+      if (this.dataService.virtualFlowunits.length > 0) {
         data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
       }
       let objInput = {
