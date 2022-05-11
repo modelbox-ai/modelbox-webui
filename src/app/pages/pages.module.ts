@@ -8,7 +8,6 @@ import { TextEditorComponent } from '../components/text-editor/text-editor.compo
 import { InsertPanelsComponent } from '../components/insert-panels/insert-panels.component';
 import { GraphComponent } from '../components/graph/graph.component';
 import { ManagementComponent } from '../components/management/management.component';
-import { AceModule } from 'ngx-ace-wrapper';
 import { SplitterModule } from 'ng-devui/splitter';
 import { SearchModule } from 'ng-devui/search';
 import { DataTableModule } from 'ng-devui/data-table';
@@ -43,9 +42,14 @@ import { DevUIModule } from 'ng-devui';
 import { BadgeModule } from 'ng-devui/badge';
 import { SolutionComponent } from '../components/solution/solution.component';
 import { ToolBarSolutionComponent } from '../components/tool-bar-solution/tool-bar-solution.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { AceModule, AceConfigInterface, ACE_CONFIG } from 'ngx-ace-wrapper';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
+const DEFAULT_ACE_CONFIG: AceConfigInterface = {
+  tabSize: 2
+};
 
 @NgModule({
   imports: [
@@ -56,6 +60,7 @@ const COMPONENTS_NOROUNT = [];
     PopoverModule,
     DropDownModule,
     TabsModule,
+    NgxJsonViewerModule,
     BadgeModule,
     SplitterModule,
     TooltipModule,
@@ -94,6 +99,12 @@ const COMPONENTS_NOROUNT = [];
     ManagementComponent,
     ModalSaveAsComponent,
     NgbdTooltipCustomclass
+  ],
+  providers: [
+    {
+      provide: ACE_CONFIG,
+      useValue: DEFAULT_ACE_CONFIG
+    }
   ],
   entryComponents: COMPONENTS_NOROUNT,
 })

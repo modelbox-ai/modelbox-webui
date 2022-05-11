@@ -306,10 +306,15 @@
                     {{'toolBar.modal.device' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }"
+                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }" *ngIf="formDataCreateFlowunit.lang !== 'python'"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
                         [(ngModel)]="formDataCreateFlowunit.device" (valueChange)="deviceValueChange($event)"
                         [placeholder]="'toolBar.modal.device' | translate" [options]="optionsdevice">
+                    </d-select>
+                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }" *ngIf="formDataCreateFlowunit.lang === 'python'"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
+                        [(ngModel)]="formDataCreateFlowunit.device" (valueChange)="deviceValueChange($event)"
+                        [placeholder]="'toolBar.modal.device' | translate" [options]="optionsdevicePython">
                     </d-select>
                 </d-form-control>
             </d-form-item>

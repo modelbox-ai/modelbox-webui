@@ -37,6 +37,18 @@ export class BasicServiceService {
     this.subject.asObservable().subscribe(handler);
   }
 
+  customRequest(method, route, paramData?: any, options?: any): Observable<any> {
+    if (method === "get") {
+      return this.http.get(route, paramData).pipe(timeout(30000));
+    } else if (method === "post") {
+      return this.http.post(route, paramData).pipe(timeout(30000));
+    } else if (method === "put") {
+      return this.http.put<any>(route, paramData, options).pipe(timeout(30000));
+    } else if (method === "delete") {
+      return this.http.delete<any>(route, paramData).pipe(timeout(30000));
+    }
+  }
+
   //请求数据
   queryData(paramData?: any): Observable<any> {
     return this.http.put<any>(this.serviceRouter + '/editor/flow-info', paramData).pipe(timeout(30000));
@@ -51,14 +63,14 @@ export class BasicServiceService {
   }
 
   loadTreeByPath(paramData?: string): Observable<any> {
-    if (!paramData){
+    if (!paramData) {
       paramData = "/"
     }
     return this.http.get(this.serviceRouter + '/editor/project/list/?path=' + paramData).pipe(timeout(30000));
   }
 
   openProject(paramData?: string): Observable<any> {
-    if (!paramData){
+    if (!paramData) {
       paramData = "/"
     }
     return this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).pipe(timeout(30000));
@@ -70,19 +82,19 @@ export class BasicServiceService {
 
   // 创建任务
   createTask(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData, {observe: 'response'}).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/v1/modelbox/job', paramData, { observe: 'response' }).pipe(timeout(30000));
   }
 
   createProject(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/project/create', paramData, {observe: 'response'}).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/project/create', paramData, { observe: 'response' }).pipe(timeout(30000));
   }
 
   createFlowunit(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/flowunit/create', paramData, {observe: 'response'}).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/flowunit/create', paramData, { observe: 'response' }).pipe(timeout(30000));
   }
 
   saveAllProject(paramData?: any): Observable<any> {
-    return this.http.put(this.serviceRouter + '/editor/graph', paramData, {observe: 'response'}).pipe(timeout(30000));
+    return this.http.put(this.serviceRouter + '/editor/graph', paramData, { observe: 'response' }).pipe(timeout(30000));
   }
 
   // 查询任务列表
