@@ -300,6 +300,7 @@ export class ToolBarComponent {
   optionsInOut = ['input', 'output'];
   optionsdata_type = ['int', 'float']; //flowunit type
   optionsdevice = ['cpu', 'cuda'];
+  optionsdevicePython = ['cpu']; 
   flowunitGroupOptions = ['generic', 'video', 'inference'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
@@ -577,6 +578,9 @@ export class ToolBarComponent {
     if (value === "inference") {
       this.formDataCreateFlowunit.device = 'cuda';
       this.portInfo.device = 'cuda';
+    }else if (value === "python"){
+      this.formDataCreateFlowunit.device = 'cpu';
+      this.portInfo.device = 'cpu';
     }
 
     if (this.formDataCreateFlowunit.lang === "inference") {

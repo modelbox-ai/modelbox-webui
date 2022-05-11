@@ -39,6 +39,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { DevUIModule } from 'ng-devui';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   const CDN_BASE = (<any>window).CDNAddress || '';
@@ -79,6 +81,7 @@ export function appInitializerFactory(
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    NgxJsonViewerModule,
     BrowserModule,
     DevUIModule,
     // imported modules
@@ -109,6 +112,7 @@ export function appInitializerFactory(
       multi: true,
     },
     BasicServiceService,
+    
   ],
   bootstrap: [AppComponent],
 })

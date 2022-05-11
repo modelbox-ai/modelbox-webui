@@ -16,14 +16,18 @@
  * limitations under the License.
  */
 
-import { Component, TemplateRef, OnInit, Input } from '@angular/core';
+import { Component, TemplateRef, OnInit, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
+import { AceComponent } from 'ngx-ace-wrapper';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ErrorCode, TaskStatus } from '@shared/constants';
 import { DialogService } from 'ng-devui/modal';
 import { translate } from '@angular/localize/src/translate';
 import { CommonUtils } from '@shared/utils';
 import { TableWidthConfig } from 'ng-devui/data-table';
+import { EditableTip } from 'ng-devui/data-table';
+
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-management',
@@ -31,6 +35,7 @@ import { TableWidthConfig } from 'ng-devui/data-table';
   styleUrls: ['./management.component.less'],
 })
 export class ManagementComponent implements OnInit {
+  @ViewChild(AceComponent, { static: true }) componentRef: AceComponent;
   page = "task";
   folded: boolean = false;
   checkedList: Array<any> = [];
@@ -40,6 +45,7 @@ export class ManagementComponent implements OnInit {
   newTaskText: string = this.i18n.getById('tasklist.newTask');
   res: any;
   tableData: any = { srcData: { data: [] } }
+  tab1acticeID: string | number = 'tab1';
   taskData: any = {
     displayed: [],
     srcData: {
@@ -90,6 +96,40 @@ export class ManagementComponent implements OnInit {
     width: '400px'
   },]
 
+  tableWidthConfigKeyValue: TableWidthConfig[] = [{
+    field: 'checked',
+    width: '10%'
+  },
+  {
+    field: 'key',
+    width: '45%'
+  }, {
+    field: 'value',
+    width: '45%'
+  },]
+
+  options = ['Put', 'Get', 'Post', 'Delete'];
+  optionsTemplate = ['Project', 'Flowunit'];
+  selectMethod = "Get";
+  jsonSrc = "";
+  jsonSrcObj = {};
+  responseSrc = "";
+  editor;
+  config;
+  values = ['Header', 'Body'];
+  choose = 'Body';
+  url = "";
+  headerSource = "";
+  dataHeaders = [
+    {
+      ischecked: true,
+      key: '',
+      value: ''
+    }
+  ];
+  editableTip = EditableTip.btn;
+
+
   dataTableOptions = {
     columns: [
       {
@@ -115,7 +155,7 @@ export class ManagementComponent implements OnInit {
     ]
   };
 
-  sreachValue: string = '';
+  searchValue: string = '';
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
   @Input() collapsed: boolean;
   @Input() isSupportFold: boolean = true;
@@ -142,6 +182,70 @@ export class ManagementComponent implements OnInit {
     }
   }
 
+  handleChange(value) {
+    this.jsonSrc = value;
+    try {
+      this.jsonSrcObj = JSON.parse(value);
+    } catch (e) { }
+  }
+
+  beautifyJson() {
+    this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
+  }
+
+  templateChange(value) {
+    if (value === "Project") {
+      this.jsonSrcObj = {
+        name: "project_name",
+        rootpath: "/home",
+        template: "hello_world"
+      };
+      this.selectMethod = "Put";
+      this.url = window.location.origin + "/editor/project/create";
+    } else if (value === "Flowunit") {
+      this.jsonSrcObj = {
+        name: 'flowunit',
+        desc: '',
+        lang: 'python',
+        "project-path": "project path",
+        device: 'cpu',
+        input: [{ name: "input1", device: "cpu" }],
+        "group-type": 'generic',
+      };
+      this.selectMethod = "Put";
+      this.url = window.location.origin + "/editor/flowunit/create";
+    }
+
+    this.jsonSrc = JSON.stringify(this.jsonSrcObj);
+  }
+
+  radioValueChange(val) {
+  }
+
+  handleSend() {
+    let header = new HttpHeaders();
+    if (this.dataHeaders.length > 1 &&
+      this.dataHeaders[0].key != '' &&
+      this.dataHeaders[0].value != '') {
+      for (let i = 0; i < this.dataHeaders.length; i++) {
+        if (this.dataHeaders[i].ischecked){
+          header.set(this.dataHeaders[i].key, this.dataHeaders[i].value);
+        }
+      }
+    }
+    this.basicService.customRequest("put", this.url, this.jsonSrc, { 'headers': header, observe: "response" }).subscribe(
+      (data: any) => {
+        if (data) {
+          this.responseSrc = JSON.stringify(data, null, 2);
+        }
+      },
+      (err) => {
+        this.responseSrc = JSON.stringify(err, null, 2);
+      }
+    )
+  }
+
+
   getCurrentCreateTaskLists(graphs) {
     let taskCreateLists = [];
     for (let key in graphs) {
@@ -156,6 +260,49 @@ export class ManagementComponent implements OnInit {
       this.taskData.srcData.data.push(obj);
     })
 
+  }
+
+  beforeEditEnd = (rowItem, field) => {
+    let obj = {
+      ischecked: true,
+      key: '',
+      value: ''
+    }
+    let v = this.dataHeaders[this.dataHeaders.length - 1];
+    if (v.key != '' || v.value != '') {
+      this.dataHeaders.push(obj);
+    }
+    if (v.key == '' && v.value == '' && this.dataHeaders.length > 1) {
+      let v2 = this.dataHeaders[this.dataHeaders.length - 2];
+      if (v2.key == '' && v.value == '') {
+        this.dataHeaders.pop();
+      }
+    }
+  };
+
+  handleDelete(e) {
+    if (this.dataHeaders.length > 1) {
+      this.dataHeaders.splice(e, 1);
+      return
+    }
+    if (this.dataHeaders[0].key == '' && this.dataHeaders[0].value == '') {
+      return;
+    }
+    this.dataHeaders[0].key = '';
+    this.dataHeaders[0].value = '';
+  }
+
+  showDebugPanel(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'dialog-debug',
+      title: this.i18n.getById('toolBar.debug'),
+      width: '900px',
+      showAnimation: true,
+      contentTemplate: content,
+      buttons: [],
+      onClose: ($event: Event) => {
+      }
+    });
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
@@ -176,7 +323,7 @@ export class ManagementComponent implements OnInit {
 
   // 清空搜索
   onClear(value) {
-    this.sreachValue = '';
+    this.searchValue = '';
     this.getTaskslists();
   }
 
