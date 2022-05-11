@@ -134,7 +134,12 @@
               <div style="width:50%;display:inline-block">
                 <div
                   style="display:flex; align-items:center;justify-content: space-between;"
-                  (click)="beautifyJson()">
+                  >
+                  <d-select
+                    [placeholder]="'Template Structure'" 
+                    (valueChange)="templateChange($event)"
+                    [options]="optionsTemplate">
+                  </d-select>
                   <d-radio-group
                     style="display:inline-block"
                     [name]="'optionContent'"
@@ -144,21 +149,17 @@
                     [direction]="'row'"
                   >
                   </d-radio-group>
-                  <div 
-                    *ngIf="choose === 'Body'"
-                    style="font-size: 18px; color:dodgerblue;display:inline-block;cursor: pointer">
-                    Beautify
-                  </div>
                 </div>
               </div>
               <div style="width:50%;display:inline-block">
-                <div 
-                  style="width:140px;float:right">
-                  <d-select
-                    [placeholder]="'Template Structure'" 
-                    (valueChange)="templateChange($event)"
-                    [options]="optionsTemplate">
-                  </d-select>
+                <div style="width:140px;float:right">
+                  <div 
+                    *ngIf="choose === 'Body'"
+                    (click)="beautifyJson()"
+                    style="font-size: 18px; color:dodgerblue;display:inline-block;cursor: pointer">
+                    Beautify
+                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -237,7 +238,7 @@
               </div>
               <div 
                 *ngIf="choose === 'Body'"
-                style="height: 160px;width:50%;display:inline-block">
+                style="height: 160px;width:100%;display:inline-block">
                 <ace
                   class="app-ace-editor"
                   #editor
@@ -251,14 +252,14 @@
                 </ace>
               </div>
               
-              <div 
+              <!-- <div 
                 *ngIf="choose === 'Body'"
                 style="height: 160px;width:50%;display:inline-block">
                 <ngx-json-viewer 
                   [json]="jsonSrcObj"
                   [expanded]="true">
                 </ngx-json-viewer>
-              </div>
+              </div> -->
             </div>
 
             <fieldset class="title-fieldset">

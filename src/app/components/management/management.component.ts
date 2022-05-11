@@ -28,6 +28,7 @@ import { TableWidthConfig } from 'ng-devui/data-table';
 import { EditableTip } from 'ng-devui/data-table';
 
 import { HttpHeaders } from '@angular/common/http';
+import { DataServiceService } from '@shared/services/data-service.service';
 
 @Component({
   selector: 'app-management',
@@ -168,7 +169,8 @@ export class ManagementComponent implements OnInit {
     private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
-    private util: CommonUtils) { }
+    private util: CommonUtils,
+    private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.getTaskslists();
@@ -197,7 +199,7 @@ export class ManagementComponent implements OnInit {
     if (value === "Project") {
       this.jsonSrcObj = {
         name: "project_name",
-        rootpath: "/home",
+        rootpath: this.dataService.defaultSearchPath,
         template: "hello_world"
       };
       this.selectMethod = "Put";
@@ -228,7 +230,7 @@ export class ManagementComponent implements OnInit {
       this.dataHeaders[0].key != '' &&
       this.dataHeaders[0].value != '') {
       for (let i = 0; i < this.dataHeaders.length; i++) {
-        if (this.dataHeaders[i].ischecked){
+        if (this.dataHeaders[i].ischecked) {
           header.set(this.dataHeaders[i].key, this.dataHeaders[i].value);
         }
       }

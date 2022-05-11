@@ -1,286 +1,286 @@
 <div class="drawer-menu">
-    <form
-      dForm
-      [layout]="layoutDirection"
-      [labelSize]="'sm'"
-      ngForm
-      #myForm1="ngForm">
-        <d-form-item>
-            <p class="attribute-title">
-                {{ 'attributePanel.title' | translate }}
-                {{ config.name }}
-                {{ 'attributePanel.title1' | translate }}
-            </p>
-        </d-form-item>
-        <d-form-item>
-            <d-accordion
-              [data]="menu1"
-              class="menu"
-              [autoOpenActiveMenu]="true"
-              [menuItemTemplate]="menutemplate"
-              [accordionType]="'embed'"
-              [innerListTemplate]="innerListTemplate"
-              [loadingTemplate]="loadingTemplate">
-            </d-accordion>
-            <d-accordion
-              [data]="menu2"
-              class="menu"
-              [accordionType]="'embed'"
-              [menuItemTemplate]="menutemplate"
-              [innerListTemplate]="innerListTemplate2"
-              [loadingTemplate]="loadingTemplate">
-            </d-accordion>
-        </d-form-item>
-        <d-form-item>
-            <div>
-                <a
-                  class="devui-link"
-                  href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html"
-                  target="_blank">
-                    {{"attribute.helpText" | translate}}
-                </a>
-            </div>
-        </d-form-item>
-    </form>
+  <form
+    dForm
+    [layout]="layoutDirection"
+    [labelSize]="'sm'"
+    ngForm
+    #myForm1="ngForm">
+    <d-form-item>
+      <p class="attribute-title">
+        {{ 'attributePanel.title' | translate }}
+        {{ config.name }}
+        {{ 'attributePanel.title1' | translate }}
+      </p>
+    </d-form-item>
+    <d-form-item>
+      <d-accordion
+        [data]="menu1"
+        class="menu"
+        [autoOpenActiveMenu]="true"
+        [menuItemTemplate]="menutemplate"
+        [accordionType]="'embed'"
+        [innerListTemplate]="innerListTemplate"
+        [loadingTemplate]="loadingTemplate">
+      </d-accordion>
+      <d-accordion
+        [data]="menu2"
+        class="menu"
+        [accordionType]="'embed'"
+        [menuItemTemplate]="menutemplate"
+        [innerListTemplate]="innerListTemplate2"
+        [loadingTemplate]="loadingTemplate">
+      </d-accordion>
+    </d-form-item>
+    <d-form-item>
+      <div>
+        <a
+          class="devui-link"
+          href="https://modelbox-ai.com/modelbox-book/flowunits/flowunits.html"
+          target="_blank">
+          {{"attribute.helpText" | translate}}
+        </a>
+      </div>
+    </d-form-item>
+  </form>
 </div>
 
 <ng-template #loadingTemplate let-item="item">
-    <li class="devui-accordion-item">
-        <div class="loading">
-            <span class="circle-spinner">
-            </span> loading...
-            <!--正在用力地加载中...-->
-        </div>
-    </li>
+  <li class="devui-accordion-item">
+    <div class="loading">
+      <span class="circle-spinner">
+      </span> loading...
+    </div>
+  </li>
 </ng-template>
 
 <ng-template #menutemplate let-item="item">
-    <span style="font-size: 20px;">{{ item.title }}</span>
+  <span style="font-size: 20px;">
+    {{ item.title }}
+  </span>
 </ng-template>
 
 <ng-template #innerListTemplate let-item="item">
-    <div style="margin:20px">
-        <d-form-item>
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.name'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div>
-                    <input
-                      dTextInput
-                      autocomplete="off"
-                      class="content-font"
-                      style="height:28px;"
-                      [name]="'new-name'"
-                      (keyup)="changedValue=true"
-                      (blur)="attributeModel.blur(myForm1.form)"
-                      [required]="true"
-                      placeholder="{{'attributePanel.namePlaceholder'|translate}}"
-                      [(ngModel)]="newName">
-                </div>
-            </d-form-control>
-        </d-form-item>
+  <div style="margin:20px">
+    <d-form-item>
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.name'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div>
+          <input
+            dTextInput
+            autocomplete="off"
+            class="content-font"
+            style="height:28px;"
+            [name]="'new-name'"
+            (keyup)="changedValue=true"
+            (blur)="attributeModel.blur(myForm1.form)"
+            [required]="true"
+            placeholder="{{'attributePanel.namePlaceholder'|translate}}"
+            [(ngModel)]="newName">
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngFor="let item of unitOptions.data">
+      <div class="form-item">
+        <d-form-label [required]="item.required">
+          <div
+            class="title-label"
+            style="padding-bottom: 8px; display: inline-block;">
+            {{item.label}}
+          </div>
+        </d-form-label>
+        <d-form-control>
+          <ng-container *ngIf="item.type === 'string'">
+            <input
+              class="content-font"
+              dTextInput
+              autocomplete="off"
+              style="height:32px"
+              [name]="'option-' + item.label.replaceAll(' ', '_')"
+              placeholder="{{item.desc}}"
+              [(ngModel)]="item.value"
+              (keyup)="changedValue=true"
+              (blur)="attributeModel.blur(myForm1.form)" />
+          </ng-container>
+          <ng-container *ngIf="item.type === 'bool'">
+            <input
+              class="content-font"
+              type="checkbox"
+              style="height:32px"
+              [(ngModel)]="item.value"
+              [name]="'option-' + item.label.replaceAll(' ', '_')"
+              (keyup)="changedValue=true"
+              (blur)="attributeModel.blur(myForm1.form)"
+              placeholder="{{item.desc}}" />
+          </ng-container>
+          <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
+            <input
+              class="content-font"
+              dTextInput
+              autocomplete="off"
+              style="height:32px"
+              [(ngModel)]="item.value"
+              [name]="'option-' + item.label.replaceAll(' ', '_')"
+              placeholder="{{item.desc}}"
+              (keyup)="changedValue=true"
+              (blur)="attributeModel.blur(myForm1.form)" />
+          </ng-container>
+          <ng-container *ngIf="item.type === 'list'">
+            <select
+              class="form-select"
+              [name]="'option-' + item.label.replaceAll(' ', '_')"
+              [(ngModel)]="item.selected"
+              (ngModelChange)="attributeModel.blur(myForm1.form)">
+              <option [ngValue]="op" *ngFor="let op of item.options">
+                {{op.label}}
+              </option>
+            </select>
+            <span style="color:#adb0b8">
+              {{item.desc}}
+            </span>
+          </ng-container>
+        </d-form-control>
+      </div>
+    </d-form-item>
 
-        <d-form-item *ngFor="let item of unitOptions.data">
-            <div class="form-item">
-                <d-form-label [required]="item.required">
-                    <div
-                      class="title-label"
-                      style="padding-bottom: 8px; display: inline-block;">
-                      {{item.label}}
-                    </div>
-                </d-form-label>
-                <d-form-control>
-                    <ng-container *ngIf="item.type === 'string'">
-                        <input
-                          class="content-font"
-                          dTextInput
-                          autocomplete="off"
-                          style="height:32px"
-                          [name]="'option-' + item.label.replaceAll(' ', '_')"
-                          placeholder="{{item.desc}}"
-                          [(ngModel)]="item.value"
-                          (keyup)="changedValue=true"
-                          (blur)="attributeModel.blur(myForm1.form)" />
-                    </ng-container>
-                    <ng-container *ngIf="item.type === 'bool'">
-                        <input
-                          class="content-font"
-                          type="checkbox"
-                          style="height:32px"
-                          [(ngModel)]="item.value"
-                          [name]="'option-' + item.label.replaceAll(' ', '_')"
-                          (keyup)="changedValue=true"
-                          (blur)="attributeModel.blur(myForm1.form)"
-                          placeholder="{{item.desc}}" />
-                    </ng-container>
-                    <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
-                        <input
-                          class="content-font"
-                          dTextInput
-                          autocomplete="off"
-                          style="height:32px"
-                          [(ngModel)]="item.value"
-                          [name]="'option-' + item.label.replaceAll(' ', '_')"
-                          placeholder="{{item.desc}}"
-                          (keyup)="changedValue=true"
-                          (blur)="attributeModel.blur(myForm1.form)" />
-                    </ng-container>
-                    <ng-container *ngIf="item.type === 'list'">
-                        <select
-                          class="form-select"
-                          [name]="'option-' + item.label.replaceAll(' ', '_')"
-                          [(ngModel)]="item.selected"
-                          (ngModelChange)="attributeModel.blur(myForm1.form)">
-                            <option [ngValue]="op" *ngFor="let op of item.options">
-                                {{op.label}}
-                            </option>
-                        </select>
-                        <span style="color:#adb0b8">
-                            {{item.desc}}
-                        </span>
-                    </ng-container>
-                </d-form-control>
-            </div>
-        </d-form-item>
-
-        <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.topType'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <select
-                  id="typeSelect"
-                  class="form-select"
-                  name="'unittype'"
-                  [(ngModel)]="unitType.selected"
-                  (ngModelChange)="unitType.change($event, myForm1.form)">
-                    <option *ngFor="let item of unitType.options" [ngValue]="item">
-                        {{item.label}}
-                    </option>
-                </select>
-            </d-form-control>
-        </d-form-item>
-    </div>
+    <d-form-item *ngIf="unit" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.topType'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <select
+          id="typeSelect"
+          class="form-select"
+          name="'unittype'"
+          [(ngModel)]="unitType.selected"
+          (ngModelChange)="unitType.change($event, myForm1.form)">
+          <option 
+            *ngFor="let item of unitType.options" 
+            [ngValue]="item">
+            {{item.label}}
+          </option>
+        </select>
+      </d-form-control>
+    </d-form-item>
+  </div>
 </ng-template>
 
 <ng-template #innerListTemplate2 let-item="item">
-    <div style="margin:20px">
-        <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'attributePanel.topName'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.name}}
-                </div>
-            </d-form-control>
-        </d-form-item>
+  <div style="margin:20px">
+    <d-form-item *ngIf="unit" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'attributePanel.topName'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.name}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="unit" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.version'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.version}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="unit && unit.desc" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.description'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.desc}}
+        </div>
+      </d-form-control>
+    </d-form-item>
 
-        <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.version'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.version}}
-                </div>
-            </d-form-control>
-        </d-form-item>
+    <d-form-item *ngIf="unit && unit.portDetail" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.portDetail'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font" style="white-space: break-spaces;">
+          {{unit.portDetail}}
+        </div>
+        <d-data-table
+          [dataSource]="descDataSource"
+          [scrollable]="true"
+          [type]="'striped'"
+          [tableWidthConfig]="descWidthConfig">
+          <thead dTableHead>
+            <tr dTableRow>
+              <th dHeadCell *ngFor="let colOption of descTableOptions.columns">
+                {{ colOption.header }}
+              </th>
+            </tr>
+          </thead>
+          <tbody dTableBody>
+            <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <tr dTableRow>
+                <td dTableCell *ngFor="let colOption of descTableOptions.columns">
+                  {{rowItem[colOption.field]}}
+                </td>
+              </tr>
+            </ng-template>
+          </tbody>
+            </d-data-table>
+        </d-form-control>
+    </d-form-item>
 
-        <d-form-item *ngIf="unit && unit.desc" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.description'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.desc}}
-                </div>
-            </d-form-control>
-        </d-form-item>
+    <d-form-item *ngIf="unit && unit.constraint" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.constraint'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.constraint}}
+        </div>
+      </d-form-control>
+    </d-form-item>
 
-        <d-form-item *ngIf="unit && unit.portDetail" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.portDetail'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font" style="white-space: break-spaces;">
-                    {{unit.portDetail}}
-                </div>
-                <d-data-table
-                  [dataSource]="descDataSource"
-                  [scrollable]="true"
-                  [type]="'striped'"
-                  [tableWidthConfig]="descWidthConfig">
-                    <thead dTableHead>
-                        <tr dTableRow>
-                            <th dHeadCell *ngFor="let colOption of descTableOptions.columns">
-                                {{ colOption.header }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody dTableBody>
-                        <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
-                            <tr dTableRow>
-                                <td dTableCell *ngFor="let colOption of descTableOptions.columns">
-                                    {{rowItem[colOption.field]}}
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </tbody>
-                </d-data-table>
-            </d-form-control>
-        </d-form-item>
+    <d-form-item *ngIf="unit" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'attributePanel.arrayGroup'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.group}}
+        </div>
+      </d-form-control>
+    </d-form-item>
 
-        <d-form-item *ngIf="unit && unit.constraint" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.constraint'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.constraint}}
-                </div>
-            </d-form-control>
-        </d-form-item>
-
-        <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'attributePanel.arrayGroup'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.group}}
-                </div>
-            </d-form-control>
-        </d-form-item>
-
-        <d-form-item *ngIf="unit" class="form-item">
-            <d-form-label>
-                <span class="title-label">
-                    {{'insertPanels.tip.isVirtualmodel'|translate}}
-                </span>
-            </d-form-label>
-            <d-form-control>
-                <div class="content-font">
-                    {{unit.virtual ? ('insertPanels.tip.yes' | translate) : ('insertPanels.tip.no' | translate)}}
-                </div>
-            </d-form-control>
-        </d-form-item>
-    </div>
+    <d-form-item *ngIf="unit" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{'insertPanels.tip.isVirtualmodel'|translate}}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font">
+          {{unit.virtual ? ('insertPanels.tip.yes' | translate) : ('insertPanels.tip.no' | translate)}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+  </div>
 </ng-template>

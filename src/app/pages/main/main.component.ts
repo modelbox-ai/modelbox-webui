@@ -74,7 +74,7 @@ export class MainComponent {
   project_name: string = JSON.parse(localStorage.getItem('project')) ? this.project.name : "";
   project_desc: string = JSON.parse(localStorage.getItem('project')) ? this.project.project_desc : "";
   graphName: string;
-  path: string = "/home";
+  path: string = this.dataService.defaultSearchPath;
   desc: string;
   state: any;
   currentComponent: any;
@@ -109,6 +109,12 @@ export class MainComponent {
     private dataService: DataServiceService,
     private toastService: ToastService,) {
     const current_project = JSON.parse(localStorage.getItem('project'));
+    this.basicService.queryRootPath().subscribe((data) => {
+      this.path = data['home-dir'];
+      this.dataService.defaultSearchPath = data['home-dir'];
+      this.toolBar.formDataCreateProject['rootpath'] = data['home-dir'];
+      this.toolBar.openproject_path = data['home-dir'];
+    });
     if (current_project) {
       this.loadProjectFromJson(current_project);
     } else {
