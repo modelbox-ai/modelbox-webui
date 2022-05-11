@@ -300,7 +300,7 @@ export class ToolBarComponent {
   optionsInOut = ['input', 'output'];
   optionsdata_type = ['int', 'float']; //flowunit type
   optionsdevice = ['cpu', 'cuda'];
-  optionsdevicePython = ['cpu']; 
+  optionsdevicePython = ['cpu'];
   flowunitGroupOptions = ['generic', 'video', 'inference'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
@@ -450,7 +450,7 @@ export class ToolBarComponent {
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
-  openProjectListPath: string = "/home";
+  openProjectListPath: string = this.dataService.defaultSearchPath;
   incomingGraphName: string = '';
   isChangingPortName: boolean;
 
@@ -486,8 +486,7 @@ export class ToolBarComponent {
     private basicService: BasicServiceService,
     private domSanitizer: DomSanitizer,
     private dataService: DataServiceService,
-    private toastService: ToastService) {
-  }
+    private toastService: ToastService) { }
 
   ngOnInit() {
     const current_project = JSON.parse(localStorage.getItem('project'));
@@ -578,7 +577,7 @@ export class ToolBarComponent {
     if (value === "inference") {
       this.formDataCreateFlowunit.device = 'cuda';
       this.portInfo.device = 'cuda';
-    }else if (value === "python"){
+    } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
     }

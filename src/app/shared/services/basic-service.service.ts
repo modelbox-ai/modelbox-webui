@@ -62,6 +62,10 @@ export class BasicServiceService {
     return this.http.get(this.serviceRouter + '/console/rest/taskListData' + paramData).pipe(timeout(30000));
   }
 
+  queryRootPath(): Observable<any> {
+    return this.http.get(this.serviceRouter + '/editor/basic-info').pipe(timeout(30000));
+  }
+
   loadTreeByPath(paramData?: string): Observable<any> {
     if (!paramData) {
       paramData = "/"
