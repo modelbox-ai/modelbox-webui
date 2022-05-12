@@ -18,6 +18,7 @@
                         "tsConfig": "tsconfig.app.json",
                         "aot": true,
                         "assets": [
+                            "src/favicon.ico",
                             "src/theme/default/images",
                             "src/i18n/hws/zh_CN.json",
                             "src/i18n/hws/en-US.json",
