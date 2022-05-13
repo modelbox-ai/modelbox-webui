@@ -62,9 +62,9 @@ export class AttributePanelComponent {
     version: '',
     descryption: '',
     desc: '',
-    group: '',
+    group: any,
     virtual: false,
-    types: [],
+    types: any,
     type: '',
     options: [any],
     inputports: [any],
@@ -350,6 +350,35 @@ export class AttributePanelComponent {
   initConfig(config) {
     this.changedValue = false;
     this.unit = this.getUnit(config);
+
+    if (this.unit === undefined) {
+      this.unit = {
+        name: '',
+        version: '',
+        descryption: '',
+        desc: '',
+        group: '',
+        virtual: false,
+        types: [],
+        type: '',
+        options: [""],
+        inputports: [""],
+        outputports: [""],
+        portDetail: '',
+        constraint: ''
+      }
+      this.unit.name = config.name;
+      this.unit.group = "Generic";
+      delete this.unit.options;
+      delete this.unit.inputports;
+      delete this.unit.outputports;
+      config.attributes.forEach(it => {
+        if (it.key === "device") {
+          this.unit.type = it.value;
+          this.unit.types = [it.value];
+        }
+      });
+    }
     this.unitType.init();
     this.unitOptions.init();
     if (!this.unit && this.warnNoNode && this.config['attributes']) {

@@ -472,7 +472,6 @@ export class SolutionComponent implements OnInit {
 
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
-
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
       this.currentComponent.attributes = Object.keys(

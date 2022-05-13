@@ -871,7 +871,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       nodeAttr.type === "input") {
       isVirtual = true;
     } else {
-      if (nodeUnit.virtual) {
+      if (nodeUnit?.virtual) {
         isVirtual = true;
       }
     }
