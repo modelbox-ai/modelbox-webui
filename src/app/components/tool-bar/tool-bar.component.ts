@@ -683,14 +683,23 @@ export class ToolBarComponent {
           this.optionSolutionList.push(obj)
         });
         let tmp = [];
-        for (var i = 0, len = this.optionSolutionList.length; i < len; i += 2) {
-          tmp.push(this.optionSolutionList.slice(i, i + 2));
+        let tmp1 = [];
+        for (let i = 0; i < this.optionSolutionList.length; i++) {
+          if (i % 2 == 0) {
+            tmp.push(this.optionSolutionList[i]);
+          } else {
+            tmp1.push(this.optionSolutionList[i]);
+          }
         }
-        this.optionSolutionList = tmp;
+        this.optionSolutionList = [];
+        this.optionSolutionList[0] = tmp;
+        this.optionSolutionList[1] = tmp1;
+        debugger
       },
       (error) => {
         return null;
-      })
+      }
+    );
   }
 
   onPortNameChange(e) {

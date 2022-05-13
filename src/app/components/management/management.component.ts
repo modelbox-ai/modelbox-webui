@@ -109,9 +109,9 @@ export class ManagementComponent implements OnInit {
     width: '45%'
   },]
 
-  options = ['Put', 'Get', 'Post', 'Delete'];
-  optionsTemplate = ['Project', 'Flowunit'];
-  selectMethod = "Get";
+  options = ['PUT', 'GET', 'POST', 'DELETE'];
+  optionsTemplate = [];
+  selectMethod = "GET";
   jsonSrc = "";
   jsonSrcObj = {};
   responseSrc = "";
@@ -175,6 +175,15 @@ export class ManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getTaskslists();
     this.refresh_timer = setInterval(() => { this.getTaskslists(); }, 5000);
+    this.optionsTemplate;
+    this.basicService.querySolutionList().subscribe(
+      (data: any) => {
+        this.optionsTemplate = data.demo_list.map(item => item.name);
+      },
+      (error) => {
+        return null;
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -218,7 +227,7 @@ export class ManagementComponent implements OnInit {
       this.url = window.location.origin + "/editor/flowunit/create";
     }
 
-    this.jsonSrc = JSON.stringify(this.jsonSrcObj);
+    this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
   }
 
   radioValueChange(val) {
@@ -298,7 +307,7 @@ export class ManagementComponent implements OnInit {
     const results = this.dialogService.open({
       id: 'dialog-debug',
       title: this.i18n.getById('toolBar.debug'),
-      width: '900px',
+      width: '1000px',
       showAnimation: true,
       contentTemplate: content,
       buttons: [],
