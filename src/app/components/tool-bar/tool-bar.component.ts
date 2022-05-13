@@ -694,7 +694,6 @@ export class ToolBarComponent {
         this.optionSolutionList = [];
         this.optionSolutionList[0] = tmp;
         this.optionSolutionList[1] = tmp1;
-        debugger
       },
       (error) => {
         return null;

@@ -164,6 +164,7 @@ export class ManagementComponent implements OnInit {
   selectedProject: any;
   dialog: boolean = false;
   currentRow;
+  demo_list;
 
   constructor(
     private dialogService: DialogService,
@@ -178,6 +179,7 @@ export class ManagementComponent implements OnInit {
     this.optionsTemplate;
     this.basicService.querySolutionList().subscribe(
       (data: any) => {
+        this.demo_list = data.demo_list;
         this.optionsTemplate = data.demo_list.map(item => item.name);
       },
       (error) => {
@@ -205,29 +207,49 @@ export class ManagementComponent implements OnInit {
   }
 
   templateChange(value) {
-    if (value === "Project") {
-      this.jsonSrcObj = {
-        name: "project_name",
-        rootpath: this.dataService.defaultSearchPath,
-        template: "hello_world"
-      };
-      this.selectMethod = "Put";
-      this.url = window.location.origin + "/editor/project/create";
-    } else if (value === "Flowunit") {
-      this.jsonSrcObj = {
-        name: 'flowunit',
-        desc: '',
-        lang: 'python',
-        "project-path": "project path",
-        device: 'cpu',
-        input: [{ name: "input1", device: "cpu" }],
-        "group-type": 'generic',
-      };
-      this.selectMethod = "Put";
-      this.url = window.location.origin + "/editor/flowunit/create";
+    //get demo file detail
+    let graphfile;
+    let demo;
+    for (let i of this.demo_list) {
+      if (value === i.name) {
+        graphfile = i.graphfile;
+        demo = i.demo
+        break;
+      }
     }
+    this.basicService.querySolution(demo + "/" + graphfile).subscribe((data) => {
+      this.selectMethod = data.postman.method;
+      let t = JSON.stringify(data.postman.requestbody);
+      t = JSON.parse(t)
+      this.jsonSrc = t;
+  //     jsonSrc = "";
+  // jsonSrcObj = {};
+  // responseSrc = "";
+      this.url = data.postman.url;
+    });
+    // if (value === "Project") {
+    //   this.jsonSrcObj = {
+    //     name: "project_name",
+    //     rootpath: this.dataService.defaultSearchPath,
+    //     template: "hello_world"
+    //   };
+    //   this.selectMethod = "Put";
+    //   this.url = window.location.origin + "/editor/project/create";
+    // } else if (value === "Flowunit") {
+    //   this.jsonSrcObj = {
+    //     name: 'flowunit',
+    //     desc: '',
+    //     lang: 'python',
+    //     "project-path": "project path",
+    //     device: 'cpu',
+    //     input: [{ name: "input1", device: "cpu" }],
+    //     "group-type": 'generic',
+    //   };
+    //   this.selectMethod = "Put";
+    //   this.url = window.location.origin + "/editor/flowunit/create";
+    // }
 
-    this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
+    // this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
   }
 
   radioValueChange(val) {
@@ -244,14 +266,11 @@ export class ManagementComponent implements OnInit {
         }
       }
     }
-    this.basicService.customRequest("put", this.url, this.jsonSrc, { 'headers': header, observe: "response" }).subscribe(
+    this.basicService.customRequest(this.selectMethod, this.url, this.jsonSrc).subscribe(
       (data: any) => {
-        if (data) {
-          this.responseSrc = JSON.stringify(data, null, 2);
-        }
       },
       (err) => {
-        this.responseSrc = JSON.stringify(err, null, 2);
+        this.responseSrc = JSON.stringify(err.error.text, null, 2);
       }
     )
   }

@@ -38,13 +38,13 @@ export class BasicServiceService {
   }
 
   customRequest(method, route, paramData?: any, options?: any): Observable<any> {
-    if (method === "get") {
+    if (method === "GET") {
       return this.http.get(route, paramData).pipe(timeout(30000));
-    } else if (method === "post") {
+    } else if (method === "POST") {
       return this.http.post(route, paramData).pipe(timeout(30000));
-    } else if (method === "put") {
+    } else if (method === "PUT") {
       return this.http.put<any>(route, paramData, options).pipe(timeout(30000));
-    } else if (method === "delete") {
+    } else if (method === "DELETE") {
       return this.http.delete<any>(route, paramData).pipe(timeout(30000));
     }
   }
