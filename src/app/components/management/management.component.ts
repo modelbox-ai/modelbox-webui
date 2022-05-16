@@ -222,34 +222,8 @@ export class ManagementComponent implements OnInit {
       let t = JSON.stringify(data.postman.requestbody);
       t = JSON.parse(t)
       this.jsonSrc = t;
-  //     jsonSrc = "";
-  // jsonSrcObj = {};
-  // responseSrc = "";
       this.url = data.postman.url;
     });
-    // if (value === "Project") {
-    //   this.jsonSrcObj = {
-    //     name: "project_name",
-    //     rootpath: this.dataService.defaultSearchPath,
-    //     template: "hello_world"
-    //   };
-    //   this.selectMethod = "Put";
-    //   this.url = window.location.origin + "/editor/project/create";
-    // } else if (value === "Flowunit") {
-    //   this.jsonSrcObj = {
-    //     name: 'flowunit',
-    //     desc: '',
-    //     lang: 'python',
-    //     "project-path": "project path",
-    //     device: 'cpu',
-    //     input: [{ name: "input1", device: "cpu" }],
-    //     "group-type": 'generic',
-    //   };
-    //   this.selectMethod = "Put";
-    //   this.url = window.location.origin + "/editor/flowunit/create";
-    // }
-
-    // this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
   }
 
   radioValueChange(val) {

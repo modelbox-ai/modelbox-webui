@@ -32,6 +32,8 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() statusGraph: any;
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
+  @Output() statusGraphEmitter = new EventEmitter<any>();
+  
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -169,6 +171,7 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   selectSolution(selectedName) {
+    this.statusGraphEmitter.emit("");
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {
