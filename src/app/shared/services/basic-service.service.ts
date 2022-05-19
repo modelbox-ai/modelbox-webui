@@ -38,15 +38,13 @@ export class BasicServiceService {
   }
 
   customRequest(method, route, paramData?: any, options?: any): Observable<any> {
-    if (method === "GET") {
-      return this.http.get(route, paramData).pipe(timeout(30000));
-    } else if (method === "POST") {
-      return this.http.post(route, paramData).pipe(timeout(30000));
-    } else if (method === "PUT") {
-      return this.http.put<any>(route, paramData, options).pipe(timeout(30000));
-    } else if (method === "DELETE") {
-      return this.http.delete<any>(route, paramData).pipe(timeout(30000));
-    }
+    let obj = new Object();
+    obj['method'] = method;
+    obj['url'] = route;
+    obj['header'] = JSON.stringify(options);
+    obj['body'] = JSON.stringify(paramData);
+
+    return this.http.post("/editor/postman", obj).pipe(timeout(30000));
   }
 
   //请求数据

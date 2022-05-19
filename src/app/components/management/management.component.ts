@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Component, TemplateRef, OnInit, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, OnInit, Input, AfterViewInit, ElementRef, ViewChild, Inject } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { AceComponent } from 'ngx-ace-wrapper';
 import { BasicServiceService } from '@shared/services/basic-service.service';
@@ -27,8 +27,10 @@ import { CommonUtils } from '@shared/utils';
 import { TableWidthConfig } from 'ng-devui/data-table';
 import { EditableTip } from 'ng-devui/data-table';
 
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataServiceService } from '@shared/services/data-service.service';
+import { IFileOptions, IUploadOptions, SingleUploadComponent } from 'ng-devui/upload';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-management',
@@ -37,6 +39,7 @@ import { DataServiceService } from '@shared/services/data-service.service';
 })
 export class ManagementComponent implements OnInit {
   @ViewChild(AceComponent, { static: true }) componentRef: AceComponent;
+  @ViewChild('singleuploadDrag', { static: true }) singleuploadDrag: SingleUploadComponent;
   page = "task";
   folded: boolean = false;
   checkedList: Array<any> = [];
@@ -165,13 +168,31 @@ export class ManagementComponent implements OnInit {
   dialog: boolean = false;
   currentRow;
   demo_list;
+  fileOptions2: IFileOptions = {
+    multiple: false,
+    accept: '.png,.jpg',
+  };
+  uploadedFiles: Array<Object> = [];
+  uploadOptions: IUploadOptions = {
+    uri: '/upload',
+    headers: {},
+    maximumSize: 0.5,
+    method: 'POST',
+    fileFieldName: 'dFile',
+    withCredentials: true,
+    responseType: 'json'
+  };
+  selectedFiles: any;
+  base64textString: string;
 
   constructor(
     private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
     private util: CommonUtils,
-    private dataService: DataServiceService) { }
+    private dataService: DataServiceService,
+    private http: HttpClient,
+    @Inject(DOCUMENT) private doc: any) { }
 
   ngOnInit(): void {
     this.getTaskslists();
@@ -194,6 +215,25 @@ export class ManagementComponent implements OnInit {
       this.refresh_timer = null;
     }
   }
+
+  handleFileSelect(evt) {
+    var files = evt.target.files;
+    var file = files[0];
+
+    if (files && file) {
+      var reader = new FileReader();
+
+      reader.onload = this._handleReaderLoaded.bind(this);
+
+      reader.readAsBinaryString(file);
+    }
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    var binaryString = readerEvt.target.result;
+    this.base64textString = btoa(binaryString);
+  }
+
 
   handleChange(value) {
     this.jsonSrc = value;
@@ -218,33 +258,63 @@ export class ManagementComponent implements OnInit {
       }
     }
     this.basicService.querySolution(demo + "/" + graphfile).subscribe((data) => {
-      this.selectMethod = data.postman.method;
-      let t = JSON.stringify(data.postman.requestbody);
-      t = JSON.parse(t)
+      this.selectMethod = data.restapi.method;
+      let t = JSON.stringify(data.restapi.requestbody);
+      t = JSON.parse(t);
       this.jsonSrc = t;
-      this.url = data.postman.url;
+      let regex = new RegExp(/(?<=endpoint=").*?(?=")/, "g");
+      let r = data.graph.graphconf.match(regex)[0].split(":");
+      let path = data.restapi.path;
+      let port = r.length > 0 ? r[r.length - 1] : "";
+      this.url = port ? window.location.hostname + ":" + port + path : window.location.hostname + path;
+      this.url = window.location.protocol + "//" + this.url;
     });
   }
 
   radioValueChange(val) {
   }
 
-  handleSend() {
-    let header = new HttpHeaders();
-    if (this.dataHeaders.length > 1 &&
-      this.dataHeaders[0].key != '' &&
-      this.dataHeaders[0].value != '') {
-      for (let i = 0; i < this.dataHeaders.length; i++) {
-        if (this.dataHeaders[i].ischecked) {
-          header.set(this.dataHeaders[i].key, this.dataHeaders[i].value);
-        }
-      }
+  customUploadEvent() {
+    this.singleuploadDrag.upload();
+  }
+
+  deleteUploadedFile(filePath: string) {
+
+  }
+
+  getImgBase64() {
+    var base64 = "";
+    var img = new Image();
+    img.src = "img/test.jpg";
+    img.onload = function () {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      base64 = canvas.toDataURL("image/png");
+      alert(base64);
     }
-    this.basicService.customRequest(this.selectMethod, this.url, this.jsonSrc).subscribe(
+  }
+
+  handleSend() {
+    let obj = new Object();
+    this.dataHeaders.map((i) => {
+      if (i.key != '') {
+        obj[i.key] = i.value;
+      }
+    });
+    this.basicService.customRequest(this.selectMethod, this.url, this.jsonSrc, obj).subscribe(
       (data: any) => {
       },
       (err) => {
-        this.responseSrc = JSON.stringify(err.error.text, null, 2);
+        if (err.error) {
+          this.responseSrc = JSON.stringify(err.error.text, null, 2);
+          this.responseSrc = this.responseSrc.replace("\\u0000", "");
+          this.responseSrc = JSON.parse(this.responseSrc);
+        } else {
+          this.responseSrc = err.message;
+        }
       }
     )
   }

@@ -171,7 +171,6 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   selectSolution(selectedName) {
-    this.statusGraphEmitter.emit("");
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {
@@ -183,6 +182,15 @@ export class ToolBarSolutionComponent implements OnInit {
           style: { top: '100px' }
         });
       }
+      this.basicService.getTaskLists().subscribe((data: any) => {
+        for (let i of data.job_list) {
+          if (i.job_id.indexOf(selectedName.split("/")[0]) > -1) {
+            this.statusGraph = true;
+          }else{
+            this.statusGraph = false;
+          }
+        }
+      });
 
     });
   }
