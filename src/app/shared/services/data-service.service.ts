@@ -129,8 +129,7 @@ export class DataServiceService {
       "skip-default": skip,
       dir: dirs,
     }
-
-    if (path != null) {
+    if (path != null && path != undefined) {
       this.loadProjectFlowunit(path);
     }
     this.basicService.queryData(params).subscribe((data) => {

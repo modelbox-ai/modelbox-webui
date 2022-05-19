@@ -470,6 +470,18 @@ export class SolutionComponent implements OnInit {
 
   }
 
+  statusGraphUpdate(e) {
+    let graphName = e.split("/")[0];
+    this.basicService.getTaskLists().subscribe((data: any) => {
+
+      for (let i of data.job_list) {
+        if (graphName === i.job_id) {
+          this.statusGraph = true;
+        }
+      }
+    });
+  }
+
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {

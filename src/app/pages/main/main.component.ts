@@ -164,7 +164,7 @@ export class MainComponent {
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
     this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
-    this.projectPath = this.path + "/" + this.project_name;
+    this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
     if (this.toolBar) {
       this.toolBar.initFormData();
     }
@@ -193,7 +193,7 @@ export class MainComponent {
       this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
       this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
       this.settingPerfDir = project.graph.settingPerfDir;
-      this.projectPath = this.path + "/" + this.project_name;
+      this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
       this.reloadInsertComponent();
     }
   }

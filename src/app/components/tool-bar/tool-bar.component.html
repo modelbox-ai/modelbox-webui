@@ -183,7 +183,7 @@
                 <d-form-label [required]="true">
                     {{'toolBar.setting.template' | translate}}
                 </d-form-label>
-                <d-form-control class="card-container" style="height:300px;">
+                <d-form-control class="card-container" style="height:300px;overflow:auto">
                     <div style="width: 48%;display:inline-block">
                         <d-card class="card-container" *ngFor="let d of optionSolutionList[0]"
                             (click)="onClickCard(d, $event)" style="height:160px;margin:8px;border: 5px solid white;">

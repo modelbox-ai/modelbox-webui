@@ -29,6 +29,7 @@
           [onRunButtonClick]="handleRunButtonClick"
           [onStopButtonClick]="handleStopButtonClick"
           [onOpenTutorial]="handleTutorials"
+          (statusGraphEmitter)="statusGraphUpdate($event)"
           (currentProjectEmitter)="handleCurrentProjectChange($event)">
         </app-tool-bar-solution>
         <as-split-area [size]="80">
