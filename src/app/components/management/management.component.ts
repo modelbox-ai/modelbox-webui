@@ -158,6 +158,7 @@ export class ManagementComponent implements OnInit {
       }
     ]
   };
+  selectTemplate: any;
 
   searchValue: string = '';
   placeholder: string = this.i18n.getById('tasklist.searchBarPlaceHolder')
@@ -319,6 +320,18 @@ export class ManagementComponent implements OnInit {
     )
   }
 
+  handleClear() {
+    this.selectTemplate = null;
+    this.url = "";
+    this.responseSrc = null;
+    this.selectMethod = "GET";
+    this.jsonSrc = null;
+    this.dataHeaders = [{
+      ischecked: true,
+      key: '',
+      value: ''
+    }];
+  }
 
   getCurrentCreateTaskLists(graphs) {
     let taskCreateLists = [];

@@ -105,19 +105,35 @@
         <ng-template dTabContent>
           <div
             style="height:560px">
-            <d-select
-              [placeholder]="'Template Structure'" 
-              (valueChange)="templateChange($event)"
-              [options]="optionsTemplate">
-            </d-select>
+            <div>
+              <div style="display: inline-block;width:90%">
+                <d-select
+                  style="display: inline-block;width:800px"
+                  [placeholder]="'Template Structure'" 
+                  (valueChange)="templateChange($event)"
+                  [allowClear]="true"
+                  [(ngModel)]="selectTemplate"
+                  [options]="optionsTemplate">
+                </d-select>
+              </div>
+              <div style="display: inline-block;width:10%">
+                <button 
+                  class="tool-bar-button"
+                  style="width:100%; right:0"
+                  (click)="handleClear()"
+                  >
+                  Clear
+                </button>
+              </div>
+            </div>
             <div style="display: inline-block;width:90%">
               <d-select 
-                style="display: inline-block;width:15%"
+                style="display: inline-block;width:96px"
                 [options]="options"
                 [(ngModel)]="selectMethod">
               </d-select>
               <input 
-                style="display: inline-block;width:80%; margin: 0 4px 2px 4px"
+                style="display: inline-block;width:700px; margin: 0 4px 2px 4px"
                 dTextInput 
                 [(ngModel)]="url"
                 id="textInput" />

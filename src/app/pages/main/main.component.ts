@@ -110,10 +110,16 @@ export class MainComponent {
     private toastService: ToastService,) {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
-      this.path = data['home-dir'];
-      this.dataService.defaultSearchPath = data['home-dir'];
-      this.toolBar.formDataCreateProject['rootpath'] = data['home-dir'];
-      this.toolBar.openproject_path = data['home-dir'];
+      let path;
+      if (data['user'] === "modelbox"){
+        path = "/tmp";
+      }else{
+        path = data['home-dir']
+      }
+      this.path = path;
+      this.dataService.defaultSearchPath = path;
+      this.toolBar.formDataCreateProject['rootpath'] = path;
+      this.toolBar.openproject_path = path;
     });
     if (current_project) {
       this.loadProjectFromJson(current_project);
