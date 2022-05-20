@@ -310,6 +310,10 @@ export class ManagementComponent implements OnInit {
       },
       (err) => {
         if (err.error) {
+          if (err.error.code === "Fault"){
+            this.responseSrc = JSON.stringify(err.error.msg, null, 2);
+            return;
+          }
           this.responseSrc = JSON.stringify(err.error.text, null, 2);
           this.responseSrc = this.responseSrc.replace("\\u0000", "");
           this.responseSrc = JSON.parse(this.responseSrc);
