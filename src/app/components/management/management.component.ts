@@ -121,7 +121,9 @@ export class ManagementComponent implements OnInit {
   editor;
   config;
   values = ['Header', 'Body'];
+  values1 = ['Header', 'Body'];
   choose = 'Body';
+  choose1 = 'Body';
   url = "";
   headerSource = "";
   dataHeaders = [
@@ -188,6 +190,9 @@ export class ManagementComponent implements OnInit {
   showResponse = true;
   postmanErrorMsg: string;
   isSendingRequest = false;
+  statusCode = "";
+  responseBody: string;
+  responseHeader: string;
 
   constructor(
     private dialogService: DialogService,
@@ -278,6 +283,14 @@ export class ManagementComponent implements OnInit {
   radioValueChange(val) {
   }
 
+  radioValueChange1(val) {
+    if (val === "Body"){
+      this.responseSrc = this.responseBody;
+    }else if (val === "Header"){
+      this.responseSrc = this.responseHeader;
+    }
+  }
+
   customUploadEvent() {
     this.singleuploadDrag.upload();
   }
@@ -314,18 +327,29 @@ export class ManagementComponent implements OnInit {
       (data: any) => {
         this.showResponse = true;
         this.isSendingRequest = false;
-        if (data.body.status === 200) {
-          this.responseSrc = JSON.stringify(data.body.body, null, 2);
-          this.responseSrc = this.responseSrc.replace("\\u0000", "");
-          this.responseSrc = JSON.parse(this.responseSrc);
-          try{
-            this.responseSrc = (new Function("return " + this.responseSrc))();
-          }catch{
+        this.statusCode = data.body.status;
+        this.responseHeader = data.body.headers;
+        this.responseBody = data.body.body;
+        
+        this.responseBody = JSON.stringify(this.responseBody, null, 2);
+        this.responseBody = this.responseBody.replace("\\u0000", "");
+        this.responseBody = JSON.parse(this.responseBody);
+        try{
+          this.responseBody = (new Function("return " + this.responseBody))();
+        }catch{
 
-          }
-          this.responseSrc = JSON.stringify(this.responseSrc, null, 2);
-          return;
         }
+        
+        this.responseBody = JSON.stringify(this.responseBody, null, 2);
+        this.responseHeader = JSON.stringify(this.responseHeader, null, 2);
+
+        if (this.choose1 === "Body"){
+          this.responseSrc = this.responseBody;
+        }else if (this.choose1 === "Header"){
+          this.responseSrc = this.responseHeader;
+        }
+        return;
+        
       },
       error => {
         this.showResponse = false;
