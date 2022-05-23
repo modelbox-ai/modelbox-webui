@@ -154,7 +154,9 @@
               </d-button>
             </div>
             <fieldset class="title-fieldset">
-              <legend class="inner">Request</legend>
+              <legend class="inner">
+                Request
+              </legend>
             </fieldset>
             <div style= "width:100%;height:40px;display:flex; justify-content: space-between; align-items: center;">
               <div style="width:50%;display:inline-block">
@@ -273,9 +275,31 @@
                 </div>
               </d-splitter-pane>
               <d-splitter-pane style="overflow: hidden">
-                <fieldset class="title-fieldset" *ngIf="showResponse">
-                  <legend class="inner" style="padding-bottom:6px">Response</legend>
-                </fieldset>
+                <div style= "width:100%;height:28px;display:flex; justify-content: space-between; align-items: center;">
+                  <div style="width:50%;display:inline-block">
+                    <div
+                      style="display:flex; align-items:center;justify-content: space-between;"
+                      >
+                      <d-radio-group
+                        style="display:inline-block"
+                        [name]="'optionContent'"
+                        [values]="values1"
+                        [(ngModel)]="choose1"
+                        (ngModelChange)="radioValueChange1($event)"
+                        [direction]="'row'"
+                      >
+                      </d-radio-group>
+                    </div>
+                  </div>
+                  <div style="width:50%;display:inline-block">
+                    <div 
+                      *ngIf="showResponse"
+                      style="float:right">
+                      Status: {{ statusCode }}
+                    </div>
+                  </div>
+                </div>
+                
                 <ace
                   class="app-ace-editor"
                   *ngIf="showResponse"
@@ -294,7 +318,7 @@
                   align-items: center">
                   <div>
                     <p style="text-align: center; font-size: 16px">
-                      Could not send request
+                      Send request failed
                     </p>
                     <p>
                       {{ postmanErrorMsg }}
