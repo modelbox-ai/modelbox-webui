@@ -265,6 +265,7 @@ export class SolutionComponent implements OnInit {
       flow: this.flow,
       profile: this.profile
     }
+    projectdata.graph.graphconf = this.dotSrc;
 
     return projectdata;
   }

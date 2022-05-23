@@ -106,7 +106,7 @@
           <div
             style="height:560px">
             <div>
-              <div style="display: inline-block;width:90%">
+              <div style="display: inline-block;width:90%; margin-bottom: 10px">
                 <d-select
                   style="display: inline-block;width:800px"
                   [placeholder]="'Template Structure'" 
@@ -116,14 +116,13 @@
                   [options]="optionsTemplate">
                 </d-select>
               </div>
-              <div style="display: inline-block;width:10%">
-                <button 
-                  class="tool-bar-button"
-                  style="width:100%; right:0"
+              <div style="display: inline-block;width:10%; margin-bottom: 10px">
+                <d-button bsStyle="common"
+                  style="width:100%; right:0; line-height:18px;"
                   (click)="handleClear()"
                   >
                   Clear
-                </button>
+                </d-button>
               </div>
             </div>
             <div style="display: inline-block;width:90%">
@@ -139,13 +138,20 @@
                 id="textInput" />
             </div>
             <div style="display: inline-block;width:10%">
-              <button 
-                class="tool-bar-button"
-                style="width:100%; right:0"
+              <d-button bsStyle="common"
+                style="width:100%; right:0;line-height:18px;"
                 (click)="handleSend()"
+                *ngIf="!isSendingRequest"
                 >
                 Send
-              </button>
+              </d-button>
+              <d-button bsStyle="common"
+                style="width:100%; right:0;line-height:18px;"
+                [disabled]="true"
+                *ngIf="isSendingRequest"
+                >
+                Sending
+              </d-button>
             </div>
             <fieldset class="title-fieldset">
               <legend class="inner">Request</legend>
@@ -267,11 +273,12 @@
                 </div>
               </d-splitter-pane>
               <d-splitter-pane style="overflow: hidden">
-                <fieldset class="title-fieldset">
+                <fieldset class="title-fieldset" *ngIf="showResponse">
                   <legend class="inner" style="padding-bottom:6px">Response</legend>
                 </fieldset>
                 <ace
                   class="app-ace-editor"
+                  *ngIf="showResponse"
                   #editor
                   style="height: 70%;padding-bottom: 20px"
                   [config]="config"
@@ -279,6 +286,21 @@
                   [theme]="'tomorrow'"
                   [mode]="'dot'">
                 </ace>
+                <div *ngIf="!showResponse"
+                  style="
+                  display: flex;
+                  height: 200px;
+                  justify-content: center;
+                  align-items: center">
+                  <div>
+                    <p style="text-align: center; font-size: 16px">
+                      Could not send request
+                    </p>
+                    <p>
+                      {{ postmanErrorMsg }}
+                    </p>
+                  </div>
+                </div>
               </d-splitter-pane>
             </d-splitter>
           </div>

@@ -185,6 +185,9 @@ export class ManagementComponent implements OnInit {
   };
   selectedFiles: any;
   base64textString: string;
+  showResponse = true;
+  postmanErrorMsg: string;
+  isSendingRequest = false;
 
   constructor(
     private dialogService: DialogService,
@@ -299,6 +302,7 @@ export class ManagementComponent implements OnInit {
   }
 
   handleSend() {
+    this.isSendingRequest = true;
     let obj = new Object();
     this.dataHeaders.map((i) => {
       if (i.key != '') {
@@ -306,22 +310,31 @@ export class ManagementComponent implements OnInit {
       }
     });
     this.basicService.customRequest(this.selectMethod, this.url, this.jsonSrc, obj).subscribe(
+
       (data: any) => {
-      },
-      (err) => {
-        if (err.error) {
-          if (err.error.code === "Fault"){
-            this.responseSrc = JSON.stringify(err.error.msg, null, 2);
-            return;
-          }
-          this.responseSrc = JSON.stringify(err.error.text, null, 2);
+        this.showResponse = true;
+        this.isSendingRequest = false;
+        if (data.body.status === 200) {
+          this.responseSrc = JSON.stringify(data.body.body, null, 2);
           this.responseSrc = this.responseSrc.replace("\\u0000", "");
           this.responseSrc = JSON.parse(this.responseSrc);
-        } else {
-          this.responseSrc = err.message;
+          try{
+            this.responseSrc = (new Function("return " + this.responseSrc))();
+          }catch{
+
+          }
+          this.responseSrc = JSON.stringify(this.responseSrc, null, 2);
+          return;
         }
+      },
+      error => {
+        this.showResponse = false;
+        this.isSendingRequest = false;
+        this.postmanErrorMsg = error.message;
+
+        return null;
       }
-    )
+    );
   }
 
   handleClear() {
