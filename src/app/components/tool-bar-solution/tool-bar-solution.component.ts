@@ -32,6 +32,8 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() statusGraph: any;
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
+  @Output() statusGraphEmitter = new EventEmitter<any>();
+  
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -180,6 +182,15 @@ export class ToolBarSolutionComponent implements OnInit {
           style: { top: '100px' }
         });
       }
+      this.basicService.getTaskLists().subscribe((data: any) => {
+        for (let i of data.job_list) {
+          if (i.job_id.indexOf(selectedName.split("/")[0]) > -1) {
+            this.statusGraph = true;
+          }else{
+            this.statusGraph = false;
+          }
+        }
+      });
 
     });
   }

@@ -110,10 +110,16 @@ export class MainComponent {
     private toastService: ToastService,) {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
-      this.path = data['home-dir'];
-      this.dataService.defaultSearchPath = data['home-dir'];
-      this.toolBar.formDataCreateProject['rootpath'] = data['home-dir'];
-      this.toolBar.openproject_path = data['home-dir'];
+      let path;
+      if (data['user'] === "modelbox"){
+        path = "/tmp";
+      }else{
+        path = data['home-dir']
+      }
+      this.path = path;
+      this.dataService.defaultSearchPath = path;
+      this.toolBar.formDataCreateProject['rootpath'] = path;
+      this.toolBar.openproject_path = path;
     });
     if (current_project) {
       this.loadProjectFromJson(current_project);
@@ -164,7 +170,7 @@ export class MainComponent {
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
     this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
-    this.projectPath = this.path + "/" + this.project_name;
+    this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
     if (this.toolBar) {
       this.toolBar.initFormData();
     }
@@ -193,7 +199,7 @@ export class MainComponent {
       this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
       this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
       this.settingPerfDir = project.graph.settingPerfDir;
-      this.projectPath = this.path + "/" + this.project_name;
+      this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
       this.reloadInsertComponent();
     }
   }
