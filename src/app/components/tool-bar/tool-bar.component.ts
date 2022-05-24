@@ -1181,7 +1181,6 @@ export class ToolBarComponent {
     if (this.folderList.indexOf("src")) {
       this.basicService.openProject(this.openproject_path).subscribe(
         (data: any) => {
-          debugger
           if (data) {
             //加载项目信息
             this.formDataCreateProject.name = data.project_name;

@@ -271,12 +271,9 @@ export class ManagementComponent implements OnInit {
       let t = JSON.stringify(data.restapi.requestbody);
       t = JSON.parse(t);
       this.jsonSrc = t;
-      let regex = new RegExp(/(?<=endpoint=").*?(?=")/, "g");
-      let r = data.graph.graphconf.match(regex)[0].split(":");
       let path = data.restapi.path;
-      let port = r.length > 0 ? r[r.length - 1] : "";
-      this.url = port ? window.location.hostname + ":" + port + path : window.location.hostname + path;
-      this.url = window.location.protocol + "//" + this.url;
+      let regex = new RegExp(/(?<=endpoint=").*?(?=")/, "g");
+      this.url = data.graph.graphconf.match(regex)[0];
     });
   }
 
