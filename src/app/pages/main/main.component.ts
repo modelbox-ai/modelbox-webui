@@ -116,9 +116,9 @@ export class MainComponent {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
       let path;
-      if (data['user'] === "modelbox"){
+      if (data['user'] === "modelbox") {
         path = "/tmp";
-      }else{
+      } else {
         path = data['home-dir']
       }
       this.path = path;
@@ -1045,6 +1045,11 @@ export class MainComponent {
       }
     });
 
+  }
+
+  handleRestartButtonClick = (graphName) => {
+    this.handleStopButtonClick(graphName);
+    this.handleRunButtonClick(graphName);
   }
 
   createOptionFromProject = (item) => {

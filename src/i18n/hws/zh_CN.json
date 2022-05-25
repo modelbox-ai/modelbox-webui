@@ -49,6 +49,7 @@
   "toolBar.flowunit": "功能单元",
   "toolBar.project": "项目",
   "toolBar.saveAsButton": "保存",
+  "toolBar.clearCacheButton":"关闭",
   "toolBar.saveGraphButton": "保存图",
   "toolBar.openTutorial": "打开指引",
   "toolBar.selectDemo": "选择示例",

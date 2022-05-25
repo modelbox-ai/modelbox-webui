@@ -472,7 +472,11 @@ export class SolutionComponent implements OnInit {
         }
       }
     });
-
+  }
+  
+  handleRestartButtonClick = (graphName) => {
+    this.handleStopButtonClick(graphName);
+    this.handleRunButtonClick();
   }
 
   statusGraphUpdate(e) {
