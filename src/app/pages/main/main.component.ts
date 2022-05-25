@@ -102,6 +102,11 @@ export class MainComponent {
   openProjectDialogResults: any;
   createFlowunitDialogResults: any;
   statusGraph = 0;
+  Status = {
+    STOP: 0,
+    RUNNING: 1,
+    FAULT: 2
+  }
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -221,6 +226,8 @@ export class MainComponent {
         settingPerfTraceEnable: this.toolBar.formData.perfTraceEnable,
         settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
         settingPerfDir: this.toolBar.formData.perfPath,
+        flowunitDebugPath: this.toolBar.formData.flowunitDebugPath,
+        flowunitReleasePath: this.toolBar.formData.flowunitReleasePath
       },
 
       flowunit: this.toolBar.formDataCreateFlowunit
@@ -961,10 +968,10 @@ export class MainComponent {
     }
     this.graphs = {};
     if (graphName) {
-      this.project.graph.name = this.graphName;
+      this.project.graph.graphName = this.graphName;
       this.toolBar.formData.graphName = this.graphName;
       this.saveCurrentProject();
-      this.graphs[this.project.graph.name] = this.project;
+      this.graphs[this.project.graph.graphName] = this.project;
       this.saveGraphs();
       //run
       let option = this.createOptionFromProject(this.project);
@@ -985,6 +992,10 @@ export class MainComponent {
           await new Promise(r => setTimeout(r, 2000));
           this.header.goTask();
         }, error => {
+          this.statusGraph = this.Status.FAULT;
+          let obj = {};
+          obj[this.graphName] = this.statusGraph;
+          sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
             this.toastService.open({
               value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
@@ -1047,7 +1058,7 @@ export class MainComponent {
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.graph.dirs,
+          dir: item.graph.flowunitDebugPath,
         },
         profile: {
           profile: item.graph.settingPerfEnable,

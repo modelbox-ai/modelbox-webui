@@ -25,6 +25,8 @@
   "toolBar.project_name": "项目名称",
   "toolBar.switchButton": "切换布局",
   "toolBar.runGraphButton": "运行",
+  "toolBar.stopGraphButton": "停止",
+  "toolBar.restartGraphButton": "重启",
   "toolBar.backButton": "回退",
   "toolBar.redoButton": "重做",
   "toolBar.zoomInButton": "放大",
