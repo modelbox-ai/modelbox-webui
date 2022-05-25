@@ -91,6 +91,7 @@ export class ToolBarComponent {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
   stopSvg = require("../../../assets/stop.svg");
+  restartSvg = require("../../../assets/restart.svg");
 
   openProjectList = [];
 
@@ -494,7 +495,7 @@ export class ToolBarComponent {
       this.formData.graphName = current_project.graph.graphName;
       this.formData.graphDesc = current_project.graph.graphDesc;
       this.formData.flowunitPath = current_project.graph.dirs;
-      this.formData.flowunitDebugPath = current_project.graph.dirs;
+      this.formData.flowunitDebugPath = current_project.graph.flowunitDebugPath;
       this.formData.skipDefault = current_project.graph.skipDefault;
       this.formData.perfEnable = current_project.graph.settingPerfEnable;
       this.formData.perfTraceEnable = current_project.graph.settingPerfTraceEnable;
@@ -506,7 +507,7 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
 
-      this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
+      this.formData.flowunitReleasePath = current_project.graph.flowunitReleasePath;
     }
 
     this.loadGraphData();

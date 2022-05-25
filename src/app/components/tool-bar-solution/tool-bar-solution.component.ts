@@ -31,9 +31,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onOpenTutorial: any;
   @Input() statusGraph: any;
 
-  @Output() currentProjectEmitter = new EventEmitter<any>();
-  @Output() statusGraphEmitter = new EventEmitter<any>();
-  
+  @Output() currentProjectEmitter = new EventEmitter<any>();  
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -46,6 +44,7 @@ export class ToolBarSolutionComponent implements OnInit {
   switchSvg = require("../../../assets/switch.svg");
   runGraphSvg = require("../../../assets/run-graph.svg");
   stopSvg = require("../../../assets/stop.svg");
+  restartSvg = require("../../../assets/restart.svg");
 
   solutionList = [];
   dirs = [];

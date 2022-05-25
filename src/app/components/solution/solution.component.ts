@@ -59,7 +59,7 @@ export class SolutionComponent implements OnInit {
   dotSrcLastChangeTime: any;
   currentComponent: any;
   showLoading;
-  statusGraph;
+  statusGraph = "stop";
 
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
@@ -92,7 +92,10 @@ export class SolutionComponent implements OnInit {
       this.basicService.getTaskLists().subscribe((data: any) => {
         for (let i of data.job_list) {
           if (i.job_id === this.project.name) {
-            this.statusGraph = true;
+            this.statusGraph = "running";
+            if (i.job_error_msg !== ''){
+              this.statusGraph = "fault";
+            }
           }
         }
       });
@@ -415,7 +418,7 @@ export class SolutionComponent implements OnInit {
   handleRunButtonClick = () => {
     //saveToBrowser
     this.showLoading = true;
-    this.statusGraph = true;
+    this.statusGraph = "running";
     this.graphs = {};
     this.project = JSON.parse(sessionStorage.getItem("projectSolution"));
     this.saveCurrentProject();
@@ -435,6 +438,7 @@ export class SolutionComponent implements OnInit {
         this.showLoading = false;
         this.header.goTask();
       }, error => {
+        this.statusGraph = "fault";
         if (error.error != null) {
           this.toastService.open({
             value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
@@ -452,7 +456,7 @@ export class SolutionComponent implements OnInit {
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.graphconf);
     }
-    this.statusGraph = false;
+    this.statusGraph = "stop";
 
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
@@ -463,7 +467,7 @@ export class SolutionComponent implements OnInit {
               life: 1500,
               style: { top: '100px' }
             });
-            this.statusGraph = false;
+            this.statusGraph = "stop";
           });
         }
       }
@@ -477,7 +481,7 @@ export class SolutionComponent implements OnInit {
 
       for (let i of data.job_list) {
         if (graphName === i.job_id) {
-          this.statusGraph = true;
+          this.statusGraph = "running";
         }
       }
     });
