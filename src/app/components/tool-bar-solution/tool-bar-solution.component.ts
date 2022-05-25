@@ -28,6 +28,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onSwitchDirectionButtonClick: any;
   @Input() onRunButtonClick: any;
   @Input() onStopButtonClick: any;
+  @Input() onRestartButtonClick: any;
   @Input() onOpenTutorial: any;
   @Input() statusGraph: any;
 
@@ -110,6 +111,10 @@ export class ToolBarSolutionComponent implements OnInit {
 
   handleStopButtonClick = event => {
     this.onStopButtonClick && this.onStopButtonClick();
+  };
+
+  handleRestartButtonClick = event => {
+    this.onRestartButtonClick && this.onRestartButtonClick();
   };
 
   openTutorial = event => {

@@ -70,6 +70,7 @@ export class ToolBarComponent {
   @Input() showCreateFlowunitDialog: any;
   @Input() onRunButtonClick: any;
   @Input() onStopButtonClick: any;
+  @Input() onRestartButtonClick: any;
 
   @Input() projectInfo: any;
   @Input() statusGraph: any;
@@ -80,6 +81,8 @@ export class ToolBarComponent {
   @Output() createProjectEmmiter = new EventEmitter();
   @Output() flowunitEmmiter = new EventEmitter();
   @Output() projectPathEmmiter = new EventEmitter();
+  @Output() saveProjectEmmiter = new EventEmitter();
+
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
   redoSvg = require("../../../assets/redo.svg");
@@ -468,6 +471,10 @@ export class ToolBarComponent {
     name: this.i18n.getById('toolBar.saveAsButton'),
     value: 3,
     specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.clearCacheButton'),
+    value: 4,
+    specialContent: '项目'
   }];
 
   currentOption2 = "功能单元";
@@ -562,7 +569,15 @@ export class ToolBarComponent {
       this.showOpenProjectButtonDialog(this.openProjectTemplate);
     } else if (e.value === 3) {
       this.saveAllProject();
+    } else if (e.value === 4) {
+      this.clearCache();
     }
+  }
+
+  clearCache() {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.reload();
   }
 
   handleFlowunitDropDown(e) {
@@ -911,6 +926,10 @@ export class ToolBarComponent {
     this.onStopButtonClick && this.onStopButtonClick(this.formData.graphName);
   };
 
+  handleRestartButtonClick = event => {
+    this.onRestartButtonClick && this.onRestartButtonClick();
+  };
+
   handleCreateProjectButtonClick = event => {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
@@ -1192,6 +1211,11 @@ export class ToolBarComponent {
             if (data.graphs && data.graphs[0] != null) {
               if (data.graphs[0].graph.graphconf) {
                 this.formData.graphName = data.graphs[0].name;
+
+                if (this.formData.graphName == undefined) {
+                  this.formData.graphName = this.getGraphNameFromGraph(data.graphs[0].graph.graphconf);
+                }
+
                 this.formData.skipDefault = false;
                 if (data.graphs[0].profile) {
                   this.formData.perfEnable = data.graphs[0].profile.profile;
@@ -1202,6 +1226,8 @@ export class ToolBarComponent {
                 this.formData.flowunitPath = data.graphs[0].driver.dir;
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
+                this.formData.flowunitReleasePath = data.graphs[0].driver.dir;
+                this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
               } else {
                 this.initFormData();
                 this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
@@ -1210,6 +1236,7 @@ export class ToolBarComponent {
               this.initFormData();
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
             }
+            this.saveProjectEmmiter.emit();
 
             comp.modalInstance.hide();
             comp.modalInstance.zIndex = -1;
