@@ -189,9 +189,13 @@ export class ToolBarSolutionComponent implements OnInit {
       this.basicService.getTaskLists().subscribe((data: any) => {
         for (let i of data.job_list) {
           if (i.job_id.indexOf(selectedName.split("/")[0]) > -1) {
-            this.statusGraph = true;
+            this.statusGraph = 'running';
           }else{
-            this.statusGraph = false;
+            if (i.job_error_msg === ""){
+              this.statusGraph = 'stop';
+              return;
+            }
+            this.statusGraph = 'fault';
           }
         }
       });
