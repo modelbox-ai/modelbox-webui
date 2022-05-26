@@ -206,11 +206,10 @@ export class ManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getTaskslists();
     this.refresh_timer = setInterval(() => { this.getTaskslists(); }, 5000);
-    this.optionsTemplate;
-    this.basicService.querySolutionList().subscribe(
+    this.basicService.queryTemplate().subscribe(
       (data: any) => {
-        this.demo_list = data.demo_list;
-        this.optionsTemplate = data.demo_list.map(item => item.name);
+        this.demo_list = data.project_template_list.filter(item => item.name !== "empty");
+        this.optionsTemplate = this.demo_list.map(item => item.name);
       },
       (error) => {
         return null;
@@ -256,25 +255,15 @@ export class ManagementComponent implements OnInit {
   }
 
   templateChange(value) {
-    //get demo file detail
-    let graphfile;
-    let demo;
-    for (let i of this.demo_list) {
-      if (value === i.name) {
-        graphfile = i.graphfile;
-        demo = i.demo
-        break;
+    for (let i of this.demo_list){
+      if (i.name === value){
+        this.selectMethod = i.restapi.method;
+        let t = JSON.stringify(i.restapi.requestbody);
+        t = JSON.parse(t);
+        this.jsonSrc = t;
+        this.url = i.restapi.path;
       }
     }
-    this.basicService.querySolution(demo + "/" + graphfile).subscribe((data) => {
-      this.selectMethod = data.restapi.method;
-      let t = JSON.stringify(data.restapi.requestbody);
-      t = JSON.parse(t);
-      this.jsonSrc = t;
-      let path = data.restapi.path;
-      let regex = new RegExp(/(?<=endpoint=").*?(?=")/, "g");
-      this.url = data.graph.graphconf.match(regex)[0];
-    });
   }
 
   radioValueChange(val) {
