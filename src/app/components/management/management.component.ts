@@ -31,6 +31,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { IFileOptions, IUploadOptions, SingleUploadComponent } from 'ng-devui/upload';
 import { DOCUMENT } from '@angular/common';
+import { isArguments } from 'lodash';
+import { ModalGuideComponent } from '../modal-guide/modal-guide.component';
 
 @Component({
   selector: 'app-management',
@@ -193,6 +195,8 @@ export class ManagementComponent implements OnInit {
   statusCode = "";
   responseBody: string;
   responseHeader: string;
+  guide: any;
+  currentTemplate: any;
 
   constructor(
     private dialogService: DialogService,
@@ -255,24 +259,49 @@ export class ManagementComponent implements OnInit {
   }
 
   templateChange(value) {
-    for (let i of this.demo_list){
-      if (i.name === value){
+    this.currentTemplate = value;
+    for (let i of this.demo_list) {
+      if (i.name === value) {
         this.selectMethod = i.restapi.method;
         let t = JSON.stringify(i.restapi.requestbody);
         t = JSON.parse(t);
         this.jsonSrc = t;
         this.url = i.restapi.path;
+        if (i.guide) {
+          this.guide = i.guide.guide;
+        } else {
+          this.guide = null;
+        }
       }
     }
+  }
+
+  openstandardDialog(dialogtype?: string) {
+    const results = this.dialogService.open({
+      id: 'dialog-service',
+      width: '346px',
+      maxHeight: '900px',
+      title: this.currentTemplate,
+      content: ModalGuideComponent,
+      backdropCloseable: true,
+      dialogtype: dialogtype,
+      onClose: () => {
+      },
+      buttons: [
+      ],
+      data: {
+        guide: this.guide
+      },
+    });
   }
 
   radioValueChange(val) {
   }
 
   radioValueChange1(val) {
-    if (val === "Body"){
+    if (val === "Body") {
       this.responseSrc = this.responseBody;
-    }else if (val === "Header"){
+    } else if (val === "Header") {
       this.responseSrc = this.responseHeader;
     }
   }
@@ -316,26 +345,26 @@ export class ManagementComponent implements OnInit {
         this.statusCode = data.body.status;
         this.responseHeader = data.body.headers;
         this.responseBody = data.body.body;
-        
+
         this.responseBody = JSON.stringify(this.responseBody, null, 2);
         this.responseBody = this.responseBody.replace("\\u0000", "");
         this.responseBody = JSON.parse(this.responseBody);
-        try{
+        try {
           this.responseBody = (new Function("return " + this.responseBody))();
-        }catch{
+        } catch {
 
         }
-        
+
         this.responseBody = JSON.stringify(this.responseBody, null, 2);
         this.responseHeader = JSON.stringify(this.responseHeader, null, 2);
 
-        if (this.choose1 === "Body"){
+        if (this.choose1 === "Body") {
           this.responseSrc = this.responseBody;
-        }else if (this.choose1 === "Header"){
+        } else if (this.choose1 === "Header") {
           this.responseSrc = this.responseHeader;
         }
         return;
-        
+
       },
       error => {
         this.showResponse = false;

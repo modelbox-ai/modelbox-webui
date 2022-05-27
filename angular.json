@@ -41,7 +41,10 @@
                         ],
                         "customWebpackConfig": {
                             "path": "config/webpack.config.js"
-                        }
+                        },
+                        "allowedCommonJsDependencies": [
+                            "showdown"
+                        ]
                     },
                     "configurations": {
                         "production": {
