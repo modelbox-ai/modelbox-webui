@@ -1048,8 +1048,31 @@ export class MainComponent {
   }
 
   handleRestartButtonClick = (graphName) => {
-    this.handleStopButtonClick(graphName);
-    this.handleRunButtonClick(graphName);
+    //saveToBrowser
+    if (!graphName && this.project && this.project.graph) {
+      graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
+    }
+
+    this.statusGraph = 0;
+    let obj = {};
+    obj[graphName] = 0;
+    sessionStorage.setItem('statusGraph', JSON.stringify(obj));
+
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      for (let i of data.job_list) {
+        if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
+          this.basicService.deleteTask(i.job_id).subscribe(data => {
+            this.toastService.open({
+              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
+              life: 1500,
+              style: { top: '100px' }
+            });
+
+            this.handleRunButtonClick(graphName);
+          });
+        }
+      }
+    });
   }
 
   createOptionFromProject = (item) => {

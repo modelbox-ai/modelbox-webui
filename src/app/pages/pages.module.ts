@@ -44,6 +44,8 @@ import { SolutionComponent } from '../components/solution/solution.component';
 import { ToolBarSolutionComponent } from '../components/tool-bar-solution/tool-bar-solution.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { AceModule, AceConfigInterface, ACE_CONFIG } from 'ngx-ace-wrapper';
+import { ShowdownModule } from 'ngx-showdown';
+import { ModalGuideComponent } from '../components/modal-guide/modal-guide.component';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
@@ -82,7 +84,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     LoadingModule,
     StepsGuideModule,
     BrowserAnimationsModule,
-    DevUIModule
+    DevUIModule,
+    ShowdownModule.forRoot({emoji: true, noHeaderId: true, flavor: 'github'}),
   ],
   declarations: [
     ...COMPONENTS,
@@ -98,7 +101,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     SolutionComponent,
     ManagementComponent,
     ModalSaveAsComponent,
-    NgbdTooltipCustomclass
+    NgbdTooltipCustomclass,
+    ModalGuideComponent
   ],
   providers: [
     {
