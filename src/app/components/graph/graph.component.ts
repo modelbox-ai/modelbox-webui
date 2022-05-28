@@ -1251,7 +1251,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   getLabelFromEdge(name, edges) {
     let input = [];
     let output = [];
-
     for (let edge in edges) {
       const [start, end] = edge.split('->');
       const [startname, outport] = start.split(':');

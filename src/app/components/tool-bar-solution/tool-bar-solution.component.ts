@@ -32,7 +32,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onOpenTutorial: any;
   @Input() statusGraph: any;
 
-  @Output() currentProjectEmitter = new EventEmitter<any>();  
+  @Output() currentProjectEmitter = new EventEmitter<any>();
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -189,15 +189,15 @@ export class ToolBarSolutionComponent implements OnInit {
       this.basicService.getTaskLists().subscribe((data: any) => {
         for (let i of data.job_list) {
           if (i.job_id.indexOf(selectedName.split("/")[0]) > -1) {
-            this.statusGraph = 'running';
-          }else{
-            if (i.job_error_msg === ""){
-              this.statusGraph = 'stop';
-              return;
+            if (i.job_error_msg === "") {
+              this.statusGraph = 'running';
+            } else {
+              this.statusGraph = 'fault';
             }
-            this.statusGraph = 'fault';
+            return;
           }
         }
+        this.statusGraph = 'stop';
       });
 
     });

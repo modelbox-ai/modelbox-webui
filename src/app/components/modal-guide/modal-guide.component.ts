@@ -9,7 +9,6 @@ export class ModalGuideComponent {
   @Input() handler: Function;
 
   ngOnInit(){
-    debugger
   }
 
   close($event) {
