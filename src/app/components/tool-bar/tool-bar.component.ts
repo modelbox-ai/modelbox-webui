@@ -487,6 +487,7 @@ export class ToolBarComponent {
     value: 2,
     specialContent: '功能单元'
   }];
+  currentGraph: any;
 
 
   constructor(private dialogService: DialogService,
@@ -1208,25 +1209,32 @@ export class ToolBarComponent {
 
             //加载功能单元信息
             //加载图信息
-            if (data.graphs && data.graphs[0] != null) {
-              if (data.graphs[0].graph.graphconf) {
-                this.formData.graphName = data.graphs[0].name;
+            if (data.graphs?.length > 1) {
+              this.currentGraph = data.graphs[data.graphs.length - 2];
+            } else if (data.graphs?.length === 1) {
+              this.currentGraph = data.graphs[0];
+            } else {
+              this.currentGraph = null;
+            }
+            if (data.graphs && this.currentGraph !== null) {
+              if (this.currentGraph.graph.graphconf) {
+                this.formData.graphName = this.currentGraph.name;
 
                 if (this.formData.graphName == undefined) {
-                  this.formData.graphName = this.getGraphNameFromGraph(data.graphs[0].graph.graphconf);
+                  this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
                 }
 
                 this.formData.skipDefault = false;
-                if (data.graphs[0].profile) {
-                  this.formData.perfEnable = data.graphs[0].profile.profile;
+                if (this.currentGraph.profile) {
+                  this.formData.perfEnable = this.currentGraph.profile.profile;
 
-                  this.formData.perfTraceEnable = data.graphs[0].profile.trace;
+                  this.formData.perfTraceEnable = this.currentGraph.profile.trace;
                 }
-                this.dotSrcEmmiter.emit(data.graphs[0].graph.graphconf);
-                this.formData.flowunitPath = data.graphs[0].driver.dir;
+                this.dotSrcEmmiter.emit(this.currentGraph.graph.graphconf);
+                this.formData.flowunitPath = this.currentGraph.driver.dir;
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
-                this.formData.flowunitReleasePath = data.graphs[0].driver.dir;
+                this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
                 this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
               } else {
                 this.initFormData();

@@ -107,6 +107,7 @@ export class MainComponent {
     RUNNING: 1,
     FAULT: 2
   }
+  currentGraph: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -290,17 +291,24 @@ export class MainComponent {
       (data: any) => {
         this.toolBar.formDataCreateProject.name = data.project_name;
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
-        if (data.graphs && data.graphs[0] != null) {
-          if (data.graphs[0].graph.graphconf) {
-            this.dotSrc = this.insertNodeType(data.graphs[0].graph.graphconf);
-            this.toolBar.formData.graphName = this.getGraphNameFromGraph(data.graphs[0].graph.graphconf);
+        if (data.graphs?.length > 1) {
+          this.currentGraph = data.graphs[data.graphs.length - 2];
+        } else if (data.graphs?.length === 1) {
+          this.currentGraph = data.graphs[0];
+        } else {
+          this.currentGraph = null;
+        }
+        if (data.graphs && this.currentGraph != null) {
+          if (this.currentGraph.graph.graphconf) {
+            this.dotSrc = this.insertNodeType(this.currentGraph.graph.graphconf);
+            this.toolBar.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphDesc = "";
             this.toolBar.formData.skipDefault = false;
-            if (data.graphs[0].profile) {
-              this.toolBar.formData.perfEnable = data.graphs[0].profile.profile;
-              this.toolBar.formData.perfTraceEnable = data.graphs[0].profile.trace;
+            if (this.currentGraph.profile) {
+              this.toolBar.formData.perfEnable = this.currentGraph.profile.profile;
+              this.toolBar.formData.perfTraceEnable = this.currentGraph.profile.trace;
             }
-            this.toolBar.formData.flowunitReleasePath = data.graphs[0].driver.dir;
+            this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
             this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit";
             this.dirs = this.toolBar.formData.flowunitDebugPath;
             this.project_name = data.project_name;
