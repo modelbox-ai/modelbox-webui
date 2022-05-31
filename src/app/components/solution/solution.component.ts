@@ -86,6 +86,7 @@ export class SolutionComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.showLoading = true;
     if (Object.keys(this.project).length === 0) {
       this.tool.showSelectDemoDialog(this.tool.selectDemo);
     } else {
@@ -93,11 +94,12 @@ export class SolutionComponent implements OnInit {
         for (let i of data.job_list) {
           if (i.job_id === this.project.name) {
             this.statusGraph = "running";
-            if (i.job_error_msg !== ''){
+            if (i.job_error_msg !== '') {
               this.statusGraph = "fault";
             }
           }
         }
+        this.showLoading = false;
       });
     }
   }
@@ -301,7 +303,9 @@ export class SolutionComponent implements OnInit {
   }
 
   handleTutorials = () => {
-    const driver = new Driver();
+    const driver = new Driver({
+      opacity: 0,
+    });
     // Define the steps for introduction
     driver.defineSteps([
       {
@@ -361,11 +365,19 @@ export class SolutionComponent implements OnInit {
         }
       },
       {
-        element: '#graph',
+        element: '#graph-guide',
         popover: {
           title: '画布',
           description: this.i18n.getById("tutorial.graphGuide"),
           position: 'right'
+        }
+      },
+      {
+        element: '#text-guide',
+        popover: {
+          title: '编辑器',
+          description: this.i18n.getById("tutorial.textGuide"),
+          position: 'top'
         }
       }
     ]);
@@ -453,6 +465,7 @@ export class SolutionComponent implements OnInit {
 
   handleStopButtonClick = (graphName) => {
     //saveToBrowser
+    this.showLoading = true;
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.graphconf);
     }
@@ -471,12 +484,32 @@ export class SolutionComponent implements OnInit {
           });
         }
       }
+      this.showLoading = false;
     });
   }
-  
+
   handleRestartButtonClick = (graphName) => {
-    this.handleStopButtonClick(graphName);
-    this.handleRunButtonClick();
+    this.showLoading = true;
+    if (!graphName && this.project && this.project.graph) {
+      graphName = this.getGraphNameFromGraph(this.project.graph.graphconf);
+    }
+
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      for (let i of data.job_list) {
+        if (graphName === i.job_id) {
+          this.basicService.deleteTask(i.job_id).subscribe(data => {
+            this.toastService.open({
+              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
+              life: 1500,
+              style: { top: '100px' }
+            });
+            this.statusGraph = "stop";
+            this.handleRunButtonClick();
+          });
+        }
+      }
+      this.showLoading = false;
+    });
   }
 
   statusGraphUpdate(e) {

@@ -37,6 +37,10 @@ const routes: Routes = [
     canActivateChild: [],
     children: [],
   },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];
 
 @NgModule({

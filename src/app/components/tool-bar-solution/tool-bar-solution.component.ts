@@ -175,6 +175,7 @@ export class ToolBarSolutionComponent implements OnInit {
   }
 
   selectSolution(selectedName) {
+    this.statusGraph = 'stop';
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
       if (response.graph) {

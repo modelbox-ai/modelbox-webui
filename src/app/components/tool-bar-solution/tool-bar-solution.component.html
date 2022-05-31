@@ -107,8 +107,8 @@
         *ngIf="statusGraph === 'fault'"
         dTooltip
         bsStyle="text-dark"
-        [content]="'toolBar.stopGraphButton' | translate"
-        (click)="handleStopButtonClick($event)">
+        [content]="'toolBar.restartGraphButton' | translate"
+        (click)="handleRestartButtonClick($event)">
         <img src={{restartSvg}} />
     </d-button>
   </div>

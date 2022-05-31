@@ -879,6 +879,39 @@ export class MainComponent {
       },],
     });
   }
+
+  showGraphSelectDialog(content: TemplateRef<any>) {
+    const results = this.dialogService.open({
+      id: 'graphSelect',
+      width: '700px',
+      title: this.i18n.getById('toolBar.selectDialogButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },
+      {
+        id: 'save-as-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+    });
+  }
+
   updateConfig(e) {
     this.currentComponent = e;
   }
