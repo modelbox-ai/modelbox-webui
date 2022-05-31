@@ -262,13 +262,19 @@ export class ManagementComponent implements OnInit {
     this.currentTemplate = value;
     for (let i of this.demo_list) {
       if (i.name === value) {
-        this.selectMethod = i.restapi.method;
-        let t = JSON.stringify(i.restapi.requestbody);
-        t = JSON.parse(t);
-        this.jsonSrc = t;
-        this.url = i.restapi.path;
+        if (i.restapi) {
+          this.selectMethod = i.restapi?.method;
+          let t = JSON.stringify(i.restapi?.requestbody);
+          t = JSON.parse(t);
+          this.jsonSrc = t;
+          this.url = i.restapi?.path;
+        }else{
+          this.selectMethod = "GET";
+          this.jsonSrc = "";
+          this.url = "";
+        }
         if (i.guide) {
-          this.guide = i.guide.guide;
+          this.guide = i.guide?.guide;
         } else {
           this.guide = null;
         }

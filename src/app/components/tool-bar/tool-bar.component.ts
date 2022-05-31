@@ -63,6 +63,7 @@ export class ToolBarComponent {
   @Input() onCreateProjectButtonClick: any;
   oldName: string = '';
   @Input() showGraphSettingDialog: any;
+  @Input() showGraphSelectDialog: any;
   @Input() showSelectDialog: any;
   @Input() showSolutionDialog: any;
   @Input() showCreateProjectDialog: any;
@@ -171,11 +172,6 @@ export class ToolBarComponent {
         fieldType: 'text'
       },
       {
-        field: 'lastChanged',
-        header: this.i18n.getById("toolBar.select.lastChanged"),
-        fieldType: 'text'
-      },
-      {
         field: 'select_operation',
         header: this.i18n.getById("toolBar.select.operation"),
         fieldType: 'customized'
@@ -194,11 +190,7 @@ export class ToolBarComponent {
     },
     {
       field: 'dotSrc',
-      width: '300px'
-    },
-    {
-      field: 'lastChanged',
-      width: '150px'
+      width: '350px'
     },
     {
       field: 'select_operation',
@@ -829,7 +821,7 @@ export class ToolBarComponent {
     delete this.graphs[row.name];
     this.graphSelectTableData = this.graphSelectTableData.filter(item => {
       return item.name != row.name;
-    })
+    });
     this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
     for (let e in this.graphSelectTableDataForDisplay) {
       this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
