@@ -238,6 +238,8 @@ export class MainComponent {
   }
 
   createProject(param) {
+    this.saveCurrentProject();
+    this.initCurrentProject();
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
         this.project_name = param.name;
@@ -302,7 +304,7 @@ export class MainComponent {
           if (this.currentGraph.graph.graphconf) {
             this.dotSrc = this.insertNodeType(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
-            this.toolBar.formData.graphDesc = "";
+            this.toolBar.formData.graphDesc = this.currentGraph.flow?.desc;
             this.toolBar.formData.skipDefault = false;
             if (this.currentGraph.profile) {
               this.toolBar.formData.perfEnable = this.currentGraph.profile.profile;

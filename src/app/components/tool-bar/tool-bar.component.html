@@ -110,11 +110,11 @@
 
     </div>
 
-    <div class="tool-bar-mid">
-        <span style="font-size:28px; font-weight:500; width:100%; word-wrap:break-word;">
-
+    <div class="tool-bar-mid" 
+        style="font-size:28px; font-weight:500; overflow:hidden; 
+        text-overflow:ellipsis;
+        white-space:nowrap;">
             {{formDataCreateProject.name}}
-        </span>
     </div>
 
     <div class="tool-bar-right">
@@ -178,7 +178,11 @@
                     {{'toolBar.modal.project_path' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="rootpath" [(ngModel)]="formDataCreateProject.rootpath" />
+                    <input 
+                        dTextInput 
+                        name="rootpath" 
+                        [(ngModel)]="formDataCreateProject.rootpath" 
+                        maxlength="4096"/>
                 </d-form-control>
             </d-form-item>
             <d-form-item *ngIf="false">
@@ -241,7 +245,7 @@
                             <input dTextInput type="text" class="devui-form-control devui-dropdown-origin"
                                 name="language" placeholder="Search" [minLength]="0" [(ngModel)]="openproject_path"
                                 dAutoComplete [source]="openProjectList" (selectValue)="onPathSelect($event)"
-                                (keyup)="($event.which === 13)?searchDirectory():0" />
+                                (keyup)="($event.which === 13)?searchDirectory():0" maxlength="4096"/>
                         </div>
                         <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"
                             (click)="searchDirectory()">
@@ -289,7 +293,7 @@
                 </d-form-label>
                 <d-form-control>
                     <div>
-                        <input dTextInput name="flowunit_name" [(ngModel)]="formDataCreateFlowunit.name" />
+                        <input dTextInput name="flowunit_name" [(ngModel)]="formDataCreateFlowunit.name" maxlength="31"/>
                     </div>
                 </d-form-control>
             </d-form-item>
@@ -563,7 +567,12 @@
                         <d-form-item>
                             <d-form-label>{{'toolBar.setting.desc' | translate}}</d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="desc" [(ngModel)]="formData.graphDesc"></textarea>
+                                <textarea 
+                                    dTextarea 
+                                    name="desc" 
+                                    [(ngModel)]="formData.graphDesc" 
+                                    [disabled]="true">
+                                </textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
