@@ -81,12 +81,7 @@ export class SolutionComponent implements OnInit {
 
   }
 
-  ngAfterContentInit(): void {
-    this.showLoading = false;
-  }
-
   ngAfterViewInit(): void {
-    this.showLoading = true;
     if (Object.keys(this.project).length === 0) {
       this.tool.showSelectDemoDialog(this.tool.selectDemo);
     } else {

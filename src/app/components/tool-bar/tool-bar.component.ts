@@ -585,6 +585,7 @@ export class ToolBarComponent {
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
       this.formDataCreateFlowunit.device = 'cuda';
+      this.formDataCreateFlowunit["virtual-type"]= 'tensorflow';
       this.portInfo.device = 'cuda';
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -593,7 +594,7 @@ export class ToolBarComponent {
 
     if (this.formDataCreateFlowunit.lang === "inference") {
       this.portHeaderOptions = this.portHeaderFullOptions;
-    }
+    } 
     this.portHeaderOptions = this.defaultPortHeaderOptions;
 
     if (value === "yolo") {
@@ -1211,7 +1212,7 @@ export class ToolBarComponent {
             if (data.graphs && this.currentGraph !== null) {
               if (this.currentGraph.graph.graphconf) {
                 this.formData.graphName = this.currentGraph.name;
-
+                this.formData.graphDesc = this.currentGraph.flow.desc;
                 if (this.formData.graphName == undefined) {
                   this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
                 }
