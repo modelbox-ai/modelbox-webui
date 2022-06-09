@@ -22,6 +22,10 @@
   "editor": "任务编排",
   "taskLists": "任务管理",
   "graph.cavans.tip": "按住CTRL+鼠标左键可拖动画布",
+  "graph.creation":"成功新建图",
+  "graph.name":"图名称",
+  "toolBar.path.name":"路径：",
+  "toolBar.graph.name":"图名称：",
   "toolBar.project_name": "项目名称",
   "toolBar.switchButton": "切换布局",
   "toolBar.runGraphButton": "运行",
@@ -103,7 +107,7 @@
   "toolBar.debugFlowunitPath":"调试功能单元路径",
   "toolBar.copyModel":"拷贝模型",
 
-
+  "modal.virtualFlowunitType":"虚拟单元类型",
   "insertPanel.flowunitList":"功能单元列表",
   "modal.okButton": "确认",
   "modal.cancelButton": "取消",

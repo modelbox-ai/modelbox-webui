@@ -23,6 +23,7 @@ import { BasicServiceService } from '@shared/services/basic-service.service';
 import { I18nService } from '@core/i18n.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ToastService } from 'ng-devui/toast';
 
 declare const require: any
 
@@ -103,6 +104,7 @@ export class InsertPanelsComponent implements OnInit {
     private basicService: BasicServiceService,
     private i18n: I18nService,
     private http: HttpClient,
+    private toastService: ToastService,
   ) { }
 
   toggleTip(tooltip, context: any) {

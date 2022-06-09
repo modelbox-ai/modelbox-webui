@@ -86,7 +86,6 @@
 
     .tool-bar-right {
         display        : inline-flex;
-        width          : 40%;
         text-align     : right;
         right          : 0;
         top            : 0;
@@ -165,5 +164,14 @@ d-card {
 }
 
 .table-style ::ng-deep td{
+    cursor: pointer;
+}
+
+.dot-class {
+    height:24px;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    max-width: 350px;
+    overflow:hidden; 
     cursor: pointer;
 }
