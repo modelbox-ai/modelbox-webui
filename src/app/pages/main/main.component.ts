@@ -17,7 +17,6 @@ import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { indexOf } from 'lodash';
 import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
-import { data } from 'jquery';
 
 @Component({
   selector: 'app-main',

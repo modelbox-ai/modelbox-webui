@@ -36,7 +36,6 @@
                             "node_modules/@devui-design/icons/icomoon/devui-icon.css"
                         ],
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
                             "node_modules/driver.js/dist/driver.min.js"
                         ],
                         "customWebpackConfig": {

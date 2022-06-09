@@ -717,6 +717,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   deleteSelectedComponents() {
+    debugger
     this.selectedComponents.style('display', 'none');
     const self = this;
     this.selectedComponents.each(function (d, i) {
