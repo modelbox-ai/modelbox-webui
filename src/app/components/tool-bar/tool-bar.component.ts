@@ -45,7 +45,8 @@ export class ToolBarComponent {
   @ViewChild('createProject') createProjectTemplate: TemplateRef<any>;
   @ViewChild('openProject') openProjectTemplate: TemplateRef<any>;
   @ViewChild('createFlowunit') createFlowunitTemplate: TemplateRef<any>;
-
+  @ViewChild('graphSelect') graphSelectTemplate: TemplateRef<any>;
+  @ViewChild('newGraph') newGraphTemplate: TemplateRef<any>;
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -83,6 +84,8 @@ export class ToolBarComponent {
   @Output() flowunitEmmiter = new EventEmitter();
   @Output() projectPathEmmiter = new EventEmitter();
   @Output() saveProjectEmmiter = new EventEmitter();
+  @Output() saveGraphEmmiter = new EventEmitter();
+  @Output() saveSettingEmmiter = new EventEmitter();
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -172,9 +175,9 @@ export class ToolBarComponent {
         fieldType: 'text'
       },
       {
-        field: 'select_operation',
-        header: this.i18n.getById("toolBar.select.operation"),
-        fieldType: 'customized'
+        field: 'desc',
+        header: this.i18n.getById("toolBar.setting.desc"),
+        fieldType: 'text'
       }
     ]
   };
@@ -190,11 +193,11 @@ export class ToolBarComponent {
     },
     {
       field: 'dotSrc',
-      width: '350px'
+      width: '200px'
     },
     {
-      field: 'select_operation',
-      width: '100px'
+      field: 'desc',
+      width: '250px'
     },
   ];
 
@@ -449,6 +452,7 @@ export class ToolBarComponent {
   openProjectListPath: string = this.dataService.defaultSearchPath;
   incomingGraphName: string = '';
   isChangingPortName: boolean;
+  layoutDirection2: FormLayout = FormLayout.Vertical;
 
   currentOption1 = "项目";
   options1 = [{
@@ -460,12 +464,20 @@ export class ToolBarComponent {
     value: 2,
     specialContent: '项目'
   }, {
-    name: this.i18n.getById('toolBar.saveAsButton'),
+    name: this.i18n.getById('toolBar.newGraphButton'),
     value: 3,
     specialContent: '项目'
   }, {
-    name: this.i18n.getById('toolBar.clearCacheButton'),
+    name: this.i18n.getById('toolBar.graphSelectButton'),
     value: 4,
+    specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.saveAsButton'),
+    value: 5,
+    specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.clearCacheButton'),
+    value: 6,
     specialContent: '项目'
   }];
 
@@ -480,6 +492,7 @@ export class ToolBarComponent {
     specialContent: '功能单元'
   }];
   currentGraph: any;
+  graphList: any;
 
 
   constructor(private dialogService: DialogService,
@@ -504,13 +517,13 @@ export class ToolBarComponent {
 
       this.formDataCreateProject.name = current_project.name;
       this.formDataCreateProject.rootpath = current_project.rootpath;
-      this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
+      this.formDataCreateFlowunit["project-path"] = current_project.flowunit["project-path"];
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
 
       this.formData.flowunitReleasePath = current_project.graph.flowunitReleasePath;
     }
 
-    this.loadGraphData();
+    this.loadGraphData("toolBar.Init");
     this.loadSolutionData();
     if (this.formDataCreateProject.name) {
       this.searchDirectory();
@@ -531,20 +544,45 @@ export class ToolBarComponent {
     }
   }
 
-  loadGraphData() {
-    this.graphSelectTableData = Object.keys(this.graphs).map(item => {
-      return {
-        name: item,
-        dotSrc: this.graphs[item].graph.dotSrc,
-        lastChanged: new Date(this.graphs[item].graph.dotSrcLastChangeTime),
-        svgString: this.graphs[item].graph.svgString,
-        checked: false
-      };
-    });
-    this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
-    for (let e in this.graphSelectTableDataForDisplay) {
-      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
+  loadGraphData(status = null) {
+    const current_project = JSON.parse(localStorage.getItem('project'));
+    if (current_project && current_project?.rootpath && current_project?.name) {
+      if (status === "toolBar.Init") {
+        this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
+          (data: any) => {
+            this.graphList = data.graphs;
+            this.graphSelectTableDataForDisplay = this.graphList.map(i => {
+              let obj = {};
+              obj['checked'] = false;
+              obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
+              obj['dotSrc'] = i.graph.graphconf;
+              obj['desc'] = i.flow?.desc;
+              return obj;
+            })
+          });
+        return;
+      }
+      this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
+        (data: any) => {
+          this.graphList = data.graphs;
+          this.graphSelectTableDataForDisplay = this.graphList.map(i => {
+            let obj = {};
+            obj['checked'] = false;
+            obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
+            obj['dotSrc'] = i.graph.graphconf;
+            obj['desc'] = i.flow?.desc;
+            return obj;
+          })
+
+        }, error => {
+          const results = this.toastService.open({
+            value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
+            life: 10000,
+            style: { top: '100px' }
+          });
+        });
     }
+
   }
 
   getFormDataCreateProject() {
@@ -561,8 +599,12 @@ export class ToolBarComponent {
     } else if (e.value === 2) {
       this.showOpenProjectButtonDialog(this.openProjectTemplate);
     } else if (e.value === 3) {
-      this.saveAllProject();
+      this.handleNewGraphClick(null);
     } else if (e.value === 4) {
+      this.showGraphSelectDialog(this.graphSelectTemplate);
+    } else if (e.value === 5) {
+      this.saveAllProject();
+    } else if (e.value === 6) {
       this.clearCache();
     }
   }
@@ -585,7 +627,7 @@ export class ToolBarComponent {
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
       this.formDataCreateFlowunit.device = 'cuda';
-      this.formDataCreateFlowunit["virtual-type"]= 'tensorflow';
+      this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       this.portInfo.device = 'cuda';
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -594,7 +636,7 @@ export class ToolBarComponent {
 
     if (this.formDataCreateFlowunit.lang === "inference") {
       this.portHeaderOptions = this.portHeaderFullOptions;
-    } 
+    }
     this.portHeaderOptions = this.defaultPortHeaderOptions;
 
     if (value === "yolo") {
@@ -928,6 +970,56 @@ export class ToolBarComponent {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
 
+  handleNewGraphClick(e) {
+    const results = this.dialogService.open({
+      id: 'new-graph',
+      title: this.i18n.getById('toolBar.newGraphButton'),
+      contentTemplate: this.newGraphTemplate,
+      width: '400px',
+      showAnimation: true,
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          let graphName = this.formData.graphName;
+          this.formData.graphName = '';
+          this.formData.graphDesc = '';
+          this.formData.radioValue = "N";
+          this.formData.skipDefault = false;
+          this.formData.perfEnable = false;
+          this.formData.perfTraceEnable = false;
+          this.formData.perfSessionEnable = false;
+          this.formData.perfPath = this.dataService.defaultPerfDir;
+
+          this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+          this.toastService.open({
+            value: [{ severity: 'success', content: this.i18n.getById('graph.creation') }],
+            life: 5000,
+            style: { top: '100px' }
+          });
+          setTimeout(() => {
+            this.saveSettingEmmiter.emit(graphName);
+          }, 0)
+
+        },
+      },
+      {
+        id: 'new-cancel',
+        cssClass: 'common',
+        text: this.i18n.getById('modal.cancelButton'),
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+        },
+      },],
+      onClose: ($event: Event) => {
+      }
+    });
+  }
+
   initFormDataCreateFlowunit() {
     this.formDataCreateFlowunit = {
       name: 'flowunit',
@@ -1094,7 +1186,7 @@ export class ToolBarComponent {
       (error) => {
         this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 150000,
+          life: 10000,
           style: { top: '100px' }
         });
         return null;
@@ -1157,7 +1249,7 @@ export class ToolBarComponent {
           } else {
             this.toastService.open({
               value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-              life: 150000,
+              life: 10000,
               style: { top: '100px' }
             });
           }
@@ -1197,6 +1289,7 @@ export class ToolBarComponent {
         (data: any) => {
           if (data) {
             //加载项目信息
+
             this.formDataCreateProject.name = data.project_name;
             this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
 
@@ -1212,7 +1305,7 @@ export class ToolBarComponent {
             if (data.graphs && this.currentGraph !== null) {
               if (this.currentGraph.graph.graphconf) {
                 this.formData.graphName = this.currentGraph.name;
-                this.formData.graphDesc = this.currentGraph.flow.desc;
+                this.formData.graphDesc = this.currentGraph.flow?.desc;
                 if (this.formData.graphName == undefined) {
                   this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
                 }
@@ -1225,6 +1318,7 @@ export class ToolBarComponent {
                 }
                 this.dotSrcEmmiter.emit(this.currentGraph.graph.graphconf);
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
+                this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
                 this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
@@ -1241,12 +1335,17 @@ export class ToolBarComponent {
 
             comp.modalInstance.hide();
             comp.modalInstance.zIndex = -1;
+            if (data.graphs.length > 1) {
+              this.showGraphSelectDialog(this.graphSelectTemplate);
+
+              return;
+            }
           }
         },
         (error) => {
           this.toastService.open({
             value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-            life: 150000,
+            life: 10000,
             style: { top: '100px' }
           });
           return;
@@ -1290,7 +1389,7 @@ export class ToolBarComponent {
       (error) => {
         this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 150000,
+          life: 10000,
           style: { top: '100px' }
         });
         return null;

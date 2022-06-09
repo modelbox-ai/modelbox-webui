@@ -64,7 +64,7 @@ export class MainComponent {
   selectedGraphComponents: any = [];
   graphInitialized = false;
   leftSpliterSize = 14;
-  centerSplitterSize = 95;
+  centerSplitterSize = 90;
   holdOff = localStorage.getItem('holdOff') || 0.2;
   fontSize = localStorage.getItem('fontSize') || 12;
   tabSize = Number(localStorage.getItem('tabSize')) || 4;
@@ -155,9 +155,13 @@ export class MainComponent {
     this.projectPath = e;
   }
 
-  reloadInsertComponent() {
+  reloadInsertComponent(f = null) {
     if (typeof this.InsertPanels === 'undefined') {
       return
+    }
+    if (f === "update") {
+      this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs, this.toolBar.openproject_path);
+      return;
     }
     this.InsertPanels.loadFlowUnit(this.skipDefault, this.dirs, this.projectPath);
   }
@@ -176,7 +180,6 @@ export class MainComponent {
     this.settingPerfTraceEnable = false;
     this.settingPerfSessionEnable = false;
     this.settingPerfDir = this.dataService.defaultPerfDir + "/" + this.graphName;
-    this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
     if (this.toolBar) {
       this.toolBar.initFormData();
     }
@@ -205,7 +208,7 @@ export class MainComponent {
       this.settingPerfTraceEnable = project.graph.settingPerfTraceEnable;
       this.settingPerfSessionEnable = project.graph.settingPerfSessionEnable;
       this.settingPerfDir = project.graph.settingPerfDir;
-      this.projectPath = this.project_name ? this.path + "/" + this.project_name : this.path;
+      this.projectPath = project.flowunit['project-path'];
       this.reloadInsertComponent();
     }
   }
@@ -261,7 +264,7 @@ export class MainComponent {
     }, error => {
       const results = this.toastService.open({
         value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-        life: 150000,
+        life: 10000,
         style: { top: '100px' }
       });
     });
@@ -323,13 +326,12 @@ export class MainComponent {
           this.dotSrc = this.dataService.defaultSrc;
         }
         this.saveCurrentProject();
-
         this.reloadInsertComponent();
 
       }, error => {
         const results = this.toastService.open({
           value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 150000,
+          life: 10000,
           style: { top: '100px' }
         });
       });
@@ -522,9 +524,11 @@ export class MainComponent {
 
 
   handleTextChange = (text, undoRedoState) => {
-    const name =
-      this.graphName || (text ? this.createUntitledName(this.graphs) : '');
-    this.graphName = name
+    if (this.project && this.project.graph) {
+      this.dotSrc = text;
+      this.graphName = this.getGraphNameFromGraph(text);
+      this.toolBar.formData.graphName = this.graphName;
+    }
 
     this.isSaved = false;
     this.dotSrc = text;
@@ -679,7 +683,7 @@ export class MainComponent {
     this.graphs[newName] = this.getProjectJson();
     this.saveGraphs();
     this.isSaved = true;
-    this.renameGraphSrc(this.graphName)
+    this.renameGraphSrc(this.graphName);
 
 
   }
@@ -883,6 +887,7 @@ export class MainComponent {
   }
 
   showGraphSelectDialog(content: TemplateRef<any>) {
+    this.toolBar.loadGraphData();
     const results = this.dialogService.open({
       id: 'graphSelect',
       width: '700px',
@@ -900,6 +905,11 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
+          
+          let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.name === this.toolBar.selectedName);
+          this.dotSrc = chosenGraph[0]?.dotSrc;
+          this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
+          this.saveCurrentProject();
         },
       },
       {
@@ -916,43 +926,6 @@ export class MainComponent {
 
   updateConfig(e) {
     this.currentComponent = e;
-  }
-
-  showSelectDialog(content: TemplateRef<any>) {
-    const results = this.dialogService.open({
-      id: 'graphSelect',
-      width: '900px',
-      title: this.i18n.getById('toolBar.selectDialogButton'),
-      showAnimate: false,
-      contentTemplate: content,
-      backdropCloseable: true,
-      onClose: () => {
-
-      },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-          if (!this.graphs[this.toolBar.selectedName]) {
-            return;
-          }
-          this.loadProjectFromJson(this.graphs[this.toolBar.selectedName]);
-          this.reloadInsertComponent();
-        },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-        },
-      },],
-    });
   }
 
   selectSolution(selectedName) {
@@ -988,7 +961,7 @@ export class MainComponent {
 
   updateDir(e) {
     this.dirs = e;
-    this.reloadInsertComponent();
+    this.reloadInsertComponent("update");
   }
 
   click(tab: string): void {
@@ -1042,13 +1015,21 @@ export class MainComponent {
           if (error.error != null) {
             this.toastService.open({
               value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-              life: 150000,
+              life: 10000,
               style: { top: '100px' }
             });
           }
         }
         );
     } else {
+      if (!this.graphName) {
+        this.toastService.open({
+          value: [{ severity: 'warn', summary: "", content: "图名称不能为空" }],
+          life: 3000,
+          style: { top: '100px' }
+        });
+        return;
+      }
       this.toastService.open({
         value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
         life: 3000,

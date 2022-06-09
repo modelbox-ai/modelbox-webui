@@ -48,8 +48,6 @@ export class SolutionComponent implements OnInit {
 
   graphs: any = JSON.parse(sessionStorage.getItem('graphsSolution')) || {};
 
-
-
   svgString: string = '';
   dotSrc: string;
   isResizing = false;
@@ -64,7 +62,6 @@ export class SolutionComponent implements OnInit {
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
     private dataService: DataServiceService) {
-    this.showLoading = true;
   }
 
   ngOnInit(): void {
@@ -94,7 +91,6 @@ export class SolutionComponent implements OnInit {
             }
           }
         }
-        this.showLoading = false;
       });
     }
   }
@@ -449,7 +445,7 @@ export class SolutionComponent implements OnInit {
         if (error.error != null) {
           this.toastService.open({
             value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-            life: 150000,
+            life: 10000,
             style: { top: '100px' }
           });
         }

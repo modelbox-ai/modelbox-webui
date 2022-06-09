@@ -116,6 +116,13 @@
         white-space:nowrap;">
             {{formDataCreateProject.name}}
     </div>
+    <div class="tool-bar-mid" 
+        style="font-size:14px; font-weight:400; overflow:hidden; margin-top:40px;
+        text-overflow:ellipsis;
+        white-space:nowrap;">
+            {{'toolBar.graph.name' | translate}}
+            {{formData.graphName}}
+    </div>
 
     <div class="tool-bar-right">
         <d-select
@@ -125,6 +132,7 @@
             [options]="options1"
             [filterKey]="'specialContent'"
             [(ngModel)]="currentOption1"
+            [highlightItemClass]=""
             (ngModelChange)="handleProjectDropDown($event)">
             <ng-template
                 let-option="option"
@@ -139,6 +147,7 @@
             [options]="options2"
             [filterKey]="'specialContent'"
             [(ngModel)]="currentOption2"
+            [highlightItemClass]=""
             (ngModelChange)="handleFlowunitDropDown($event)">
             <ng-template
                 let-option="option"
@@ -154,11 +163,26 @@
             {{'toolBar.graphSettingButton' | translate}}
         </button>
     </div>
-
 </div>
 <ng-template #titleTemplate>
     <h1>{{formDataCreateProject.name}}</h1>
-    <h4>路径：{{formDataCreateProject.rootpath}}</h4>
+    <h4>{{'toolBar.path.name' | translate}}{{formDataCreateProject.rootpath}}</h4>
+</ng-template>
+<ng-template #newGraph>
+    <d-layout class="basic-usage">
+        <d-layout dForm [layout]="layoutDirection2" ngForm style="margin:10px">
+            <d-form-item>
+                <d-form-label [required]="true">
+                    {{'graph.name' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <div>
+                        <input dTextInput name="project_name" [(ngModel)]="formData.graphName" maxlength="31"/>
+                    </div>
+                </d-form-control>
+            </d-form-item>
+        </d-layout>
+    </d-layout>
 </ng-template>
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
@@ -300,7 +324,7 @@
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang === 'virtual'">
                 <d-form-label [required]="true">
-                    虚拟单元类型
+                    {{'modal.virtualFlowunitType' | translate}}
                 </d-form-label>
                 <d-form-control>
                     <div class="row">
@@ -560,7 +584,7 @@
                             <d-form-control>
                                 <div>
                                     <input dTextInput type="text" [(ngModel)]="formData.graphName"
-                                        [ngModelOptions]="{standalone: true}" [disabled]="true">
+                                        [ngModelOptions]="{standalone: true}">
                                 </div>
                             </d-form-control>
                         </d-form-item>
@@ -570,8 +594,7 @@
                                 <textarea 
                                     dTextarea 
                                     name="desc" 
-                                    [(ngModel)]="formData.graphDesc" 
-                                    [disabled]="true">
+                                    [(ngModel)]="formData.graphDesc">
                                 </textarea>
                             </d-form-control>
                         </d-form-item>
@@ -653,16 +676,36 @@
                         {{ rowItem[colOption.field] }}
                     </div>
                     <div *ngIf="colOption.field === 'dotSrc'">
-                        <div [ngbTooltip]="tipContent" #t1="ngbTooltip"
-                            (mouseenter)="toggleTip(t1, graphSelectTableData[rowIndex].dotSrc)"
-                            placement="bottom" tooltipClass="my-custom-class-wide">
+                        <div 
+                            class="dot-class"
+                            dPopover 
+                            bsStyle="common" 
+                            [content]="tipContent"
+                            [controlled]="true">
                             {{ rowItem[colOption.field] }}
                         </div>
+                        <ng-template #tipContent>
+                            <div class="tips-block-top"
+                                style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                        </ng-template>
                     </div>
-                    <div *ngIf="colOption.field === 'select_operation'" class="edit-padding-fix">
-                        <a class="delete-button" (click)="deleteData(rowItem, rowIndex)">
-                            {{'toolBar.deleteDialogButton' | translate}}
-                        </a>
+                    <div *ngIf="colOption.field === 'desc'">
+                        <div 
+                            class="dot-class"
+                            dPopover 
+                            bsStyle="common" 
+                            [content]="tipContent"
+                            [controlled]="true">
+                            {{ rowItem[colOption.field] }}
+                        </div>
+                        <ng-template #tipContent>
+                            <div class="tips-block-top"
+                                style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+                                {{ rowItem[colOption.field] }}
+                            </div>
+                        </ng-template>
                     </div>
                 </td>
             </tr>
@@ -672,12 +715,7 @@
   </d-content>
 </ng-template>
 
-<ng-template #tipContent let-context="context">
-    <div class="tips-block-top"
-        style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
-        {{context}}
-    </div>
-</ng-template>
+
 
 <ng-template #solutionSelect let-context='context'>
     <d-content>

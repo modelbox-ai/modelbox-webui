@@ -53,7 +53,7 @@
               [onCreateProjectButtonClick]="createProject"
               [showGraphSettingDialog]="showGraphSettingDialog.bind(this)"
               [showGraphSelectDialog]="showGraphSelectDialog.bind(this)"
-              [showSelectDialog]="showSelectDialog.bind(this)"
+              [showSelectDialog]="showGraphSelectDialog.bind(this)"
               [showSolutionDialog]="showSolutionDialog.bind(this)"
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
@@ -63,7 +63,9 @@
               (dotSrcEmmiter)="dotSrcUpdate($event)"
               (flowunitEmmiter)="updateDir($event)"
               (projectPathEmmiter)="updateProjectPath($event)"
-              (saveProjectEmmiter)="saveCurrentProject()">
+              (saveProjectEmmiter)="saveCurrentProject()"
+              (saveSettingEmmiter)="renameGraphSrc($event)"
+              (saveGraphEmmiter)="handleSaveAsToBrowser($event)">
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">

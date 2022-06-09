@@ -155,8 +155,8 @@ export class AttributePanelComponent {
       // 处理 node name
       if (this.newName !== this.config.name && this.unit) {
         if (
-          this.unit.inputports.find(item => item.name === this.newName) ||
-          this.unit.outputports.find(item => item.name === this.newName)
+          this.unit.inputports?.find(item => item.name === this.newName) ||
+          this.unit.outputports?.find(item => item.name === this.newName)
         ) {
           const results = this.dialogService.open({
             id: 'dialog-service',
