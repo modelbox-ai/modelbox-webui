@@ -470,7 +470,7 @@ export class MainComponent {
   }
 
   handleGraphComponentSelect = components => {
-    this.selectedGraphComponents = components;
+    this.selectedGraphComponents = components;    
     this.setEditorMarkers(components);
 
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
