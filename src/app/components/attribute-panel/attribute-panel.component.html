@@ -87,18 +87,16 @@
       <div class="form-item">
         <d-form-label [required]="item.required">
           <div
-            class="title-label"
-            style="padding-bottom: 8px; display: inline-block;">
+            class="title-label-required">
             {{item.label}}
           </div>
         </d-form-label>
         <d-form-control>
           <ng-container *ngIf="item.type === 'string'">
             <input
-              class="content-font"
+              class="content-font content-input"
               dTextInput
               autocomplete="off"
-              style="height:32px"
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               placeholder="{{item.desc}}"
               [(ngModel)]="item.value"
@@ -107,9 +105,8 @@
           </ng-container>
           <ng-container *ngIf="item.type === 'bool'">
             <input
-              class="content-font"
+              class="content-font content-input"
               type="checkbox"
-              style="height:32px"
               [(ngModel)]="item.value"
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               (keyup)="changedValue=true"
@@ -118,10 +115,9 @@
           </ng-container>
           <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
             <input
-              class="content-font"
+              class="content-font content-input"
               dTextInput
               autocomplete="off"
-              style="height:32px"
               [(ngModel)]="item.value"
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               placeholder="{{item.desc}}"

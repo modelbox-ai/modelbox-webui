@@ -1,9 +1,11 @@
+@import "../../../styles.less";
+
 .tool-bar {
   height         : 44px;
   width          : 100%;
   right          : 10px;
-  background     : #FFFFFF;
-  box-shadow     : 0 1px 0 0 #DFE1E6, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
+  background     : #fff;
+  box-shadow     : 0 1px 0 0 @lightest-grey, 0 4px 8px 0 rgba(0, 0, 0, 0.10);
   border-radius  : 0 2px 0 0;
   display        : flex;
   justify-content: space-between;
@@ -39,12 +41,12 @@
     & .tool-bar-button {
       margin          : 0 4px 0 4px;
       padding         : 4px 12px 4px 12px;
-      color           : #252B3A;
+      color           : @black;
       letter-spacing  : 0;
       text-align      : center;
       line-height     : 18px;
       background-color: #fff;
-      border          : 1px solid #ADB0B8;
+      border          : 1px solid @light-grey;
       border-radius   : 2px;
     }
   }

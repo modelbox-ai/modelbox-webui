@@ -1,7 +1,5 @@
-.panel-content {
-    padding: 20px;
-    height : calc(100% - 42px);
-}
+@import "../../../styles.less";
+@content-font-size: 12px;
 
 .attribute-title {
     font-size  : 18px;
@@ -12,17 +10,8 @@
     margin: 12px;
 }
 
-.single-checkbox {
-    display     : inline-block;
-    margin-right: 4px;
-}
-
 :host ::ng-deep .devui-radio-horizontal d-radio {
     display: inline-block;
-}
-
-.item {
-    margin-top: 24px;
 }
 
 .form-item {
@@ -30,18 +19,30 @@
 }
 
 .title-label {
-    color: #8c8c8c;
+    color: @darker-grey;
+    font-weight: 600;
+    font-size : 14px;
+}
+
+.title-label-required {
+    .title-label();
+    padding-bottom: 8px;
+    display       : inline-block;
 }
 
 .content-font {
-    color    : #1f1f1f;
-    font-size: 12px;
+    color    : @black;
+    font-size: @content-font-size;
+}
+
+.content-input {
+    height: 32px;
 }
 
 .form-select {
-    font-size    : 16px;
-    color        : #1f1f1f;
-    border-color : #adb0b8;
+    font-size    : @content-font-size;
+    color        : @black;
+    border-color : @light-grey;
     padding      : 3px 36px 3px 8px;
     border-radius: 2px;
 }
