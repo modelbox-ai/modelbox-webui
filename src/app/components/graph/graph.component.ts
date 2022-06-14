@@ -225,6 +225,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (this.dotGraph !== undefined) {
       const nodes = { ...this.dotGraph.nodes };
       const edges = { ...this.dotGraph.edges };
+
       for (let node in nodes) {
         let attr = nodes[node]['attributes'];
         let flowunit = attr['flowunit'];
@@ -238,8 +239,11 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             attr["label"] = this.getLabelFromEdge(node, edges);
           }
         }
-        this.dotGraph.updateNode(node, attr);
-        this.dotGraph.reparse();
+        try {
+          this.dotGraph.updateNode(node, attr);
+          this.dotGraph.reparse();
+        }
+        catch { }
       }
 
       if (this.extended === false) {
@@ -249,6 +253,19 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       }
       this.extended = true;
     }
+
+    this.deduplicationDotSrc();
+  }
+
+  unique(arr) {
+    return Array.from(new Set(arr))
+  }
+
+  deduplicationDotSrc() {
+
+    let text = this.dotGraph.dotSrc.split("\n");
+    text = this.unique(text);
+    this.dotGraph.dotSrc = text.join("\n");
   }
 
   handleZoomResetButtonClick = () => {
@@ -717,7 +734,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   deleteSelectedComponents() {
-    debugger
     this.selectedComponents.style('display', 'none');
     const self = this;
     this.selectedComponents.each(function (d, i) {
@@ -740,6 +756,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     self.dotGraph.reparse();
     this.formatDotSrc();
     this.onTextChange(this.dotGraph.dotSrc);
+
     this.handleClickDiv(null, null, null);
   }
 
