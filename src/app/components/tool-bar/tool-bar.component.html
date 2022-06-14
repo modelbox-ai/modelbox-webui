@@ -110,16 +110,10 @@
 
     </div>
 
-    <div class="tool-bar-mid" 
-        style="font-size:28px; font-weight:500; overflow:hidden; 
-        text-overflow:ellipsis;
-        white-space:nowrap;">
+    <div class="tool-bar-mid ellipsis project-name">
             {{formDataCreateProject.name}}
     </div>
-    <div class="tool-bar-mid" 
-        style="font-size:14px; font-weight:400; overflow:hidden; margin-top:40px;
-        text-overflow:ellipsis;
-        white-space:nowrap;">
+    <div class="tool-bar-mid ellipsis graph-name">
             {{'toolBar.graph.name' | translate}}
             {{formData.graphName}}
     </div>
@@ -127,8 +121,7 @@
     <div class="tool-bar-right">
         <d-select
             id="projectDropDown"
-            class="btn-group" 
-            style="display:inline-block; width: 70px; margin-right: 4px"
+            class="btn-group project-drop-down"
             [options]="options1"
             [filterKey]="'specialContent'"
             [(ngModel)]="currentOption1"
@@ -142,8 +135,7 @@
         </d-select>
 
         <d-select
-            class="btn-group" 
-            style="display:inline-block; width: 84px"
+            class="btn-group flowunit-drop-down"
             [options]="options2"
             [filterKey]="'specialContent'"
             [(ngModel)]="currentOption2"
@@ -170,14 +162,22 @@
 </ng-template>
 <ng-template #newGraph>
     <d-layout class="basic-usage">
-        <d-layout dForm [layout]="layoutDirection2" ngForm style="margin:10px">
+        <d-layout 
+            dForm 
+            [layout]="layoutDirection2" 
+            ngForm 
+            style="margin:10px">
             <d-form-item>
                 <d-form-label [required]="true">
                     {{'graph.name' | translate}}
                 </d-form-label>
                 <d-form-control>
                     <div>
-                        <input dTextInput name="project_name" [(ngModel)]="formData.graphName" maxlength="31"/>
+                        <input 
+                            dTextInput 
+                            name="project_name" 
+                            [(ngModel)]="formData.graphName" 
+                            maxlength="31"/>
                     </div>
                 </d-form-control>
             </d-form-item>
@@ -186,14 +186,22 @@
 </ng-template>
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
-        <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
+        <form 
+            dForm 
+            [layout]="layoutDirection" 
+            ngForm 
+            style="margin:10px">
             <d-form-item>
                 <d-form-label [required]="true">
                     {{'toolBar.project_name' | translate}}
                 </d-form-label>
                 <d-form-control>
                     <div>
-                        <input dTextInput name="project_name" [(ngModel)]="formDataCreateProject.name" maxlength="31"/>
+                        <input 
+                            dTextInput 
+                            name="project_name" 
+                            [(ngModel)]="formDataCreateProject.name" 
+                            maxlength="31"/>
                     </div>
                 </d-form-control>
             </d-form-item>
@@ -221,26 +229,40 @@
                 <d-form-label [required]="true">
                     {{'toolBar.setting.template' | translate}}
                 </d-form-label>
-                <d-form-control class="card-container" style="height:300px;overflow:auto">
+                <d-form-control 
+                    class="card-container" 
+                    style="height:300px;overflow:auto">
                     <div style="width: 48%;display:inline-block">
-                        <d-card class="card-container" *ngFor="let d of optionSolutionList[0]"
-                            (click)="onClickCard(d, $event)" style="height:160px;margin:8px;border: 5px solid white;">
+                        <d-card 
+                            class="card-container card-out" 
+                            *ngFor="let d of optionSolutionList[0]"
+                            (click)="onClickCard(d, $event)">
                             <d-card-header>
-                                <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                                <d-avatar 
+                                    dCardAvatar 
+                                    [name]="d.dirname">
+                                </d-avatar>
                                 <d-card-title>
                                     {{d.name}}
                                 </d-card-title>
                             </d-card-header>
                             <d-card-content>
-                                <div>{{d.desc}}</div>
+                                <div>
+                                    {{d.desc}}
+                                </div>
                             </d-card-content>
                         </d-card>
                     </div>
                     <div style="width: 48%;display:inline-block">
-                        <d-card class="card-container" *ngFor="let d of optionSolutionList[1]"
-                            (click)="onClickCard(d, $event)" style="height:160px;margin:8px;border: 5px solid white;">
+                        <d-card 
+                            class="card-container card-out"
+                            *ngFor="let d of optionSolutionList[1]"
+                            (click)="onClickCard(d, $event)">
                             <d-card-header>
-                                <d-avatar dCardAvatar [name]="d.dirname"></d-avatar>
+                                <d-avatar 
+                                    dCardAvatar 
+                                    [name]="d.dirname">
+                                </d-avatar>
                                 <d-card-title>
                                     {{d.name}}
                                 </d-card-title>
@@ -264,14 +286,26 @@
                     {{'toolBar.modal.project_path' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <div style="display: flex; justify-content:center">
+                    <div class="flex-center">
                         <div class="devui-form-group" style="width:80%">
-                            <input dTextInput type="text" class="devui-form-control devui-dropdown-origin"
-                                name="language" placeholder="Search" [minLength]="0" [(ngModel)]="openproject_path"
-                                dAutoComplete [source]="openProjectList" (selectValue)="onPathSelect($event)"
-                                (keyup)="($event.which === 13)?searchDirectory():0" maxlength="4096"/>
+                            <input 
+                                dTextInput 
+                                type="text" 
+                                class="devui-form-control devui-dropdown-origin"
+                                name="language" 
+                                placeholder="Search" 
+                                [minLength]="0" 
+                                [(ngModel)]="openproject_path"
+                                dAutoComplete 
+                                [source]="openProjectList" 
+                                (selectValue)="onPathSelect($event)"
+                                (keyup)="($event.which === 13)?searchDirectory():0" 
+                                maxlength="4096"/>
                         </div>
-                        <d-button style="margin-left:30px;" icon="icon-search" bsStyle="primary"
+                        <d-button 
+                            style="margin-left:30px;" 
+                            icon="icon-search" 
+                            bsStyle="primary"
                             (click)="searchDirectory()">
                         </d-button>
                     </div>
@@ -279,14 +313,24 @@
             </d-form-item>
             <d-form-item>
                 <d-form-control>
-                    <d-data-table class="table-style" [dataSource]="folderList" [scrollable]="true" [type]="'striped'"
-                        [borderType]="'borderless'" (cellClick)="cellClick($event)" maxHeight="360px">
-                        <d-column field="folder" [header]="'toolBar.modal.folder' | translate" [cellClass]="'cell-style'">
+                    <d-data-table 
+                        class="table-style" 
+                        [dataSource]="folderList" 
+                        [scrollable]="true" 
+                        [type]="'striped'"
+                        [borderType]="'borderless'" 
+                        (cellClick)="cellClick($event)" 
+                        maxHeight="360px">
+                        <d-column 
+                            field="folder" 
+                            [header]="'toolBar.modal.folder' | translate" 
+                            [cellClass]="'cell-style'">
                         </d-column>
-                        <d-column field="isProject" [cellClass]="'cell-style'">
+                        <d-column 
+                            field="isProject" 
+                            [cellClass]="'cell-style'">
                         </d-column>
                     </d-data-table>
-
                 </d-form-control>
             </d-form-item>
         </form>
@@ -302,9 +346,16 @@
                     {{'toolBar.modal.unitType' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-radio-group [direction]="'row'" [(ngModel)]="formDataCreateFlowunit.lang"
-                        (change)="langValueChange2($event)" [direction]="'row'" [ngModelOptions]="{ standalone: true }">
-                        <d-radio [name]="'lang2'" *ngFor="let value of valueslang" [value]="value.value">
+                    <d-radio-group 
+                        [direction]="'row'" 
+                        [(ngModel)]="formDataCreateFlowunit.lang"
+                        (change)="langValueChange2($event)" 
+                        [direction]="'row'" 
+                        [ngModelOptions]="{ standalone: true }">
+                        <d-radio 
+                            [name]="'lang2'" 
+                            *ngFor="let value of valueslang" 
+                            [value]="value.value">
                             {{ value.name }}
                         </d-radio>
                     </d-radio-group>
@@ -317,7 +368,11 @@
                 </d-form-label>
                 <d-form-control>
                     <div>
-                        <input dTextInput name="flowunit_name" [(ngModel)]="formDataCreateFlowunit.name" maxlength="31"/>
+                        <input 
+                            dTextInput 
+                            name="flowunit_name" 
+                            [(ngModel)]="formDataCreateFlowunit.name" 
+                            maxlength="31"/>
                     </div>
                 </d-form-control>
             </d-form-item>
@@ -344,15 +399,25 @@
                     {{'toolBar.modal.device' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }" *ngIf="formDataCreateFlowunit.lang !== 'python'"
+                    <d-select 
+                        [appendToBody]="true" 
+                        [ngModelOptions]="{ standalone: true }" 
+                        *ngIf="formDataCreateFlowunit.lang !== 'python'"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
-                        [(ngModel)]="formDataCreateFlowunit.device" (valueChange)="deviceValueChange($event)"
-                        [placeholder]="'toolBar.modal.device' | translate" [options]="optionsdevice">
+                        [(ngModel)]="formDataCreateFlowunit.device" 
+                        (valueChange)="deviceValueChange($event)"
+                        [placeholder]="'toolBar.modal.device' | translate" 
+                        [options]="optionsdevice">
                     </d-select>
-                    <d-select [appendToBody]="true" [ngModelOptions]="{ standalone: true }" *ngIf="formDataCreateFlowunit.lang === 'python'"
+                    <d-select 
+                        [appendToBody]="true" 
+                        [ngModelOptions]="{ standalone: true }" 
+                        *ngIf="formDataCreateFlowunit.lang === 'python'"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
-                        [(ngModel)]="formDataCreateFlowunit.device" (valueChange)="deviceValueChange($event)"
-                        [placeholder]="'toolBar.modal.device' | translate" [options]="optionsdevicePython">
+                        [(ngModel)]="formDataCreateFlowunit.device" 
+                        (valueChange)="deviceValueChange($event)"
+                        [placeholder]="'toolBar.modal.device' | translate" 
+                        [options]="optionsdevicePython">
                     </d-select>
                 </d-form-control>
             </d-form-item>
@@ -362,7 +427,11 @@
                     {{'model' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <input dTextInput name="model" placeholder="model.pb" [(ngModel)]="formDataCreateFlowunit.model" />
+                    <input 
+                        dTextInput 
+                        name="model" 
+                        placeholder="model.pb" 
+                        [(ngModel)]="formDataCreateFlowunit.model" />
                 </d-form-control>
             </d-form-item>
 
@@ -385,20 +454,20 @@
                 *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
                 <d-form-label></d-form-label>
                 <d-form-control>
-                    <div style="display:flex; justify-content:space-between">
-                        <div style="width:100px; text-align:center">
+                    <div class="flex-space-between">
+                        <div class="label-name">
                             {{'toolBar.modal.inputOutput' | translate}}
                         </div>
-                        <div style="width:100px; text-align:center">
+                        <div class="label-name">
                             {{'toolBar.modal.port_name' | translate}}
                         </div>
-                        <div *ngIf="formDataCreateFlowunit.lang === 'inference'" style="width:100px; text-align:center">
+                        <div *ngIf="formDataCreateFlowunit.lang === 'inference'" class="label-name">
                             {{'toolBar.modal.data_type' | translate}}
                         </div>
-                        <div style="width:100px; text-align:center">
+                        <div class="label-name">
                             {{'toolBar.modal.device' | translate}}
                         </div>
-                        <div style="width:100px; text-align:center">
+                        <div class="label-name">
 
                         </div>
                     </div>
@@ -410,25 +479,42 @@
                     {{'toolBar.modal.portOption' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <div style="display:flex; justify-content:space-between">
+                    <div class="flex-space-between">
                         <div style="width:100px">
-                            <d-select [appendToBody]=" true" [ngModelOptions]="{ standalone: true }"
-                                [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" [(ngModel)]="portInfo.port_type"
-                                [placeholder]="'toolBar.modal.inputOutput' | translate" [options]="optionsInOut"
+                            <d-select 
+                                [appendToBody]=" true" 
+                                [ngModelOptions]="{ standalone: true }"
+                                [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" 
+                                [(ngModel)]="portInfo.port_type"
+                                [placeholder]="'toolBar.modal.inputOutput' | translate" 
+                                [options]="optionsInOut"
                                 (valueChange)="handleValueChangeport_type($event)">
                             </d-select>
                         </div>
 
                         <div style="width:100px">
-                            <input type="text" id="name" name="name" required [(ngModel)]="portInfo.port_name"
-                                placeholder="port name" (ngModelChange)="onPortNameChange($event)">
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                required 
+                                [(ngModel)]="portInfo.port_name"
+                                placeholder="port name" 
+                                (ngModelChange)="onPortNameChange($event)">
                         </div>
 
-                        <div style="width:100px" *ngIf="formDataCreateFlowunit.lang === 'inference'">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [(ngModel)]="portInfo.data_type" [ngModelOptions]="{ standalone: true }"
-                                [filterKey]="'id'" [placeholder]="'toolBar.modal.data_type' | translate"
-                                [options]="optionsdata_type" [isSearch]="true">
+                        <div 
+                            style="width:100px" 
+                            *ngIf="formDataCreateFlowunit.lang === 'inference'">
+                            <d-select 
+                                [appendToBody]="true" 
+                                [appendToBodyDirections]="['centerDown', 'centerUp']"
+                                [(ngModel)]="portInfo.data_type" 
+                                [ngModelOptions]="{ standalone: true }"
+                                [filterKey]="'id'" 
+                                [placeholder]="'toolBar.modal.data_type' | translate"
+                                [options]="optionsdata_type" 
+                                [isSearch]="true">
                                 <ng-template let-option="option">
                                     {{ option }}
                                 </ng-template>
@@ -436,10 +522,14 @@
                         </div>
 
                         <div style="width:100px">
-                            <d-select [appendToBody]="true" [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [disabled]="portdeviceAble" [(ngModel)]="portInfo.device"
+                            <d-select 
+                                [appendToBody]="true" 
+                                [appendToBodyDirections]="['centerDown', 'centerUp']"
+                                [disabled]="portdeviceAble" 
+                                [(ngModel)]="portInfo.device"
                                 [ngModelOptions]="{ standalone: true }"
-                                [placeholder]="'toolBar.modal.device' | translate" [options]="optionsdevice">
+                                [placeholder]="'toolBar.modal.device' | translate" 
+                                [options]="optionsdevice">
                             </d-select>
                         </div>
 
@@ -498,7 +588,9 @@
                 </d-form-label>
                 <d-form-control style="height:32px;">
                     <div style="display: inline-block;">
-                        <d-tabs [(activeTab)]="formDataCreateFlowunit.type" type="slider">
+                        <d-tabs 
+                            [(activeTab)]="formDataCreateFlowunit.type" 
+                            type="slider">
                             <d-tab *ngFor="let item of flowunit_types" [id]="item.id">
                                 <ng-template dTabTitle>
                                     {{ item.title }}
@@ -515,7 +607,9 @@
                     {{'virtualType' | translate}}
                 </d-form-label>
                 <d-form-control style="height:32px">
-                    <d-tabs [(activeTab)]="formDataCreateFlowunit['virtual-type']" type="slider">
+                    <d-tabs 
+                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
+                        type="slider">
                         <d-tab *ngFor="let item of types" [id]="item.id">
                             <ng-template dTabTitle>
                                 {{ item.title }}
@@ -527,10 +621,12 @@
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang === 'yolo'">
                 <d-form-label [required]="true">
-                    yolo类型
+                    {{ "toolBar.yoloType" | translate}}
                 </d-form-label>
                 <d-form-control style="height:32px">
-                    <d-tabs [(activeTab)]="formDataCreateFlowunit['virtual-type']" type="slider">
+                    <d-tabs 
+                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
+                        type="slider">
                         <d-tab *ngFor="let item of types_yolo" [id]="item.id">
                             <ng-template dTabTitle>
                                 {{ item.title }}
@@ -545,8 +641,11 @@
                     {{'toolBar.modal.flowUnitGroup' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <d-select [options]="flowunitGroupOptions" [customViewTemplate]="addCustomeGroup"
-                        [(ngModel)]="formDataCreateFlowunit['group-type']" [ngModelOptions]="{standalone: true}">
+                    <d-select 
+                        [options]="flowunitGroupOptions" 
+                        [customViewTemplate]="addCustomeGroup"
+                        [(ngModel)]="formDataCreateFlowunit['group-type']" 
+                        [ngModelOptions]="{standalone: true}">
                     </d-select>
                 </d-form-control>
             </d-form-item>
@@ -555,7 +654,10 @@
                     {{'toolBar.setting.desc' | translate}}
                 </d-form-label>
                 <d-form-control>
-                    <textarea dTextarea name=" desc" [(ngModel)]="formDataCreateFlowunit.desc"
+                    <textarea 
+                        dTextarea 
+                        name="desc" 
+                        [(ngModel)]="formDataCreateFlowunit.desc"
                         [ngModelOptions]="{standalone: true}"></textarea>
                 </d-form-control>
             </d-form-item>
@@ -571,25 +673,38 @@
 
 <ng-template #graphSetting id="graphSetting">
     <d-layout class="basic-usage">
-        <d-tabs [(activeTab)]="tabActiveId" type="slider" customWidth="100px">
+        <d-tabs 
+            [(activeTab)]="tabActiveId" 
+            type="slider" 
+            customWidth="100px">
             <d-tab id="tab1">
                 <ng-template dTabTitle>
                     {{'toolBar.setting.basic'| translate}}
                 </ng-template>
                 <ng-template dTabContent>
-                    <form dForm [layout]="layoutDirection" ngForm style="margin:10px">
+                    <form 
+                        dForm 
+                        [layout]="layoutDirection" 
+                        ngForm 
+                        style="margin:10px">
                         <d-form-item>
-                            <d-form-label [required]="true">{{'toolBar.setting.name' | translate}}
+                            <d-form-label [required]="true">
+                                {{'toolBar.setting.name' | translate}}
                             </d-form-label>
                             <d-form-control>
                                 <div>
-                                    <input dTextInput type="text" [(ngModel)]="formData.graphName"
+                                    <input 
+                                        dTextInput 
+                                        type="text" 
+                                        [(ngModel)]="formData.graphName"
                                         [ngModelOptions]="{standalone: true}">
                                 </div>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.desc' | translate}}</d-form-label>
+                            <d-form-label>
+                                {{'toolBar.setting.desc' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <textarea 
                                     dTextarea 
@@ -599,24 +714,39 @@
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.skipDefault' | translate}}
+                            <d-form-label>
+                                {{'toolBar.setting.skipDefault' | translate}}
                             </d-form-label>
                             <d-form-control>
-                                <d-checkbox [(ngModel)]="formData.skipDefault" name="skipDefault"
+                                <d-checkbox 
+                                    [(ngModel)]="formData.skipDefault" 
+                                    name="skipDefault"
                                     (change)="onCheckboxSkipDefaultChange($event)">
                                 </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.reLeaseFlowunitPath' | translate}}</d-form-label>
+                            <d-form-label>
+                                {{'toolBar.reLeaseFlowunitPath' | translate}}
+                            </d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="dir2" [(ngModel)]="formData.flowunitReleasePath"></textarea>
+                                <textarea 
+                                    dTextarea 
+                                    name="dir2" 
+                                    [(ngModel)]="formData.flowunitReleasePath">
+                                </textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.debugFlowunitPath' | translate}}</d-form-label>
+                            <d-form-label>
+                                {{'toolBar.debugFlowunitPath' | translate}}
+                            </d-form-label>
                             <d-form-control>
-                                <textarea dTextarea name="dir" [(ngModel)]="formData.flowunitDebugPath"></textarea>
+                                <textarea 
+                                    dTextarea 
+                                    name="dir" 
+                                    [(ngModel)]="formData.flowunitDebugPath">
+                                </textarea>
                             </d-form-control>
                         </d-form-item>
                     </form>
@@ -628,21 +758,32 @@
                     {{'toolBar.setting.perf'| translate}}
                 </ng-template>
                 <ng-template dTabContent>
-                    <form dForm [layout]="layoutDirection" ngForm>
+                    <form 
+                        dForm 
+                        [layout]="layoutDirection" 
+                        ngForm>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.trace.enable' | translate}}
+                            <d-form-label>
+                                {{'toolBar.setting.perf.trace.enable' | translate}}
                             </d-form-label>
                             <d-form-control>
-                                <d-checkbox [(ngModel)]="formData.perfTraceEnable" name="perfTraceEnable"
+                                <d-checkbox 
+                                    [(ngModel)]="formData.perfTraceEnable" 
+                                    name="perfTraceEnable"
                                     (change)="onCheckboxPerfTraceEnableChange($event)">
                                 </d-checkbox>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>
-                            <d-form-label>{{'toolBar.setting.perf.path' | translate}}</d-form-label>
+                            <d-form-label>
+                                {{'toolBar.setting.perf.path' | translate}}
+                            </d-form-label>
                             <d-form-control>
                                 <div>
-                                    <input dTextInput autocomplete="off" name="userName"
+                                    <input 
+                                        dTextInput 
+                                        autocomplete="off" 
+                                        name="userName"
                                         [(ngModel)]="formData.perfPath" />
                                 </div>
                             </d-form-control>
@@ -656,9 +797,15 @@
 
 <ng-template #graphSelect let-context='context'>
   <d-content>
-    <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
-      [colDraggable]="true" [dataSource]="graphSelectTableDataForDisplay" tableHeight="360px"
-      [tableWidthConfig]="tableWidthConfig">
+    <d-data-table 
+        [fixHeader]="true" 
+        [containFixHeaderHeight]="true" 
+        [scrollable]="true" 
+        [headerBg]="true"
+        [colDraggable]="true" 
+        [dataSource]="graphSelectTableDataForDisplay" 
+        tableHeight="360px"
+        [tableWidthConfig]="tableWidthConfig">
       <thead dTableHead>
         <tr dTableRow>
           <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>
@@ -668,11 +815,15 @@
         <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
             <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
                 <td dTableCell *ngFor="let colOption of dataTableOptions.columns">
-                    <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
+                    <d-checkbox 
+                        *ngIf="colOption.field === 'checked'" 
+                        [ngModelOptions]="{ standalone: true }"
                         (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
                         [ngModel]="rowItem.checked">
                     </d-checkbox>
-                    <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
+                    <div 
+                        *ngIf="colOption.field === 'name'" 
+                        class="edit-padding-fix">
                         {{ rowItem[colOption.field] }}
                     </div>
                     <div *ngIf="colOption.field === 'dotSrc'">
@@ -685,8 +836,7 @@
                             {{ rowItem[colOption.field] }}
                         </div>
                         <ng-template #tipContent>
-                            <div class="tips-block-top"
-                                style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+                            <div class="tips-block-top tips-tip-content">
                                 {{ rowItem[colOption.field] }}
                             </div>
                         </ng-template>
@@ -701,8 +851,7 @@
                             {{ rowItem[colOption.field] }}
                         </div>
                         <ng-template #tipContent>
-                            <div class="tips-block-top"
-                                style="background-color: #333854; font-size: 75%; margin: 20px; padding: 8px; width: 600px;">
+                            <div class="tips-block-top tips-tip-content">
                                 {{ rowItem[colOption.field] }}
                             </div>
                         </ng-template>
@@ -719,20 +868,31 @@
 
 <ng-template #solutionSelect let-context='context'>
     <d-content>
-        <d-data-table [fixHeader]="true" [containFixHeaderHeight]="true" [scrollable]="true" [headerBg]="true"
-            [colDraggable]="true" [dataSource]="solutionList" tableHeight="360px"
+        <d-data-table 
+            [fixHeader]="true" 
+            [containFixHeaderHeight]="true" 
+            [scrollable]="true" 
+            [headerBg]="true"
+            [colDraggable]="true" 
+            [dataSource]="solutionList" 
+            tableHeight="360px"
             [tableWidthConfig]="solutionTableWidthConfig">
             <thead dTableHead>
                 <tr dTableRow>
-                    <th dHeadCell *ngFor="let colOption of solutionTableOptions.columns">{{ colOption.header }}</th>
+                    <th dHeadCell *ngFor="let colOption of solutionTableOptions.columns">
+                        {{ colOption.header }}
+                    </th>
                 </tr>
             </thead>
             <tbody dTableBody>
                 <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
                     <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
                         <td dTableCell *ngFor="let colOption of solutionTableOptions.columns">
-                            <d-checkbox *ngIf="colOption.field === 'checked'" [ngModelOptions]="{ standalone: true }"
-                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)" [ngModel]="rowItem.checked">
+                            <d-checkbox 
+                                *ngIf="colOption.field === 'checked'" 
+                                [ngModelOptions]="{ standalone: true }"
+                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)" 
+                                [ngModel]="rowItem.checked">
                             </d-checkbox>
                             <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
                                 {{ rowItem[colOption.field] }}

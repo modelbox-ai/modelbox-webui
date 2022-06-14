@@ -28,7 +28,7 @@
   position       : absolute;
   top            : 380px;
   left           : 10%;
-  height         : 100%-300px;
+  height         : calc(100%-300px);
   width          : 80%;
   margin         : auto;
   display        : flex;
@@ -40,7 +40,7 @@
   width           : 320px;
   height          : 400px;
   border-radius   : 2px;
-  background-color: #fff !important;
+  background-color: #fff;
   box-shadow      : 0 0 5px 2px rgb(207, 204, 204);
 }
 
@@ -64,22 +64,28 @@
   display  : inline-block;
 }
 
-.icon-example {
+.container-flex {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+}
+
+.icon {
   height           : 100px;
   width            : 100px;
   margin           : 20px 20px 0 20px;
   background-size  : contain;
   background-repeat: no-repeat;
-  background-image : url("../../../assets/example.svg");
+}
+
+.icon-example {
+  .icon();
+  background-image: url("../../../assets/example.svg");
 }
 
 .icon-arrange {
-  height           : 100px;
-  width            : 100px;
-  margin           : 20px 20px 0 20px;
-  background-size  : contain;
-  background-repeat: no-repeat;
-  background-image : url("../../../assets/arrange.svg");
+  .icon();
+  background-image: url("../../../assets/arrange.svg");
 }
 
 .icon-arrange:hover {
@@ -87,12 +93,8 @@
 }
 
 .icon-task {
-  height           : 100px;
-  width            : 100px;
-  margin           : 20px 20px 0 20px;
-  background-size  : contain;
-  background-repeat: no-repeat;
-  background-image : url("../../../assets/task.svg");
+  .icon();
+  background-image: url("../../../assets/task.svg");
 }
 
 .icon-task:hover {

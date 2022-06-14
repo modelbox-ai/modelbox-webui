@@ -6,28 +6,22 @@
     <div class="tasklist-search-box-block">
     </div>
     <div class="tasklist-search-box-block">
-      <button 
-        id="open-graph-setting" 
-        style="float: right;"
-        class="tool-bar-button"
-        (click)="showDebugPanel(debug)">
+      <button id="open-graph-setting" style="float: right;" class="tool-bar-button" (click)="showDebugPanel(debug)">
         {{'toolBar.debug' | translate}}
       </button>
     </div>
   </div>
 
-  <d-data-table
-    [fixHeader]="true"
-    tableHeight="360px"
-    [containFixHeaderHeight]="true"
-    [scrollable]="true"
-    [headerBg]="true"
-    [colDraggable]="true"
-    [dataSource]="tableData.srcData.data"
+  <d-data-table [fixHeader]="true" tableHeight="360px" [containFixHeaderHeight]="true" [scrollable]="true"
+    [headerBg]="true" [colDraggable]="true" [dataSource]="tableData.srcData.data"
     [tableWidthConfig]="mainTableWidthConfig">
     <thead dTableHead>
       <tr dTableRow>
-        <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>
+        <th 
+          dHeadCell 
+          *ngFor="let colOption of dataTableOptions.columns">
+          {{ colOption.header }}
+        </th>
       </tr>
     </thead>
     <tbody dTableBody>
@@ -50,8 +44,12 @@
                 {{ rowItem[colOption.field] }}
               </span>
             </div>
-            <div *ngIf="colOption.field === 'job_operation'" class="edit-padding-fix">
-              <a class="delete-button" (click)="deleteData(rowItem)">
+            <div 
+              *ngIf="colOption.field === 'job_operation'" 
+              class="edit-padding-fix">
+              <a 
+                class="delete-button" 
+                (click)="deleteData(rowItem)">
                 {{'toolBar.deleteDialogButton' | translate}}
               </a>
             </div>
@@ -64,30 +62,40 @@
 
 <ng-template #createTaskModal let-context='context'>
   <d-content>
-    <d-data-table
-      [fixHeader]="true"
-      [containFixHeaderHeight]="true"
-      [scrollable]="true"
+    <d-data-table 
+      [fixHeader]="true" 
+      [containFixHeaderHeight]="true" 
+      [scrollable]="true" 
       [headerBg]="true"
-      [colDraggable]="true"
-      [dataSource]="taskData.srcData.data"
+      [colDraggable]="true" 
+      [dataSource]="taskData.srcData.data" 
       [tableWidthConfig]="tableWidthConfig">
       <thead dTableHead>
         <tr dTableRow>
-          <th dHeadCell *ngFor="let colOption of taskData.columns">{{ colOption.header }}</th>
+          <th 
+            dHeadCell 
+            *ngFor="let colOption of taskData.columns">
+            {{ colOption.header }}
+          </th>
         </tr>
       </thead>
       <tbody dTableBody>
         <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
-          <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
-            <td dTableCell *ngFor="let colOption of taskData.columns">
-              <d-checkbox
-                *ngIf="colOption.field === 'checked'"
+          <tr 
+            dTableRow 
+            [ngClass]="{ 'table-row-selected': rowItem.$checked }">
+            <td 
+              dTableCell 
+              *ngFor="let colOption of taskData.columns">
+              <d-checkbox 
+                *ngIf="colOption.field === 'checked'" 
                 [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)" 
                 [ngModel]="rowItem.checked">
               </d-checkbox>
-              <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
+              <div 
+                *ngIf="colOption.field === 'name'" 
+                class="edit-padding-fix">
                 {{ rowItem.job_id }}
               </div>
             </td>
@@ -101,55 +109,58 @@
 <ng-template #debug id="debug">
   <d-layout class="basic-usage">
     <d-tabs [type]="'tabs'" [(activeTab)]="tab1acticeID">
-      <d-tab id="tab1" [title]="'toolBar.apiDebug' | translate" >
+      <d-tab id="tab1" [title]="'toolBar.apiDebug' | translate">
         <ng-template dTabContent>
-          <div
-            style="height:560px">
+          <div style="height:580px">
             <div>
-              <div style="display: inline-block;width:90%; margin-bottom: 10px">
-                <d-select
-                  style="display: inline-block;width:800px"
-                  [placeholder]="'Template Structure'" 
-                  (valueChange)="templateChange($event)"
-                  [allowClear]="true"
+              <div 
+                class="left-bar" 
+                style="margin-bottom: 10px">
+                <d-select 
+                  class="template-select"
+                  [placeholder]="'Template Structure'"
+                  (valueChange)="templateChange($event)" 
+                  [allowClear]="true" 
                   [(ngModel)]="selectTemplate"
                   [options]="optionsTemplate">
                 </d-select>
               </div>
-              <div style="display: inline-block;width:10%; margin-bottom: 10px">
-                <d-button bsStyle="common"
-                  style="width:100%; right:0; line-height:18px;"
-                  (click)="handleClear()"
-                  >
+              <div 
+                class="right-bar" 
+                style="margin-bottom: 10px">
+                <d-button 
+                  bsStyle="common" 
+                  class="button" 
+                  (click)="handleClear()">
                   Clear
                 </d-button>
               </div>
             </div>
-            <div style="display: inline-block;width:90%">
+            <div class="left-bar">
               <d-select 
-                style="display: inline-block;width:96px"
-                [options]="options"
+                class="method-select" 
+                [options]="options" 
                 [(ngModel)]="selectMethod">
               </d-select>
               <input 
-                style="display: inline-block;width:700px; margin: 0 4px 2px 4px"
+                class="url-input" 
                 dTextInput 
                 [(ngModel)]="url"
                 id="textInput" />
             </div>
-            <div style="display: inline-block;width:10%">
-              <d-button bsStyle="common"
-                style="width:100%; right:0;line-height:18px;"
+            <div class="right-bar">
+              <d-button 
+                bsStyle="common"
+                class="button"
                 (click)="handleSend()"
-                *ngIf="!isSendingRequest"
-                >
+                *ngIf="!isSendingRequest">
                 Send
               </d-button>
-              <d-button bsStyle="common"
-                style="width:100%; right:0;line-height:18px;"
+              <d-button 
+                bsStyle="common" 
+                class="button"
                 [disabled]="true"
-                *ngIf="isSendingRequest"
-                >
+                *ngIf="isSendingRequest">
                 Sending
               </d-button>
             </div>
@@ -158,121 +169,137 @@
                 Request
               </legend>
             </fieldset>
-            <div style= "width:100%;height:40px;display:flex; justify-content: space-between; align-items: center;">
-              <div style="width:50%;display:inline-block">
-                <div
-                  style="display:flex; align-items:center;justify-content: space-between;"
-                  >
-                  <d-radio-group
-                    style="display:inline-block"
-                    [name]="'optionContent'"
+            <div 
+              class="flex-space-between" 
+              style="width:100%;height:40px;">
+              <div style="width:50%; display:inline-block">
+                <div class="flex-space-between">
+                  <d-radio-group 
+                    style="display:inline-block" 
+                    [name]="'optionContent'" 
                     [values]="values"
-                    [(ngModel)]="choose"
-                    (ngModelChange)="radioValueChange($event)"
-                    [direction]="'row'"
-                  >
+                    [(ngModel)]="choose" 
+                    (ngModelChange)="radioValueChange($event)" 
+                    [direction]="'row'">
                   </d-radio-group>
                 </div>
               </div>
-              <div style="width:50%;display:inline-flex; justify-content:flex-end; align-items: center">
-                <div 
-                  *ngIf="guide"
+              <div 
+                class="flex-end" 
+                style="width:50%;display:inline-block">
+                <div
+                  *ngIf="guide" 
                   (click)="openstandardDialog('standard')"
-                  style="font-size: 18px; color:dodgerblue;cursor: pointer;margin-right:2em;">
+                  style="float:right"
+                  class="font-bar">
                   Guide
                 </div>
                 <div 
-                  *ngIf="choose === 'Body'"
+                  *ngIf="choose === 'Body'" 
+                  style="float:right;"
                   (click)="beautifyJson()"
-                  style="font-size: 18px; color:dodgerblue;cursor: pointer">
+                  class="font-bar">
                   Beautify
                 </div>
               </div>
             </div>
-            
+
             <d-splitter 
-              style="height:480px" 
+              style="height:400px" 
               class="splitter-border" 
               orientation="vertical" 
               [disabledBarSize]="'2px'">
-              <d-splitter-pane size="250px" >
-                <ace
-                  *ngIf="choose === 'Body'"
-                  class="app-ace-editor"
-                  #editor
-                  style="height: 80%;"
+              <d-splitter-pane size="230px">
+                <ace 
+                  *ngIf="choose === 'Body'" 
+                  class="app-ace-editor" 
+                  #editor 
+                  style="height: 80%;" 
                   [config]="config"
-                  [mode]="'dot'"
-                  [value]="jsonSrc"
-                  (valueChange)="handleChange($event)"
-                  [theme]="'tomorrow'"
-                >
+                  [mode]="'dot'" 
+                  [value]="jsonSrc" 
+                  (valueChange)="handleChange($event)" 
+                  [theme]="'tomorrow'">
                 </ace>
-                <div 
-                  *ngIf="choose === 'Header'"
-                  style="height: 160px">
-                  <d-data-table
-                    [dataSource]="dataHeaders"
+                <div *ngIf="choose === 'Header'" style="height: 160px">
+                  <d-data-table 
+                    [dataSource]="dataHeaders" 
                     [scrollable]="true"
-                    [tableWidthConfig]="tableWidthConfigKeyValue"
-                  >
+                    [tableWidthConfig]="tableWidthConfigKeyValue">
                     <thead dTableHead [checkable]="true">
                       <tr dTableRow>
-                        <th dHeadCell style="text-align: center;">Key</th>
-                        <th dHeadCell style="text-align: center;">Value</th>
+                        <th 
+                          dHeadCell 
+                          style="text-align: center;">
+                          Key
+                        </th>
+                        <th 
+                          dHeadCell 
+                          style="text-align: center;">
+                          Value
+                        </th>
                       </tr>
                     </thead>
                     <tbody dTableBody>
                       <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
                         <tr 
-                          class="trheader"
+                          class="trheader" 
                           dTableRow 
-                          [ngClass]="{ 'table-row-selected': rowItem.$checked }"
-                        >
+                          [ngClass]="{ 'table-row-selected': rowItem.$checked }">
                           <td dTableCell class="devui-checkable-cell">
-                            <d-checkbox
+                            <d-checkbox 
                               [ngModelOptions]="{ standalone: true }"
                               (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
-                              [ngModel]="rowItem.ischecked"
-                            >
+                              [ngModel]="rowItem.ischecked">
                             </d-checkbox>
                           </td>
                           <td 
-                            dTableCell
-                            [editable]="true"
-                            [editableTip]="editableTip"
+                            dTableCell 
+                            [editable]="true" 
+                            [editableTip]="editableTip" 
                             [(editing)]="rowItem['nameEdit']"
-                            [rowItem]="rowItem"
-                            [field]="'key'"
+                            [rowItem]="rowItem" 
+                            [field]="'key'" 
                             [beforeEditEnd]="beforeEditEnd"
-                            style="text-align: center;"
-                          >
-                            <span *ngIf="!rowItem['nameEdit']">{{ rowItem?.key }}</span>
+                            style="text-align: center;">
+                            <span *ngIf="!rowItem['nameEdit']">
+                              {{ rowItem?.key }}
+                            </span>
                             <div *ngIf="rowItem['nameEdit']" class="edit-padding-fix">
-                              <input class="devui-form-control" name="key" [(ngModel)]="rowItem.key" [attr.maxlength]="100" [attr.minlength]="3" />
+                              <input 
+                                class="devui-form-control" 
+                                name="key" 
+                                [(ngModel)]="rowItem.key"
+                                [attr.maxlength]="100" 
+                                [attr.minlength]="3" />
                             </div>
                           </td>
                           <td 
-                            dTableCell
-                            [editable]="true"
+                            dTableCell 
+                            [editable]="true" 
                             [editableTip]="editableTip"
-                            [(editing)]="rowItem['nameEdit2']"
-                            [rowItem]="rowItem"
+                            [(editing)]="rowItem['nameEdit2']" 
+                            [rowItem]="rowItem" 
                             [field]="'value'"
-                            [beforeEditEnd]="beforeEditEnd"
-                            style="text-align: center;"
-                          >
-                            <span *ngIf="!rowItem['nameEdit2']">{{ rowItem?.value }}</span>
+                            [beforeEditEnd]="beforeEditEnd" 
+                            style="text-align: center;">
+                            <span *ngIf="!rowItem['nameEdit2']">
+                              {{ rowItem?.value }}
+                            </span>
                             <div *ngIf="rowItem['nameEdit2']" class="edit-padding-fix">
-                              <input class="devui-form-control" name="value" [(ngModel)]="rowItem.value" [attr.maxlength]="100" [attr.minlength]="3" />
+                              <input 
+                                class="devui-form-control" 
+                                name="value" 
+                                [(ngModel)]="rowItem.value"
+                                [attr.maxlength]="100" 
+                                [attr.minlength]="3" />
                             </div>
                           </td>
-                          
+
                           <i 
-                            class="icon icon-close"
+                            class="icon icon-close" 
                             style="position:fixed; right:40px; cursor:pointer"
-                            (click)="handleDelete(rowIndex)"
-                          >
+                            (click)="handleDelete(rowIndex)">
                           </i>
                         </tr>
                       </ng-template>
@@ -280,48 +307,43 @@
                   </d-data-table>
                 </div>
               </d-splitter-pane>
-              <d-splitter-pane style="overflow: hidden">
-                <div style= "width:100%;height:28px;display:flex; justify-content: space-between; align-items: center;">
+              <d-splitter-pane size="180px" style="overflow: hidden">
+                <div 
+                  class="flex-space-between" 
+                  style="width:100%;height:28px;">
                   <div style="width:50%;display:inline-block">
-                    <div
-                      style="display:flex; align-items:center;justify-content: space-between;"
-                      >
-                      <d-radio-group
-                        style="display:inline-block"
-                        [name]="'optionContent'"
+                    <div class="flex-space-between" >
+                      <d-radio-group 
+                        style="display:inline-block" 
+                        [name]="'optionContent'" 
                         [values]="values1"
-                        [(ngModel)]="choose1"
-                        (ngModelChange)="radioValueChange1($event)"
-                        [direction]="'row'"
-                      >
+                        [(ngModel)]="choose1" 
+                        (ngModelChange)="radioValueChange1($event)" 
+                        [direction]="'row'">
                       </d-radio-group>
                     </div>
                   </div>
                   <div style="width:50%;display:inline-block">
-                    <div 
-                      *ngIf="showResponse"
-                      style="float:right">
+                    <div *ngIf="showResponse" style="float:right">
                       Status: {{ statusCode }}
                     </div>
                   </div>
                 </div>
-                
-                <ace
-                  class="app-ace-editor"
-                  *ngIf="showResponse"
-                  #editor
-                  style="height: 70%;padding-bottom: 20px"
-                  [config]="config"
-                  [value]="responseSrc"
-                  [theme]="'tomorrow'"
+
+                <ace 
+                  class="app-ace-editor" 
+                  *ngIf="showResponse" 
+                  #editor 
+                  style="height: 76%"
+                  [config]="config" 
+                  [value]="responseSrc" 
+                  [theme]="'tomorrow'" 
                   [mode]="'dot'">
                 </ace>
-                <div *ngIf="!showResponse"
-                  style="
-                  display: flex;
-                  height: 200px;
-                  justify-content: center;
-                  align-items: center">
+                <div 
+                  *ngIf="!showResponse" 
+                  class="flex-center"
+                  style="height: 200px;">
                   <div>
                     <p style="text-align: center; font-size: 16px">
                       Send request failed
@@ -336,27 +358,25 @@
           </div>
         </ng-template>
       </d-tab>
-      <d-tab id="tab2" [title]="'toolBar.base64' | translate" >
+      <d-tab id="tab2" [title]="'toolBar.base64' | translate">
         <ng-template dTabContent>
-          <div style="height: 240px; display:flex; justify-content: center; align-items:center">
-            <div style="width:50%; height:100%; display:inline-flex; margin:40px; border: 1px solid black;position: relative;
-              align-items: stretch;">
-              <div style="
-                display: table-cell;
-                width:100%;
-                vertical-align: middle;
-                text-align: center;
-                top:0;
-                left:0;
-                right:0;
-                bottom:0;
-                margin:auto;">
+          <div 
+            style="height: 240px;"
+            class="flex-space-between">
+            <div 
+              class="left-block">
+              <div class="input-block">
                 <input type="file" (change)="handleFileSelect($event)" />
               </div>
             </div>
-            <div style="width:50%; height:100%; display:inline-block; margin:40px; border: 1px solid black;position: relative;
-              align-items: stretch;">
-              <textarea dTextarea placeholder="base64" id="textArea" style="height:100%;" [(ngModel)]="base64textString"></textarea>
+            <div class="right-block">
+              <textarea 
+                dTextarea 
+                placeholder="base64" 
+                id="textArea" 
+                style="height:100%;"
+                [(ngModel)]="base64textString">
+              </textarea>
             </div>
 
           </div>

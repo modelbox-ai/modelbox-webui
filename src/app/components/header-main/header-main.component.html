@@ -1,66 +1,74 @@
 <div class="header-main">
-    <div class="modelArts-header-container" (click)="click('')">
-        <img src={{logoSvg}} />
-        <div class="logo-text">{{consoleName}}</div>
+  <div 
+    class="modelArts-header-container" 
+    (click)="click('')">
+    <img src={{logoSvg}} />
+    <div class="logo-text">
+      {{consoleName}}
     </div>
-    <div style="position: fixed;top:8px;left:40%;">
-        <ul class="tabs">
-            <li>
-                <a
-                  #firstPage
-                  id="firstPage"
-                  class="nav-link"
-                  href=" javascript:void(0);"
-                  [ngClass]="{'tab-active': active===''}"
-                  oncontext="return false"
-                  (click)="click('')">
-                    {{ 'firstPage' | translate}}
-                </a>
-            </li>
-            <li>
-                <a
-                  #exampleDisplay
-                  id="exampleDisplay"
-                  class="nav-link"
-                  href=" javascript:void(0);"
-                  [ngClass]="{'tab-active': active==='example'}"
-                  oncontext="return false"
-                  (click)="click('example')">
-                    {{ 'exampleDisplay' | translate}}
-                </a>
-            </li>
-            <li>
-                <a
-                  class="nav-link"
-                  href=" javascript:void(0); "
-                  [ngClass]="{'tab-active': active==='editor'}"
-                  oncontext="return false"
-                  (click)="click('editor')">
-                    {{'editor' | translate}}
-                </a>
-            </li>
-            <li>
-                <a
-                  class="nav-link"
-                  href=" javascript:void(0);"
-                  [ngClass]="{'tab-active': active==='task'}"
-                  oncontext="return false"
-                  (click)="click('task')">
-                    {{'taskLists' | translate}}
-                </a>
-            </li>
-        </ul>
+  </div>
+  <div class="container-pos" style="left:42%;">
+    <ul class="tabs">
+      <li>
+        <a
+          #firstPage
+          id="firstPage"
+          class="nav-link"
+          href=" javascript:void(0);"
+          [ngClass]="{'tab-active': active===''}"
+          oncontext="return false"
+          (click)="click('')">
+          {{ 'firstPage' | translate}}
+        </a>
+      </li>
+      <li>
+        <a
+          #exampleDisplay
+          id="exampleDisplay"
+          class="nav-link"
+          href=" javascript:void(0);"
+          [ngClass]="{'tab-active': active==='example'}"
+          oncontext="return false"
+          (click)="click('example')">
+          {{ 'exampleDisplay' | translate}}
+        </a>
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          href=" javascript:void(0); "
+          [ngClass]="{'tab-active': active==='editor'}"
+          oncontext="return false"
+          (click)="click('editor')">
+          {{'editor' | translate}}
+        </a>
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          href=" javascript:void(0);"
+          [ngClass]="{'tab-active': active==='task'}"
+          oncontext="return false"
+          (click)="click('task')">
+          {{'taskLists' | translate}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div 
+    class="container-pos" 
+    style="right:0;">
+    <div 
+      class="links-first" 
+      style="display: inline-block;">
+      <a href="https://modelbox-ai.com/modelbox-book/" target="_blank">
+        <span><i class="icon icon-help"></i>{{helpText}}</span>
+      </a>
     </div>
-    <div style="position: fixed;top:8px;right:0;">
-        <div class="links-first" style="display: inline-block;">
-            <a href="https://modelbox-ai.com/modelbox-book/" target="_blank">
-                <span><i class="icon icon-help"></i>{{helpText}}</span>
-            </a>
-        </div>
-        <div class="links-first" style="display: inline-block;">
-            <a href="/api" target="_blank">
-                <span><i class="icon icon-connect"></i>API</span>
-            </a>
-        </div>
+    <div class="links-first" style="display: inline-block;">
+      <a href="/api" target="_blank">
+        <span><i class="icon icon-connect"></i>API</span>
+      </a>
     </div>
+  </div>
 </div>

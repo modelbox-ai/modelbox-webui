@@ -1,5 +1,12 @@
-<div ngbTooltip="{{tipData}}" placement="right" [ngbTooltip]="tipContent" #t1="ngbTooltip"
-    (mouseenter)="toggleTip(t1, tipData)" placement="right" container="body" tooltipClass="my-custom-class">
+<div 
+    ngbTooltip="{{tipData}}" 
+    placement="right" 
+    [ngbTooltip]="tipContent" 
+    #t1="ngbTooltip"
+    (mouseenter)="toggleTip(t1, tipData)" 
+    placement="right" 
+    container="body" 
+    tooltipClass="my-custom-class">
     {{displayedData}}
 </div>
 

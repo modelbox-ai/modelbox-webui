@@ -106,6 +106,7 @@
   "toolBar.reLeaseFlowunitPath":"发布功能单元路径",
   "toolBar.debugFlowunitPath":"调试功能单元路径",
   "toolBar.copyModel":"拷贝模型",
+  "toolBar.yoloType":"yolo类型",
 
   "modal.virtualFlowunitType":"虚拟单元类型",
   "insertPanel.flowunitList":"功能单元列表",
