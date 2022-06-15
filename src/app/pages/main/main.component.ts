@@ -15,8 +15,9 @@ import { ToolBarComponent } from '../../components/tool-bar/tool-bar.component';
 import { AttributePanelComponent } from '../../components/attribute-panel/attribute-panel.component';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { ToastService } from 'ng-devui/toast';
-import { indexOf } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
+import { GraphComponent } from 'src/app/components/graph/graph.component';
 
 @Component({
   selector: 'app-main',
@@ -86,6 +87,7 @@ export class MainComponent {
   @ViewChild('textEditor') editor: TextEditorComponent;
   @ViewChild('toolBar') toolBar: ToolBarComponent;
   @ViewChild('header') header: HeaderMainComponent;
+  @ViewChild('graph') graph: GraphComponent;
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
   handleNodeShapeDragEnd = () => { };
@@ -237,6 +239,25 @@ export class MainComponent {
     }
 
     return projectdata;
+  }
+
+  removeDotSrcLabel(){
+    if (this.graph.dotGraph !== undefined) {
+      const nodes = { ...this.graph.dotGraph.nodes };
+      const edges = { ...this.graph.dotGraph.edges };
+      let dotGraph = cloneDeep(this.graph.dotGraph);
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        
+        if (flowunit) {
+          delete attr["label"];
+        }
+        dotGraph.updateNode(node, attr);
+        dotGraph.reparse();
+      }
+      this.toolBar.dotSrcWithoutLabel = dotGraph.dotSrc;
+    }
   }
 
   createProject(param) {
