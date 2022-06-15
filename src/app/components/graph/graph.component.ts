@@ -262,10 +262,11 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   deduplicationDotSrc() {
-
-    let text = this.dotGraph.dotSrc.split("\n");
-    text = this.unique(text);
-    this.dotGraph.dotSrc = text.join("\n");
+    if (this.dotGraph?.dotSrc) {
+      let text = this.dotGraph.dotSrc.split("\n");
+      text = this.unique(text);
+      this.dotGraph.dotSrc = text.join("\n");
+    }
   }
 
   handleZoomResetButtonClick = () => {

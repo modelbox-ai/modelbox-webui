@@ -65,11 +65,13 @@
               (projectPathEmmiter)="updateProjectPath($event)"
               (saveProjectEmmiter)="saveCurrentProject()"
               (saveSettingEmmiter)="renameGraphSrc($event)"
-              (saveGraphEmmiter)="handleSaveAsToBrowser($event)">
+              (saveGraphEmmiter)="handleSaveAsToBrowser($event)"
+              (removeLabelEmmiter)="removeDotSrcLabel()">
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">
               <app-graph
+                #graph
                 style="z-index:-100"
                 [dotSrc]="dotSrc"
                 [hasFocus]="focusedPane === 'Graph'"

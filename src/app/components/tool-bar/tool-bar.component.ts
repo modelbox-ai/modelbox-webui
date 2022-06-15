@@ -86,6 +86,7 @@ export class ToolBarComponent {
   @Output() saveProjectEmmiter = new EventEmitter();
   @Output() saveGraphEmmiter = new EventEmitter();
   @Output() saveSettingEmmiter = new EventEmitter();
+  @Output() removeLabelEmmiter = new EventEmitter();
 
   backSvg = require("../../../assets/undo.svg");
   backDisabledSvg = require("../../../assets/undo_disabled.svg");
@@ -453,6 +454,7 @@ export class ToolBarComponent {
   incomingGraphName: string = '';
   isChangingPortName: boolean;
   layoutDirection2: FormLayout = FormLayout.Vertical;
+  dotSrcWithoutLabel: string;
 
   currentOption1 = "项目";
   options1 = [{
@@ -1376,7 +1378,9 @@ export class ToolBarComponent {
     if (!ret) {
       return;
     }
+    this.removeLabelEmmiter.emit();
     param = this.createProjectParam(param);
+
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
         this.toastService.open({
@@ -1426,7 +1430,7 @@ export class ToolBarComponent {
           dir: project.graph.settingPerfDir,
         },
         graph: {
-          graphconf: project.graph.dotSrc,
+          graphconf: this.dotSrcWithoutLabel ? this.dotSrcWithoutLabel : project.graph.dotSrc,
           format: "graphviz",
         },
       },
