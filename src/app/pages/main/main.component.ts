@@ -140,7 +140,8 @@ export class MainComponent {
     //加载既存project
     let item = JSON.parse(sessionStorage.getItem('statusGraph')) || undefined;
     if (item !== undefined) {
-      this.statusGraph = item[this.graphName];
+      this.updataStatusGraph();
+      setInterval(() => { this.updataStatusGraph(); }, 5000);
     }
   }
 
@@ -149,6 +150,26 @@ export class MainComponent {
       this.handleGrutterMove(x);
     });
     this.splitV.dragProgress$.subscribe(x => {
+    });
+  }
+
+  updataStatusGraph() {
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      if (data.job_list.length === 0){
+        this.statusGraph = 0;
+        return;
+      }
+      for (let i of data.job_list) {
+        let name = this.getGraphNameFromGraph(this.project.graph.dotSrc);
+        if (i.job_id === name + ".toml") {
+          this.statusGraph = 1;
+          if (i.job_error_msg !== '') {
+            this.statusGraph = 2;
+          }
+        } else {
+          this.statusGraph = 0;
+        }
+      }
     });
   }
 
@@ -241,7 +262,7 @@ export class MainComponent {
     return projectdata;
   }
 
-  removeDotSrcLabel(){
+  removeDotSrcLabel() {
     if (this.graph.dotGraph !== undefined) {
       const nodes = { ...this.graph.dotGraph.nodes };
       const edges = { ...this.graph.dotGraph.edges };
@@ -249,7 +270,7 @@ export class MainComponent {
       for (let node in nodes) {
         let attr = nodes[node]['attributes'];
         let flowunit = attr['flowunit'];
-        
+
         if (flowunit) {
           delete attr["label"];
         }
@@ -491,7 +512,7 @@ export class MainComponent {
   }
 
   handleGraphComponentSelect = components => {
-    this.selectedGraphComponents = components;    
+    this.selectedGraphComponents = components;
     this.setEditorMarkers(components);
 
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
@@ -925,7 +946,7 @@ export class MainComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          
+
           let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.name === this.toolBar.selectedName);
           this.dotSrc = chosenGraph[0]?.dotSrc;
           this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
