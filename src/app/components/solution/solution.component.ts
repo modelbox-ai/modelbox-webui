@@ -58,6 +58,7 @@ export class SolutionComponent implements OnInit {
   currentComponent: any;
   showLoading;
   statusGraph = "stop";
+  refresh_timer: any;
 
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
@@ -74,6 +75,7 @@ export class SolutionComponent implements OnInit {
       this.driver = this.project.driver;
       this.graph = this.project.graph;
       this.profile = this.project.profile;
+      this.updateStatus();
     }
 
   }
@@ -82,17 +84,21 @@ export class SolutionComponent implements OnInit {
     if (Object.keys(this.project).length === 0) {
       this.tool.showSelectDemoDialog(this.tool.selectDemo);
     } else {
-      this.basicService.getTaskLists().subscribe((data: any) => {
-        for (let i of data.job_list) {
-          if (i.job_id === this.project.name) {
-            this.statusGraph = "running";
-            if (i.job_error_msg !== '') {
-              this.statusGraph = "fault";
-            }
+      this.refresh_timer = setInterval(() => { this.updateStatus(); }, 5000);
+    }
+  }
+
+  updateStatus() {
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      for (let i of data.job_list) {
+        if (i.job_id === this.project.name) {
+          this.statusGraph = "running";
+          if (i.job_error_msg !== '') {
+            this.statusGraph = "fault";
           }
         }
-      });
-    }
+      }
+    });
   }
 
   handleTextChange = (text, undoRedoState) => {
