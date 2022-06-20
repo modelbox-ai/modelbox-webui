@@ -166,6 +166,7 @@
   "message.wrongFlowunitTypePleaseChooseGPUDevice": "功能单元类型错误，请选择带有GPU的设备",
   "message.duplicatePortName": "端口名重复",
   "message.duplicateVirtualFlowunit": "已存在同名虚拟单元",
+  "message.graphNameCannotBeNull":"图名称不能为空",
   
   
   "tutorial.toolbar": "工具栏",

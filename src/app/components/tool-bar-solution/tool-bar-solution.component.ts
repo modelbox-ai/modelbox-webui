@@ -31,6 +31,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() onRestartButtonClick: any;
   @Input() onOpenTutorial: any;
   @Input() statusGraph: any;
+  @Input() msgs: any;
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
 
@@ -181,11 +182,9 @@ export class ToolBarSolutionComponent implements OnInit {
       if (response.graph) {
         this.sendCurrentProject(data);
       } else {
-        this.toastService.open({
-          value: [{ severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }],
-          life: 3000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'warn', summary: "Warning!", content: this.i18n.getById('message.selectedSolutionNotFound') }
+        ];
       }
       this.basicService.getTaskLists().subscribe((data: any) => {
         for (let i of data.job_list) {

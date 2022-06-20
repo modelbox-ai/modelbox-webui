@@ -28,6 +28,7 @@ export class DataServiceService {
   public currentSolutionList = [];
   warningMessage = false;
   public virtualFlowunits = [];
+  public msgstack = [];
 
 
   constructor(private sanitized: DomSanitizer,

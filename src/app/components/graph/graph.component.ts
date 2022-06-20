@@ -88,6 +88,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() registerNodeAttributeChange: any;
   @Input() registerExtendDetail: any;
   @Input() isResizing: any;
+  @Input() msgs: any;
   @Output() sendIsOpen = new EventEmitter<any>();
   prevFit: any;
   prevEngine: any;
@@ -126,7 +127,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   pointCr: any = 6;
   maxHeight: any = 150;
   extended: any = true;
-  msgs: Array<Object> = [];
+  
   nodeBbox: any;
   extendedNum = 2;
 
@@ -140,11 +141,9 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
     let visited = localStorage.getItem("visited");
     if (!visited) {
-      this.toastService.open({
-        value: [{ severity: 'info', content: this.i18n.getById('graph.cavans.tip') }],
-        life: 5000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'info', content: this.i18n.getById('graph.cavans.tip') }
+      ];
     }
     localStorage.setItem('visited', 'true');
   }
