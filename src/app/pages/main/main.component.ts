@@ -109,6 +109,7 @@ export class MainComponent {
     FAULT: 2
   }
   currentGraph: any;
+  msgs: Array<Object> = [];
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -155,7 +156,7 @@ export class MainComponent {
 
   updataStatusGraph() {
     this.basicService.getTaskLists().subscribe((data: any) => {
-      if (data.job_list.length === 0){
+      if (data.job_list.length === 0) {
         this.statusGraph = 0;
         return;
       }
@@ -291,11 +292,9 @@ export class MainComponent {
         localStorage.removeItem("project");
         this.dotSrc = this.dataService.defaultSrc;
         this.createProjectDialogResults.modalInstance.hide();
-        this.toastService.open({
-          value: [{ severity: 'success', content: data.body.msg }],
-          life: 1500,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'success', content: data.body.msg }
+        ];
         this.loadProject(param);
 
         this.createProjectDialogResults.modalInstance.hide();
@@ -303,11 +302,9 @@ export class MainComponent {
         return;
       }
     }, error => {
-      const results = this.toastService.open({
-        value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-        life: 10000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'error', summary: 'ERROR', content: error.error.msg }
+      ];
     });
   }
 
@@ -370,11 +367,9 @@ export class MainComponent {
         this.reloadInsertComponent();
 
       }, error => {
-        const results = this.toastService.open({
-          value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 10000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+        ];
       });
 
   }
@@ -1040,11 +1035,9 @@ export class MainComponent {
       this.basicService.createTask(option)
         .subscribe(async (data: any) => {
           //提示任务运行状态
-          this.toastService.open({
-            value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
-            life: 3000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }
+          ];
 
           await new Promise(r => setTimeout(r, 2000));
           this.header.goTask();
@@ -1054,28 +1047,22 @@ export class MainComponent {
           obj[this.graphName] = this.statusGraph;
           sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
-            this.toastService.open({
-              value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-              life: 10000,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
+            ];
           }
         }
         );
     } else {
       if (!this.graphName) {
-        this.toastService.open({
-          value: [{ severity: 'warn', summary: "", content: "图名称不能为空" }],
-          life: 3000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'warn', summary: "", content: this.i18n.getById('message.graphNameCannotBeNull') }
+        ];
         return;
       }
-      this.toastService.open({
-        value: [{ severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }],
-        life: 3000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }
+      ];
       this.statusGraph = 0;
       let obj = {};
       obj[this.graphName] = 0;
@@ -1100,11 +1087,9 @@ export class MainComponent {
       for (let i of data.job_list) {
         if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
-            this.toastService.open({
-              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
-              life: 1500,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
+            ];
           });
         }
       }
@@ -1127,12 +1112,9 @@ export class MainComponent {
       for (let i of data.job_list) {
         if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
-            this.toastService.open({
-              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
-              life: 1500,
-              style: { top: '100px' }
-            });
-
+            this.msgs = [
+              { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
+            ];
             this.handleRunButtonClick(graphName);
           });
         }

@@ -37,6 +37,7 @@
               [hasUndo]="hasUndo"
               [hasRedo]="hasRedo"
               [graphs]="graphs"
+              [msgs]="msgs"
               [statusGraph]="statusGraph"
               [onUndoButtonClick]="handleUndoButtonClick"
               [onRedoButtonClick]="handleRedoButtonClick"
@@ -74,6 +75,7 @@
                 #graph
                 style="z-index:-100"
                 [dotSrc]="dotSrc"
+                [msgs]="msgs"
                 [hasFocus]="focusedPane === 'Graph'"
                 [onUndo]="handleUndoButtonClick"
                 [onRedo]="handleRedoButtonClick"
@@ -130,3 +132,7 @@
     </app-attribute-panel>
   </div>
 </div>
+<d-toast 
+  [value]="msgs" 
+  [style]="{ top: '100px' }">
+</d-toast>

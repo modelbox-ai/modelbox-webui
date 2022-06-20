@@ -19,6 +19,7 @@
           [hasUndo]="hasUndo"
           [hasRedo]="hasRedo"
           [statusGraph]="statusGraph"
+          [msgs]="msgs"
           [onUndoButtonClick]="handleUndoButtonClick"
           [onRedoButtonClick]="handleRedoButtonClick"
           [onZoomInButtonClick]="handleZoomInButtonClick"
@@ -84,3 +85,8 @@
     (newItemEvent)="updateConfig($event)">
   </app-attribute-panel>
 </div>
+
+<d-toast 
+  [value]="msgs" 
+  [style]="{ top: '100px' }">
+</d-toast>

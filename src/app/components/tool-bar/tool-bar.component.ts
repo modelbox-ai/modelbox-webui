@@ -76,6 +76,7 @@ export class ToolBarComponent {
 
   @Input() projectInfo: any;
   @Input() statusGraph: any;
+  @Input() msgs: any;
 
   @Output() graphsEmmiter = new EventEmitter();
   @Output() refreshEmmiter = new EventEmitter();
@@ -577,11 +578,9 @@ export class ToolBarComponent {
           })
 
         }, error => {
-          const results = this.toastService.open({
-            value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-            life: 10000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          ];
         });
     }
 
@@ -769,31 +768,25 @@ export class ToolBarComponent {
       }
       for (let key in this.portInfo) {
         if (!this.portInfo[key]) {
-          this.toastService.open({
-            value: [{ severity: 'warn', content: key + this.i18n.getById("message.valueIsNecessary") }],
-            life: 2000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'warn', content: key + this.i18n.getById("message.valueIsNecessary") }
+          ];
           return;
         }
 
         if (this.formDataCreateFlowunit.lang === "inference" && !this.portInfo.data_type) {
-          this.toastService.open({
-            value: [{ severity: 'warn', content: this.i18n.getById("message.valueIsNecessaryForDataType") }],
-            life: 2000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'warn', content: this.i18n.getById("message.valueIsNecessaryForDataType") }
+          ];
           return;
         }
       }
 
       for (let p of this.formDataCreateFlowunit.port_infos) {
         if (p.port_name === this.portInfo.port_name) {
-          this.toastService.open({
-            value: [{ severity: 'warn', content: this.i18n.getById("message.duplicatePortName") }],
-            life: 2000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'warn', content: this.i18n.getById("message.duplicatePortName") }
+          ];
 
           return;
         }
@@ -813,46 +806,34 @@ export class ToolBarComponent {
 
   checkFormDataCreateFlowunit() {
     if (!this.formDataCreateFlowunit.name) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.nameOfFlowunitIsNecessary") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.nameOfFlowunitIsNecessary") }
+      ];
       return false;
     } else if (!this.formDataCreateFlowunit.lang) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.langOfFlowunitIsNecessary") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.langOfFlowunitIsNecessary") }
+      ];
       return false;
     } else if (!this.formDataCreateFlowunit.device) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.deviceTypeOfFlowunitIsNecessary") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.deviceTypeOfFlowunitIsNecessary") }
+      ];
       return false;
     } else if (!this.formDataCreateFlowunit.type && !this.formDataCreateFlowunit["virtual-type"]) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.typeOfFlowunitIsNecessary") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.typeOfFlowunitIsNecessary") }
+      ];
       return false;
     } else if (!this.formDataCreateFlowunit["group-type"]) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.groupOfFlowunitIsNecessary") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.groupOfFlowunitIsNecessary") }
+      ];
       return false;
     } else if (this.formDataCreateFlowunit.port_infos && this.formDataCreateFlowunit.port_infos.length === 0) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.atLeastOneInputOrOutput") }],
-        life: 2000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.atLeastOneInputOrOutput") }
+      ];
       return false;
     }
     return true;
@@ -997,11 +978,9 @@ export class ToolBarComponent {
           this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-          this.toastService.open({
-            value: [{ severity: 'success', content: this.i18n.getById('graph.creation') }],
-            life: 5000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'success', content: this.i18n.getById('graph.creation') }
+          ];
           setTimeout(() => {
             this.saveSettingEmmiter.emit(graphName);
           }, 0)
@@ -1068,11 +1047,9 @@ export class ToolBarComponent {
         }
       }
       if (flag) {
-        this.toastService.open({
-          value: [{ severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }],
-          life: 3000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
+        ];
       }
       this.dataService.virtualFlowunits.push(obj);
       this.refreshFlowunit();
@@ -1174,11 +1151,9 @@ export class ToolBarComponent {
             this.dataService.loadFlowUnit("", dirs, this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name);
             this.initFormDataCreateFlowunit();
             this.refreshFlowunit();
-            this.toastService.open({
-              value: [{ severity: 'success', content: data.body.msg }],
-              life: 1500,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'success', content: data.body.msg }
+            ];
 
             comp.modalInstance.hide();
             comp.modalInstance.zIndex = -1;
@@ -1186,11 +1161,9 @@ export class ToolBarComponent {
         }
       },
       (error) => {
-        this.toastService.open({
-          value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 10000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+        ];
         return null;
       });
     return true;
@@ -1243,17 +1216,13 @@ export class ToolBarComponent {
       error => {
         if (error) {
           if (error.staus == 404) {
-            this.toastService.open({
-              value: [{ severity: 'warn', content: this.i18n.getById('message.noFolder') }],
-              life: 2000,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'warn', content: this.i18n.getById('message.noFolder') }
+            ];
           } else {
-            this.toastService.open({
-              value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-              life: 10000,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'error', summary: 'ERROR', content: error.error.msg }
+            ];
           }
         }
         this.folderList = [];
@@ -1345,11 +1314,9 @@ export class ToolBarComponent {
           }
         },
         (error) => {
-          this.toastService.open({
-            value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-            life: 10000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          ];
           return;
         });
     }
@@ -1383,19 +1350,15 @@ export class ToolBarComponent {
 
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
-        this.toastService.open({
-          value: [{ severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }],
-          life: 1500,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }
+        ];
       }
     },
       (error) => {
-        this.toastService.open({
-          value: [{ severity: 'error', summary: 'ERROR', content: error.error.msg }],
-          life: 10000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+        ];
         return null;
       });
   }
@@ -1443,11 +1406,9 @@ export class ToolBarComponent {
 
   infoCreateProjectFirst() {
     if (!this.formDataCreateProject.name) {
-      this.toastService.open({
-        value: [{ severity: 'warn', content: this.i18n.getById("message.createProjectFirst") }],
-        life: 3000,
-        style: { top: '100px' }
-      });
+      this.msgs = [
+        { severity: 'warn', content: this.i18n.getById("message.createProjectFirst") }
+      ];
       return false;
     } else {
       return true;

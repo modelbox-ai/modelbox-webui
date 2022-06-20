@@ -59,7 +59,7 @@ export class SolutionComponent implements OnInit {
   showLoading;
   statusGraph = "stop";
   refresh_timer: any;
-
+  msgs: Array<Object> = [];
 
   constructor(private basicService: BasicServiceService, private toastService: ToastService, private i18n: I18nService,
     private dataService: DataServiceService) {
@@ -438,22 +438,18 @@ export class SolutionComponent implements OnInit {
     this.basicService.createTask(option)
       .subscribe(async (data: any) => {
         //提示任务运行状态
-        this.toastService.open({
-          value: [{ severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }],
-          life: 3000,
-          style: { top: '100px' }
-        });
+        this.msgs = [
+          { severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') },
+        ];
         await new Promise(r => setTimeout(r, 1000));
         this.showLoading = false;
         this.header.goTask();
       }, error => {
         this.statusGraph = "fault";
         if (error.error != null) {
-          this.toastService.open({
-            value: [{ severity: 'error', summary: error.error.error_code, content: error.error.error_msg }],
-            life: 10000,
-            style: { top: '100px' }
-          });
+          this.msgs = [
+            { severity: 'error', summary: error.error.error_code, content: error.error.error_msg },
+          ];
         }
         this.showLoading = false;
       }
@@ -472,11 +468,9 @@ export class SolutionComponent implements OnInit {
       for (let i of data.job_list) {
         if (graphName === i.job_id) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
-            this.toastService.open({
-              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
-              life: 1500,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') },
+            ];
             this.statusGraph = "stop";
           });
         }
@@ -495,11 +489,9 @@ export class SolutionComponent implements OnInit {
       for (let i of data.job_list) {
         if (graphName === i.job_id) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
-            this.toastService.open({
-              value: [{ severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }],
-              life: 1500,
-              style: { top: '100px' }
-            });
+            this.msgs = [
+              { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') },
+            ];
             this.statusGraph = "stop";
             this.handleRunButtonClick();
           });
