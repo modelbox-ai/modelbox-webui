@@ -47,6 +47,7 @@ import { AceModule, AceConfigInterface, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { ShowdownModule } from 'ngx-showdown';
 import { ModalGuideComponent } from '../components/modal-guide/modal-guide.component';
 
+
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
@@ -102,7 +103,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     ManagementComponent,
     ModalSaveAsComponent,
     NgbdTooltipCustomclass,
-    ModalGuideComponent
+    ModalGuideComponent,
   ],
   providers: [
     {
