@@ -5,7 +5,8 @@
     "start": "npm run prepare && ng serve",
     "prepare": "mkdir dist -p && pegjs src/app/components/graph/dotParser.pegjs dist/dotParser.js",
     "build": "npm run prepare && ng build --configuration production",
-    "serve": "ng serve --configuration development"
+    "serve": "ng serve --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -60,10 +61,17 @@
     "@types/lodash": "^4.14.158",
     "@types/node": "^12.11.1",
     "@types/showdown": "^1.9.4",
+    "@types/jasmine": "~4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "copy-webpack-plugin": "~10.2.4",
     "cross-spawn": "^7.0.3",
+    "jasmine-core": "~4.1.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.0.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
     "prettier": "~2.6.2",
     "stylelint": "~14.7.1",
     "stylelint-config-standard": "^25.0.0",
