@@ -43,49 +43,16 @@ export class DataServiceService {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
-  // 使用 unit name 及 type获取 对应的 unit
-  getUnit(name, type) {
-    let unit;
-    if (this.nodeShapeCategories.length === 0) {
-      this.loadFlowUnit(null, [], null);
-    }
-    this.nodeShapeCategories.forEach(cat => {
-      cat.children.forEach(it => {
-        if (it.name === name) {
-          unit = it;
-          if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
-            this.toastService.open({
-              value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
-              life: 3000,
-              style: { top: '100px' }
-            });
-            this.warningMessage = true;
-            this.sleep(3000).then(() => {
-              this.warningMessage = false;
-            });
-          }
-        }
-      });
-    });
-    return unit;
-  }
-
-  loadProjectFlowunit(path) {
-    this.basicService.openProject(path).subscribe(
-      (data: any) => {
-        if (data) {
-          this.flowunits = data.flowunits;
-        }
-      });
+  getCurrentPage() {
+    return this.currentPage;
   }
 
   titleCase(str) {
     if (str) {
       let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
       return newStr;
-    } else {
-      return str;
     }
+    return str;
   }
 
   transformFlowunit() {
@@ -107,7 +74,7 @@ export class DataServiceService {
       }
       obj.name = ele.base.name;
       obj.version = ele.base.version;
-      obj.type = ele.base.type;
+      obj.type = ele.base.device;
       for (let i in ele.input) {
         obj.inputports.push(ele.input[i]);
       }
@@ -115,7 +82,8 @@ export class DataServiceService {
         obj.outputports.push(ele.output[i]);
       }
       this.transformedFlowunits.push(obj);
-    })
+    });
+    return this.transformedFlowunits;
   }
 
   loadFlowUnit(skip, dirs, path) {
@@ -177,9 +145,34 @@ export class DataServiceService {
           };
         }
       );
-    })
+    });
+  }
 
-
+  // 使用 unit name 及 type获取 对应的 unit
+  getUnit(name, type) {
+    let unit;
+    if (this.nodeShapeCategories.length === 0) {
+      this.loadFlowUnit(null, [], null);
+    }
+    this.nodeShapeCategories.forEach(cat => {
+      cat.children.forEach(it => {
+        if (it.name === name) {
+          unit = it;
+          if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
+            this.toastService.open({
+              value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
+              life: 3000,
+              style: { top: '100px' }
+            });
+            this.warningMessage = true;
+            this.sleep(3000).then(() => {
+              this.warningMessage = false;
+            });
+          }
+        }
+      });
+    });
+    return unit;
   }
 
   nodeShapeCategoriesAdd(param) {
@@ -269,5 +262,19 @@ export class DataServiceService {
       );
     }
     return '{' + parts.join('|') + '}';
+  }
+
+  loadProjectFlowunit(path) {
+    this.basicService.openProject(path).subscribe(
+      (data: any) => {
+        if (data) {
+          this.flowunits = data.flowunits;
+          return this.flowunits;
+        }
+      },
+      (err) => {
+        return;
+      }
+    );
   }
 }

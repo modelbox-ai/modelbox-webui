@@ -133,28 +133,6 @@ export class InsertPanelsComponent implements OnInit {
     return false;
   }
 
-  loadProjectFlowunit(path) {
-    this.basicService.openProject(path).subscribe(
-      (data: any) => {
-        if (data) {
-          this.flowunits = data.flowunits;
-        }
-      },
-      (err) => {
-        return;
-      }
-    );
-  }
-
-  titleCase(str) {
-    if (str) {
-      let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
-      return newStr;
-    } else {
-      return str;
-    }
-  }
-
   transformFlowunit() {
     this.transformedFlowunits = [];
     this.flowunits.map(ele => {
@@ -168,7 +146,7 @@ export class InsertPanelsComponent implements OnInit {
         outputports: []
       };
       obj.descryption = ele.base.description;
-      obj.group = this.titleCase(ele.base.group_type);
+      obj.group = this.dataService.titleCase(ele.base.group_type);
       if (!obj.group) {
         obj.group = "Generic";
       }
@@ -203,7 +181,7 @@ export class InsertPanelsComponent implements OnInit {
       dir: dirs,
     }
     if (path != null) {
-      this.loadProjectFlowunit(path);
+      this.flowunits = this.dataService.loadProjectFlowunit(path);
     }
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];

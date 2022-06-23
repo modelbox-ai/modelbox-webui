@@ -30,6 +30,7 @@ import ace from 'brace'
 import 'brace/mode/dot';
 import 'brace/theme/tomorrow';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { DataServiceService } from '@shared/services/data-service.service';
 
 @Component({
   selector: 'app-text-editor',
@@ -67,7 +68,10 @@ export class TextEditorComponent {
     }
   }, 500);
 
-  constructor(private div: ElementRef, private basicService: BasicServiceService) { }
+  constructor(
+    private div: ElementRef,
+    private basicService: BasicServiceService,
+    private dataService: DataServiceService) { }
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -178,13 +182,11 @@ export class TextEditorComponent {
   undo = () => {
     this.editor.getSession().getUndoManager().undo();
   };
-  sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
+
   redo = () => {
     this.editor.getSession().getUndoManager().redo();
     if (!this.dotSrc) {
-      this.sleep(1000).then(() => {
+      this.dataService.sleep(1000).then(() => {
         location.reload();
       });
     }

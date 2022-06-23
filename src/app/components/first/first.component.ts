@@ -14,7 +14,7 @@ export class FirstComponent implements OnInit {
     private dataService: DataServiceService) { }
 
   ngOnInit(): void {
-    this.dataService.currentPage = "first";
+    this.dataService.currentPage = "";
   }
 
 }
