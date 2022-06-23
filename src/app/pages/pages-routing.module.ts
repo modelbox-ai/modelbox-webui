@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { LayoutFullComponent } from '../layout/full/full.component';
 // main pages
 import { MainComponent } from './main/main.component';
 import { FirstComponent } from '../components/first/first.component';
 import { SolutionComponent } from '../components/solution/solution.component';
 import { ManagementComponent } from '../components/management/management.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: FirstComponent,

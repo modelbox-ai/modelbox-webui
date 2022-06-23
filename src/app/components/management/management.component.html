@@ -337,6 +337,7 @@
                   style="height: 76%"
                   [config]="config" 
                   [value]="responseSrc" 
+                  (valueChange)="handleChange1($event)" 
                   [theme]="'tomorrow'" 
                   [mode]="'dot'">
                 </ace>

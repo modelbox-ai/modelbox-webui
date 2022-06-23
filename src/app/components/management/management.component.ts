@@ -254,6 +254,10 @@ export class ManagementComponent implements OnInit {
     } catch (e) { }
   }
 
+  handleChange1(value) {
+    this.responseSrc = value;
+  }
+
   beautifyJson() {
     this.jsonSrc = JSON.stringify(this.jsonSrcObj, null, 2);
   }
@@ -268,7 +272,7 @@ export class ManagementComponent implements OnInit {
           t = JSON.parse(t);
           this.jsonSrc = t;
           this.url = i.restapi?.path;
-        }else{
+        } else {
           this.selectMethod = "GET";
           this.jsonSrc = "";
           this.url = "";

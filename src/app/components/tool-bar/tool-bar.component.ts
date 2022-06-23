@@ -1019,21 +1019,13 @@ export class ToolBarComponent {
     this.out_num = 1;
   }
 
-  titleCase(str) {
-    if (str) {
-      let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
-      return newStr;
-    }
-    return str;
-  }
-
   createFlowunit(comp) {
     if (this.formDataCreateFlowunit.lang === "virtual") {
       // add node directly in insert-panel
       let obj = {};
       obj['name'] = this.formDataCreateFlowunit.name;
       obj['type'] = this.virtualType;
-      obj['group'] = this.titleCase(this.formDataCreateFlowunit["group-type"]);
+      obj['group'] = this.dataService.titleCase(this.formDataCreateFlowunit["group-type"]);
       obj['title'] = obj['name'];
       obj['version'] = "";
       obj['types'] = "";

@@ -126,7 +126,7 @@ export class MainComponent {
       }
       this.path = path;
       this.dataService.defaultSearchPath = path;
-      this.toolBar.formDataCreateProject['rootpath'] = path;
+      // this.toolBar.formDataCreateProject['rootpath'] = path;
       this.toolBar.openproject_path = path;
     });
     if (current_project) {
