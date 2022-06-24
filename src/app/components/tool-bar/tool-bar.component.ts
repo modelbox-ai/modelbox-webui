@@ -299,7 +299,7 @@ export class ToolBarComponent {
   }
 
   optionsInOut = ['input', 'output'];
-  optionsdata_type = ['int', 'float']; //flowunit type
+  optionsdata_type = ['uint8', 'int', 'int64', 'float', 'float64', 'long', 'double']; //flowunit type
   optionsdevice = ['cpu', 'cuda'];
   optionsdevicePython = ['cpu'];
   flowunitGroupOptions = ['generic', 'video', 'inference'];
@@ -307,31 +307,6 @@ export class ToolBarComponent {
   virtualType = 'Input';
 
   portHeaderOptions = {
-    columns: [
-      {
-        field: 'inputOutput',
-        header: this.i18n.getById("toolBar.modal.inputOutput"),
-        fieldType: 'text'
-      },
-      {
-        field: 'portName',
-        header: this.i18n.getById("toolBar.modal.port_name"),
-        fieldType: 'text'
-      },
-      {
-        field: 'device',
-        header: this.i18n.getById("toolBar.modal.device"),
-        fieldType: 'text'
-      },
-      {
-        field: 'operation',
-        header: this.i18n.getById("toolBar.select.operation"),
-        fieldType: 'customized'
-      }
-    ]
-  };
-
-  defaultPortHeaderOptions = {
     columns: [
       {
         field: 'inputOutput',
@@ -634,11 +609,6 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
     }
-
-    if (this.formDataCreateFlowunit.lang === "inference") {
-      this.portHeaderOptions = this.portHeaderFullOptions;
-    }
-    this.portHeaderOptions = this.defaultPortHeaderOptions;
 
     if (value === "yolo") {
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
