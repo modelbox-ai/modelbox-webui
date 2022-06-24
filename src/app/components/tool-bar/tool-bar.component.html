@@ -547,8 +547,13 @@
                     <d-data-table [dataSource]="formDataCreateFlowunit.port_infos" [scrollable]="true"
                         maxHeight="200px">
                         <thead dTableHead>
-                            <tr dTableRow>
+                            <tr dTableRow *ngIf="formDataCreateFlowunit.lang !== 'inference'">
                                 <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">
+                                    {{ colOption.header }}
+                                </th>
+                            </tr>
+                            <tr dTableRow *ngIf="formDataCreateFlowunit.lang === 'inference'">
+                                <th dHeadCell *ngFor="let colOption of portHeaderFullOptions.columns">
                                     {{ colOption.header }}
                                 </th>
                             </tr>
