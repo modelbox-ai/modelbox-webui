@@ -1,136 +1,141 @@
-<div id="tool-bar" class="tool-bar">
-  <div class="tool-bar-left btn-group">
-    <span id="undoredo">
-     <d-button
-       id="undo1"
-       *ngIf="hasUndo"
-       dTooltip
-       bsStyle="text-dark"
-       [content]="'toolBar.backButton' | translate"
-       [disabled]="!hasUndo"
-       (click)="handleUndoButtonClick($event)">
-        <img src={{backSvg}} />
-      </d-button>
+<div>
+  <div id="tool-bar" class="tool-bar">
+    <div class="tool-bar-left btn-group">
+      <span id="undoredo">
       <d-button
-        id="undo2"
-        *ngIf="!hasUndo"
+        id="undo1"
+        *ngIf="hasUndo"
         dTooltip
         bsStyle="text-dark"
         [content]="'toolBar.backButton' | translate"
         [disabled]="!hasUndo"
         (click)="handleUndoButtonClick($event)">
-        <img src={{backDisabledSvg}} />
+          <img src={{backSvg}} />
+        </d-button>
+        <d-button
+          id="undo2"
+          *ngIf="!hasUndo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.backButton' | translate"
+          [disabled]="!hasUndo"
+          (click)="handleUndoButtonClick($event)">
+          <img src={{backDisabledSvg}} />
+        </d-button>
+        <d-button
+          id="redo1"
+          *ngIf="hasRedo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.redoButton' | translate"
+          [disabled]="!hasRedo"
+          (click)="handleRedoButtonClick($event)">
+          <img src={{redoSvg}} />
+        </d-button>
+        <d-button
+          id="redo2"
+          *ngIf="!hasRedo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.redoButton' | translate"
+          [disabled]="!hasRedo"
+          (click)="handleRedoButtonClick($event)">
+          <img src={{redoDisabledSvg}} />
+        </d-button>
+      </span>
+      <span id="zoominout">
+        <d-button
+          id="zoom-in"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomInButton' | translate"
+          (click)="handleZoomInButtonClick($event)">
+          <img src={{zoomInSvg}} />
+        </d-button>
+        <d-button
+          id="zoom-out"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.zoomOutButton' | translate"
+          (click)="handleZoomOutButtonClick($event)">
+          <img src={{zoomOutSvg}} />
+        </d-button>
+      </span>
+      <d-button
+        id="zoom-reset"
+        dTooltip
+        bsStyle="text-dark"
+        [content]="'toolBar.zoomResetButton' | translate"
+        (click)="handleZoomResetButtonClick($event)">
+        <img src={{zoomResetSvg}} />
       </d-button>
       <d-button
-        id="redo1"
-        *ngIf="hasRedo"
+        id="zoom-fit"
         dTooltip
         bsStyle="text-dark"
-        [content]="'toolBar.redoButton' | translate"
-        [disabled]="!hasRedo"
-        (click)="handleRedoButtonClick($event)">
-        <img src={{redoSvg}} />
+        [content]="'toolBar.zoomFitButton' | translate"
+        (click)="handleZoomFitButtonClick($event)">
+        <img src={{zoomFitSvg}} />
       </d-button>
       <d-button
-        id="redo2"
-        *ngIf="!hasRedo"
+        id="switch"
         dTooltip
         bsStyle="text-dark"
-        [content]="'toolBar.redoButton' | translate"
-        [disabled]="!hasRedo"
-        (click)="handleRedoButtonClick($event)">
-        <img src={{redoDisabledSvg}} />
-      </d-button>
-    </span>
-    <span id="zoominout">
-      <d-button
-        id="zoom-in"
-        dTooltip
-        bsStyle="text-dark"
-        [content]="'toolBar.zoomInButton' | translate"
-        (click)="handleZoomInButtonClick($event)">
-        <img src={{zoomInSvg}} />
+        [content]="'toolBar.switchButton' | translate"
+        (click)="handleSwitchDirectionButtonClick($event)">
+        <img src={{switchSvg}} />
       </d-button>
       <d-button
-        id="zoom-out"
+        id="run"
+        *ngIf="statusGraph === 'stop'"
         dTooltip
         bsStyle="text-dark"
-        [content]="'toolBar.zoomOutButton' | translate"
-        (click)="handleZoomOutButtonClick($event)">
-        <img src={{zoomOutSvg}} />
+        [content]="'toolBar.runGraphButton' | translate"
+        (click)="handleRunButtonClick($event)">
+          <img src={{runGraphSvg}} />
       </d-button>
-    </span>
-    <d-button
-      id="zoom-reset"
-      dTooltip
-      bsStyle="text-dark"
-      [content]="'toolBar.zoomResetButton' | translate"
-      (click)="handleZoomResetButtonClick($event)">
-      <img src={{zoomResetSvg}} />
-    </d-button>
-    <d-button
-      id="zoom-fit"
-      dTooltip
-      bsStyle="text-dark"
-      [content]="'toolBar.zoomFitButton' | translate"
-      (click)="handleZoomFitButtonClick($event)">
-      <img src={{zoomFitSvg}} />
-    </d-button>
-    <d-button
-      id="switch"
-      dTooltip
-      bsStyle="text-dark"
-      [content]="'toolBar.switchButton' | translate"
-      (click)="handleSwitchDirectionButtonClick($event)">
-      <img src={{switchSvg}} />
-    </d-button>
-    <d-button
-      id="run"
-      *ngIf="statusGraph === 'stop'"
-      dTooltip
-      bsStyle="text-dark"
-      [content]="'toolBar.runGraphButton' | translate"
-      (click)="handleRunButtonClick($event)">
-        <img src={{runGraphSvg}} />
-    </d-button>
-    <d-button
-        id="stop"
-        *ngIf="statusGraph === 'running'"
-        dTooltip
-        bsStyle="text-dark"
-        [content]="'toolBar.stopGraphButton' | translate"
-        (click)="handleStopButtonClick($event)">
-        <img src={{stopSvg}} />
-    </d-button>
-    <d-button
-        id="restart"
-        *ngIf="statusGraph === 'fault'"
-        dTooltip
-        bsStyle="text-dark"
-        [content]="'toolBar.restartGraphButton' | translate"
-        (click)="handleRestartButtonClick($event)">
-        <img src={{restartSvg}} />
-    </d-button>
-  </div>
-  <div class="tool-bar-right" style="margin: 0 20px 0 20px;">
-    <div style="display: inline-block;">
+      <d-button
+          id="stop"
+          *ngIf="statusGraph === 'running'"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.stopGraphButton' | translate"
+          (click)="handleStopButtonClick($event)">
+          <img src={{stopSvg}} />
+      </d-button>
+      <d-button
+          id="restart"
+          *ngIf="statusGraph === 'fault'"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.restartGraphButton' | translate"
+          (click)="handleRestartButtonClick($event)">
+          <img src={{restartSvg}} />
+      </d-button>
+    </div>
+    <div class="tool-bar-right" style="margin: 0 20px 0 20px;">
+      <div style="display: inline-block;">
+        <button
+          id="selectDemo"
+          (click)="showSelectDemoDialog(selectDemo)"
+          class="tool-bar-button"
+          style="display: inline-block;">
+          {{'toolBar.selectDemo' | translate}}
+        </button>
       <button
-        id="selectDemo"
-        (click)="showSelectDemoDialog(selectDemo)"
+        id="tutorial"
+        (click)="openTutorial($event)"
         class="tool-bar-button"
         style="display: inline-block;">
-        {{'toolBar.selectDemo' | translate}}
+        {{'toolBar.openTutorial' | translate}}
       </button>
-    <button
-      id="tutorial"
-      (click)="openTutorial($event)"
-      class="tool-bar-button"
-      style="display: inline-block;">
-      {{'toolBar.openTutorial' | translate}}
-    </button>
+    </div>
   </div>
 </div>
-
+<d-toast 
+  [value]="msgs" 
+  [style]="{ top: '100px' }">
+</d-toast>
 <ng-template #selectDemo id="selectDemo">
   <div
     dLoading
@@ -141,18 +146,19 @@
       style="width:50%;height:100%"
       (click)="onClickCard(d)">
       <d-card-header>
-        <d-avatar dCardAvatar [name]="d.name"></d-avatar>
+        <d-avatar 
+          dCardAvatar 
+          [name]="d.name">
+        </d-avatar>
         <d-card-title>
           {{d.name}}
         </d-card-title>
       </d-card-header>
       <d-card-content>
-        <div>{{d.desc}}</div>
+        <div>
+          {{d.desc}}
+        </div>
       </d-card-content>
     </d-card>
   </div>
 </ng-template>
-<d-toast 
-  [value]="msgs" 
-  [style]="{ top: '100px' }">
-</d-toast>

@@ -192,7 +192,6 @@ export class InsertPanelsComponent implements OnInit {
       }
       if (this.flowunits && this.flowunits.length > 0) {
         this.transformFlowunit();
-
         for (let ele in this.transformedFlowunits) {
           for (let ele2 of data.flowunits) {
             if (this.transformedFlowunits[ele].name === ele2.name) {

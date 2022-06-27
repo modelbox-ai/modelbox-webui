@@ -299,7 +299,8 @@
                                 dAutoComplete 
                                 [source]="openProjectList" 
                                 (selectValue)="onPathSelect($event)"
-                                (keyup)="($event.which === 13)?searchDirectory():0" 
+                                (keyup)="($event.which === 13)?searchDirectory():0"
+                                (blur)="searchDirectory()"
                                 maxlength="4096"/>
                         </div>
                         <d-button 
@@ -802,15 +803,15 @@
 
 <ng-template #graphSelect let-context='context'>
   <d-content>
-    <d-data-table 
-        [fixHeader]="true" 
-        [containFixHeaderHeight]="true" 
-        [scrollable]="true" 
-        [headerBg]="true"
-        [colDraggable]="true" 
-        [dataSource]="graphSelectTableDataForDisplay" 
-        tableHeight="360px"
-        [tableWidthConfig]="tableWidthConfig">
+    <d-data-table
+      [fixHeader]="true" 
+      [containFixHeaderHeight]="true" 
+      [scrollable]="true" 
+      [headerBg]="true"
+      [colDraggable]="true" 
+      [dataSource]="graphSelectTableDataForDisplay" 
+      tableHeight="360px"
+      [tableWidthConfig]="tableWidthConfig">
       <thead dTableHead>
         <tr dTableRow>
           <th dHeadCell *ngFor="let colOption of dataTableOptions.columns">{{ colOption.header }}</th>

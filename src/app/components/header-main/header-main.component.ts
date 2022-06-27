@@ -11,9 +11,7 @@ declare const require: any;
 })
 export class HeaderMainComponent implements OnInit {
   consoleName: string = this.i18n.getById('consoleName');
-  helpSvg = require("../../../assets/help.svg");
-  apiSvg = require("../../../assets/api.svg");
-  logoSvg = require("../../../assets/model-arts-logo.svg");
+  logoSvg = "../../../assets/model-arts-logo.svg";
   helpText: string = this.i18n.getById('common.help');
   @Input() active = "";
 
