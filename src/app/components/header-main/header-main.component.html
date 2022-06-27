@@ -2,9 +2,9 @@
   <div 
     class="modelArts-header-container" 
     (click)="click('')">
-    <img src={{logoSvg}} />
+    <img [src]="logoSvg" alt="Logo">
     <div class="logo-text">
-      {{consoleName}}
+      {{ consoleName }}
     </div>
   </div>
   <div class="container-pos" style="left:42%;">
@@ -18,7 +18,7 @@
           [ngClass]="{'tab-active': active===''}"
           oncontext="return false"
           (click)="click('')">
-          {{ 'firstPage' | translate}}
+          {{ 'firstPage' | translate }}
         </a>
       </li>
       <li>
@@ -30,7 +30,7 @@
           [ngClass]="{'tab-active': active==='example'}"
           oncontext="return false"
           (click)="click('example')">
-          {{ 'exampleDisplay' | translate}}
+          {{ 'exampleDisplay' | translate }}
         </a>
       </li>
       <li>
@@ -40,7 +40,7 @@
           [ngClass]="{'tab-active': active==='editor'}"
           oncontext="return false"
           (click)="click('editor')">
-          {{'editor' | translate}}
+          {{ 'editor' | translate }}
         </a>
       </li>
       <li>
@@ -50,7 +50,7 @@
           [ngClass]="{'tab-active': active==='task'}"
           oncontext="return false"
           (click)="click('task')">
-          {{'taskLists' | translate}}
+          {{ 'taskLists' | translate }}
         </a>
       </li>
     </ul>
@@ -62,12 +62,18 @@
       class="links-first" 
       style="display: inline-block;">
       <a href="https://modelbox-ai.com/modelbox-book/" target="_blank">
-        <span><i class="icon icon-help"></i>{{helpText}}</span>
+        <span>
+          <i class="icon icon-help"></i>
+          {{ helpText }}
+        </span>
       </a>
     </div>
     <div class="links-first" style="display: inline-block;">
       <a href="/api" target="_blank">
-        <span><i class="icon icon-connect"></i>API</span>
+        <span>
+          <i class="icon icon-connect"></i>
+          API
+        </span>
       </a>
     </div>
   </div>

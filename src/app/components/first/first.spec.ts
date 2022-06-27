@@ -7,8 +7,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OverlayContainerRef } from 'ng-devui/overlay-container';
 
 import { FirstComponent } from './first.component';
+import { HeaderMainComponent } from '../header-main/header-main.component';
 import { OverlayContainerModule } from 'ng-devui/overlay-container';
-// import { HeaderMainComponent } from '../header-main/header-main.component';
 
 class MockedDataService extends DataServiceService {
   currentPage = "";
@@ -25,6 +25,7 @@ describe('FirstComponent', () => {
       ],
       declarations: [
         FirstComponent,
+        HeaderMainComponent
       ],
       providers: [
         I18nService,

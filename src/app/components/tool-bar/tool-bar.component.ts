@@ -1135,10 +1135,10 @@ export class ToolBarComponent {
     if (e.rowIndex === 0) {
       let position = this.openproject_path.lastIndexOf("/");
       this.openproject_path = this.openproject_path.substring(0, position);
-      this.searchDirectory();
+      this.searchDirectory(this.openproject_path);
     } else {
       this.openproject_path = this.openproject_path + "/" + e.rowItem.folder;
-      this.searchDirectory();
+      this.searchDirectory(this.openproject_path);
     }
   }
 
@@ -1161,8 +1161,11 @@ export class ToolBarComponent {
     event.currentTarget.classList.add("card-focus");
   }
 
-  searchDirectory() {
-    this.basicService.loadTreeByPath(this.openproject_path).subscribe(
+  searchDirectory(path = null) {
+    if (!path) {
+      path = this.openproject_path;
+    }
+    this.basicService.loadTreeByPath(path).subscribe(
       (data: any) => {
         if (data.subdir) {
           this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": "是否modelbox项目" }];
@@ -1181,10 +1184,6 @@ export class ToolBarComponent {
             this.msgs = [
               { severity: 'warn', content: this.i18n.getById('message.noFolder') }
             ];
-          } else {
-            this.msgs = [
-              { severity: 'error', summary: 'ERROR', content: error.error.msg }
-            ];
           }
         }
         this.folderList = [];
@@ -1194,7 +1193,7 @@ export class ToolBarComponent {
 
   onPathSelect(e) {
     this.openproject_path = e;
-    this.searchDirectory();
+    this.searchDirectory(this.openproject_path);
   }
 
   loadOpenProjectList() {
@@ -1222,7 +1221,6 @@ export class ToolBarComponent {
         (data: any) => {
           if (data) {
             //加载项目信息
-
             this.formDataCreateProject.name = data.project_name;
             this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
 
@@ -1270,7 +1268,6 @@ export class ToolBarComponent {
             comp.modalInstance.zIndex = -1;
             if (data.graphs.length > 1) {
               this.showGraphSelectDialog(this.graphSelectTemplate);
-
               return;
             }
           }

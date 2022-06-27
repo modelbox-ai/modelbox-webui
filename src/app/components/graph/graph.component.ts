@@ -74,6 +74,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() onRedo: any;
   @Input() onHelp: any;
   @Input() onError: any;
+  @Input() onNodeAttributeChange: any;
   @Input() tweenPaths: any;
   @Input() tweenShapes: any;
   @Input() tweenPrecision: any;
@@ -367,13 +368,48 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (attributes.label) {
       attributes.label = attributes.label.replace('_NODE_NAME_', nodeName);
     }
+    let flowunit = attributes?.flowunit;
+    let device = attributes?.device;
+    let unit = this.dataService.getUnit(flowunit, device);
+    if (unit.options) {
+      for (let i of unit.options) {
+        if (i.required) {
+          attributes[i.name] = i.default;
+        }
+      }
+    }
     this.graphviz.updateDrawnNode(x0, y0, nodeName, attributes);
     this.graphviz.insertDrawnNode(nodeName);
     this.dotGraph.insertNode(nodeName, attributes);
     this.dotGraph.reparse();
     this.formatDotSrc();
+    this.addDefaultPropertiesForUnit(attributes, nodeName);
     this.onTextChange(this.dotGraph.dotSrc);
   }
+
+  addDefaultPropertiesForUnit (attributes, nodeName){
+    const edges = [];
+    const newName = nodeName;
+    for (let edge in this.dotGraph.edges) {
+      const edgeArr = edge.split('->');
+      const isRelatedEdge = edgeArr.some(item => {
+        return item.split(':').indexOf(nodeName) === 0;
+      });
+      if (isRelatedEdge) {
+        edges.push({
+          from: this.replaceEdgeLinkName(edgeArr[0], nodeName, newName),
+          to: this.replaceEdgeLinkName(edgeArr[1], nodeName, newName),
+        });
+      }
+    }
+    // delete original node
+    this.dotGraph.updateNode(nodeName, attributes, newName);
+    this.dotGraph.reparse();
+    this.formatDotSrc();
+    setTimeout(() => {
+      this.onTextChange(this.dotGraph.dotSrc);
+    }, 100)
+  };
 
   formAttribute(data) {
     let obj = {

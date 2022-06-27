@@ -764,7 +764,7 @@ export class MainComponent {
     this.desc = context.graphDesc;
     let rankdir = context.radioValue;
     this.skipDefault = context.skipDefault;
-    this.dirs = context.flowunitPath;
+    this.dirs = context.flowunitDebugPath;
     this.renameGraphSrc(newName);
     this.settingPerfEnable = context.perfEnable;
     this.settingPerfTraceEnable = context.perfTraceEnable;
@@ -820,7 +820,7 @@ export class MainComponent {
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
     this.toolBar.isOpen = false;
     this.toolBar.isOpen2 = false;
-    this.toolBar.searchDirectory();
+    this.toolBar.searchDirectory(this.toolBar.openproject_path);
     this.openProjectDialogResults = this.dialogService.open({
       id: 'openProject',
       width: '700px',
