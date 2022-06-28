@@ -1106,8 +1106,10 @@ export class ToolBarComponent {
             } else {
               dirs = [];
             }
-
-            dirs.push(param["project-path"] + "/src/flowunit/");
+            let ele = param["project-path"] + "/src/flowunit";
+            if (dirs.indexOf(ele) !== -1){
+              dirs.push(param["project-path"] + "/src/flowunit");
+            }
             this.formData.flowunitPath = dirs.join("\n");
             this.flowunitEmmiter.emit(this.formData.flowunitPath);
             this.dataService.loadFlowUnit("", dirs, this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name);
@@ -1295,6 +1297,27 @@ export class ToolBarComponent {
     this.refreshEmmiter.emit("refresh");
   }
 
+
+  formateDotSrc(text) {
+    let tmp = text.split("\n");
+    let new_text = "";
+    let new_relation = "";
+    for (let i of tmp) {
+      if (i.trim().length > 0) {
+        if (i === "}") {
+          new_text = new_text + '\n' + new_relation + '\n' + i + '\n';
+          break;
+        }
+        if (i.indexOf("->") > -1) {
+          new_relation = new_relation.concat(i, '\n');
+        } else {
+          new_text = new_text.concat(i, '\n');
+        }
+      }
+    }
+    return new_text;
+  }
+
   showSaveAsDialog() {
     this.isOpen = false;
     this.isOpen2 = false;
@@ -1305,8 +1328,8 @@ export class ToolBarComponent {
       return;
     }
     this.removeLabelEmmiter.emit();
+    param.graph.dotSrc = this.formateDotSrc(param.graph.dotSrc);
     param = this.createProjectParam(param);
-
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
         this.msgs = [
