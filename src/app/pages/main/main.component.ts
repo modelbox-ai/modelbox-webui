@@ -560,15 +560,15 @@ export class MainComponent {
 
 
   handleTextChange = (text, undoRedoState) => {
-    if (this.project && this.project.graph) {
-      this.dotSrc = text;
-      this.graphName = this.getGraphNameFromGraph(text);
-      this.toolBar.formData.graphName = this.graphName;
-    }
-
     this.isSaved = false;
     this.dotSrc = text;
     this.dotSrcLastChangeTime = Date.now();
+
+    if (this.project && this.project.graph) {
+      this.graphName = this.getGraphNameFromGraph(text);
+      this.toolBar.formData.graphName = this.graphName;
+    }
+    
     this.saveCurrentProject();
 
     if (this.resetUndoAtNextTextChange) {
