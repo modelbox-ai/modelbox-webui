@@ -10,7 +10,6 @@ declare const require: any;
 })
 export class HeaderMainComponent implements OnInit {
   consoleName: string = this.i18n.getById('consoleName');
-  logoSvg = "../../../assets/model-arts-logo.svg";
   helpText: string = this.i18n.getById('common.help');
   @Input() active = "";
 
