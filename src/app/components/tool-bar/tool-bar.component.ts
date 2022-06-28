@@ -1298,7 +1298,7 @@ export class ToolBarComponent {
   }
 
 
-  formateDotSrc(text) {
+  formatDotSrc(text) {
     let tmp = text.split("\n");
     let new_text = "";
     let new_relation = "";
@@ -1328,7 +1328,8 @@ export class ToolBarComponent {
       return;
     }
     this.removeLabelEmmiter.emit();
-    param.graph.dotSrc = this.formateDotSrc(param.graph.dotSrc);
+    param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
+    this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
     param = this.createProjectParam(param);
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
