@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { I18nService } from '@core/i18n.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OverlayContainerRef } from 'ng-devui/overlay-container';
@@ -9,9 +9,11 @@ import { OverlayContainerRef } from 'ng-devui/overlay-container';
 import { FirstComponent } from './first.component';
 import { HeaderMainComponent } from '../header-main/header-main.component';
 import { OverlayContainerModule } from 'ng-devui/overlay-container';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-class MockedDataService extends DataServiceService {
-  currentPage = "";
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, '../../../i18n/', '.json');
 }
 
 describe('FirstComponent', () => {
@@ -19,7 +21,14 @@ describe('FirstComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        TranslateModule.forRoot(),
+        TranslateModule.forChild({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (createTranslateLoader),
+            deps: [HttpClient]
+          }
+        }),
+        
         HttpClientModule,
         OverlayContainerModule
       ],
@@ -30,7 +39,9 @@ describe('FirstComponent', () => {
       providers: [
         I18nService,
         DataServiceService,
-        OverlayContainerRef
+        OverlayContainerRef,
+        TranslateService,
+        TranslateStore,
       ],
     }).compileComponents();
   });

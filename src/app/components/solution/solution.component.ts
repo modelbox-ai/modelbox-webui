@@ -37,7 +37,7 @@ export class SolutionComponent implements OnInit {
   resetUndoStack: any;
   resetUndoAtNextTextChange: any;
 
-  page = "example";
+  page = "solution";
 
   project: any = JSON.parse(sessionStorage.getItem('projectSolution')) || {};
   name;
@@ -443,7 +443,7 @@ export class SolutionComponent implements OnInit {
         ];
         await new Promise(r => setTimeout(r, 1000));
         this.showLoading = false;
-        this.header.goTask();
+        this.header.goManagement();
       }, error => {
         this.statusGraph = "fault";
         if (error.error != null) {

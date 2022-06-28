@@ -42,7 +42,7 @@ import { ModalGuideComponent } from '../modal-guide/modal-guide.component';
 export class ManagementComponent implements OnInit {
   @ViewChild(AceComponent, { static: true }) componentRef: AceComponent;
   @ViewChild('singleuploadDrag', { static: true }) singleuploadDrag: SingleUploadComponent;
-  page = "task";
+  page = "management";
   folded: boolean = false;
   checkedList: Array<any> = [];
   createTasklists: any;

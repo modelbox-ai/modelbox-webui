@@ -47,7 +47,7 @@ export class MainComponent {
   settingPerfSessionEnable = false;
   settingPerfDir: any;
   model = 1;
-  page = "editor";
+  page = "main";
   collapsed = false;
   editorCollapsed = false;
   getSvg: any;
@@ -1040,7 +1040,7 @@ export class MainComponent {
           ];
 
           await new Promise(r => setTimeout(r, 2000));
-          this.header.goTask();
+          this.header.goManagement();
         }, error => {
           this.statusGraph = this.Status.FAULT;
           let obj = {};

@@ -54,11 +54,11 @@ export class InsertPanelsComponent implements OnInit {
   @Input() dirs: any;
   @Input() projectPath: any;
   @Output() refreshEmmiter = new EventEmitter();
-  imgSvg = require("../../../assets/img.svg");
-  videoSvg = require("../../../assets/video.svg");
-  commonSvg = require("../../../assets/common.svg");
-  inputSvg = require("../../../assets/input.svg");
-  outputSvg = require("../../../assets/output.svg");
+  imgSvg = "../../../assets/img.svg";
+  videoSvg = "../../../assets/video.svg";
+  commonSvg = "../../../assets/common.svg";
+  inputSvg = "../../../assets/input.svg";
+  outputSvg = "../../../assets/output.svg";
   headClass: string = 'headClass';
   bodyClass: string = 'bodyClass';
   tipName: string = this.i18n.getById('insertPanels.tip.name');
