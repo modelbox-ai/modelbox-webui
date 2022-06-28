@@ -1,11 +1,9 @@
 import { DataServiceService } from "./data-service.service";
-import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import units from './units.json';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
-import { SolutionComponent } from 'src/app/components/solution/solution.component';
 import { I18nService } from '@core/i18n.service';
+import { test_transformed_data, test_flowunits_data } from "./test-flowunit-data";
 
 describe('DataService: titleCase', () => {
   let service: DataServiceService;
@@ -37,6 +35,12 @@ describe('DataService: titleCase', () => {
     service.currentPage = "main";
     let res = "main";
     expect(service.getCurrentPage()).toEqual(res);
+  });
+
+  it('transformFlowunit', () => {
+    service.flowunits = test_flowunits_data;
+    let res = test_transformed_data;
+    expect(service.transformFlowunit()).toEqual(res);
   });
 
 });

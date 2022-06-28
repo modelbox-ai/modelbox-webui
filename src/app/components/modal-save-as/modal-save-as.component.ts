@@ -24,13 +24,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./modal-save-as.component.less']
 })
 export class ModalSaveAsComponent {
-  data: { graphName: string }
   graphName = "";
   constructor() { }
-  ngOnInit(): void {
-    this.graphName = this.data.graphName;
-  }
-  onInputChange() {
-    this.data.graphName = this.graphName;
-  }
 }

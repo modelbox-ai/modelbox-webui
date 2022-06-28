@@ -35,18 +35,18 @@ export class ToolBarSolutionComponent implements OnInit {
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
 
-  backSvg = require("../../../assets/undo.svg");
-  backDisabledSvg = require("../../../assets/undo_disabled.svg");
-  redoSvg = require("../../../assets/redo.svg");
-  redoDisabledSvg = require("../../../assets/redo_disabled.svg");
-  zoomInSvg = require("../../../assets/zoom-in.svg");
-  zoomOutSvg = require("../../../assets/zoom-out.svg");
-  zoomResetSvg = require("../../../assets/zoom-reset.svg");
-  zoomFitSvg = require("../../../assets/zoom-out-map.svg");
-  switchSvg = require("../../../assets/switch.svg");
-  runGraphSvg = require("../../../assets/run-graph.svg");
-  stopSvg = require("../../../assets/stop.svg");
-  restartSvg = require("../../../assets/restart.svg");
+  backSvg = "../../../assets/undo.svg";
+  backDisabledSvg = "../../../assets/undo_disabled.svg";
+  redoSvg = "../../../assets/redo.svg";
+  redoDisabledSvg = "../../../assets/redo_disabled.svg";
+  zoomInSvg = "../../../assets/zoom-in.svg";
+  zoomOutSvg = "../../../assets/zoom-out.svg";
+  zoomResetSvg = "../../../assets/zoom-reset.svg";
+  zoomFitSvg = "../../../assets/zoom-out-map.svg";
+  switchSvg = "../../../assets/switch.svg";
+  runGraphSvg = "../../../assets/run-graph.svg";
+  stopSvg = "../../../assets/stop.svg";
+  restartSvg = "../../../assets/restart.svg";
 
   solutionList = [];
   dirs = [];

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { I18nService } from '@core/i18n.service';
 import { Router } from '@angular/router';
-import { includes } from 'lodash';
 declare const require: any;
 
 @Component({
@@ -21,16 +20,16 @@ export class HeaderMainComponent implements OnInit {
   ngOnInit(): void { }
 
   click(tab: string): void {
-    this.active;
     if (this.active === tab) {
       location.reload();
+      return;
     }
-    if (tab === 'editor') {
+    if (tab === 'main') {
       this.goMain();
-    } else if (tab === 'example') {
-      this.goExample();
-    } else if (tab === 'task') {
-      this.goTask();
+    } else if (tab === 'solution') {
+      this.goSolution();
+    } else if (tab === 'management') {
+      this.goManagement();
     } else {
       this.goFirst();
     }
@@ -44,11 +43,11 @@ export class HeaderMainComponent implements OnInit {
     this.router.navigateByUrl("");
   }
 
-  goTask(): void {
+  goManagement(): void {
     this.router.navigateByUrl("management");
   }
 
-  goExample = () => {
+  goSolution = () => {
     this.router.navigateByUrl("solution");
   }
 

@@ -27,9 +27,9 @@
           id="exampleDisplay"
           class="nav-link"
           href=" javascript:void(0);"
-          [ngClass]="{'tab-active': active==='example'}"
+          [ngClass]="{'tab-active': active==='solution'}"
           oncontext="return false"
-          (click)="click('example')">
+          (click)="click('solution')">
           {{ 'exampleDisplay' | translate }}
         </a>
       </li>
@@ -37,9 +37,9 @@
         <a
           class="nav-link"
           href=" javascript:void(0); "
-          [ngClass]="{'tab-active': active==='editor'}"
+          [ngClass]="{'tab-active': active==='main'}"
           oncontext="return false"
-          (click)="click('editor')">
+          (click)="click('main')">
           {{ 'editor' | translate }}
         </a>
       </li>
@@ -47,9 +47,9 @@
         <a
           class="nav-link"
           href=" javascript:void(0);"
-          [ngClass]="{'tab-active': active==='task'}"
+          [ngClass]="{'tab-active': active==='management'}"
           oncontext="return false"
-          (click)="click('task')">
+          (click)="click('management')">
           {{ 'taskLists' | translate }}
         </a>
       </li>

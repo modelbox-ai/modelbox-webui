@@ -1,10 +1,7 @@
 import { Location } from "@angular/common";
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { TestBed, fakeAsync, tick, flush } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
-
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './main/main.component';
 import { FirstComponent } from '../components/first/first.component';
 import { SolutionComponent } from '../components/solution/solution.component';
@@ -38,35 +35,39 @@ describe("Router: App", () => {
     expect(done).toBeTruthy();
   }));
 
-  it('navigate to "" redirects you to first page', () => {
+  it('navigate to "" redirects you to first page', fakeAsync(() => {
     router.navigate([""]).then(() => {
       expect(location.path()).toBe("/");
     });
-  });
+    flush();
+  }));
 
-  it('navigate to "solution" takes you to demo page', () => {
+  it('navigate to "solution" takes you to demo page', fakeAsync(() => {
     router.navigate(["/solution"]).then(() => {
       expect(location.path()).toBe("/solution");
     });
-  });
+    flush();
+  }));
 
-  it('navigate to "main" takes you to editor page', () => {
+  it('navigate to "main" takes you to editor page', fakeAsync(() => {
     router.navigate(["/main"]).then(() => {
       expect(location.path()).toBe("/main");
     });
-  });
+    flush();
+  }));
 
-  it('navigate to "management" takes you to management page', () => {
+  it('navigate to "management" takes you to management page', fakeAsync(() => {
     router.navigate(["/management"]).then(() => {
       expect(location.path()).toBe("/management");
     });
-  });
+    flush();
+  }));
 
-  it('navigate to "whatever" takes you to first page', () => {
+  it('navigate to "whatever" takes you to first page', fakeAsync(() => {
     router.navigate(["/whatever&^%#&$@213423"]).then(() => {
       expect(location.path()).toBe("/");
     });
-  });
+    flush();
+  }));
 
-  
 });
