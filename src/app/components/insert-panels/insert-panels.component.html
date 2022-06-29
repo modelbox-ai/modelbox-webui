@@ -37,11 +37,11 @@
       placement="right"
       container="body"
       tooltipClass="my-custom-class">
-      <img *ngSwitchCase="'Image'" [src]="imgSvg" />
-      <img *ngSwitchCase="'Video'" [src]="videoSvg" />
-      <img *ngSwitchCase="'Input'" [src]="inputSvg" />
-      <img *ngSwitchCase="'Output'" [src]="outputSvg" />
-      <img *ngSwitchDefault [src]="commonSvg" />
+      <img *ngSwitchCase="'Image'" class="icon-img"/>
+      <img *ngSwitchCase="'Video'" class="icon-video"/>
+      <img *ngSwitchCase="'Input'" class="icon-input"/>
+      <img *ngSwitchCase="'Output'" class="icon-output"/>
+      <img *ngSwitchDefault class="icon-common"/>
       {{child.title}}
     </div>
   </div>

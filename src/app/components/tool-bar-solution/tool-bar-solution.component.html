@@ -2,15 +2,15 @@
   <div id="tool-bar" class="tool-bar">
     <div class="tool-bar-left btn-group">
       <span id="undoredo">
-      <d-button
-        id="undo1"
-        *ngIf="hasUndo"
-        dTooltip
-        bsStyle="text-dark"
-        [content]="'toolBar.backButton' | translate"
-        [disabled]="!hasUndo"
-        (click)="handleUndoButtonClick($event)">
-          <img [src]="backSvg" />
+        <d-button
+          id="undo1"
+          *ngIf="hasUndo"
+          dTooltip
+          bsStyle="text-dark"
+          [content]="'toolBar.backButton' | translate"
+          [disabled]="!hasUndo"
+          (click)="handleUndoButtonClick($event)">
+          <div class="icon-undo-customed"></div>
         </d-button>
         <d-button
           id="undo2"
@@ -20,7 +20,7 @@
           [content]="'toolBar.backButton' | translate"
           [disabled]="!hasUndo"
           (click)="handleUndoButtonClick($event)">
-          <img [src]="backDisabledSvg" />
+          <div class="icon-undo-disabled"></div>
         </d-button>
         <d-button
           id="redo1"
@@ -30,7 +30,7 @@
           [content]="'toolBar.redoButton' | translate"
           [disabled]="!hasRedo"
           (click)="handleRedoButtonClick($event)">
-          <img [src]="redoSvg" />
+          <div class="icon-redo-customed"></div>
         </d-button>
         <d-button
           id="redo2"
@@ -40,7 +40,7 @@
           [content]="'toolBar.redoButton' | translate"
           [disabled]="!hasRedo"
           (click)="handleRedoButtonClick($event)">
-          <img [src]="redoDisabledSvg" />
+          <div class="icon-redo-disabled"></div>
         </d-button>
       </span>
       <span id="zoominout">
@@ -50,7 +50,7 @@
           bsStyle="text-dark"
           [content]="'toolBar.zoomInButton' | translate"
           (click)="handleZoomInButtonClick($event)">
-          <img [src]="zoomInSvg" />
+          <div class="icon-zoom-in-customed"></div>
         </d-button>
         <d-button
           id="zoom-out"
@@ -58,7 +58,7 @@
           bsStyle="text-dark"
           [content]="'toolBar.zoomOutButton' | translate"
           (click)="handleZoomOutButtonClick($event)">
-          <img [src]="zoomOutSvg" />
+          <div class="icon-zoom-out-customed"></div>
         </d-button>
       </span>
       <d-button
@@ -67,7 +67,7 @@
         bsStyle="text-dark"
         [content]="'toolBar.zoomResetButton' | translate"
         (click)="handleZoomResetButtonClick($event)">
-        <img [src]="zoomResetSvg" />
+        <div class="icon-zoom-reset"></div>
       </d-button>
       <d-button
         id="zoom-fit"
@@ -75,7 +75,7 @@
         bsStyle="text-dark"
         [content]="'toolBar.zoomFitButton' | translate"
         (click)="handleZoomFitButtonClick($event)">
-        <img [src]="zoomFitSvg" />
+        <div class="icon-zoom-out-map"></div>
       </d-button>
       <d-button
         id="switch"
@@ -83,7 +83,7 @@
         bsStyle="text-dark"
         [content]="'toolBar.switchButton' | translate"
         (click)="handleSwitchDirectionButtonClick($event)">
-        <img [src]="switchSvg" />
+        <div class="icon-switch-customed"></div>
       </d-button>
       <d-button
         id="run"
@@ -92,7 +92,7 @@
         bsStyle="text-dark"
         [content]="'toolBar.runGraphButton' | translate"
         (click)="handleRunButtonClick($event)">
-          <img [src]="runGraphSvg" />
+        <div class="icon-run-graph"></div>
       </d-button>
       <d-button
           id="stop"
@@ -101,7 +101,7 @@
           bsStyle="text-dark"
           [content]="'toolBar.stopGraphButton' | translate"
           (click)="handleStopButtonClick($event)">
-          <img [src]="stopSvg" />
+          <div class="icon-stop-customed"></div>
       </d-button>
       <d-button
           id="restart"
@@ -110,7 +110,7 @@
           bsStyle="text-dark"
           [content]="'toolBar.restartGraphButton' | translate"
           (click)="handleRestartButtonClick($event)">
-          <img [src]="restartSvg" />
+          <div class="icon-restart-customed"></div>
       </d-button>
     </div>
     <div class="tool-bar-right" style="margin: 0 20px 0 20px;">

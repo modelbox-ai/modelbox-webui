@@ -35,19 +35,6 @@ export class ToolBarSolutionComponent implements OnInit {
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
 
-  backSvg = "../../../assets/undo.svg";
-  backDisabledSvg = "../../../assets/undo_disabled.svg";
-  redoSvg = "../../../assets/redo.svg";
-  redoDisabledSvg = "../../../assets/redo_disabled.svg";
-  zoomInSvg = "../../../assets/zoom-in.svg";
-  zoomOutSvg = "../../../assets/zoom-out.svg";
-  zoomResetSvg = "../../../assets/zoom-reset.svg";
-  zoomFitSvg = "../../../assets/zoom-out-map.svg";
-  switchSvg = "../../../assets/switch.svg";
-  runGraphSvg = "../../../assets/run-graph.svg";
-  stopSvg = "../../../assets/stop.svg";
-  restartSvg = "../../../assets/restart.svg";
-
   solutionList = [];
   dirs = [];
   showLoading;
