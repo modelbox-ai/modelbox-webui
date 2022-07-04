@@ -285,6 +285,9 @@ export class MainComponent {
   createProject(param) {
     this.saveCurrentProject();
     this.initCurrentProject();
+    if (!this.dataService.pathValidate(param?.rootpath)) {
+      return;
+    }
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
         this.project_name = param.name;
@@ -568,7 +571,7 @@ export class MainComponent {
       this.graphName = this.getGraphNameFromGraph(text);
       this.toolBar.formData.graphName = this.graphName;
     }
-    
+
     this.saveCurrentProject();
 
     if (this.resetUndoAtNextTextChange) {

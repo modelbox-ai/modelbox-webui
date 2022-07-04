@@ -277,4 +277,13 @@ export class DataServiceService {
       }
     );
   }
+
+  pathValidate(path) {
+
+    if ((/^[a-z]:((\\|\/)[a-z0-9\s_@\-^!#$%&+={}\[\]]+)/i.test(path)) ||
+      (/^([\\/][a-z0-9\s\-_\@\-\^!#$%&]*)+(\.[a-z][a-z0-9]+)?$/i.test(path))) {
+        return true;
+    }
+    return false;
+  }
 }

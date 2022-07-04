@@ -7,6 +7,7 @@ import { DataServiceService } from "@shared/services/data-service.service";
 import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-container";
 import { AttributePanelComponent } from "./attribute-panel.component";
 import { DialogService } from "ng-devui";
+import { context_origin, context_target, unit_target, config, unit_http_receive } from "./mock-data";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -14,8 +15,8 @@ export function createTranslateLoader(http: HttpClient) {
 
 describe("AttributePanelComponent", () => {
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [
         AttributePanelComponent
       ],
@@ -27,7 +28,7 @@ describe("AttributePanelComponent", () => {
             deps: [HttpClient]
           }
         }),
-        
+
         HttpClientModule,
         OverlayContainerModule
       ],
@@ -46,6 +47,23 @@ describe("AttributePanelComponent", () => {
     const fixture = TestBed.createComponent(AttributePanelComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
+  });
+
+  it('format descryption from code to UI, handleTipText', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    let context = context_origin;
+    expect(app.handleTipText(context)).toEqual(context_target);
+  });
+
+  it('initUnit with config', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.initUnit(config);
+    expect(app.unit).toBeTruthy();
+    expect(app.unit.inputports).toBeFalsy();
+    expect(app.unit.options).toBeFalsy();
+    expect(app.unit.outputports).toBeFalsy();
   });
 
 });

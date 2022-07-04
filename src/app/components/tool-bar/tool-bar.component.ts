@@ -775,6 +775,16 @@ export class ToolBarComponent {
   }
 
   checkFormDataCreateFlowunit() {
+
+    if (this.formDataCreateFlowunit.model){
+      if ((/(^\s+)|(\s+$)|\s+/g).test(this.formDataCreateFlowunit.model)){
+        this.msgs = [
+          { severity: 'warn', content: this.i18n.getById("message.noSpace") }
+        ];
+        return false;
+      }
+    }
+
     if (!this.formDataCreateFlowunit.name) {
       this.msgs = [
         { severity: 'warn', content: this.i18n.getById("message.nameOfFlowunitIsNecessary") }

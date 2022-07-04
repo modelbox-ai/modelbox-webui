@@ -254,12 +254,12 @@ export class AttributePanelComponent {
   ];
 
   menu1 = [{
-    title: '配置',
+    title: this.i18n.getById('attribute.conf'),
     children: [{ active: true }],
   }];
 
   menu2 = [{
-    title: '描述',
+    title: this.i18n.getById('attribute.desc'),
     children: [],
   }];
 
@@ -347,31 +347,29 @@ export class AttributePanelComponent {
     return portDetail;
   }
 
-  initConfig(config) {
-    this.changedValue = false;
-    this.unit = this.getUnit(config);
-
-    if (this.unit === undefined) {
-      this.unit = {
-        name: '',
-        version: '',
-        descryption: '',
-        desc: '',
-        group: '',
-        virtual: false,
-        types: [],
-        type: '',
-        options: [""],
-        inputports: [""],
-        outputports: [""],
-        portDetail: '',
-        constraint: ''
-      }
+  initUnit(config = null) {
+    this.unit = {
+      name: '',
+      version: '',
+      descryption: '',
+      desc: '',
+      group: '',
+      virtual: false,
+      types: [],
+      type: '',
+      options: [""],
+      inputports: [""],
+      outputports: [""],
+      portDetail: '',
+      constraint: ''
+    }
+    if (config) {
       this.unit.name = config.name;
       this.unit.group = "Generic";
       delete this.unit.options;
       delete this.unit.inputports;
       delete this.unit.outputports;
+
       config.attributes.forEach(it => {
         if (it.key === "device") {
           this.unit.type = it.value;
@@ -379,8 +377,19 @@ export class AttributePanelComponent {
         }
       });
     }
+  }
+
+  initConfig(config) {
+    this.changedValue = false;
+    this.unit = this.getUnit(config);
+
+    if (this.unit === undefined) {
+      this.initUnit(config);
+    }
+
     this.unitType.init();
     this.unitOptions.init();
+
     if (!this.unit && this.warnNoNode && this.config['attributes']) {
       if (this.config['attributes'].length === 0) {
         this.newItemEvent.emit(null);
@@ -407,6 +416,7 @@ export class AttributePanelComponent {
       }
       return;
     }
+
     this.handleTipText(this.unit);
     // type
     if (this.config['attributes']) {

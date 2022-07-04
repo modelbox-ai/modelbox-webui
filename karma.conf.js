@@ -14,6 +14,7 @@ module.exports = function (config) {
     ],
     client: {
       jasmine: {
+        verboseDeprecations: true,
       },
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
