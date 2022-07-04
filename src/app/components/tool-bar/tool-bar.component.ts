@@ -284,7 +284,7 @@ export class ToolBarComponent {
     "project-path": this.formDataCreateProject.rootpath,
     device: 'cpu',
     port_infos: [],
-    type: 'normal',
+    type: 'stream',
     "virtual-type": 'tensorflow',
     "group-type": 'generic',
     model: '',
@@ -302,6 +302,7 @@ export class ToolBarComponent {
   optionsdata_type = ['uint8', 'int', 'int64', 'float', 'float64', 'long', 'double']; //flowunit type
   optionsdevice = ['cpu', 'cuda'];
   optionsdevicePython = ['cpu'];
+  optionsdeviceYolo = ['cpu'];
   flowunitGroupOptions = ['generic', 'video', 'inference'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
@@ -442,6 +443,10 @@ export class ToolBarComponent {
     value: 2,
     specialContent: '项目'
   }, {
+    name: this.i18n.getById('toolBar.clearCacheButton'),
+    value: 6,
+    specialContent: '项目'
+  }, {
     name: this.i18n.getById('toolBar.newGraphButton'),
     value: 3,
     specialContent: '项目'
@@ -452,10 +457,6 @@ export class ToolBarComponent {
   }, {
     name: this.i18n.getById('toolBar.saveAsButton'),
     value: 5,
-    specialContent: '项目'
-  }, {
-    name: this.i18n.getById('toolBar.clearCacheButton'),
-    value: 6,
     specialContent: '项目'
   }];
 
@@ -586,9 +587,20 @@ export class ToolBarComponent {
   }
 
   clearCache() {
+    // clear cache
     localStorage.clear();
     sessionStorage.clear();
-    location.reload();
+    // stop running service
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      if (data.job_list) {
+        data.job_list.map(ele => {
+          this.basicService.deleteTask(ele.job_id).subscribe((res: any) => {
+
+          });
+        });
+      }
+      location.reload();
+    });
   }
 
   handleFlowunitDropDown(e) {
@@ -608,9 +620,15 @@ export class ToolBarComponent {
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
+      this.formDataCreateFlowunit.type = 'stream'
+    } else if (value === "c++") {
+      this.formDataCreateFlowunit.device = 'cpu';
+      this.portInfo.device = 'cpu';
+      this.formDataCreateFlowunit.type = 'stream'
     }
 
     if (value === "yolo") {
+      this.formDataCreateFlowunit.device = 'cpu';
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
     }
 
@@ -776,8 +794,8 @@ export class ToolBarComponent {
 
   checkFormDataCreateFlowunit() {
 
-    if (this.formDataCreateFlowunit.model){
-      if ((/(^\s+)|(\s+$)|\s+/g).test(this.formDataCreateFlowunit.model)){
+    if (this.formDataCreateFlowunit.model) {
+      if ((/(^\s+)|(\s+$)|\s+/g).test(this.formDataCreateFlowunit.model)) {
         this.msgs = [
           { severity: 'warn', content: this.i18n.getById("message.noSpace") }
         ];
@@ -989,7 +1007,7 @@ export class ToolBarComponent {
       "project-path": this.dataService.defaultSearchPath + this.project_name + '/src/flowunit',
       port_infos: [],
       device: 'cpu',
-      type: 'normal',
+      type: 'stream',
       "virtual-type": 'tensorflow',
       "group-type": 'generic',
       model: '',
@@ -1117,7 +1135,7 @@ export class ToolBarComponent {
               dirs = [];
             }
             let ele = param["project-path"] + "/src/flowunit";
-            if (dirs.indexOf(ele) !== -1){
+            if (dirs.indexOf(ele) !== -1) {
               dirs.push(param["project-path"] + "/src/flowunit");
             }
             this.formData.flowunitPath = dirs.join("\n");

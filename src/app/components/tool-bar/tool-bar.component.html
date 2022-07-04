@@ -401,7 +401,7 @@
                     <d-select 
                         [appendToBody]="true" 
                         [ngModelOptions]="{ standalone: true }" 
-                        *ngIf="formDataCreateFlowunit.lang !== 'python'"
+                        *ngIf="formDataCreateFlowunit.lang !== 'python' && formDataCreateFlowunit.lang !== 'yolo'"
                         [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
                         [(ngModel)]="formDataCreateFlowunit.device" 
                         (valueChange)="deviceValueChange($event)"
@@ -417,6 +417,16 @@
                         (valueChange)="deviceValueChange($event)"
                         [placeholder]="'toolBar.modal.device' | translate" 
                         [options]="optionsdevicePython">
+                    </d-select>
+                    <d-select 
+                        [appendToBody]="true" 
+                        [ngModelOptions]="{ standalone: true }" 
+                        *ngIf="formDataCreateFlowunit.lang === 'yolo'"
+                        [appendToBodyDirections]=" ['centerDown', 'centerUp' ]"
+                        [(ngModel)]="formDataCreateFlowunit.device" 
+                        (valueChange)="deviceValueChange($event)"
+                        [placeholder]="'toolBar.modal.device' | translate" 
+                        [options]="optionsdeviceYolo">
                     </d-select>
                 </d-form-control>
             </d-form-item>
