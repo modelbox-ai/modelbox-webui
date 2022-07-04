@@ -43,4 +43,30 @@ describe('DataService: titleCase', () => {
     expect(service.transformFlowunit()).toEqual(res);
   });
 
+  it('pathValidate', () => {
+    let path1 = '/';
+    let path2 = '/asdf';
+    let path3 = '/asdf/scd.csv';
+    let path4 = '//asdf';
+    let path5 = '/asd/ads/c.csv/';
+    let path6 = 'asd/asfd/a';
+    let path7 = "D:/test.xml";               // D:/test.xml
+    let path8 = "D:\\folder\\test.xml";      // D:\folder\test.xml
+    let path9 = "D:/folder/test.xml";        // D:/folder/test.xml
+    let path10 = "D:\\folder/test.xml";       // D:\folder/test.xml
+    let path11 = "D:\\test.xml";
+    expect(service.pathValidate(path1)).toBeTrue();
+    expect(service.pathValidate(path2)).toBeTrue();
+    expect(service.pathValidate(path3)).toBeTrue();
+    expect(service.pathValidate(path4)).toBeTrue();
+    expect(service.pathValidate(path5)).toBeFalse();
+    expect(service.pathValidate(path6)).toBeFalse();
+    expect(service.pathValidate(path7)).toBeTrue();
+    expect(service.pathValidate(path8)).toBeTrue();
+    expect(service.pathValidate(path9)).toBeTrue();
+    expect(service.pathValidate(path10)).toBeTrue();
+    expect(service.pathValidate(path11)).toBeTrue();
+
+  });
+
 });
