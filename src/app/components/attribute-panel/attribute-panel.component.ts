@@ -446,7 +446,6 @@ export class AttributePanelComponent {
         config?.name ||
         config?.attributes.find(item => item.key === 'label')?.value;
     }
-    debugger
   }
 
   getUnit(config) {

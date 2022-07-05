@@ -8,6 +8,11 @@
   </i>
 </div>
 
+<d-search
+  style="margin:0 8px 0 24px; width: 90%; max-width: 200px"
+  [isKeyupSearch]="true"
+  (searchFn)="onSearch($event)">
+</d-search>
 <d-accordion
   id="main-accrodition"
   [data]="nodeShapeCategories"
@@ -19,7 +24,7 @@
 
 <ng-template #innerListTemplate let-item="item">
   <div
-    class="devui-accordion-submenu menu-detail draggable"
+    class="devui-accordion-submenu menu-detail draggable search-detail"
     [ngStyle]="classes.column"
     *ngFor="let child of item.children"
     [ngSwitch]="item.title"
