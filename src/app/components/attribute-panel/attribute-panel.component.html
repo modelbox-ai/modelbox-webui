@@ -204,6 +204,32 @@
       </d-form-control>
     </d-form-item>
 
+    <d-form-item *ngIf="unit && unit.inputports?.length > 0" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{ "attributePanel.inputport" | translate }}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font" *ngFor="let ip of unit.inputports">
+          {{ip.name}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item *ngIf="unit && unit.outputports?.length > 0" class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          {{ "attributePanel.outputport" | translate }}
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div class="content-font" *ngFor="let op of unit.outputports">
+          {{op.name}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+
     <d-form-item *ngIf="unit && unit.portDetail" class="form-item">
       <d-form-label>
         <span class="title-label">

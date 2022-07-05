@@ -131,6 +131,8 @@
   "attributePanel.topName": "功能单元名称：",
   "attributePanel.arrayGroup": "功能单元分组：",
   "attributePanel.selectType": "请选择类型",
+  "attributePanel.inputport": "输入端口",
+  "attributePanel.outputport": "输出端口",
   "tasklist.newTask": "新建任务",
   "tasklist.searchBarPlaceHolder": "请输入名称搜索",
   "tasklist.jobName": "图名称",
