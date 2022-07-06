@@ -126,7 +126,7 @@ export class MainComponent {
       }
       this.path = path;
       this.dataService.defaultSearchPath = path;
-      // this.toolBar.formDataCreateProject['rootpath'] = path;
+      this.toolBar.formDataCreateProject['rootpath'] = path;
       this.toolBar.openproject_path = path;
     });
     if (current_project) {
@@ -284,12 +284,12 @@ export class MainComponent {
 
   createProject(param) {
     this.saveCurrentProject();
-    this.initCurrentProject();
     if (!this.dataService.pathValidate(param?.rootpath)) {
       return;
     }
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
+        this.initCurrentProject();
         this.project_name = param.name;
         //after created successfully
         localStorage.removeItem("project");
@@ -306,7 +306,7 @@ export class MainComponent {
       }
     }, error => {
       this.msgs = [
-        { severity: 'error', summary: 'ERROR', content: error.error.msg }
+        { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
       ];
     });
   }
@@ -371,7 +371,7 @@ export class MainComponent {
 
       }, error => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
       });
 
@@ -1051,7 +1051,7 @@ export class MainComponent {
           sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
             this.msgs = [
-              { severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
+              { life: 30000, severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
             ];
           }
         }

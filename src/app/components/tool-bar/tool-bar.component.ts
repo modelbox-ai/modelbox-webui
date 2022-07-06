@@ -555,7 +555,7 @@ export class ToolBarComponent {
 
         }, error => {
           this.msgs = [
-            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+            { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
           ];
         });
     }
@@ -1038,7 +1038,7 @@ export class ToolBarComponent {
       }
       if (flag) {
         this.msgs = [
-          { severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
+          { life: 30000, severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
         ];
       }
       this.dataService.virtualFlowunits.push(obj);
@@ -1154,7 +1154,7 @@ export class ToolBarComponent {
       },
       (error) => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
         return null;
       });
@@ -1304,7 +1304,7 @@ export class ToolBarComponent {
         },
         (error) => {
           this.msgs = [
-            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+            { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
           ];
           return;
         });
@@ -1368,7 +1368,7 @@ export class ToolBarComponent {
     },
       (error) => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
         return null;
       });
