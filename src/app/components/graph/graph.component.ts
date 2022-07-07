@@ -91,6 +91,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() isResizing: any;
   @Input() msgs: any;
   @Output() sendIsOpen = new EventEmitter<any>();
+  @Output() searchTypeByNameOfCategories = new EventEmitter<any>();
+  @Input() typeFlowunit: any;
   prevFit: any;
   prevEngine: any;
   prevDotSrc = '';
@@ -128,9 +130,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   pointCr: any = 6;
   maxHeight: any = 150;
   extended: any = true;
-  
+
   nodeBbox: any;
   extendedNum = 2;
+  unitType: any;
 
 
   constructor(
@@ -387,7 +390,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.onTextChange(this.dotGraph.dotSrc);
   }
 
-  addDefaultPropertiesForUnit (attributes, nodeName){
+  addDefaultPropertiesForUnit(attributes, nodeName) {
     const edges = [];
     const newName = nodeName;
     for (let edge in this.dotGraph.edges) {
@@ -447,12 +450,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  renderGraph() {
+  renderGraph(unitType=null) {
     const container = this.div.node().parentElement.parentElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
     const fit = this.fit;
     const engine = this.engine;
+    this.unitType = unitType;
     if (this.dotSrc !== undefined && this.dotSrc.length === 0) {
       this.svg.remove();
       this.svg = d3_select(null);
@@ -515,6 +519,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
     this.rendering = true;
     this.busy = true;
+    let that = this;
     this.graphviz
       .width(width)
       .height(height)
@@ -545,7 +550,23 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             d.attributes.fill === 'none'
           ) {
             d.attributes.fill = 'white';
-            d.attributes.stroke = '#ADB0B8';
+            let ids = d.id.split('.');
+            let name;
+            let nodes = { ...that.prelDotGraph.nodes };
+            if (ids[ids.length - 1] === d.key) {
+              name = ids[ids.length - 2];
+              that.typeFlowunit = nodes[name]?.attributes.device;
+            }
+            if (that.typeFlowunit === 'cpu'){
+              d.attributes.stroke = '#99CC33';
+            }else if(that.typeFlowunit === 'cuda'){
+              d.attributes.stroke = '#3399CC';
+            }else if (that.typeFlowunit === 'ascend'){
+              d.attributes.stroke = '#666699';
+            }else{
+              d.attributes.stroke = '#ADB0B8';
+            }
+            
           } else {
             d.attributes.stroke = '#ADB0B8';
           }

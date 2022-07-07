@@ -110,6 +110,7 @@ export class MainComponent {
   }
   currentGraph: any;
   msgs: Array<Object> = [];
+  typeFlowunit: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -126,7 +127,7 @@ export class MainComponent {
       }
       this.path = path;
       this.dataService.defaultSearchPath = path;
-      this.toolBar.formDataCreateProject['rootpath'] = path;
+      // this.toolBar.formDataCreateProject['rootpath'] = path;
       this.toolBar.openproject_path = path;
     });
     if (current_project) {
@@ -337,6 +338,7 @@ export class MainComponent {
       (data: any) => {
         this.toolBar.formDataCreateProject.name = data.project_name;
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
+        this.toolBar.openproject_path = this.toolBar.formDataCreateProject.rootpath;
         if (data.graphs?.length > 1) {
           this.currentGraph = data.graphs[data.graphs.length - 2];
         } else if (data.graphs?.length === 1) {
@@ -375,6 +377,22 @@ export class MainComponent {
         ];
       });
 
+  }
+
+  searchTypeByNameOfCategories(name) {
+    let res;
+    let that = this;
+    this.InsertPanels.nodeShapeCategories.forEach(item => {
+      item.children.forEach(element => {
+        if (element['name'] === name) {
+
+          res = element['type'];
+          that.graph.typeFlowunit = res;
+          return res;
+        }
+      });
+    });
+    return res;
   }
 
   saveCurrentProject() {
