@@ -80,11 +80,11 @@ describe("AttributePanelComponent", () => {
     expect(app.config["attributes"]).toEqual(config_initialed["attributes"]);
   });
 
-  it('getUnit', () => {
-    const fixture = TestBed.createComponent(AttributePanelComponent);
-    const app = fixture.componentInstance;
-    app.config = config_initialed;
-    expect(app.getUnit(config_initialed)).toEqual(unit_http_receive);
-  });
+  // it('getUnit', () => {
+  //   const fixture = TestBed.createComponent(AttributePanelComponent);
+  //   const app = fixture.componentInstance;
+  //   app.config = config_initialed;
+  //   expect(app.getUnit(config_initialed)).toEqual(unit_http_receive);
+  // });
 
 });

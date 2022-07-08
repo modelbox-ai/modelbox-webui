@@ -62,7 +62,7 @@ add_custom_command(
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMAND [ -d ${NODE_MODULES_PATH}/node_modules ] || mkdir -p ${NODE_MODULES_PATH}/node_modules
     COMMAND [ -d ${CMAKE_CURRENT_LIST_DIR}/node_modules ] || mv -f ${NODE_MODULES_PATH}/node_modules ${CMAKE_CURRENT_LIST_DIR}/
-    COMMAND [ -e ${EDITOR_UI_INSTALL_FLAG} ] || ${NPM} install
+    COMMAND [ -e ${EDITOR_UI_INSTALL_FLAG} ] || PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true ${NPM} install
     COMMAND ${NPM} run prepare
     COMMAND NG_CLI_ANALYTICS=ci ${NG} build --output-path ${EDITOR_UI_OUTPUT_DIR}
     COMMAND mv -f ${CMAKE_CURRENT_LIST_DIR}/node_modules ${NODE_MODULES_PATH}/

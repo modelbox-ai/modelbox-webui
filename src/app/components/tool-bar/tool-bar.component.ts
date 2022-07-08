@@ -473,6 +473,50 @@ export class ToolBarComponent {
   currentGraph: any;
   graphList: any;
 
+  options: any;
+
+  value1: Array<string | number>[] = [];
+
+  onChanges(value: any) {
+    this.formDataCreateFlowunit['port_infos'] = [];
+    this.formDataCreateFlowunit['device'] = value[1]?.type;
+    let group = value[1]['group']?.toLowerCase();
+    if (this.flowunitGroupOptions.indexOf(group) > -1) {
+      this.formDataCreateFlowunit['group-type'] = group;
+    }
+    if (value[1]['inputports'].length > 0) {
+      value[1]['inputports'].forEach(element => {
+        let obj = {};
+        if (element['name']) {
+          obj['port_name'] = element['name'];
+        }
+        obj['port_type'] = "input";
+        if (element['type']) {
+          obj['device'] = element['device'];
+        } else {
+          obj['device'] = "cpu";
+        }
+        this.formDataCreateFlowunit['port_infos'].push(obj);
+      });
+    }
+
+    if (value[1]['outputports'].length > 0) {
+      value[1]['outputports'].forEach(element => {
+        let obj = {};
+        if (element['name']) {
+          obj['port_name'] = element['name'];
+        }
+        obj['port_type'] = "output";
+        if (element['type']) {
+          obj['device'] = element['device'];
+        } else {
+          obj['device'] = "cpu";
+        }
+        this.formDataCreateFlowunit['port_infos'].push(obj);
+      });
+    }
+  }
+
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -555,7 +599,7 @@ export class ToolBarComponent {
 
         }, error => {
           this.msgs = [
-            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+            { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
           ];
         });
     }
@@ -1038,7 +1082,7 @@ export class ToolBarComponent {
       }
       if (flag) {
         this.msgs = [
-          { severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
+          { life: 30000, severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
         ];
       }
       this.dataService.virtualFlowunits.push(obj);
@@ -1154,7 +1198,7 @@ export class ToolBarComponent {
       },
       (error) => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
         return null;
       });
@@ -1304,7 +1348,7 @@ export class ToolBarComponent {
         },
         (error) => {
           this.msgs = [
-            { severity: 'error', summary: 'ERROR', content: error.error.msg }
+            { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
           ];
           return;
         });
@@ -1368,7 +1412,7 @@ export class ToolBarComponent {
     },
       (error) => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
         return null;
       });

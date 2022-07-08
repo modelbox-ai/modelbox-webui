@@ -33,6 +33,7 @@ import { IFileOptions, IUploadOptions, SingleUploadComponent } from 'ng-devui/up
 import { DOCUMENT } from '@angular/common';
 import { isArguments } from 'lodash';
 import { ModalGuideComponent } from '../modal-guide/modal-guide.component';
+import { FormLayout } from 'ng-devui/form';
 
 @Component({
   selector: 'app-management',
@@ -52,6 +53,8 @@ export class ManagementComponent implements OnInit {
   res: any;
   tableData: any = { srcData: { data: [] } }
   tab1acticeID: string | number = 'tab1';
+  openProjectList = [];
+  layoutDirection: FormLayout = FormLayout.Horizontal;
   taskData: any = {
     displayed: [],
     srcData: {
@@ -197,6 +200,9 @@ export class ManagementComponent implements OnInit {
   responseHeader: string;
   guide: any;
   currentTemplate: any;
+  openproject_path: any;
+  folderList: any;
+  msgs: { severity: string; content: any; }[];
 
   constructor(
     private dialogService: DialogService,
@@ -284,6 +290,48 @@ export class ManagementComponent implements OnInit {
         }
       }
     }
+  }
+
+  searchDirectory(path = null) {
+    if (!path) {
+      path = this.openproject_path;
+    }
+    this.basicService.loadTreeByPath(path).subscribe(
+      (data: any) => {
+        if (data.subdir) {
+          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": "是否modelbox项目" }];
+          data.subdir.forEach(element => {
+            this.folderList.push({ "folder": element.dirname });
+          });
+        }
+      },
+      error => {
+        if (error) {
+          if (error.staus == 404) {
+            this.msgs = [
+              { severity: 'warn', content: this.i18n.getById('message.noFolder') }
+            ];
+          }
+        }
+        this.folderList = [];
+        return;
+      });
+  }
+
+  cellClick(e) {
+    if (e.rowIndex === 0) {
+      let position = this.openproject_path.lastIndexOf("/");
+      this.openproject_path = this.openproject_path.substring(0, position);
+      this.searchDirectory(this.openproject_path);
+    } else {
+      this.openproject_path = this.openproject_path + "/" + e.rowItem.folder;
+      this.searchDirectory(this.openproject_path);
+    }
+  }
+
+  onPathSelect(e) {
+    this.openproject_path = e;
+    this.searchDirectory(this.openproject_path);
   }
 
   openstandardDialog(dialogtype?: string) {

@@ -95,7 +95,8 @@
                 [registerZoomResetButtonClick]="registerZoomResetButtonClick"
                 [registerNodeAttributeChange]="registerNodeAttributeChange"
                 [isResizing]="isResizing"
-                (sendIsOpen)="updateIsOpen($event)">
+                (sendIsOpen)="updateIsOpen($event)"
+                (searchTypeByNameOfCategories)="searchTypeByNameOfCategories($event)">
               </app-graph>
             </div>
           </as-split-area>

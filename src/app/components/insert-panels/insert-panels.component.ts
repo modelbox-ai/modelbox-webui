@@ -24,6 +24,8 @@ import { I18nService } from '@core/i18n.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from 'ng-devui/toast';
+import { ICategorySearchTagItem } from 'ng-devui/category-search';
+import { cloneDeep } from 'lodash-es';
 
 declare const require: any
 
@@ -71,6 +73,7 @@ export class InsertPanelsComponent implements OnInit {
   dotSrcLastChangeTime: any = Date.now();
   res: any;
   autoOpenActiveMenu = false;
+  showSlideMenu = true;
 
   classes = {
     columns: {
@@ -98,6 +101,7 @@ export class InsertPanelsComponent implements OnInit {
   nodeShapeCategories: Array<any> = [];
   flowunits: any;
   transformedFlowunits: Array<any> = [];
+  categories: any;
   constructor(
     private sanitized: DomSanitizer,
     private dataService: DataServiceService,
@@ -131,6 +135,72 @@ export class InsertPanelsComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  onSearch(term) {
+    const eles = document.querySelectorAll('.search-detail');
+    if (term) {
+      let firstResult = null;
+      eles.forEach(element => {
+        let name = element['outerText']?.trim();
+        if (name.indexOf(term) === -1) {
+          this.hideEle(element);
+        } else {
+          if (!firstResult) {
+            firstResult = element;
+          }
+          this.showEle(element);
+        }
+      });
+      let title = this.searchGroupByNameOfCategories(firstResult['outerText']?.trim());
+      this.nodeShapeCategories.forEach((item) => {
+        if (item.title === title){
+          item.open = true;
+        }else{
+          item.open = false;
+        }
+      });
+    } else {
+      eles.forEach(element => {
+        this.showEle(element);
+      });
+      this.nodeShapeCategories.forEach((item,index) => {
+        if (index === 0){
+          item.open = true;
+        }else{
+          item.open = false;
+        }
+      });
+    }
+  }
+
+  searchGroupByNameOfCategories(name) {
+    let res;
+    this.nodeShapeCategories.forEach(item => {
+      item.children.forEach(element => {
+        if (element['name'] === name){
+          res = item.title
+          return res;
+        }
+      });
+    });
+    return res;
+  }
+
+  private hideEle(element) {
+    element.setAttribute('style', `display: none`);
+  }
+
+  private showEle(element) {
+    element.setAttribute('style', `text-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: relative;
+    margin-top: 10px;
+    height: 40px;
+    color: rgb(87, 93, 108);`
+    );
   }
 
   transformFlowunit() {

@@ -94,7 +94,6 @@ export class AttributePanelComponent {
         item => item.key === 'device'
       );
       unitType.value = event.id;
-
       this.initConfig(this.config);
       this.attributeModel.blur(form);
     },
@@ -446,7 +445,6 @@ export class AttributePanelComponent {
         config?.name ||
         config?.attributes.find(item => item.key === 'label')?.value;
     }
-
   }
 
   getUnit(config) {

@@ -448,7 +448,7 @@ export class SolutionComponent implements OnInit {
         this.statusGraph = "fault";
         if (error.error != null) {
           this.msgs = [
-            { severity: 'error', summary: error.error.error_code, content: error.error.error_msg },
+            { life: 30000, severity: 'error', summary: error.error.error_code, content: error.error.error_msg },
           ];
         }
         this.showLoading = false;

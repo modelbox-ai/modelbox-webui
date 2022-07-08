@@ -110,6 +110,7 @@ export class MainComponent {
   }
   currentGraph: any;
   msgs: Array<Object> = [];
+  typeFlowunit: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -284,12 +285,12 @@ export class MainComponent {
 
   createProject(param) {
     this.saveCurrentProject();
-    this.initCurrentProject();
     if (!this.dataService.pathValidate(param?.rootpath)) {
       return;
     }
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
+        this.initCurrentProject();
         this.project_name = param.name;
         //after created successfully
         localStorage.removeItem("project");
@@ -306,7 +307,7 @@ export class MainComponent {
       }
     }, error => {
       this.msgs = [
-        { severity: 'error', summary: 'ERROR', content: error.error.msg }
+        { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
       ];
     });
   }
@@ -337,6 +338,7 @@ export class MainComponent {
       (data: any) => {
         this.toolBar.formDataCreateProject.name = data.project_name;
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
+        this.toolBar.openproject_path = this.toolBar.formDataCreateProject.rootpath;
         if (data.graphs?.length > 1) {
           this.currentGraph = data.graphs[data.graphs.length - 2];
         } else if (data.graphs?.length === 1) {
@@ -371,10 +373,26 @@ export class MainComponent {
 
       }, error => {
         this.msgs = [
-          { severity: 'error', summary: 'ERROR', content: error.error.msg }
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
       });
 
+  }
+
+  searchTypeByNameOfCategories(name) {
+    let res;
+    let that = this;
+    this.InsertPanels.nodeShapeCategories.forEach(item => {
+      item.children.forEach(element => {
+        if (element['name'] === name) {
+
+          res = element['type'];
+          that.graph.typeFlowunit = res;
+          return res;
+        }
+      });
+    });
+    return res;
   }
 
   saveCurrentProject() {
@@ -857,6 +875,7 @@ export class MainComponent {
   showCreateFlowunitDialog(content: TemplateRef<any>) {
     this.toolBar.isOpen = false;
     this.toolBar.isOpen2 = false;
+    this.transformNodeShapreCategories();
     this.createFlowunitDialogResults = this.dialogService.open({
       id: 'createFlowunit',
       width: '700px',
@@ -889,6 +908,27 @@ export class MainComponent {
         },
       },],
     });
+  }
+
+  transformNodeShapreCategories(){
+    this.toolBar.options = [];
+    this.InsertPanels.nodeShapeCategories.forEach(
+      element => {
+        let obj = {};
+        obj['label'] = element.title;
+        obj['value'] = element.title;
+        obj['icon'] = 'icon-folder';
+        obj['children'] = [];
+        element.children.forEach(ele => {
+          let cld = {};
+          cld['label'] = ele.title;
+          cld['value'] = ele;
+          cld['isLeaf'] = true;
+          obj['children'].push(cld);
+        });
+        this.toolBar.options.push(obj);
+      }
+    )
   }
 
 
@@ -1051,7 +1091,7 @@ export class MainComponent {
           sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
             this.msgs = [
-              { severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
+              { life: 30000, severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
             ];
           }
         }
