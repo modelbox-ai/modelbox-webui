@@ -875,6 +875,7 @@ export class MainComponent {
   showCreateFlowunitDialog(content: TemplateRef<any>) {
     this.toolBar.isOpen = false;
     this.toolBar.isOpen2 = false;
+    this.transformNodeShapreCategories();
     this.createFlowunitDialogResults = this.dialogService.open({
       id: 'createFlowunit',
       width: '700px',
@@ -907,6 +908,27 @@ export class MainComponent {
         },
       },],
     });
+  }
+
+  transformNodeShapreCategories(){
+    this.toolBar.options = [];
+    this.InsertPanels.nodeShapeCategories.forEach(
+      element => {
+        let obj = {};
+        obj['label'] = element.title;
+        obj['value'] = element.title;
+        obj['icon'] = 'icon-folder';
+        obj['children'] = [];
+        element.children.forEach(ele => {
+          let cld = {};
+          cld['label'] = ele.title;
+          cld['value'] = ele;
+          cld['isLeaf'] = true;
+          obj['children'].push(cld);
+        });
+        this.toolBar.options.push(obj);
+      }
+    )
   }
 
 

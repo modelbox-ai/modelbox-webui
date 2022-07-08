@@ -337,9 +337,28 @@
 </ng-template>
 
 <ng-template #createFlowunit id="createFlowunit">
-
     <d-layout class="basic-usage">
         <form dForm [layout]="layoutDirection" style="margin:10px">
+            <d-form-item>
+                <d-form-label>
+                    {{'toolBar.modal.loadTemplate' | translate}}
+                </d-form-label>
+                <d-form-control>
+                    <d-cascader
+                        [options]="options"
+                        [placeholder]="'please select'"
+                        [(ngModel)]="value1"
+                        (ngModelChange)="onChanges($event)"
+                        [trigger]="'click'"
+                        [width]="500"
+                        [dropdownWidth]="200"
+                        [allowClear]="true"
+                        [allowSearch]="true"
+                        [ngModelOptions]="{standalone: true}"
+                    >
+                    </d-cascader>
+                </d-form-control>
+            </d-form-item>
             <d-form-item>
                 <d-form-label [required]="true">
                     {{'toolBar.modal.unitType' | translate}}

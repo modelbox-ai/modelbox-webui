@@ -87,6 +87,7 @@
   "toolBar.select.dotSource": "DOT资源",
   "toolBar.select.operation": "操作",
   "toolBar.modal.unitType": "单元类型",
+  "toolBar.modal.loadTemplate": "加载模板",
   "toolBar.modal.project_path": "项目路径",
   "toolBar.base64": "转base64",
   "toolBar.upload": "上传",
