@@ -1340,6 +1340,7 @@ export class ToolBarComponent {
 
             comp.modalInstance.hide();
             comp.modalInstance.zIndex = -1;
+            this.refreshFlowunit();
             if (data.graphs.length > 1) {
               this.showGraphSelectDialog(this.graphSelectTemplate);
               return;

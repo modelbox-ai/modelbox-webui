@@ -802,7 +802,7 @@ export class MainComponent {
   }
 
   refreshFlowunit(e) {
-    this.reloadInsertComponent();
+    this.saveSetting(this.toolBar.formData);
   }
 
   showCreateProjectDialog(content: TemplateRef<any>) {
