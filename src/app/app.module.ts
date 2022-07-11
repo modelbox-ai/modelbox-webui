@@ -17,7 +17,7 @@
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector, APP_INITIALIZER, Inject, LOCALE_ID, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, Injector, APP_INITIALIZER, Inject, LOCALE_ID, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { LOCATION_INITIALIZED } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import {
@@ -112,9 +112,10 @@ export function appInitializerFactory(
       multi: true,
     },
     BasicServiceService,
-    
+
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule {
   constructor(private i18n: TranslateService, @Inject(LOCALE_ID) locale: string) {

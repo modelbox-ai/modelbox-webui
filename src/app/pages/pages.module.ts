@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AngularSplitModule } from "angular-split";
 import { SharedModule } from '@shared/shared.module';
 import { RouteRoutingModule } from './pages-routing.module';
@@ -86,7 +86,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     StepsGuideModule,
     BrowserAnimationsModule,
     DevUIModule,
-    ShowdownModule.forRoot({emoji: true, noHeaderId: true, flavor: 'github'}),
+    ShowdownModule.forRoot({ emoji: true, noHeaderId: true, flavor: 'github' }),
   ],
   declarations: [
     ...COMPONENTS,
@@ -112,5 +112,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     }
   ],
   entryComponents: COMPONENTS_NOROUNT,
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA,
+    NO_ERRORS_SCHEMA]
 })
 export class PagesModule { }
