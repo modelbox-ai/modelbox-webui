@@ -8,6 +8,7 @@ import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService
 import { DataServiceService } from '@shared/services/data-service.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OverlayContainerRef } from 'ng-devui/overlay-container';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -40,6 +41,10 @@ describe("MainComponent", () => {
         OverlayContainerRef,
         TranslateService,
         TranslateStore,
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
   });

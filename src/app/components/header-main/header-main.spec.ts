@@ -13,6 +13,7 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HttpLoaderFactory } from "src/app/app.module";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -45,6 +46,10 @@ describe("Header-main", () => {
       providers: [
         I18nService,
       ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
     router = TestBed.get(Router);
     location = TestBed.get(Location);

@@ -1,17 +1,15 @@
 import { TestBed } from "@angular/core/testing";
-import { ModalGuideComponent } from "./modal-guide.component";
-import { ShowdownModule } from 'ngx-showdown';
+import { NgbdTooltipCustomclass } from "./tooltip-customclass"
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
-describe("ModalGuideComponent", () => {
+describe("NgbdTooltipCustomclass", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        ModalGuideComponent
+        NgbdTooltipCustomclass
       ],
       imports: [
-        ShowdownModule
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA, 
@@ -20,8 +18,8 @@ describe("ModalGuideComponent", () => {
     }).compileComponents();
   });
 
-  it('should create the ModalGuideComponent', () => {
-    const fixture = TestBed.createComponent(ModalGuideComponent);
+  it('should create the NgbdTooltipCustomclass', () => {
+    const fixture = TestBed.createComponent(NgbdTooltipCustomclass);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });

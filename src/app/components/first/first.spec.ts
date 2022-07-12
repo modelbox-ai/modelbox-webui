@@ -10,6 +10,7 @@ import { FirstComponent } from './first.component';
 import { HeaderMainComponent } from '../header-main/header-main.component';
 import { OverlayContainerModule } from 'ng-devui/overlay-container';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -43,6 +44,10 @@ describe('FirstComponent', () => {
         TranslateService,
         TranslateStore,
       ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
   });
 

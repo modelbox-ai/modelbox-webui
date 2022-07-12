@@ -1,4 +1,5 @@
 import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { I18nService } from "@core/i18n.service";
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from "@ngx-translate/core";
@@ -36,6 +37,10 @@ describe("InsertPanelsComponent", () => {
         TranslateService,
         TranslateStore,
       ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
   });
 

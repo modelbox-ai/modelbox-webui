@@ -1,20 +1,24 @@
-// import { TestBed } from "@angular/core/testing";
-// import { ModalSaveAsComponent } from "./modal-save-as.component";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {HttpClientModule} from '@angular/common/http';
+import { BasicServiceService } from './basic-service.service';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
-// describe("ModalSaveAsComponent", () => {
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [
-//         ModalSaveAsComponent
-//       ],
-//     }).compileComponents();
-//   });
+describe('BasicServiceService', () => {
 
-//   it('should create the ModalSaveAsComponent', () => {
-//     const fixture = TestBed.createComponent(ModalSaveAsComponent);
-//     const app = fixture.componentInstance;
-//     expect(app).toBeTruthy();
-//   });
+      beforeEach(() => TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule], 
+        providers: [BasicServiceService],
+        schemas: [
+          CUSTOM_ELEMENTS_SCHEMA, 
+          NO_ERRORS_SCHEMA
+        ]
+      }));
 
-// });
+       it('should be created', () => {
+        const service: BasicServiceService = TestBed.get(BasicServiceService);
+        expect(service).toBeTruthy();
+       });
+
+    });

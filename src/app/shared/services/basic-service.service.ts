@@ -15,10 +15,6 @@ export class BasicServiceService {
     this.http = http;
   }
 
-  switchSignal(sign: string): void {
-    this.messageSource.next(sign);
-  }
-
   private subject = new Subject<any>();
   publish(value: any, err: any) {
     if (value !== undefined) {
