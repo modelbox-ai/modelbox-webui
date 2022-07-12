@@ -8,6 +8,7 @@ import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-co
 import { TextEditorComponent } from "./text-editor.component";
 import { AceComponent } from 'ngx-ace-wrapper';
 import { dotSrc } from "./mock-data";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -55,6 +56,10 @@ describe("TextEditorComponent", () => {
         OverlayContainerRef,
         TranslateService,
         TranslateStore,
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
   });

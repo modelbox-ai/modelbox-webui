@@ -7,7 +7,9 @@ import { DataServiceService } from "@shared/services/data-service.service";
 import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-container";
 import { AttributePanelComponent } from "./attribute-panel.component";
 import { DialogService } from "ng-devui";
-import { context_origin, context_target, unit_target, config, unit_http_receive, unit_type_target, config_initialed } from "./mock-data";
+import { context_origin, context_target, config, unit_type_target, config_initialed } from "./mock-data";
+import { HttpTestingController } from "@angular/common/http/testing";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -39,6 +41,10 @@ describe("AttributePanelComponent", () => {
         TranslateService,
         TranslateStore,
         DialogService
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
   });
@@ -79,12 +85,5 @@ describe("AttributePanelComponent", () => {
     expect(app.newName).toEqual("httpserver_sync_receive");
     expect(app.config["attributes"]).toEqual(config_initialed["attributes"]);
   });
-
-  // it('getUnit', () => {
-  //   const fixture = TestBed.createComponent(AttributePanelComponent);
-  //   const app = fixture.componentInstance;
-  //   app.config = config_initialed;
-  //   expect(app.getUnit(config_initialed)).toEqual(unit_http_receive);
-  // });
 
 });

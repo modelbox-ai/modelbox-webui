@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 // main pages
 import { MainComponent } from './main/main.component';
@@ -51,5 +51,8 @@ export const routes: Routes = [
     }),
   ],
   exports: [RouterModule],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA,
+    NO_ERRORS_SCHEMA]
 })
 export class RouteRoutingModule { }

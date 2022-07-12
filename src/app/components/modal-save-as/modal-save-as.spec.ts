@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { ModalSaveAsComponent } from "./modal-save-as.component";
 
@@ -8,6 +9,10 @@ describe("ModalSaveAsComponent", () => {
       declarations: [
         ModalSaveAsComponent
       ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA, 
+        NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
   });
 

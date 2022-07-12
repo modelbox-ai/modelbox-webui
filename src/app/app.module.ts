@@ -40,7 +40,7 @@ import { NgbModule, NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng
 import { DevUIModule } from 'ng-devui';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
-
+import { HeaderMainComponent } from './components/header-main/header-main.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   const CDN_BASE = (<any>window).CDNAddress || '';
@@ -79,7 +79,6 @@ export function appInitializerFactory(
 }
 
 @NgModule({
-  declarations: [AppComponent],
   imports: [
     NgxJsonViewerModule,
     BrowserModule,
@@ -103,6 +102,10 @@ export function appInitializerFactory(
     NgbModule,
     NgbPaginationModule,
     NgbAlertModule
+  ],
+  declarations: [
+    AppComponent,
+    HeaderMainComponent
   ],
   providers: [
     {
