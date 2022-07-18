@@ -559,9 +559,6 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
       this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
-      if (this.formData.flowunitDebugPath.indexOf(this.formData.flowunitReleasePath) === -1) {
-        this.formData.flowunitDebugPath += "\n" + this.formData.flowunitReleasePath;
-      }
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -571,7 +568,6 @@ export class ToolBarComponent {
   }
 
   loadGraphData(status = null) {
-    // this.active.basoc
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project && current_project?.rootpath && current_project?.name) {
       if (status === "toolBar.Init") {
@@ -840,15 +836,7 @@ export class ToolBarComponent {
           this.portInfo.port_name = "output" + this.out_num;
           this.out_num += 1;
         }
-      } else {
-        if (this.portInfo.port_type === "input") {
-          this.portInfo.port_name = "input" + this.in_num;
-        } else if (this.portInfo.port_type === "output") {
-          this.portInfo.port_name = "output" + this.out_num;
-        }
       }
-
-
     }
     this.isChangingPortName = false;
   }
