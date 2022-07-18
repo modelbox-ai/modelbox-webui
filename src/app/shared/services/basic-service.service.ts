@@ -48,14 +48,6 @@ export class BasicServiceService {
     return this.http.put<any>(this.serviceRouter + '/editor/flow-info', paramData).pipe(timeout(30000));
   }
 
-  queryManagementData(paramData?: string): Observable<any> {
-    return this.http.get(this.serviceRouter + '/' + paramData).pipe(timeout(30000));
-  }
-
-  queryTaskListData(paramData?: string): Observable<any> {
-    return this.http.get(this.serviceRouter + '/console/rest/taskListData' + paramData).pipe(timeout(30000));
-  }
-
   queryRootPath(): Observable<any> {
     return this.http.get(this.serviceRouter + '/editor/basic-info').pipe(timeout(30000));
   }
@@ -72,6 +64,17 @@ export class BasicServiceService {
       paramData = "/"
     }
     return this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).pipe(timeout(30000));
+  }
+
+  openProjectPromise(paramData?: string){
+    const promise = this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).toPromise();
+    console.log(promise);  
+    promise.then((data)=>{
+      
+      console.log(JSON.stringify(data));
+    }).catch((error)=>{
+      console.log("Promise rejected with " + JSON.stringify(error));
+    });
   }
 
   queryTemplate(): Observable<any> {

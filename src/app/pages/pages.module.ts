@@ -46,7 +46,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { AceModule, AceConfigInterface, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { ShowdownModule } from 'ngx-showdown';
 import { ModalGuideComponent } from '../components/modal-guide/modal-guide.component';
-
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 const COMPONENTS = [MainComponent];
 const COMPONENTS_NOROUNT = [];

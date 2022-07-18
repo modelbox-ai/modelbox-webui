@@ -365,12 +365,12 @@ export class ToolBarComponent {
 
   flowunit_types = [
     {
-      id: 'normal',
-      title: 'NORMAL'
-    },
-    {
       id: 'stream',
       title: 'STREAM'
+    },
+    {
+      id: 'normal',
+      title: 'NORMAL'
     },
     {
       id: 'condition',
@@ -421,7 +421,7 @@ export class ToolBarComponent {
   ];
 
   in_num = 1;
-  out_num = 2;
+  out_num = 1;
   isOpen = false;
   isOpen2 = false;
 
@@ -559,6 +559,9 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
       this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
+      if (this.formData.flowunitDebugPath.indexOf(this.formData.flowunitReleasePath) === -1) {
+        this.formData.flowunitDebugPath += "\n" + this.formData.flowunitReleasePath;
+      }
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -568,6 +571,7 @@ export class ToolBarComponent {
   }
 
   loadGraphData(status = null) {
+    // this.active.basoc
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project && current_project?.rootpath && current_project?.name) {
       if (status === "toolBar.Init") {
@@ -711,13 +715,17 @@ export class ToolBarComponent {
   }
 
   handleValueChangeport_type(e) {
+    
     if (e === "output") {
       this.portdeviceAble = true;
       this.portInfo.port_name = "output" + this.out_num;
+      this.out_num += 1;
+      return;
     }
 
     this.portdeviceAble = false;
     this.portInfo.port_name = "input" + this.in_num;
+    this.in_num += 1;
 
     this.portInfo.device = this.formDataCreateFlowunit.device;
 
@@ -823,15 +831,24 @@ export class ToolBarComponent {
           return;
         }
       }
-
-      if (this.portInfo.port_type === "input" && this.isChangingPortName == false) {
-        this.in_num += 1;
-        this.portInfo.port_name = "input" + this.in_num;
-      } else if (this.portInfo.port_type === "output" && this.isChangingPortName == false) {
-        this.out_num += 1;
-        this.portInfo.port_name = "output" + this.out_num;
-      }
       this.formDataCreateFlowunit.port_infos.push({ ...this.portInfo });
+      if (!this.isChangingPortName) {
+        if (this.portInfo.port_type === "input") {
+          this.portInfo.port_name = "input" + this.in_num;
+          this.in_num += 1;
+        } else if (this.portInfo.port_type === "output") {
+          this.portInfo.port_name = "output" + this.out_num;
+          this.out_num += 1;
+        }
+      } else {
+        if (this.portInfo.port_type === "input") {
+          this.portInfo.port_name = "input" + this.in_num;
+        } else if (this.portInfo.port_type === "output") {
+          this.portInfo.port_name = "output" + this.out_num;
+        }
+      }
+
+
     }
     this.isChangingPortName = false;
   }
@@ -839,6 +856,7 @@ export class ToolBarComponent {
   checkFormDataCreateFlowunit() {
 
     if (this.formDataCreateFlowunit.model) {
+      this.formDataCreateFlowunit.model = this.formDataCreateFlowunit.model.trim();
       if ((/(^\s+)|(\s+$)|\s+/g).test(this.formDataCreateFlowunit.model)) {
         this.msgs = [
           { severity: 'warn', content: this.i18n.getById("message.noSpace") }
@@ -1092,7 +1110,6 @@ export class ToolBarComponent {
       return;
     }
 
-
     if (!this.checkFormDataCreateFlowunit()) {
       return false;
     }
@@ -1162,6 +1179,15 @@ export class ToolBarComponent {
     }
     if (output.length > 0) {
       param['output'] = output;
+    }
+
+    if (this.formDataCreateFlowunit.lang === "inference") {
+      if (input.length * output.length === 0) {
+        this.msgs = [
+          { severity: 'warn', content: this.i18n.getById('message.inputAndOutputIsNecessary') }
+        ];
+        return;
+      }
     }
 
     this.basicService.createFlowunit(param).subscribe(
@@ -1297,6 +1323,7 @@ export class ToolBarComponent {
             //加载项目信息
             this.formDataCreateProject.name = data.project_name;
             this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
+            this.formDataCreateFlowunit["project-path"] = data.project_path;
 
             //加载功能单元信息
             //加载图信息
@@ -1323,11 +1350,12 @@ export class ToolBarComponent {
                 }
                 this.dotSrcEmmiter.emit(this.currentGraph.graph.graphconf);
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
-                this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
+
+                this.projectPathEmmiter.emit(data.project_path);
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
-                this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
                 this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
+                this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
               } else {
                 this.initFormData();
                 this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
@@ -1402,6 +1430,7 @@ export class ToolBarComponent {
     }
     this.removeLabelEmmiter.emit();
     param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
+    param.graph.dirs = param.graph.dirs.split("\n");
     this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
     param = this.createProjectParam(param);
     this.basicService.saveAllProject(param).subscribe((data) => {
