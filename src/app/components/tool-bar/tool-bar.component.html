@@ -211,7 +211,7 @@
                     <input 
                         dTextInput 
                         name="rootpath" 
-                        [(ngModel)]="formDataCreateProject.rootpath" 
+                        [(ngModel)]="openproject_path" 
                         maxlength="4096"/>
                 </d-form-control>
             </d-form-item>
@@ -755,18 +755,6 @@
                                     name="skipDefault"
                                     (change)="onCheckboxSkipDefaultChange($event)">
                                 </d-checkbox>
-                            </d-form-control>
-                        </d-form-item>
-                        <d-form-item>
-                            <d-form-label>
-                                {{'toolBar.reLeaseFlowunitPath' | translate}}
-                            </d-form-label>
-                            <d-form-control>
-                                <textarea 
-                                    dTextarea 
-                                    name="dir2" 
-                                    [(ngModel)]="formData.flowunitReleasePath">
-                                </textarea>
                             </d-form-control>
                         </d-form-item>
                         <d-form-item>

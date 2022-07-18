@@ -127,7 +127,6 @@ export class MainComponent {
       }
       this.path = path;
       this.dataService.defaultSearchPath = path;
-      // this.toolBar.formDataCreateProject['rootpath'] = path;
       this.toolBar.openproject_path = path;
     });
     if (current_project) {
@@ -285,7 +284,8 @@ export class MainComponent {
 
   createProject(param) {
     this.saveCurrentProject();
-    if (!this.dataService.pathValidate(param?.rootpath)) {
+    param["rootpath"] = this.toolBar.openproject_path;
+    if (!this.dataService.pathValidate(param.rootpath)) {
       return;
     }
     this.basicService.createProject(param).subscribe((data: any) => {
@@ -356,8 +356,8 @@ export class MainComponent {
               this.toolBar.formData.perfEnable = this.currentGraph.profile.profile;
               this.toolBar.formData.perfTraceEnable = this.currentGraph.profile.trace;
             }
-            this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
             this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit";
+            this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
             this.dirs = this.toolBar.formData.flowunitDebugPath;
             this.project_name = data.project_name;
           } else {
@@ -808,34 +808,46 @@ export class MainComponent {
   showCreateProjectDialog(content: TemplateRef<any>) {
     this.toolBar.isOpen = false;
     this.toolBar.isOpen2 = false;
-    this.createProjectDialogResults = this.dialogService.open({
-      id: 'createProject',
-      width: '700px',
-      title: this.i18n.getById('toolBar.newButton'),
-      showAnimate: false,
-      contentTemplate: content,
-      backdropCloseable: true,
-      onClose: () => {
+    this.basicService.queryRootPath().subscribe((data) => {
+      let path;
+      if (data['user'] === "modelbox") {
+        path = "/tmp";
+      } else {
+        path = data['home-dir']
+      }
+      this.path = path;
+      this.dataService.defaultSearchPath = path;
+      this.toolBar.openproject_path = path;
+      this.createProjectDialogResults = this.dialogService.open({
+        id: 'createProject',
+        width: '700px',
+        title: this.i18n.getById('toolBar.newButton'),
+        showAnimate: false,
+        contentTemplate: content,
+        backdropCloseable: true,
+        onClose: () => {
 
-      },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          this.createProject(this.toolBar.formDataCreateProject);
         },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          this.createProjectDialogResults.modalInstance.hide();
-          this.createProjectDialogResults.modalInstance.zIndex = -1;
+        buttons: [{
+          cssClass: 'danger',
+          text: this.i18n.getById('modal.okButton'),
+          disabled: false,
+          handler: ($event: Event) => {
+            this.createProject(this.toolBar.formDataCreateProject);
+          },
         },
-      },],
+        {
+          id: 'save-as-cancel',
+          cssClass: 'common',
+          text: this.i18n.getById('modal.cancelButton'),
+          handler: ($event: Event) => {
+            this.createProjectDialogResults.modalInstance.hide();
+            this.createProjectDialogResults.modalInstance.zIndex = -1;
+          },
+        },],
+      });
     });
+
   }
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
@@ -910,7 +922,7 @@ export class MainComponent {
     });
   }
 
-  transformNodeShapreCategories(){
+  transformNodeShapreCategories() {
     this.toolBar.options = [];
     this.InsertPanels.nodeShapeCategories.forEach(
       element => {
@@ -966,41 +978,54 @@ export class MainComponent {
   }
 
   showGraphSelectDialog(content: TemplateRef<any>) {
-    this.toolBar.loadGraphData();
-    const results = this.dialogService.open({
-      id: 'graphSelect',
-      width: '700px',
-      title: this.i18n.getById('toolBar.selectDialogButton'),
-      showAnimate: false,
-      contentTemplate: content,
-      backdropCloseable: true,
-      onClose: () => {
+    const current_project = JSON.parse(localStorage.getItem('project'));
+    this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
+      (data: any) => {
+        this.toolBar.graphList = data.graphs;
+        this.toolBar.graphSelectTableDataForDisplay = this.toolBar.graphList.map(i => {
+          let obj = {};
+          obj['checked'] = false;
+          obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
+          obj['dotSrc'] = i.graph.graphconf;
+          obj['desc'] = i.flow?.desc;
+          return obj;
+        });
+        const results = this.dialogService.open({
+          id: 'graphSelect',
+          width: '700px',
+          title: this.i18n.getById('toolBar.selectDialogButton'),
+          showAnimate: false,
+          contentTemplate: content,
+          backdropCloseable: true,
+          onClose: () => {
 
-      },
-      buttons: [{
-        cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
-        disabled: false,
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
+          },
+          buttons: [{
+            cssClass: 'danger',
+            text: this.i18n.getById('modal.okButton'),
+            disabled: false,
+            handler: ($event: Event) => {
+              results.modalInstance.hide();
+              results.modalInstance.zIndex = -1;
 
-          let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.name === this.toolBar.selectedName);
-          this.dotSrc = chosenGraph[0]?.dotSrc;
-          this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
-          this.saveCurrentProject();
-        },
-      },
-      {
-        id: 'save-as-cancel',
-        cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
-        handler: ($event: Event) => {
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-        },
-      },],
-    });
+              let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.name === this.toolBar.selectedName);
+              this.dotSrc = chosenGraph[0]?.dotSrc;
+              this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
+              this.saveCurrentProject();
+            },
+          },
+          {
+            id: 'save-as-cancel',
+            cssClass: 'common',
+            text: this.i18n.getById('modal.cancelButton'),
+            handler: ($event: Event) => {
+              results.modalInstance.hide();
+              results.modalInstance.zIndex = -1;
+            },
+          },],
+        });
+      });
+
   }
 
   updateConfig(e) {

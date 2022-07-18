@@ -120,11 +120,14 @@ export class ToolBarSolutionComponent implements OnInit {
           obj.graphfile = item.graphfile;
           obj.name = item.name;
           this.solutionList.push(obj);
-          let flowunitPath = this.getFlowunitPathFromGraphPath(obj.graphfile, obj.name);
+
+          let flowunitPath = this.getFlowunitPathFromGraphPath(obj.graphfile);
           if (flowunitPath) {
             this.dirs.push(flowunitPath);
           }
+
         });
+
         this.dataService.loadFlowUnit(null, this.dirs, null);
         this.showLoading = false;
       },
@@ -133,7 +136,7 @@ export class ToolBarSolutionComponent implements OnInit {
       });
   }
 
-  getFlowunitPathFromGraphPath(graphPath, graphName) {
+  getFlowunitPathFromGraphPath(graphPath) {
     let pos = graphPath.search(/\/graph\//);
     if (pos > -1) {
       return graphPath.slice(0, pos + 1) + "flowunit/";
