@@ -1094,6 +1094,7 @@ export class MainComponent {
       this.graphs[this.project.graph.graphName] = this.project;
       this.saveGraphs();
       //run
+      this.project.graph.dirs = this.project.graph.dirs.split("\n");
       let option = this.createOptionFromProject(this.project);
 
       this.statusGraph = 1;
