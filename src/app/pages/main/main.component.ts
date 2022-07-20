@@ -323,16 +323,6 @@ export class MainComponent {
     return graphName;
   }
 
-  insertNodeType(graph) {
-    let pos;
-    let newGraph = graph;
-    if (graph.indexOf("node [shape=Mrecord]") === -1) {
-      pos = graph.indexOf("{") + 1;
-      newGraph = graph.slice(0, pos) + "\n\tnode [shape=Mrecord]" + graph.slice(pos);
-    }
-    return newGraph;
-  }
-
   loadProject(param) {
     this.basicService.openProject(param.rootpath + "/" + param.name).subscribe(
       (data: any) => {
@@ -348,7 +338,7 @@ export class MainComponent {
         }
         if (data.graphs && this.currentGraph != null) {
           if (this.currentGraph.graph.graphconf) {
-            this.dotSrc = this.insertNodeType(this.currentGraph.graph.graphconf);
+            this.dotSrc = this.dataService.insertNodeType(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphDesc = this.currentGraph.flow?.desc;
             this.toolBar.formData.skipDefault = false;

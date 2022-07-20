@@ -286,4 +286,14 @@ export class DataServiceService {
     }
     return false;
   }
+
+  insertNodeType(graph) {
+    let pos;
+    let newGraph = graph;
+    if (graph.indexOf("node [shape=Mrecord]") === -1) {
+      pos = graph.indexOf("{") + 1;
+      newGraph = graph.slice(0, pos) + "\n\tnode [shape=Mrecord]" + graph.slice(pos);
+    }
+    return newGraph;
+  }
 }

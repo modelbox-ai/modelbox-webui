@@ -1336,7 +1336,7 @@ export class ToolBarComponent {
 
                   this.formData.perfTraceEnable = this.currentGraph.profile.trace;
                 }
-                this.dotSrcEmmiter.emit(this.currentGraph.graph.graphconf);
+                this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
 
                 this.projectPathEmmiter.emit(data.project_path);
