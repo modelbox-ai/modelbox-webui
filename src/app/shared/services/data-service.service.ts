@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import units from './units.json';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
-import { SolutionComponent } from 'src/app/components/solution/solution.component';
 import { I18nService } from '@core/i18n.service';
 
 @Injectable({
@@ -31,7 +29,7 @@ export class DataServiceService {
   public msgstack = [];
 
 
-  constructor(private sanitized: DomSanitizer,
+  constructor(
     private basicService: BasicServiceService,
     private toastService: ToastService,
     private i18n: I18nService) {
@@ -282,7 +280,7 @@ export class DataServiceService {
 
     if ((/^[a-z]:((\\|\/)[a-z0-9\s_@\-^!#$%&+={}\[\]]+)/i.test(path)) ||
       (/^([\\/][a-z0-9\s\-_\@\-\^!#$%&]*)+(\.[a-z][a-z0-9]+)?$/i.test(path))) {
-        return true;
+      return true;
     }
     return false;
   }

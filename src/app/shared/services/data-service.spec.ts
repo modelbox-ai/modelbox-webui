@@ -1,5 +1,4 @@
 import { DataServiceService } from "./data-service.service";
-import { DomSanitizer } from '@angular/platform-browser';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { I18nService } from '@core/i18n.service';
@@ -7,14 +6,13 @@ import { test_transformed_data, test_flowunits_data } from "./test-flowunit-data
 
 describe('DataService: titleCase', () => {
   let service: DataServiceService;
-  let sanitized: DomSanitizer;
   let basicService: BasicServiceService;
   let toastService: ToastService;
   let i18n: I18nService;
 
 
   beforeEach(() => {
-    service = new DataServiceService(sanitized, basicService, toastService, i18n);
+    service = new DataServiceService(basicService, toastService, i18n);
   });
 
   afterEach(() => {
