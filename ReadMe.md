@@ -9,3 +9,5 @@ ModelBox前端UI界面代码
 安装完成后输入`npm start`运行
 
 输入`npm run serve` 或者 `ng serve --configuration development` 进入开发模式
+
+输入`ng test`以运行单元测试
