@@ -168,11 +168,14 @@ export class TextEditorComponent {
     this.registerUndoReset(this.resetUndoStack);
     this.registerResize(this.resize);
     this.registerSwitchDirectionButtonClick(this.switchDirection);
-    this.config.tabSize = 2
-    this.config.enableBasicAutocompletion = true;
-    this.config.enableLiveAutocompletion = true;
-    this.config.enableSnippets = true;
-    this.config.printMarginColumn = 120;
+    ace.acequire("ace/ext/language_tools");
+    this.editor.setOptions({
+      tabSize: 2,
+      enableBasicAutoCompletion: true,
+      enableLiveAutoCompletion: true,
+      enableSnippets: true,
+      printMarginColumn: 120,
+    });
   }
 
   resize = () => {

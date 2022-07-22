@@ -167,7 +167,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   createGraph() {
     wasmFolder('lib/@hpcc-js/wasm/dist');
     this.graphviz = this.div
-      .graphviz()
+      .graphviz({ useWorker: false })
       .onerror(this.handleError.bind(this))
       .on('initEnd', () => this.renderGraph());
     this.registerGetSvg(this.getSvg, this);
@@ -450,7 +450,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  renderGraph(unitType=null) {
+  renderGraph(unitType = null) {
     const container = this.div.node().parentElement.parentElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -557,16 +557,16 @@ export class GraphComponent implements AfterViewInit, OnChanges {
               name = ids[ids.length - 2];
               that.typeFlowunit = nodes[name]?.attributes.device;
             }
-            if (that.typeFlowunit === 'cpu'){
+            if (that.typeFlowunit === 'cpu') {
               d.attributes.stroke = '#99CC33';
-            }else if(that.typeFlowunit === 'cuda'){
+            } else if (that.typeFlowunit === 'cuda') {
               d.attributes.stroke = '#3399CC';
-            }else if (that.typeFlowunit === 'ascend'){
+            } else if (that.typeFlowunit === 'ascend') {
               d.attributes.stroke = '#666699';
-            }else{
+            } else {
               d.attributes.stroke = '#ADB0B8';
             }
-            
+
           } else {
             d.attributes.stroke = '#ADB0B8';
           }
