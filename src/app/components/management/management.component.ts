@@ -23,7 +23,6 @@ import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ErrorCode, TaskStatus } from '@shared/constants';
 import { DialogService } from 'ng-devui/modal';
 import { translate } from '@angular/localize/src/translate';
-import { CommonUtils } from '@shared/utils';
 import { TableWidthConfig } from 'ng-devui/data-table';
 import { EditableTip } from 'ng-devui/data-table';
 
@@ -207,11 +206,8 @@ export class ManagementComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     private i18n: I18nService,
-    private basicService: BasicServiceService,
-    private util: CommonUtils,
-    private dataService: DataServiceService,
-    private http: HttpClient,
-    @Inject(DOCUMENT) private doc: any) { }
+    private basicService: BasicServiceService
+  ) { }
 
   ngOnInit(): void {
     this.getTaskslists();
@@ -663,8 +659,7 @@ export class ManagementComponent implements OnInit {
       (error) => {
         this.tableData.srcData.data.forEach(item => {
           item.job_status_value = TaskStatus.UNKNOWN;
-        })
-        this.util.messageShow('获取列表数据失败', 'error');
+        });
       })
   }
 

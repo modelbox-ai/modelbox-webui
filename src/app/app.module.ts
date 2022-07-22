@@ -28,7 +28,6 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 
-import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { PagesModule } from './pages/pages.module';
@@ -84,7 +83,6 @@ export function appInitializerFactory(
     DevUIModule,
     // imported modules
     PagesModule,
-    LayoutModule,
     SharedModule,
     CoreModule,
     // http & translate
