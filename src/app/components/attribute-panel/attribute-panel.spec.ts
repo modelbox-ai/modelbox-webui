@@ -7,7 +7,7 @@ import { DataServiceService } from "@shared/services/data-service.service";
 import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-container";
 import { AttributePanelComponent } from "./attribute-panel.component";
 import { DialogService } from "ng-devui";
-import { context_origin, context_target, config, unit_type_target, config_initialed } from "./mock-data";
+import { context_origin, context_target, config, unit_type_target, config_initialed, unit_example, unit_options_example, dotGraph_example } from "./mock-data";
 import { HttpTestingController } from "@angular/common/http/testing";
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 
@@ -43,7 +43,7 @@ describe("AttributePanelComponent", () => {
         DialogService
       ],
       schemas: [
-        CUSTOM_ELEMENTS_SCHEMA, 
+        CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
@@ -55,7 +55,7 @@ describe("AttributePanelComponent", () => {
     expect(app).toBeTruthy();
   });
 
-  it('format descryption from code to UI, handleTipText', () => {
+  it('format descryption from code to UI, handleTipText && handlePortDetail', () => {
     const fixture = TestBed.createComponent(AttributePanelComponent);
     const app = fixture.componentInstance;
     let context = context_origin;
@@ -81,9 +81,29 @@ describe("AttributePanelComponent", () => {
     const fixture = TestBed.createComponent(AttributePanelComponent);
     const app = fixture.componentInstance;
     app.config = config;
+    app.newName = "httpserver_sync_receive";
     app.initConfig(config);
     expect(app.newName).toEqual("httpserver_sync_receive");
     expect(app.config["attributes"]).toEqual(config_initialed["attributes"]);
   });
+
+  it('attributeModel.blur', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.config = config;
+    app.newName = "httpserver_sync_receive";
+    app.unit = unit_example;
+    app.unitType = unit_type_target;
+    app.unitOptions = unit_options_example;
+    expect(app.newName !== app.config.name && app.unit).toBeFalsy();
+    app.newName = "test";
+    expect(app.newName !== app.config.name && app.unit).toBeTruthy();
+    app.dotGraph = dotGraph_example;
+    app.onNodeAttributeChange = function (x, y) { };
+    app.attributeModel.blur();
+    expect(app.config.name).toEqual(app.newName);
+  });
+
+
 
 });

@@ -75,7 +75,7 @@
             style="height:28px;"
             [name]="'new-name'"
             (keyup)="changedValue=true"
-            (blur)="attributeModel.blur(myForm1.form)"
+            (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="{{'attributePanel.namePlaceholder'|translate}}"
             [(ngModel)]="newName">
@@ -100,7 +100,7 @@
               placeholder="{{item.desc}}"
               [(ngModel)]="item.value"
               (keyup)="changedValue=true"
-              (blur)="attributeModel.blur(myForm1.form)" />
+              (blur)="attributeModel.blur()" />
           </ng-container>
           <ng-container *ngIf="item.type === 'bool'">
             <input
@@ -109,7 +109,7 @@
               [(ngModel)]="item.value"
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               (keyup)="changedValue=true"
-              (blur)="attributeModel.blur(myForm1.form)"
+              (blur)="attributeModel.blur()"
               placeholder="{{item.desc}}" />
           </ng-container>
           <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
@@ -121,14 +121,14 @@
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               placeholder="{{item.desc}}"
               (keyup)="changedValue=true"
-              (blur)="attributeModel.blur(myForm1.form)" />
+              (blur)="attributeModel.blur()" />
           </ng-container>
           <ng-container *ngIf="item.type === 'list'">
             <select
               class="form-select"
               [name]="'option-' + item.label.replaceAll(' ', '_')"
               [(ngModel)]="item.selected"
-              (ngModelChange)="attributeModel.blur(myForm1.form)">
+              (ngModelChange)="attributeModel.blur()">
               <option [ngValue]="op" *ngFor="let op of item.options">
                 {{op.label}}
               </option>
@@ -153,7 +153,7 @@
           class="form-select"
           name="'unittype'"
           [(ngModel)]="unitType.selected"
-          (ngModelChange)="unitType.change($event, myForm1.form)">
+          (ngModelChange)="unitType.change($event)">
           <option 
             *ngFor="let item of unitType.options" 
             [ngValue]="item">

@@ -86,7 +86,6 @@ describe("TextEditorComponent", () => {
     expect(app.resize).toBeTruthy();
     expect(app.switchDirection).toBeTruthy();
     expect(app.config).toBeTruthy();
-    expect(app.config.printMarginColumn).toEqual(120);
   });
 
   it('should switchComponent', () => {

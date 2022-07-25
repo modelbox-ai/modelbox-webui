@@ -58,12 +58,12 @@ describe('FirstComponent', () => {
   });
 
   it('should import DataService', () => {
-    const dataService = TestBed.get(DataServiceService);
+    const dataService = TestBed.inject(DataServiceService);
     expect(dataService).toBeTruthy();
   });
 
   it('currentPage should be ""', () => {
-    const dataService = TestBed.get(DataServiceService);
+    const dataService = TestBed.inject(DataServiceService);
     expect(dataService.getCurrentPage()).toEqual("");
   });
 });
