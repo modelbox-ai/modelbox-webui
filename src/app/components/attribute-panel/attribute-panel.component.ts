@@ -43,6 +43,7 @@ export class AttributePanelComponent {
   @ViewChild('myForm1') attrform;
   @Input() config: any;
   @Input() onNodeAttributeChange: any;
+  @Input() dotGraph: any;
   @Output() newItemEvent = new EventEmitter<any>();
   selectType = this.i18n.getById('attributePanel.selectType');
   changedValue = false;
@@ -57,21 +58,7 @@ export class AttributePanelComponent {
   };
   warnNoNode = true;
   // 节点对应的顶点信息
-  unit: {
-    name: '',
-    version: '',
-    descryption: '',
-    desc: '',
-    group: any,
-    virtual: false,
-    types: any,
-    type: '',
-    options: [any],
-    inputports: [any],
-    outputports: [any],
-    portDetail: '',
-    constraint: ''
-  };
+  unit: any;
   // unitType
   unitType: any = {
     options: [],
@@ -95,7 +82,7 @@ export class AttributePanelComponent {
       );
       unitType.value = event.id;
       this.initConfig(this.config);
-      this.attributeModel.blur(form);
+      this.attributeModel.blur();
     },
   };
   unitOptions: any = {
@@ -149,20 +136,48 @@ export class AttributePanelComponent {
       this.config.attributes.splice(index, 1);
       this.onNodeAttributeChange({ ...this.config, newName: this.newName });
     },
-    blur: (form: FormGroup) => {
+    blur: () => {
       let config = { ...this.config };
-      // 处理 node name
+
+      // 处理 node name更改
       if (this.newName !== this.config.name && this.unit) {
-        if (
-          this.unit.inputports?.find(item => item.name === this.newName) ||
-          this.unit.outputports?.find(item => item.name === this.newName)
-        ) {
+        const nodes = { ...this.dotGraph.nodes };
+        let nodesName = Object.keys(nodes);
+        if (nodesName.indexOf(this.newName) > -1) {
           const results = this.dialogService.open({
             id: 'dialog-service',
             width: '346px',
             maxHeight: '600px',
             title: '',
             content: this.i18n.getById('message.duplicatedNodeName'),
+            backdropCloseable: true,
+            dialogtype: 'failed',
+            buttons: [
+              {
+                cssClass: 'primary',
+                text: 'Ok',
+                handler: ($event: Event) => {
+                  results.modalInstance.hide();
+                  results.modalInstance.zIndex = -1;
+                },
+              }
+            ],
+          });
+          return;
+        }
+        if (!this.unit["inputports"]) this.unit["inputports"] = [];
+        if (!this.unit["outputports"]) this.unit["outputports"] = [];
+        if (
+          this.unit.inputports?.find(item => item.name === this.newName) ||
+          this.unit.outputports?.find(item => item.name === this.newName)
+        ) {
+          //node同名处理
+          const results = this.dialogService.open({
+            id: 'dialog-service',
+            width: '346px',
+            maxHeight: '600px',
+            title: '',
+            content: this.i18n.getById('message.duplicatedNodeNameWithPort'),
             backdropCloseable: true,
             dialogtype: 'failed',
             buttons: [
@@ -219,7 +234,6 @@ export class AttributePanelComponent {
       });
       this.config.name = this.newName;
       this.onNodeAttributeChange({ ...config, newName: this.newName });
-
     }
   };
 
@@ -285,7 +299,7 @@ export class AttributePanelComponent {
       return;
     }
 
-    this.attributeModel.blur(this.attrform);
+    this.attributeModel.blur();
     this.config = null;
     this.changedValue = false;
   }

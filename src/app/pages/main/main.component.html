@@ -130,7 +130,8 @@
       *ngIf="currentComponent"
       [config]="currentComponent"
       [onNodeAttributeChange]="handleNodeAttributeChange"
-      (newItemEvent)="updateConfig($event)">
+      (newItemEvent)="updateConfig($event)"
+      [dotGraph]="graph.dotGraph">
     </app-attribute-panel>
   </div>
 </div>
