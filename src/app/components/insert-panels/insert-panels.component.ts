@@ -24,8 +24,6 @@ import { I18nService } from '@core/i18n.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from 'ng-devui/toast';
-import { ICategorySearchTagItem } from 'ng-devui/category-search';
-import { cloneDeep } from 'lodash-es';
 
 declare const require: any
 
@@ -99,16 +97,14 @@ export class InsertPanelsComponent implements OnInit {
 
   trustHtml = this.sanitized.bypassSecurityTrustHtml;
   nodeShapeCategories: Array<any> = [];
-  flowunits: any;
-  transformedFlowunits: Array<any> = [];
   categories: any;
+  context: any;
+  eles: any;
   constructor(
     private sanitized: DomSanitizer,
     private dataService: DataServiceService,
     private basicService: BasicServiceService,
-    private i18n: I18nService,
-    private http: HttpClient,
-    private toastService: ToastService,
+    private i18n: I18nService
   ) { }
 
   toggleTip(tooltip, context: any) {
@@ -118,6 +114,7 @@ export class InsertPanelsComponent implements OnInit {
       context = this.handleTipText(context);
       tooltip.open({ context });
     }
+    this.context = context;
   }
 
   handleTipText(context) {
@@ -138,7 +135,10 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   onSearch(term) {
-    const eles = document.querySelectorAll('.search-detail');
+    let eles = document.querySelectorAll('.search-detail');
+    if (!eles) {
+      eles = this.eles;
+    }
     if (term) {
       let firstResult = null;
       eles.forEach(element => {
@@ -152,11 +152,14 @@ export class InsertPanelsComponent implements OnInit {
           this.showEle(element);
         }
       });
+      if (!firstResult) {
+        return;
+      }
       let title = this.searchGroupByNameOfCategories(firstResult['outerText']?.trim());
       this.nodeShapeCategories.forEach((item) => {
-        if (item.title === title){
+        if (item.title === title) {
           item.open = true;
-        }else{
+        } else {
           item.open = false;
         }
       });
@@ -164,10 +167,10 @@ export class InsertPanelsComponent implements OnInit {
       eles.forEach(element => {
         this.showEle(element);
       });
-      this.nodeShapeCategories.forEach((item,index) => {
-        if (index === 0){
+      this.nodeShapeCategories.forEach((item, index) => {
+        if (index === 0) {
           item.open = true;
-        }else{
+        } else {
           item.open = false;
         }
       });
@@ -178,7 +181,7 @@ export class InsertPanelsComponent implements OnInit {
     let res;
     this.nodeShapeCategories.forEach(item => {
       item.children.forEach(element => {
-        if (element['name'] === name){
+        if (element['name'] === name) {
           res = item.title
           return res;
         }
@@ -203,36 +206,6 @@ export class InsertPanelsComponent implements OnInit {
     );
   }
 
-  transformFlowunit() {
-    this.transformedFlowunits = [];
-    this.flowunits.map(ele => {
-      let obj = {
-        descryption: "",
-        group: "",
-        name: "",
-        version: "",
-        type: "",
-        inputports: [],
-        outputports: []
-      };
-      obj.descryption = ele.base.description;
-      obj.group = this.dataService.titleCase(ele.base.group_type);
-      if (!obj.group) {
-        obj.group = "Generic";
-      }
-      obj.name = ele.base.name;
-      obj.version = ele.base.version;
-      obj.type = ele.base.device;
-      for (let i in ele.input) {
-        obj.inputports.push(ele.input[i]);
-      }
-      for (let i in ele.output) {
-        obj.outputports.push(ele.output[i]);
-      }
-      this.transformedFlowunits.push(obj);
-    })
-  }
-
   public loadFlowUnit(skip, dirs, path) {
     if (skip === null) {
       skip = false;
@@ -249,31 +222,12 @@ export class InsertPanelsComponent implements OnInit {
     let params = {
       "skip-default": skip,
       dir: dirs,
-    }
-    if (path != null) {
-      this.flowunits = this.dataService.loadProjectFlowunit(path);
-    }
+    }    
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
-      let index = [];
       if (data.devices == null) {
         return;
-      }
-      if (this.flowunits && this.flowunits.length > 0) {
-        this.transformFlowunit();
-        for (let ele in this.transformedFlowunits) {
-          for (let ele2 of data.flowunits) {
-            if (this.transformedFlowunits[ele].name === ele2.name) {
-              index.push(ele);
-            }
-          }
-        }
-        for (let ele in this.transformedFlowunits) {
-          if (index.indexOf(ele) == -1) {
-            data.flowunits.push(this.transformedFlowunits[ele]);
-          }
-        }
       }
       if (this.dataService.virtualFlowunits.length > 0) {
         data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
