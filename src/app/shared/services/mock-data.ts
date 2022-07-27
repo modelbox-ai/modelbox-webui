@@ -354,3 +354,64 @@ export let openProjectData = {
   "project_name": "ddd",
   "project_path": "/root/ddd"
 }
+
+export let graph_example = "digraph car_detection {\n    node [shape=Mrecord]\n    video_input[type=flowunit, flowunit=video_input, device=cpu, deviceid=0, source_url=\"/opt/modelbox/demo/video/car_test_video.mp4\"]\n    videodemuxer[type=flowunit, flowunit=video_demuxer, device=cpu, deviceid=0]\n    videodecoder[type=flowunit, flowunit=video_decoder, device=cuda, deviceid=0, pix_fmt=bgr]\n    image_resize[type=flowunit, flowunit=resize, device=cpu, deviceid=0, image_width=512, image_height=288]\n    image_transpose[type=flowunit, flowunit=packed_planar_transpose, device=cpu, deviceid=0]\n    normalize[type=flowunit, flowunit=normalize, device=cpu, deviceid=0, standard_deviation_inverse=\"1,1,1\"]\n    model_inference[type=flowunit, flowunit=car_detect, device=cuda, deviceid=0, batch_size=1]\n    yolox_post[type=flowunit, flowunit=yolox_post, device=cpu, deviceid=0]\n    videoencoder[type=flowunit, flowunit=video_encoder, device=cpu, deviceid=0, encoder=mpeg4, format=mp4, default_dest_url=\"/tmp/car_detection_result.mp4\"]\n\n    video_input:out_video_url -> videodemuxer:in_video_url\n    videodemuxer:out_video_packet -> videodecoder:in_video_packet\n    videodecoder:out_video_frame -> image_resize:in_image\n    image_resize:out_image -> image_transpose:in_image\n    image_transpose:out_image -> normalize:in_data\n    normalize:out_data -> model_inference:input\n    model_inference:output -> yolox_post:in_feat\n    videodecoder:out_video_frame -> yolox_post:in_image\n    yolox_post:out_data -> videoencoder:in_video_frame\n}"
+
+export let open_project = {
+  flowunits:
+    [
+      {
+        "base": {
+          "description": "car detection infer",
+          "device": "cuda",
+          "entry": "./yolox_nano_jit_trace_288x512.pt",
+          "name": "car_detect",
+          "type": "inference",
+          "version": "1.0.0",
+          "virtual_type": "torch"
+        },
+        "input": {
+          "input1": {
+            "name": "input",
+            "type": "float"
+          }
+        },
+        "output": {
+          "output1": {
+            "name": "output",
+            "type": "float"
+          }
+        }
+      },
+      {
+        "base": {
+          "description": "yolox postprocess",
+          "device": "cpu",
+          "entry": "yolox_post@YoloXPost",
+          "name": "yolox_post",
+          "type": "python",
+          "version": "1.0.0"
+        },
+        "config": {
+          "conf_threshold": 0.3,
+          "iou_threshold": 0.4,
+          "net_h": 288,
+          "net_w": 512,
+          "num_classes": 80
+        },
+        "input": {
+          "input1": {
+            "name": "in_image"
+          },
+          "input2": {
+            "name": "in_feat"
+          }
+        },
+        "output": {
+          "output1": {
+            "name": "out_data"
+          }
+        }
+      }
+    ]
+}
