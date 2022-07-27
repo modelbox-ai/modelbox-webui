@@ -964,7 +964,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         linkName = nodeTitle + ':' + itemTitle;
       }
 
-      const nodeport_type = this.dataService.getport_type(nodeUnit, linkName);
+      const nodeport_type = this.dataService.getPortType(nodeUnit, linkName);
       if (!nodeUnit && !isVirtual) {
         return;
       }
@@ -1467,11 +1467,11 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       endAttr['flowunit'],
       endAttr['device']
     );
-    const startport_type = this.dataService.getport_type(
+    const startport_type = this.dataService.getPortType(
       startUnit,
       startLinkName
     );
-    const endport_type = this.dataService.getport_type(endUnit, endLinkName);
+    const endport_type = this.dataService.getPortType(endUnit, endLinkName);
 
     for (let edge in this.dotGraph.edges) {
       const [start, end] = edge.split('->');

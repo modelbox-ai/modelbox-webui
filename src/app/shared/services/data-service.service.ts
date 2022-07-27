@@ -27,6 +27,7 @@ export class DataServiceService {
   warningMessage = false;
   public virtualFlowunits = [];
   public msgstack = [];
+  data: any;
 
 
   constructor(
@@ -173,32 +174,6 @@ export class DataServiceService {
     return unit;
   }
 
-  nodeShapeCategoriesAdd(param) {
-    this.nodeShapeCategories;
-    const group = this.nodeShapeCategories.find(i => i.title === param.title);
-    const unit = {
-      name: param.flowunit_name,
-      descryption: param.desc,
-      title: param.flowunit_name,
-      active: this.nodeShapeCategories.length == 0 ? true : false,
-      type: param.device,
-      types: [param.device],
-      version: "1.0.0",
-      virtual: false,
-      inputports: param.port_infos.filter(x => x.port_type == "output"),
-      outputports: param.port_infos.filter(x => x.port_type == "input")
-    };
-    if (group) {
-      group.children.push(unit);
-    } else {
-      this.nodeShapeCategories.push({
-        title: "Generic",
-        collapsed: true,
-        children: [unit],
-      });
-    }
-  }
-
   getLabel(name, type, labelname) {
     let parts = [];
     let unit = this.getUnit(name, type);
@@ -227,7 +202,7 @@ export class DataServiceService {
   }
 
   // 获取 port类型 input / output / main
-  getport_type(unit, linkName): string {
+  getPortType(unit, linkName): string {
     const [node, port] = linkName.split(':');
     if (!port) {
       return 'main';
@@ -238,28 +213,6 @@ export class DataServiceService {
         return 'output';
       }
     }
-  }
-
-  formLabel(data) {
-    let parts = [];
-    if (data.inputports && data.inputports.length > 0) {
-      parts.push(
-        '{' +
-        data.inputports.map(item => `<${item.name}> ${item.name}`).join('|') +
-        '}'
-      );
-    }
-    parts.push('_NODE_NAME_');
-    if (data.outputports && data.outputports.length > 0) {
-      parts.push(
-        '{' +
-        data.outputports
-          .map(item => `<${item.name}> ${item.name}`)
-          .join('|') +
-        '}'
-      );
-    }
-    return '{' + parts.join('|') + '}';
   }
 
   loadProjectFlowunit(path) {
@@ -274,6 +227,10 @@ export class DataServiceService {
         return;
       }
     );
+  }
+
+  setBasicService(basicService) {
+    this.basicService = basicService;
   }
 
   pathValidate(path) {

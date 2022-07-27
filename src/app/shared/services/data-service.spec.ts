@@ -3,6 +3,12 @@ import { BasicServiceService } from '@shared/services/basic-service.service';
 import { ToastService } from 'ng-devui/toast';
 import { I18nService } from '@core/i18n.service';
 import { test_transformed_data, test_flowunits_data } from "./test-flowunit-data";
+import { flowInfo, graph_example, open_project } from "./mock-data";
+import { Observable, of } from "rxjs";
+import { fakeAsync, flush, TestBed } from "@angular/core/testing";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
+import { nodeShapeCategories } from "src/app/components/insert-panels/mock_data";
 
 describe('DataService: titleCase', () => {
   let service: DataServiceService;
@@ -12,7 +18,22 @@ describe('DataService: titleCase', () => {
 
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule,
+      ],
+      providers: [
+        I18nService,
+        DataServiceService,
+        BasicServiceService
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
+      ]
+    })
     service = new DataServiceService(basicService, toastService, i18n);
+    basicService = TestBed.inject(BasicServiceService);
   });
 
   afterEach(() => {
@@ -67,8 +88,69 @@ describe('DataService: titleCase', () => {
 
   });
 
-  it('loadProjectFlowunit', () => {
-    //需要先创建项目
+  it('loadProjectFlowunit', fakeAsync(() => {
+    const httpSpy = TestBed.inject(HttpClient);
+    spyOn(httpSpy, 'get').and.returnValue(of(open_project));
+    service.setBasicService(basicService);
+    service.loadProjectFlowunit("/root/pro1");
+    flush();
+    expect(service.flowunits).toBeTruthy();
+  }));
+
+  it('transformFlowunit', () => {
+    expect(
+      service.insertNodeType(graph_example).
+        indexOf("node [shape=Mrecord]"))
+      .toBeGreaterThan(-1);
+  });
+
+  it('getPortType', () => {
+    expect(
+      service.getPortType({
+        inputports: [
+          {
+            "name": "in_image"
+          }
+        ]
+      },
+        "image_resiz:in_image"))
+      .toEqual("input");
+  });
+
+  it('getLabel', () => {
+    spyOn(service, 'getUnit').and.returnValue({
+      "inputports": [
+        {
+          "name": "in_data"
+        }
+      ]
+    });
+    expect(
+      service.getLabel("video_input", "cpu", "video_input")
+    ).toBeTruthy();
+  });
+
+  it('loadFlowUnit', () => {
+
+    service.setBasicService(basicService);
+    spyOn(basicService, 'queryData').and.returnValue(new Observable(subscriber => {
+      subscriber.next(flowInfo);
+    }));
+    expect(
+      service.nodeShapeCategories
+    ).toBeTruthy();
+  });
+
+  it('getUnit', () => {
+
+    service.setBasicService(basicService);
+    spyOn(basicService, 'queryData').and.returnValue(new Observable(subscriber => {
+      subscriber.next(flowInfo);
+    }));
+    service.nodeShapeCategories = nodeShapeCategories;
+    expect(
+      service.getUnit("video_decoder", "cpu")
+    ).toBeTruthy();
   });
 
 });

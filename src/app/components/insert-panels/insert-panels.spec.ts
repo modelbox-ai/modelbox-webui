@@ -95,12 +95,12 @@ describe("InsertPanelsComponent", () => {
     const fixture = TestBed.createComponent(InsertPanelsComponent);
     const app = fixture.componentInstance;
     const mockDataObj = flowInfo;
-    const httpSpy = TestBed.inject(HttpClient)
-    spyOn(httpSpy, 'put').and.returnValue(of(mockDataObj))
+    const httpSpy = TestBed.inject(HttpClient);
+    spyOn(httpSpy, 'put').and.returnValue(of(mockDataObj));
 
     app.loadFlowUnit(false, "/root/pro1/src/flowunit", "/root/pro1")
     flush(); // clear out any pending tasks in queue including observable magic
-    
+
     expect(app.nodeShapeCategories).toBeTruthy();
   }));
 
