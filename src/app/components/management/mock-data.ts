@@ -475,3 +475,103 @@ export const treeDataSource = [
     endDate: new Date(2020, 1, 12),
   }
 ];
+
+export let demo_list =
+  [
+    {
+      "desc": "A mnist with mindspore example project template for modelbox",
+      "dirname": "mnist-mindspore",
+      "name": "mnist-mindspore",
+      "restapi": {
+        "method": "POST",
+        "path": "http://0.0.0.0:8190/v1/mnist_test",
+        "requestbody": "{\n  \"image_base64\": \"\"\n}\n"
+      }
+    },
+    {
+      "desc": "A car detection example project template for modelbox",
+      "dirname": "car_detection",
+      "name": "car detection"
+    },
+    {
+      "desc": "A emotion detection example project template for modelbox",
+      "dirname": "emotion_detection",
+      "guide": {
+        "guide": "\n# 使用指导\n\n需要执行工程根目录下download_emotion_files.sh下载torch模型。\n\n"
+      },
+      "name": "emotion_detection"
+    },
+    {
+      "desc": "A resize example project template for modelbox",
+      "dirname": "resize",
+      "name": "resize"
+    },
+    {
+      "desc": "A helloworld REST API service example project template for modelbox",
+      "dirname": "hello_world",
+      "name": "helloworld",
+      "restapi": {
+        "method": "POST",
+        "path": "http://0.0.0.0:7770/v1/hello_world",
+        "requestbody": "{\n  \"msg\": \"hello modelbox\"\n}\n"
+      }
+    },
+    {
+      "desc": "A mnist example project template for modelbox",
+      "dirname": "mnist",
+      "name": "mnist",
+      "restapi": {
+        "method": "POST",
+        "path": "http://0.0.0.0:8190/v1/mnist_test",
+        "requestbody": "{\n  \"image_base64\": \"\"\n}\n"
+      }
+    }
+  ];
+
+export let directory = {
+  "dirname": "/root",
+  "isproject": false,
+  "subdir": [
+    {
+      "dirname": "modelbox-service",
+      "isproject": false
+    },
+    {
+      "dirname": "pro1",
+      "isproject": true
+    },
+    {
+      "dirname": "pro3",
+      "isproject": true
+    }
+  ]
+}
+
+export let taskData = {
+  "displayed": [],
+  "srcData": {
+    "data": [
+      {
+        "job_id": 2,
+        "checked": true
+      }
+    ],
+    "state": {
+      "searched": false,
+      "sorted": false,
+      "paginated": false
+    }
+  },
+  "columns": [
+    {
+      "field": "checked",
+      "header": "",
+      "fieldType": "customized"
+    },
+    {
+      "field": "name",
+      "header": "图名称",
+      "fieldType": "text"
+    }
+  ]
+}

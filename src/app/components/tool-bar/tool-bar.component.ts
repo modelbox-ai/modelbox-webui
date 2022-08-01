@@ -973,10 +973,6 @@ export class ToolBarComponent {
     this.onZoomResetButtonClick && this.onZoomResetButtonClick();
   };
 
-  handleConfirmNameChange = (event, src, rename) => {
-    this.onConfirmNameChange && this.onConfirmNameChange(event, src, rename);
-  };
-
   handleNewButtonClick = event => {
     this.onNewButtonClick && this.onNewButtonClick();
   };
