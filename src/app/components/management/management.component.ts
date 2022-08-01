@@ -20,17 +20,12 @@ import { Component, TemplateRef, OnInit, Input, AfterViewInit, ElementRef, ViewC
 import { I18nService } from '@core/i18n.service';
 import { AceComponent } from 'ngx-ace-wrapper';
 import { BasicServiceService } from '@shared/services/basic-service.service';
-import { ErrorCode, TaskStatus } from '@shared/constants';
+import { TaskStatus } from '@shared/constants';
 import { DialogService } from 'ng-devui/modal';
 import { translate } from '@angular/localize/src/translate';
 import { TableWidthConfig } from 'ng-devui/data-table';
 import { EditableTip } from 'ng-devui/data-table';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DataServiceService } from '@shared/services/data-service.service';
 import { IFileOptions, IUploadOptions, SingleUploadComponent } from 'ng-devui/upload';
-import { DOCUMENT } from '@angular/common';
-import { isArguments } from 'lodash';
 import { ModalGuideComponent } from '../modal-guide/modal-guide.component';
 import { FormLayout } from 'ng-devui/form';
 
@@ -42,6 +37,7 @@ import { FormLayout } from 'ng-devui/form';
 export class ManagementComponent implements OnInit {
   @ViewChild(AceComponent, { static: true }) componentRef: AceComponent;
   @ViewChild('singleuploadDrag', { static: true }) singleuploadDrag: SingleUploadComponent;
+  @ViewChild("debug", { static: true }) debugRef: "debug";
   page = "management";
   folded: boolean = false;
   checkedList: Array<any> = [];
@@ -173,7 +169,6 @@ export class ManagementComponent implements OnInit {
   @Input() graphs: any = JSON.parse(localStorage.getItem('graphs')) || {};
   selectedProject: any;
   dialog: boolean = false;
-  currentRow;
   demo_list;
   fileOptions2: IFileOptions = {
     multiple: false,
@@ -202,6 +197,7 @@ export class ManagementComponent implements OnInit {
   openproject_path: any;
   folderList: any;
   msgs: { severity: string; content: any; }[];
+  content: TemplateRef<any>;
 
   constructor(
     private dialogService: DialogService,
@@ -231,11 +227,10 @@ export class ManagementComponent implements OnInit {
   }
 
   handleFileSelect(evt) {
-    var files = evt.target.files;
-    var file = files[0];
-
+    let files = evt.target.files;
+    let file = files[0];
     if (files && file) {
-      var reader = new FileReader();
+      let reader = new FileReader();
 
       reader.onload = this._handleReaderLoaded.bind(this);
 
@@ -244,10 +239,9 @@ export class ManagementComponent implements OnInit {
   }
 
   _handleReaderLoaded(readerEvt) {
-    var binaryString = readerEvt.target.result;
+    let binaryString = readerEvt.target.result;
     this.base64textString = btoa(binaryString);
   }
-
 
   handleChange(value) {
     this.jsonSrc = value;
@@ -318,11 +312,10 @@ export class ManagementComponent implements OnInit {
     if (e.rowIndex === 0) {
       let position = this.openproject_path.lastIndexOf("/");
       this.openproject_path = this.openproject_path.substring(0, position);
-      this.searchDirectory(this.openproject_path);
     } else {
       this.openproject_path = this.openproject_path + "/" + e.rowItem.folder;
-      this.searchDirectory(this.openproject_path);
     }
+    this.searchDirectory(this.openproject_path);
   }
 
   onPathSelect(e) {
@@ -347,12 +340,10 @@ export class ManagementComponent implements OnInit {
         guide: this.guide
       },
     });
+    return results;
   }
 
   radioValueChange(val) {
-  }
-
-  radioValueChange1(val) {
     if (val === "Body") {
       this.responseSrc = this.responseBody;
     } else if (val === "Header") {
@@ -362,25 +353,6 @@ export class ManagementComponent implements OnInit {
 
   customUploadEvent() {
     this.singleuploadDrag.upload();
-  }
-
-  deleteUploadedFile(filePath: string) {
-
-  }
-
-  getImgBase64() {
-    var base64 = "";
-    var img = new Image();
-    img.src = "img/test.jpg";
-    img.onload = function () {
-      var canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, img.width, img.height);
-      base64 = canvas.toDataURL("image/png");
-      alert(base64);
-    }
   }
 
   handleSend() {
@@ -399,7 +371,7 @@ export class ManagementComponent implements OnInit {
         this.statusCode = data.body.status;
         this.responseHeader = data.body.headers;
         this.responseBody = data.body.body;
-
+        debugger
         this.responseBody = JSON.stringify(this.responseBody, null, 2);
         this.responseBody = this.responseBody.replace("\\u0000", "");
         this.responseBody = JSON.parse(this.responseBody);
@@ -443,22 +415,6 @@ export class ManagementComponent implements OnInit {
     }];
   }
 
-  getCurrentCreateTaskLists(graphs) {
-    let taskCreateLists = [];
-    for (let key in graphs) {
-      graphs[key].job_id = key;
-      taskCreateLists.push(graphs[key]);
-    };
-    this.taskData.srcData.data = [];
-    taskCreateLists.forEach((item, index) => {
-      let obj = { job_id: '', project: '' };
-      obj.job_id = item.job_id;
-      obj.project = item;
-      this.taskData.srcData.data.push(obj);
-    })
-
-  }
-
   beforeEditEnd = (rowItem, field) => {
     let obj = {
       ischecked: true,
@@ -490,6 +446,7 @@ export class ManagementComponent implements OnInit {
   }
 
   showDebugPanel(content: TemplateRef<any>) {
+
     const results = this.dialogService.open({
       id: 'dialog-debug',
       title: this.i18n.getById('toolBar.debug'),
@@ -500,6 +457,7 @@ export class ManagementComponent implements OnInit {
       onClose: ($event: Event) => {
       }
     });
+    return results;
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
@@ -513,147 +471,10 @@ export class ManagementComponent implements OnInit {
     });
   }
 
-  // 查询任务状态
-  onSearch(job_id) {
-    this.searchTask(job_id);
-  }
-
-  // 清空搜索
-  onClear(value) {
-    this.searchValue = '';
-    this.getTaskslists();
-  }
-
-  createTask() {
-    let params;
-    this.checkedList.splice(0, this.checkedList.length);
-    this.checkedList.push(this.selectedProject);
-    if (this.checkedList.length > 0) {
-      this.checkedList.forEach((item) => {
-        // doesnot exist the same name
-        let res = false;
-        for (let item_displayed of this.tableData.srcData.data) {
-          if (item_displayed.job_id === item.job_id) {
-            res = true;
-            break;
-          }
-        }
-        if (!res && item) {
-          params = {
-            job_id: item.job_id,
-            graph: {
-              flow: {
-                desc: item.project.desc,
-              },
-              driver: {
-                "skip-default": item.project.skipDefault,
-                dir: item.project.dirs,
-              },
-              profile: {
-                profile: item.project.settingPerfEnable,
-                trace: item.project.settingPerfTraceEnable,
-                session: item.project.settingPerfSessionEnable,
-                dir: item.project.settingPerfDir,
-              },
-              graph: {
-                graphconf: item.project.dotSrc,
-                format: "graphviz",
-              },
-            }
-          }
-
-          params["graph_name"] = params["job_id"];
-          params["job_graph"] = params["graph"];
-          this.createTaskResult(params);
-        } else {
-          if (!this.dialog) {
-            const results = this.dialogService.open({
-              id: 'dialog-service',
-              width: '346px',
-              maxHeight: '600px',
-              title: '',
-              content: this.i18n.getById('message.taskWithTheSameNameHasAlreadyBeenExisted') + ": " + item.job_id,
-              backdropCloseable: true,
-              dialogtype: 'failed',
-              buttons: [
-                {
-                  cssClass: 'primary',
-                  text: 'Ok',
-                  handler: ($event: Event) => {
-                    results.modalInstance.hide();
-                    results.modalInstance.zIndex = -1;
-                    this.dialog = false;
-                  },
-                }
-              ],
-            });
-            this.dialog = true;
-          }
-        }
-      })
-    }
-  }
-
-  // 创建任务调用接口
-  createTaskResult(option) {
-    this.basicService.createTask(option)
-      .subscribe((data: any) => {
-        if (data) {
-          if (data.status === 201) {
-            const results = this.dialogService.open({
-              id: 'task-create-success',
-              width: '346px',
-              maxHeight: '600px',
-              title: '',
-              content: this.i18n.getById("message.taskHasBeenCreatedSuccessfully"),
-              backdropCloseable: true,
-              dialogtype: 'success',
-              buttons: [
-                {
-                  cssClass: 'primary',
-                  text: this.i18n.getById('modal.okButton'),
-                  handler: ($event: Event) => {
-                    results.modalInstance.hide();
-                  },
-                }
-              ],
-            });
-          }
-        }
-        this.getTaskslists();
-      },
-        error => {
-          if (error.error instanceof String) {
-            const results = this.dialogService.open({
-              id: 'task-error',
-              width: '346px',
-              maxHeight: '600px',
-              title: '',
-              content: error.error,
-              backdropCloseable: true,
-              dialogtype: 'failed',
-              buttons: [
-                {
-                  cssClass: 'primary',
-                  text: this.i18n.getById('modal.okButton'),
-                  handler: ($event: Event) => {
-                    results.modalInstance.hide();
-                  },
-                }
-              ],
-            });
-          }
-        },
-        () => {
-          //创建任务成功与否， 都应清空checkedList
-          this.checkedList = [];
-        })
-  }
-
   // 获取任务列表
   public getTaskslists() {
     this.basicService.getTaskLists().subscribe((data: any) => {
-      //
+      debugger
       this.tableData.srcData.data = this.tasksListparse(data.job_list);
     },
       (error) => {
@@ -665,7 +486,6 @@ export class ManagementComponent implements OnInit {
 
   // 删除任务
   deleteData(row: any) {
-    this.currentRow = row;
     const results = this.dialogService.open({
       id: 'management-delete',
       width: '400px',
@@ -694,24 +514,7 @@ export class ManagementComponent implements OnInit {
         },
       },],
     });
-  }
-
-  // 错误码解析
-  private errorParse(option) {
-    switch (option.error_code) {
-      case 'MODELBOX_001':
-        return ErrorCode.MODELBOX_001;
-      case 'MODELBOX_002':
-        return ErrorCode.MODELBOX_002;
-      case 'MODELBOX_003':
-        return ErrorCode.MODELBOX_003;
-      case 'MODELBOX_004':
-        return ErrorCode.MODELBOX_004;
-      case 'MODELBOX_005':
-        return ErrorCode.MODELBOX_005;
-      case 'MODELBOX_006':
-        return ErrorCode.MODELBOX_006;
-    }
+    return results;
   }
 
   // 任务列表数据处理
@@ -741,7 +544,6 @@ export class ManagementComponent implements OnInit {
 
   // 删除任务
   public deleteTask(option) {
-
     this.basicService.deleteTask(option.job_id)
       .subscribe(data => {
         let obj = {};
@@ -791,33 +593,5 @@ export class ManagementComponent implements OnInit {
           this.getTaskslists();
         }
       )
-  }
-
-  // 搜索任务状态
-  private searchTask(option) {
-    this.basicService.searchTask(option)
-      .subscribe(data => {
-        this.tableData.srcData.data = this.tasksListparse(data.job_list);
-      },
-        error => {
-          const results = this.dialogService.open({
-            id: 'task-query-fail',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById('management.failToQueryTask'),
-            backdropCloseable: true,
-            dialogtype: 'error',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: this.i18n.getById('modal.okButton'),
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                },
-              }
-            ],
-          });
-        })
   }
 }

@@ -13,7 +13,7 @@ declare const require: any
 })
 export class ToolBarSolutionComponent implements OnInit {
 
-  @ViewChild('selectDemo') selectDemo: TemplateRef<any>;
+  @ViewChild("selectDemo", { static: true }) selectDemo: TemplateRef<any>;
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -79,10 +79,6 @@ export class ToolBarSolutionComponent implements OnInit {
 
   handleZoomResetButtonClick = event => {
     this.onZoomResetButtonClick && this.onZoomResetButtonClick();
-  };
-
-  handleConfirmNameChange = (event, src, rename) => {
-    this.onConfirmNameChange && this.onConfirmNameChange(event, src, rename);
   };
 
   handleNewButtonClick = event => {
@@ -163,6 +159,7 @@ export class ToolBarSolutionComponent implements OnInit {
       },
       buttons: [],
     });
+    return this.selectDemoDialog;
   }
 
   selectSolution(selectedName) {

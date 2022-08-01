@@ -60,52 +60,6 @@
   </d-data-table>
 </div>
 
-<ng-template #createTaskModal let-context='context'>
-  <d-content>
-    <d-data-table 
-      [fixHeader]="true" 
-      [containFixHeaderHeight]="true" 
-      [scrollable]="true" 
-      [headerBg]="true"
-      [colDraggable]="true" 
-      [dataSource]="taskData.srcData.data" 
-      [tableWidthConfig]="tableWidthConfig">
-      <thead dTableHead>
-        <tr dTableRow>
-          <th 
-            dHeadCell 
-            *ngFor="let colOption of taskData.columns">
-            {{ colOption.header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody dTableBody>
-        <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
-          <tr 
-            dTableRow 
-            [ngClass]="{ 'table-row-selected': rowItem.$checked }">
-            <td 
-              dTableCell 
-              *ngFor="let colOption of taskData.columns">
-              <d-checkbox 
-                *ngIf="colOption.field === 'checked'" 
-                [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)" 
-                [ngModel]="rowItem.checked">
-              </d-checkbox>
-              <div 
-                *ngIf="colOption.field === 'name'" 
-                class="edit-padding-fix">
-                {{ rowItem.job_id }}
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </tbody>
-    </d-data-table>
-  </d-content>
-</ng-template>
-
 <ng-template #debug id="debug">
   <d-layout class="basic-usage">
     <d-tabs [type]="'tabs'" [(activeTab)]="tab1acticeID">
@@ -179,7 +133,6 @@
                     [name]="'optionContent'" 
                     [values]="values"
                     [(ngModel)]="choose" 
-                    (ngModelChange)="radioValueChange($event)" 
                     [direction]="'row'">
                   </d-radio-group>
                 </div>
@@ -318,7 +271,7 @@
                         [name]="'optionContent'" 
                         [values]="values1"
                         [(ngModel)]="choose1" 
-                        (ngModelChange)="radioValueChange1($event)" 
+                        (ngModelChange)="radioValueChange($event)" 
                         [direction]="'row'">
                       </d-radio-group>
                     </div>
