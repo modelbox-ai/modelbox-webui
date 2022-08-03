@@ -371,7 +371,6 @@ export class ManagementComponent implements OnInit {
         this.statusCode = data.body.status;
         this.responseHeader = data.body.headers;
         this.responseBody = data.body.body;
-        debugger
         this.responseBody = JSON.stringify(this.responseBody, null, 2);
         this.responseBody = this.responseBody.replace("\\u0000", "");
         this.responseBody = JSON.parse(this.responseBody);
@@ -474,7 +473,6 @@ export class ManagementComponent implements OnInit {
   // 获取任务列表
   public getTaskslists() {
     this.basicService.getTaskLists().subscribe((data: any) => {
-      debugger
       this.tableData.srcData.data = this.tasksListparse(data.job_list);
     },
       (error) => {

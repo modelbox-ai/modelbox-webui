@@ -290,6 +290,8 @@ export class MainComponent {
     }
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
+        //关闭项目
+        this.toolBar.clearCache();
         this.initCurrentProject();
         this.project_name = param.name;
         //after created successfully
@@ -998,7 +1000,7 @@ export class MainComponent {
               results.modalInstance.hide();
               results.modalInstance.zIndex = -1;
 
-              let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.name === this.toolBar.selectedName);
+              let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.checked === true);
               this.dotSrc = chosenGraph[0]?.dotSrc;
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
               this.saveCurrentProject();

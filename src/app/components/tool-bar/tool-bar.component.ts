@@ -300,7 +300,7 @@ export class ToolBarComponent {
 
   optionsInOut = ['input', 'output'];
   optionsdata_type = ['uint8', 'int', 'int64', 'float', 'float64', 'long', 'double']; //flowunit type
-  optionsdevice = ['cpu', 'cuda'];
+  optionsdevice = ['cpu', 'cuda', 'ascend'];
   optionsdevicePython = ['cpu'];
   optionsdeviceYolo = ['cpu'];
   flowunitGroupOptions = ['generic', 'video', 'inference'];
@@ -474,49 +474,6 @@ export class ToolBarComponent {
   graphList: any;
 
   options: any;
-
-  value1: Array<string | number>[] = [];
-
-  onChanges(value: any) {
-    this.formDataCreateFlowunit['port_infos'] = [];
-    this.formDataCreateFlowunit['device'] = value[1]?.type;
-    let group = value[1]['group']?.toLowerCase();
-    if (this.flowunitGroupOptions.indexOf(group) > -1) {
-      this.formDataCreateFlowunit['group-type'] = group;
-    }
-    if (value[1]['inputports'].length > 0) {
-      value[1]['inputports'].forEach(element => {
-        let obj = {};
-        if (element['name']) {
-          obj['port_name'] = element['name'];
-        }
-        obj['port_type'] = "input";
-        if (element['type']) {
-          obj['device'] = element['device'];
-        } else {
-          obj['device'] = "cpu";
-        }
-        this.formDataCreateFlowunit['port_infos'].push(obj);
-      });
-    }
-
-    if (value[1]['outputports'].length > 0) {
-      value[1]['outputports'].forEach(element => {
-        let obj = {};
-        if (element['name']) {
-          obj['port_name'] = element['name'];
-        }
-        obj['port_type'] = "output";
-        if (element['type']) {
-          obj['device'] = element['device'];
-        } else {
-          obj['device'] = "cpu";
-        }
-        this.formDataCreateFlowunit['port_infos'].push(obj);
-      });
-    }
-  }
-
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
