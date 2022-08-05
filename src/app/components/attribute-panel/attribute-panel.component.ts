@@ -232,6 +232,52 @@ export class AttributePanelComponent {
           }
         }
       });
+      // 处理 advanced
+      if (this.deviceId) {
+        let num = config.attributes.find((item, index) => {
+          if (item.key === 'deviceId') {
+            return index;
+          }
+        });
+        if (num?.value) {
+          config.attributes[config.attributes.indexOf(num)].value = this.deviceId;
+        } else {
+          config.attributes.push({
+            key: "deviceId",
+            value: this.deviceId
+          });
+        }
+      }
+      if (this.batchSize) {
+        let num = config.attributes.find((item, index) => {
+          if (item.key === 'batchSize') {
+            return index;
+          }
+        });
+        if (num?.value) {
+          config.attributes[config.attributes.indexOf(num)].value = this.batchSize;
+        } else {
+          config.attributes.push({
+            key: "batchSize",
+            value: this.batchSize
+          });
+        }
+      }
+      if (this.queueSize) {
+        let num = config.attributes.find((item, index) => {
+          if (item.key === 'queueSize') {
+            return index;
+          }
+        });
+        if (num?.value) {
+          config.attributes[config.attributes.indexOf(num)].value = this.queueSize;
+        } else {
+          config.attributes.push({
+            key: "queueSize",
+            value: this.queueSize
+          });
+        }
+      }
       this.config.name = this.newName;
       this.onNodeAttributeChange({ ...config, newName: this.newName });
     }
@@ -275,6 +321,35 @@ export class AttributePanelComponent {
     title: this.i18n.getById('attribute.desc'),
     children: [],
   }];
+
+  menu3 = [{
+    title: this.i18n.getById('attribute.advance'),
+    children: [],
+  }];
+
+  portOptions = {
+    columns: [
+      {
+        field: 'fieldName',
+        header: 'Name',
+        fieldType: 'text'
+      },
+      {
+        field: 'type',
+        header: 'Device',
+        fieldType: 'text'
+      },
+      {
+        field: 'port',
+        header: 'Port',
+        fieldType: 'text'
+      }
+    ]
+  };
+
+  deviceId: any;
+  batchSize: any;
+  queueSize: any;
 
   constructor(
     private dataService: DataServiceService,

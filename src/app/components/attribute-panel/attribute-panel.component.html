@@ -29,6 +29,14 @@
         [innerListTemplate]="innerListTemplate2"
         [loadingTemplate]="loadingTemplate">
       </d-accordion>
+      <d-accordion
+        [data]="menu3"
+        class="menu"
+        [accordionType]="'embed'"
+        [menuItemTemplate]="menutemplate"
+        [innerListTemplate]="innerListTemplate3"
+        [loadingTemplate]="loadingTemplate">
+      </d-accordion>
     </d-form-item>
     <d-form-item>
       <div>
@@ -211,9 +219,28 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <div class="content-font" *ngFor="let ip of unit.inputports">
-          {{ip.name}}
-        </div>
+        <d-data-table [dataSource]="unit.inputports" [scrollable]="true">
+          <thead dTableHead>
+            <tr dTableRow>
+              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
+            </tr>
+          </thead>
+          <tbody dTableBody>
+            <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <tr dTableRow>
+                <td dTableCell>
+                  {{ rowItem.name }}
+                </td>
+                <td dTableCell>
+                  {{ rowItem.device_type }}
+                </td>
+                <td dTableCell>
+                  {{ rowItem.port_type }}
+                </td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </d-data-table>
       </d-form-control>
     </d-form-item>
 
@@ -224,9 +251,28 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <div class="content-font" *ngFor="let op of unit.outputports">
-          {{op.name}}
-        </div>
+        <d-data-table [dataSource]="unit.outputports" [scrollable]="true">
+          <thead dTableHead>
+            <tr dTableRow>
+              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
+            </tr>
+          </thead>
+          <tbody dTableBody>
+            <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <tr dTableRow>
+                <td dTableCell>
+                  {{ rowItem.name }}
+                </td>
+                <td dTableCell>
+                  {{ rowItem.device_type }}
+                </td>
+                <td dTableCell>
+                  {{ rowItem.port_type }}
+                </td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </d-data-table>
       </d-form-control>
     </d-form-item>
 
@@ -300,6 +346,77 @@
       <d-form-control>
         <div class="content-font">
           {{unit.virtual ? ('insertPanels.tip.yes' | translate) : ('insertPanels.tip.no' | translate)}}
+        </div>
+      </d-form-control>
+    </d-form-item>
+  </div>
+</ng-template>
+
+<ng-template #innerListTemplate3 let-item="item">
+  <div style="margin:20px">
+    <d-form-item class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          deviceID
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div>
+          <input
+            dTextInput
+            autocomplete="off"
+            class="content-font"
+            style="height:28px;"
+            [name]="'deviceId'"
+            (keyup)="changedValue=true"
+            (blur)="attributeModel.blur()"
+            [required]="true"
+            placeholder="deviceID"
+            [(ngModel)]="deviceId">
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          batch_size
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div>
+          <input
+            dTextInput
+            autocomplete="off"
+            class="content-font"
+            style="height:28px;"
+            [name]="'batchSize'"
+            (keyup)="changedValue=true"
+            (blur)="attributeModel.blur()"
+            [required]="true"
+            placeholder="batch_size"
+            [(ngModel)]="batchSize">
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item class="form-item">
+      <d-form-label>
+        <span class="title-label">
+          queue_size
+        </span>
+      </d-form-label>
+      <d-form-control>
+        <div>
+          <input
+            dTextInput
+            autocomplete="off"
+            class="content-font"
+            style="height:28px;"
+            [name]="'queueSize'"
+            (keyup)="changedValue=true"
+            (blur)="attributeModel.blur()"
+            [required]="true"
+            placeholder="queue_size"
+            [(ngModel)]="queueSize">
         </div>
       </d-form-control>
     </d-form-item>

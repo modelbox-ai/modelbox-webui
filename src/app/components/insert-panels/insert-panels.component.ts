@@ -54,6 +54,7 @@ export class InsertPanelsComponent implements OnInit {
   @Input() dirs: any;
   @Input() projectPath: any;
   @Output() refreshEmmiter = new EventEmitter();
+  @Output() deviceTypeEmmiter = new EventEmitter();
   imgSvg = "../../../assets/img.svg";
   videoSvg = "../../../assets/video.svg";
   commonSvg = "../../../assets/common.svg";
@@ -222,13 +223,22 @@ export class InsertPanelsComponent implements OnInit {
     let params = {
       "skip-default": skip,
       dir: dirs,
-    }    
+    }
     this.basicService.queryData(params).subscribe((data) => {
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
       if (data.devices == null) {
         return;
       }
+      if (data.devices) {
+        data.devices.forEach(item => {
+          if (this.dataService.deviceTypes.indexOf(item.type) === -1) {
+            this.dataService.deviceTypes.push(item.type.toLowerCase());
+          }
+        });
+        this.deviceTypeEmmiter.emit(this.dataService.deviceTypes);
+      }
+
       if (this.dataService.virtualFlowunits.length > 0) {
         data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
       }
