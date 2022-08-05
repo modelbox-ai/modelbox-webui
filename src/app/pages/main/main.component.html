@@ -19,7 +19,8 @@
               [onNodeShapeDragEnd]="handleNodeShapeDragEnd"
               [regFlowUnitPanel]="regFlowUnitPanel"
               [dirs]="dirs"
-              (refreshEmmiter)="refreshFlowunit($event)">
+              (refreshEmmiter)="refreshFlowunit($event)"
+              (deviceTypeEmmiter)="updateDeviceType($event)">
             </app-insert-panels>
           </as-split-area>
         </as-split>

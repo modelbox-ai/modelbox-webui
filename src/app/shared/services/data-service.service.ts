@@ -27,6 +27,7 @@ export class DataServiceService {
   warningMessage = false;
   public virtualFlowunits = [];
   public msgstack = [];
+  public deviceTypes = [];
   data: any;
 
 
@@ -250,5 +251,21 @@ export class DataServiceService {
       newGraph = graph.slice(0, pos) + "\n\tnode [shape=Mrecord]" + graph.slice(pos);
     }
     return newGraph;
+  }
+
+  setPersistentState(obj) {
+    if (obj !== null) {
+      Object.keys(obj).forEach(key => {
+        let value = obj[key];
+        this[key] = value;
+        if (typeof value === 'boolean') {
+          value = value.toString;
+        } else if (typeof value === 'object') {
+          value = JSON.stringify(value);
+        }
+        localStorage.setItem(key, value);
+      });
+    }
+    return obj;
   }
 }

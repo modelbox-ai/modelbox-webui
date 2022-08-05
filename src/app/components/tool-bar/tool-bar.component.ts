@@ -458,6 +458,10 @@ export class ToolBarComponent {
     name: this.i18n.getById('toolBar.saveAsButton'),
     value: 5,
     specialContent: '项目'
+  }, {
+    name: this.i18n.getById('toolBar.sycnGraphButton'),
+    value: 7,
+    specialContent: '项目'
   }];
 
   currentOption2 = "功能单元";
@@ -474,6 +478,7 @@ export class ToolBarComponent {
   graphList: any;
 
   options: any;
+  selectNameIndex: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -584,7 +589,71 @@ export class ToolBarComponent {
       this.saveAllProject();
     } else if (e.value === 6) {
       this.clearCache();
+    } else if (e.value === 7) {
+      this.sycnGraph();
     }
+  }
+
+  sycnGraph() {
+    const current_project = JSON.parse(localStorage.getItem('project'));
+    if (current_project?.flowunit) {
+      this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
+        data => {
+          this.formDataCreateProject.name = data.project_name;
+          this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
+          this.formDataCreateFlowunit["project-path"] = data.project_path;
+
+          //加载功能单元信息
+          //加载图信息
+          if (data.graphs?.length > 1) {
+            //加载指定图
+            if (!this.selectedName) {
+              this.selectedName = this.getGraphNameFromGraph(current_project.graph.dotSrc);
+            }
+            this.currentGraph = data.graphs.find(item => this.selectedName === this.getGraphNameFromGraph(item.graph.graphconf));
+            if (this.currentGraph.length > 1) {
+              if (this.selectNameIndex) {
+                this.currentGraph = this.currentGraph[this.selectNameIndex];
+              } else {
+                this.currentGraph = this.currentGraph[0];
+              }
+            }
+          } else if (data.graphs?.length === 1) {
+            this.currentGraph = data.graphs[0];
+          } else {
+            this.currentGraph = null;
+          }
+
+
+          if (data.graphs && this.currentGraph !== null) {
+            if (this.currentGraph.graph.graphconf) {
+              this.formData.graphName = this.currentGraph.name;
+              this.formData.graphDesc = this.currentGraph.flow?.desc;
+              if (this.formData.graphName == undefined) {
+                this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
+              }
+
+              this.formData.skipDefault = false;
+              if (this.currentGraph.profile) {
+                this.formData.perfEnable = this.currentGraph.profile.profile;
+
+                this.formData.perfTraceEnable = this.currentGraph.profile.trace;
+              }
+              this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
+              this.formData.flowunitPath = this.currentGraph.driver.dir;
+
+              this.projectPathEmmiter.emit(data.project_path);
+              this.flowunitEmmiter.emit(this.formData.flowunitPath);
+              this.project_name = data.project_name;
+              this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
+              this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
+            }
+          }
+        }
+      );
+    }
+
+
   }
 
   clearCache() {
@@ -615,9 +684,15 @@ export class ToolBarComponent {
   langValueChange2(value) {
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
-      this.formDataCreateFlowunit.device = 'cuda';
+      if (this.dataService.deviceTypes.indexOf('cuda') > -1) {
+        this.formDataCreateFlowunit.device = 'cuda';
+        this.portInfo.device = 'cuda';
+      } else {
+        this.formDataCreateFlowunit.device = 'ascend';
+        this.portInfo.device = 'ascend';
+      }
       this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
-      this.portInfo.device = 'cuda';
+
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
@@ -668,7 +743,7 @@ export class ToolBarComponent {
   }
 
   handleValueChangeport_type(e) {
-    
+
     if (e === "output") {
       this.portdeviceAble = true;
       this.portInfo.port_name = "output" + this.out_num;
@@ -697,6 +772,7 @@ export class ToolBarComponent {
     const self = this;
     rowItem.checked = checked;
     this.selectedName = rowItem.name;
+    this.selectNameIndex = rowIndex;
     this.graphSelectTableData = [];
     this.graphSelectTableDataForDisplay.map(function (obj) {
       if (obj != rowItem) {
@@ -1155,7 +1231,16 @@ export class ToolBarComponent {
             this.initFormDataCreateFlowunit();
             this.refreshFlowunit();
             this.msgs = [
-              { severity: 'success', content: data.body.msg }
+              {
+                severity: 'success',
+                content: data.body.msg +
+                  "\n" +
+                  "new flowunit located in \n" +
+                  this.formDataCreateProject.rootpath +
+                  "/" +
+                  this.formDataCreateProject.name +
+                  "/src/flowunit"
+              }
             ];
 
             comp.modalInstance.hide();
@@ -1371,7 +1456,9 @@ export class ToolBarComponent {
     }
     this.removeLabelEmmiter.emit();
     param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
-    param.graph.dirs = param.graph.dirs.split("\n");
+    if (typeof param.graph.dirs === "string") {
+      param.graph.dirs = param.graph.dirs.split("\n");
+    }
     this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
     param = this.createProjectParam(param);
     this.basicService.saveAllProject(param).subscribe((data) => {

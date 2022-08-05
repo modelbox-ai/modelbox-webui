@@ -288,10 +288,21 @@ export class MainComponent {
     if (!this.dataService.pathValidate(param.rootpath)) {
       return;
     }
+    localStorage.clear();
+    sessionStorage.clear();
+    // stop running service
+    this.basicService.getTaskLists().subscribe((data: any) => {
+      if (data.job_list) {
+        data.job_list.map(ele => {
+          this.basicService.deleteTask(ele.job_id).subscribe((res: any) => {
+            location.reload();
+          });
+        });
+      }
+    });
     this.basicService.createProject(param).subscribe((data: any) => {
       if (data.status === 201) {
         //关闭项目
-        this.toolBar.clearCache();
         this.initCurrentProject();
         this.project_name = param.name;
         //after created successfully
@@ -388,7 +399,7 @@ export class MainComponent {
   }
 
   saveCurrentProject() {
-    this.setPersistentState(
+    this.dataService.setPersistentState(
       {
         project: this.getProjectJson()
       });
@@ -396,7 +407,7 @@ export class MainComponent {
 
   saveGraphs() {
     this.saveCurrentProject();
-    this.setPersistentState({
+    this.dataService.setPersistentState({
       graphs: {
         ...this.graphs,
       }
@@ -657,7 +668,7 @@ export class MainComponent {
 
   handleGraphInitialized = () => {
     this.graphInitialized = true;
-    this.setPersistentState({
+    this.dataService.setPersistentState({
       svgString: this.getSvgString(),
     });
   };
@@ -748,22 +759,6 @@ export class MainComponent {
   handleUndoButtonClick = () => {
     this.undo();
   };
-
-  setPersistentState(obj) {
-    if (obj !== null) {
-      Object.keys(obj).forEach(key => {
-        let value = obj[key];
-        this[key] = value;
-        if (typeof value === 'boolean') {
-          value = value.toString;
-        } else if (typeof value === 'object') {
-          value = JSON.stringify(value);
-        }
-        localStorage.setItem(key, value);
-      });
-    }
-    return obj;
-  }
 
   getSvgString() {
     const svg = this.getSvg();
@@ -1071,7 +1066,9 @@ export class MainComponent {
     this.currentComponent = null;
   }
 
-
+  updateDeviceType(e) {
+    this.toolBar.optionsdevice = e;
+  }
 
   handleRunButtonClick = (graphName) => {
     //saveToBrowser
@@ -1194,7 +1191,7 @@ export class MainComponent {
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.graph.flowunitDebugPath,
+          dir: item.graph.flowunitDebugPath.split("\n"),
         },
         profile: {
           profile: item.graph.settingPerfEnable,
