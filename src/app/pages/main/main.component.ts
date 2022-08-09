@@ -18,6 +18,7 @@ import { ToastService } from 'ng-devui/toast';
 import { cloneDeep } from 'lodash';
 import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
 import { GraphComponent } from 'src/app/components/graph/graph.component';
+import { ModalVscodeComponent } from '../../components/modal-vscode/modal-vscode.component';
 
 @Component({
   selector: 'app-main',
@@ -111,6 +112,14 @@ export class MainComponent {
   currentGraph: any;
   msgs: Array<Object> = [];
   typeFlowunit: any;
+  config = {
+    id: 'dialog-service',
+    width: '346px',
+    maxHeight: '600px',
+    title: '请打开Vscode进行开发',
+    content: ModalVscodeComponent,
+    backdropCloseable: true
+  };
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -316,12 +325,40 @@ export class MainComponent {
 
         this.createProjectDialogResults.modalInstance.hide();
         this.createProjectDialogResults.modalInstance.zIndex = -1;
+        // 弹出提示框，要求在vscode中开发
+        this.openDialog();
         return;
       }
     }, error => {
       this.msgs = [
         { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
       ];
+    });
+  }
+
+  openDialog(dialogtype?: string, showAnimation?: boolean) {
+    const results = this.dialogService.open({
+      ...this.config,
+      dialogtype: dialogtype,
+      showAnimation: showAnimation,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: 'Ok',
+          disabled: false,
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        },
+        {
+          id: 'btn-cancel',
+          cssClass: 'common',
+          text: 'Cancel',
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        },
+      ],
     });
   }
 
