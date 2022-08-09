@@ -35,7 +35,6 @@ export class SolutionComponent implements OnInit {
   editorResize: any;
   getSvg: any;
   resetUndoStack: any;
-  resetUndoAtNextTextChange: any;
 
   page = "solution";
 
@@ -107,15 +106,6 @@ export class SolutionComponent implements OnInit {
     this.name = name;
     this.dotSrc = text;
     this.saveCurrentProject();
-
-    if (this.resetUndoAtNextTextChange) {
-      this.resetUndoStack();
-      undoRedoState = {
-        hasUndo: false,
-        hasRedo: false,
-      };
-      this.resetUndoAtNextTextChange = false;
-    }
     this.hasUndo = !!undoRedoState?.hasUndo;
     this.hasRedo = !!undoRedoState?.hasRedo;
   };
@@ -212,10 +202,6 @@ export class SolutionComponent implements OnInit {
   registerNodeShapeClick = (handleNodeShapeClick, context) => {
     this.handleNodeShapeClick = handleNodeShapeClick.bind(context);
   };
-
-  getChildData(e): void {
-    this.dotSrc = e;
-  }
 
   getSvgString() {
     const svg = this.getSvg();
@@ -380,6 +366,7 @@ export class SolutionComponent implements OnInit {
     ]);
     // Start the introduction
     driver.start();
+    return driver;
   }
 
   introduce: any = new Driver({
@@ -407,6 +394,7 @@ export class SolutionComponent implements OnInit {
   handleTextEditorFocus = () => {
     this.setFocus('TextEditor');
   };
+
   setFocus = focusedPane => {
     this.focusedPane = focusedPane;
   };
@@ -420,9 +408,6 @@ export class SolutionComponent implements OnInit {
       this.focusedPane = newFocusedPane;
     }
   };
-  handleDotSrcChange(e) {
-    this.dotSrc = e;
-  }
 
   handleRunButtonClick = () => {
     //saveToBrowser

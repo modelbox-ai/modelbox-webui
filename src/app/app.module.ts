@@ -101,7 +101,7 @@ export function appInitializerFactory(
     NgbAlertModule
   ],
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   providers: [
     {
