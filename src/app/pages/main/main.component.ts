@@ -116,7 +116,7 @@ export class MainComponent {
     id: 'dialog-service',
     width: '346px',
     maxHeight: '600px',
-    title: '请打开Vscode进行开发',
+    title: '请打开IDE进行开发',
     content: ModalVscodeComponent,
     backdropCloseable: true
   };
@@ -223,6 +223,7 @@ export class MainComponent {
       this.project_name = project.name;
       this.project_desc = project.project_desc;
       this.path = project.rootpath;
+      debugger
       this.dotSrc = project.graph.dotSrc;
       this.graphName = this.getGraphNameFromGraph(this.dotSrc);
       if (typeof this.dotSrc === 'undefined') {
@@ -543,8 +544,6 @@ export class MainComponent {
   }
 
   updateIsOpen(e) {
-    this.toolBar.isOpen = false;
-    this.toolBar.isOpen2 = false;
     this.toolBar.closeInput();
   }
 
@@ -830,8 +829,6 @@ export class MainComponent {
   }
 
   showCreateProjectDialog(content: TemplateRef<any>) {
-    this.toolBar.isOpen = false;
-    this.toolBar.isOpen2 = false;
     this.basicService.queryRootPath().subscribe((data) => {
       let path;
       if (data['user'] === "modelbox") {
@@ -875,8 +872,6 @@ export class MainComponent {
   }
 
   showOpenProjectButtonDialog(content: TemplateRef<any>) {
-    this.toolBar.isOpen = false;
-    this.toolBar.isOpen2 = false;
     this.toolBar.searchDirectory(this.toolBar.openproject_path);
     this.openProjectDialogResults = this.dialogService.open({
       id: 'openProject',
@@ -909,8 +904,6 @@ export class MainComponent {
   }
 
   showCreateFlowunitDialog(content: TemplateRef<any>) {
-    this.toolBar.isOpen = false;
-    this.toolBar.isOpen2 = false;
     this.transformNodeShapreCategories();
     this.createFlowunitDialogResults = this.dialogService.open({
       id: 'createFlowunit',

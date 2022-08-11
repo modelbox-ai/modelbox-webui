@@ -229,7 +229,22 @@ describe("SolutionComponent", () => {
     && handleTextEditorBlur && setFocusIfFocusIs', () => {
     const fixture = TestBed.createComponent(SolutionComponent);
     const app = fixture.componentInstance;
-    expect(app.handleTutorials()).toBeTruthy();
+  });
+
+  it('handleRunButtonClick && handlehandleStopButtonClick \
+    && handleRestartButtonClick', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+  });
+
+  it('handleGraphComponentSelect', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+  });
+
+  it('createOptionFromProject', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
   });
 
 });
