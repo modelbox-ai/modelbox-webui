@@ -422,8 +422,6 @@ export class ToolBarComponent {
 
   in_num = 1;
   out_num = 1;
-  isOpen = false;
-  isOpen2 = false;
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
@@ -479,6 +477,7 @@ export class ToolBarComponent {
 
   options: any;
   selectNameIndex: any;
+  data: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -507,7 +506,6 @@ export class ToolBarComponent {
 
       this.formData.flowunitReleasePath = current_project.graph.flowunitReleasePath;
     }
-
     this.loadGraphData("toolBar.Init");
     this.loadSolutionData();
     if (this.formDataCreateProject.name) {
@@ -566,10 +564,6 @@ export class ToolBarComponent {
         });
     }
 
-  }
-
-  getFormDataCreateProject() {
-    return this.formDataCreateProject;
   }
 
   closeInput() {
@@ -720,26 +714,6 @@ export class ToolBarComponent {
   deviceValueChange(value) {
     this.formDataCreateFlowunit.device = value;
     this.portInfo.device = value;
-  }
-
-  onToggle(event) {
-    if (this.isOpen != event) {
-      this.isOpen = event;
-    }
-  }
-
-  toggleIsOpen() {
-    this.isOpen = !this.isOpen;
-  }
-
-  onToggle2(event) {
-    if (this.isOpen2 != event) {
-      this.isOpen2 = event;
-    }
-  }
-
-  toggleIsOpen2() {
-    this.isOpen2 = !this.isOpen2;
   }
 
   handleValueChangeport_type(e) {
@@ -1419,11 +1393,8 @@ export class ToolBarComponent {
   }
 
   refreshFlowunit() {
-    this.isOpen = false;
-    this.isOpen2 = false;
     this.refreshEmmiter.emit("refresh");
   }
-
 
   formatDotSrc(text) {
     let tmp = text.split("\n");
@@ -1446,8 +1417,6 @@ export class ToolBarComponent {
   }
 
   showSaveAsDialog() {
-    this.isOpen = false;
-    this.isOpen2 = false;
     this.loadGraphData();
     let param = JSON.parse(localStorage.getItem('project'));
     let ret = this.infoCreateProjectFirst();
