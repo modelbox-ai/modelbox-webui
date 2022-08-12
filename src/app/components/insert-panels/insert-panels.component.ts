@@ -232,7 +232,7 @@ export class InsertPanelsComponent implements OnInit {
       }
       if (data.devices) {
         data.devices.forEach(item => {
-          if (this.dataService.deviceTypes.indexOf(item.type) === -1) {
+          if (this.dataService.deviceTypes.indexOf(item.type.toLowerCase()) === -1) {
             this.dataService.deviceTypes.push(item.type.toLowerCase());
           }
         });

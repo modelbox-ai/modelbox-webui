@@ -11,6 +11,7 @@ import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-co
 import { Observable } from "rxjs";
 import { openProject, project, solutions } from "./mock-data";
 import { ToolBarComponent } from "./tool-bar.component";
+import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -30,7 +31,9 @@ describe("ToolBarComponent", () => {
         }),
 
         HttpClientModule,
-        OverlayContainerModule
+        OverlayContainerModule,
+        BrowserAnimationsModule,
+        NoopAnimationsModule
       ],
       declarations: [
         ToolBarComponent
@@ -79,7 +82,7 @@ describe("ToolBarComponent", () => {
     app.loadGraphData();
     spyOn(basicService, "openProject").and.returnValue(
       new Observable(subscriber => {
-        subscriber.next(project);
+        subscriber.next(openProject);
         expect(app.graphList).toBeTruthy();
         expect(app.graphSelectTableDataForDisplay).toBeTruthy();
       }));
@@ -94,7 +97,7 @@ describe("ToolBarComponent", () => {
     app.loadGraphData("toolBar.Init");
     spyOn(basicService, "openProject").and.returnValue(
       new Observable(subscriber => {
-        subscriber.next(project);
+        subscriber.next(openProject);
         expect(app.graphList).toBeTruthy();
         expect(app.graphSelectTableDataForDisplay).toBeTruthy();
       }));
@@ -146,13 +149,117 @@ describe("ToolBarComponent", () => {
         ', () => {
     const fixture = TestBed.createComponent(ToolBarComponent);
     const app = fixture.componentInstance;
-    let basicService = TestBed.inject(BasicServiceService);
-    // localStorage.setItem("project", JSON.stringify(project));
-    spyOn(basicService, 'queryRootPath');
+    expect(app.createProjectTemplate).toBeTruthy();
     let e = { value: 1 }
+    app.showCreateProjectDialog = function (e) { };
     app.handleProjectDropDown(e);
-    expect(basicService.queryRootPath).toHaveBeenCalled();
+  });
+
+  it('handleProjectDropDown: \
+    showOpenProjectButtonDialog, \
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.openProjectTemplate).toBeTruthy();
+    let e = { value: 2 }
+    app.showOpenProjectButtonDialog = function (e) { };
+    app.handleProjectDropDown(e);
+  });
+
+  it('handleProjectDropDown: \
+    showGraphSelectDialog, \
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.graphSelectTemplate).toBeTruthy();
+    let e = { value: 4 }
+    app.showGraphSelectDialog = function (e) { };
+    app.handleProjectDropDown(e);
+  });
+
+  it('handleProjectDropDown: \
+    handleNewGraphClick, \
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.graphSelectTemplate).toBeTruthy();
+    let e = { value: 3 }
+
+    app.handleProjectDropDown(e);
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('handleProjectDropDown: \
+    handleNewGraphClick - clickOnOk \
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.graphSelectTemplate).toBeTruthy();
+    let res = app.handleNewGraphClick(null);
+    app.onNewGraphClickOk(res);
+    expect(app.formData.graphName).toBeFalsy();
 
   });
 
+  it('handleProjectDropDown: \
+  saveAllProject - have not created project \
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    localStorage.clear();
+    localStorage.setItem("project", JSON.stringify(project));
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(basicService, "openProject").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(openProject);
+      }));
+
+    let e = { value: 5 }
+    app.formDataCreateProject.name = "";
+
+    spyOn(basicService, "saveAllProject");
+    app.dotSrcWithoutLabel = "";
+    app.handleProjectDropDown(e);
+    expect(app.dotSrcWithoutLabel).toBeFalsy();
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('handleProjectDropDown: \
+  saveAllProject\
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    spyOn(localStorage.__proto__, 'getItem').and.returnValue(JSON.stringify(project));
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(basicService, "openProject").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(openProject);
+      }));
+
+    let e = { value: 5 }
+    app.formDataCreateProject.name = "test";
+    app.dotSrcWithoutLabel = "";
+    spyOn(basicService, "saveAllProject").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({ status: 201 });
+      }));;
+    app.handleProjectDropDown(e);
+    expect(basicService.saveAllProject).toHaveBeenCalled();
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
 });

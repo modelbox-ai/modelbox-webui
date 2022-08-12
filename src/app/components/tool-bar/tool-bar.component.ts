@@ -42,11 +42,11 @@ export class ToolBarComponent {
   @ViewChild('project') projectRef: ElementRef;
   @ViewChild('flowunit') flowunitRef: ElementRef;
   @ViewChild('graph') graphRef: ElementRef;
-  @ViewChild('createProject') createProjectTemplate: TemplateRef<any>;
-  @ViewChild('openProject') openProjectTemplate: TemplateRef<any>;
-  @ViewChild('createFlowunit') createFlowunitTemplate: TemplateRef<any>;
-  @ViewChild('graphSelect') graphSelectTemplate: TemplateRef<any>;
-  @ViewChild('newGraph') newGraphTemplate: TemplateRef<any>;
+  @ViewChild('createProject', { static: true }) createProjectTemplate: TemplateRef<any>;
+  @ViewChild('openProject', { static: true }) openProjectTemplate: TemplateRef<any>;
+  @ViewChild('createFlowunit', { static: true }) createFlowunitTemplate: TemplateRef<any>;
+  @ViewChild('graphSelect', { static: true }) graphSelectTemplate: TemplateRef<any>;
+  @ViewChild('newGraph', { static: true }) newGraphTemplate: TemplateRef<any>;
 
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
@@ -1016,26 +1016,7 @@ export class ToolBarComponent {
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
-          let graphName = this.formData.graphName;
-          this.formData.graphName = '';
-          this.formData.graphDesc = '';
-          this.formData.radioValue = "N";
-          this.formData.skipDefault = false;
-          this.formData.perfEnable = false;
-          this.formData.perfTraceEnable = false;
-          this.formData.perfSessionEnable = false;
-          this.formData.perfPath = this.dataService.defaultPerfDir;
-
-          this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
-          results.modalInstance.hide();
-          results.modalInstance.zIndex = -1;
-          this.msgs = [
-            { severity: 'success', content: this.i18n.getById('graph.creation') }
-          ];
-          setTimeout(() => {
-            this.saveSettingEmmiter.emit(graphName);
-          }, 0)
-
+          this.onNewGraphClickOk(results);
         },
       },
       {
@@ -1046,10 +1027,31 @@ export class ToolBarComponent {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
         },
-      },],
-      onClose: ($event: Event) => {
-      }
+      },]
     });
+    return results;
+  }
+
+  onNewGraphClickOk(results) {
+    let graphName = this.formData.graphName;
+    this.formData.graphName = '';
+    this.formData.graphDesc = '';
+    this.formData.radioValue = "N";
+    this.formData.skipDefault = false;
+    this.formData.perfEnable = false;
+    this.formData.perfTraceEnable = false;
+    this.formData.perfSessionEnable = false;
+    this.formData.perfPath = this.dataService.defaultPerfDir;
+
+    this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+    results.modalInstance.hide();
+    results.modalInstance.zIndex = -1;
+    this.msgs = [
+      { severity: 'success', content: this.i18n.getById('graph.creation') }
+    ];
+    setTimeout(() => {
+      this.saveSettingEmmiter.emit(graphName);
+    }, 0)
   }
 
   initFormDataCreateFlowunit() {
