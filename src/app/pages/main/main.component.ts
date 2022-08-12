@@ -223,7 +223,7 @@ export class MainComponent {
       this.project_name = project.name;
       this.project_desc = project.project_desc;
       this.path = project.rootpath;
-      debugger
+      
       this.dotSrc = project.graph.dotSrc;
       this.graphName = this.getGraphNameFromGraph(this.dotSrc);
       if (typeof this.dotSrc === 'undefined') {
