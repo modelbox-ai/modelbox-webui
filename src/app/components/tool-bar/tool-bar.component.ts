@@ -128,6 +128,7 @@ export class ToolBarComponent {
   path: string = this.dataService.defaultSearchPath;
   template: string = "empty";
   optionSolutionList: any = [];
+  placeholderModel = "model.pb";
   blank: any = {
     checked: false,
     desc: "",

@@ -1098,6 +1098,8 @@ export class MainComponent {
 
   updateDeviceType(e) {
     this.toolBar.optionsdevice = e;
+    debugger
+    this.toolBar.placeholderModel = e;
   }
 
   handleRunButtonClick = (graphName) => {
