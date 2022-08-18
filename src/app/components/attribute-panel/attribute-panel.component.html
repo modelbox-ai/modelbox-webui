@@ -219,18 +219,11 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.inputports" [scrollable]="true">
-          <thead dTableHead>
-            <tr dTableRow>
-              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
-            </tr>
-          </thead>
+        <d-data-table [dataSource]="unit.inputports" [scrollable]="true" [borderType]="'borderless'">
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
-                <td dTableCell>
-                  {{ rowItem.name }}
-                </td>
                 <td dTableCell>
                   {{ rowItem.device_type }}
                 </td>
@@ -251,18 +244,11 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.outputports" [scrollable]="true">
-          <thead dTableHead>
-            <tr dTableRow>
-              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
-            </tr>
-          </thead>
+        <d-data-table [dataSource]="unit.outputports" [scrollable]="true" [borderType]="'borderless'">
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
-                <td dTableCell>
-                  {{ rowItem.name }}
-                </td>
                 <td dTableCell>
                   {{ rowItem.device_type }}
                 </td>

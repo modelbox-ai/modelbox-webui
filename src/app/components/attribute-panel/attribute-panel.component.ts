@@ -295,19 +295,19 @@ export class AttributePanelComponent {
 
   portOptions = {
     columns: [
-      {
-        field: 'fieldName',
-        header: 'Name',
-        fieldType: 'text'
-      },
+      // {
+      //   field: 'fieldName',
+      //   header: 'Name',
+      //   fieldType: 'text'
+      // },
       {
         field: 'type',
-        header: 'Device',
+        // header: 'Device',
         fieldType: 'text'
       },
       {
         field: 'port',
-        header: 'Port',
+        // header: 'Port',
         fieldType: 'text'
       }
     ]
