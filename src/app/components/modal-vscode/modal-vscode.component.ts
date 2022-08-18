@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-modal-vscode',
@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./modal-vscode.component.less']
 })
 export class ModalVscodeComponent implements OnInit {
+  @Input() projectPath: "";
+  parent: HTMLElement;
+  @Input() data: any;
 
-  constructor() { }
+  constructor(private elr: ElementRef) {
 
-  ngOnInit(): void {
+  }
+
+  ngOnInit() {
+    this.parent = this.elr.nativeElement.parentElement;
+  }
+
+  close(event) {
+    this.data.onClose(event);
   }
 
 }

@@ -111,11 +111,18 @@
     </div>
 
     <div class="tool-bar-mid ellipsis project-name">
-            {{formDataCreateProject.name}}
+        {{'toolBar.project.name' | translate}}
+        {{formDataCreateProject.name}}
     </div>
-    <div class="tool-bar-mid ellipsis graph-name">
-            {{'toolBar.graph.name' | translate}}
-            {{formData.graphName}}
+
+    <div class="tool-bar-mid ellipsis project-name">
+        {{'toolBar.path' | translate}}
+        {{formDataCreateProject.rootpath + "/" + formDataCreateProject.name}}
+    </div>
+
+    <div class="tool-bar-mid ellipsis project-name">
+        {{'toolBar.graph.name' | translate}}
+        {{formData.graphName}}
     </div>
 
     <div class="tool-bar-right">
@@ -156,10 +163,12 @@
         </button>
     </div>
 </div>
+
 <ng-template #titleTemplate>
     <h1>{{formDataCreateProject.name}}</h1>
     <h4>{{'toolBar.path.name' | translate}}{{formDataCreateProject.rootpath}}</h4>
 </ng-template>
+
 <ng-template #newGraph>
     <d-layout class="basic-usage">
         <d-layout 
@@ -183,6 +192,7 @@
         </d-layout>
     </d-layout>
 </ng-template>
+
 <ng-template #createProject id="createProject">
     <d-layout class="basic-usage">
         <form 
@@ -438,7 +448,7 @@
                     <input 
                         dTextInput 
                         name="model" 
-                        placeholder="model.pb" 
+                        [(placeholder)]="placeholderModel" 
                         [(ngModel)]="formDataCreateFlowunit.model" />
                 </d-form-control>
             </d-form-item>
@@ -457,140 +467,137 @@
                 </d-form-control>
             </d-form-item>
 
-            <d-form-item 
-                style="margin-bottom: 0 !important;" 
-                *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
-                <d-form-label></d-form-label>
-                <d-form-control>
-                    <div class="flex-space-between">
-                        <div class="label-name">
-                            {{'toolBar.modal.inputOutput' | translate}}
-                        </div>
-                        <div class="label-name">
-                            {{'toolBar.modal.port_name' | translate}}
-                        </div>
-                        <div *ngIf="formDataCreateFlowunit.lang === 'inference'" class="label-name">
-                            {{'toolBar.modal.data_type' | translate}}
-                        </div>
-                        <div class="label-name">
-                            {{'toolBar.modal.device' | translate}}
-                        </div>
-                        <div class="label-name">
-
-                        </div>
-                    </div>
-                </d-form-control>
-            </d-form-item>
-
-            <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
-                <d-form-label [required]="true">
-                    {{'toolBar.modal.portOption' | translate}}
-                </d-form-label>
-                <d-form-control>
-                    <div class="flex-space-between">
-                        <div style="width:100px">
-                            <d-select 
-                                [appendToBody]=" true" 
-                                [ngModelOptions]="{ standalone: true }"
-                                [appendToBodyDirections]=" ['centerDown', 'centerUp' ]" 
-                                [(ngModel)]="portInfo.port_type"
-                                [placeholder]="'toolBar.modal.inputOutput' | translate" 
-                                [options]="optionsInOut"
-                                (valueChange)="handleValueChangeport_type($event)">
-                            </d-select>
-                        </div>
-
-                        <div style="width:100px">
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                required 
-                                [(ngModel)]="portInfo.port_name"
-                                placeholder="port name" 
-                                (ngModelChange)="onPortNameChange($event)">
-                        </div>
-
-                        <div 
-                            style="width:100px" 
-                            *ngIf="formDataCreateFlowunit.lang === 'inference'">
-                            <d-select 
-                                [appendToBody]="true" 
-                                [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [(ngModel)]="portInfo.data_type" 
-                                [ngModelOptions]="{ standalone: true }"
-                                [filterKey]="'id'" 
-                                [placeholder]="'toolBar.modal.data_type' | translate"
-                                [options]="optionsdata_type" 
-                                [isSearch]="true">
-                                <ng-template let-option="option">
-                                    {{ option }}
-                                </ng-template>
-                            </d-select>
-                        </div>
-
-                        <div style="width:100px">
-                            <d-select 
-                                [appendToBody]="true" 
-                                [appendToBodyDirections]="['centerDown', 'centerUp']"
-                                [disabled]="portdeviceAble" 
-                                [(ngModel)]="portInfo.device"
-                                [ngModelOptions]="{ standalone: true }"
-                                [placeholder]="'toolBar.modal.device' | translate" 
-                                [options]="optionsdevice">
-                            </d-select>
-                        </div>
-
-                        <button class="tool-bar-button" (click)="handleAddPortInfoClick()">
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            {{'toolBar.modal.add' | translate}}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                        </button>
-                    </div>
-                </d-form-control>
-            </d-form-item>
-
-            <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
-                <d-form-control>
-                    <d-data-table [dataSource]="formDataCreateFlowunit.port_infos" [scrollable]="true"
-                        maxHeight="200px">
-                        <thead dTableHead>
-                            <tr dTableRow *ngIf="formDataCreateFlowunit.lang !== 'inference'">
-                                <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">
-                                    {{ colOption.header }}
-                                </th>
-                            </tr>
-                            <tr dTableRow *ngIf="formDataCreateFlowunit.lang === 'inference'">
-                                <th dHeadCell *ngFor="let colOption of portHeaderFullOptions.columns">
-                                    {{ colOption.header }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody dTableBody>
-                            <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
-                                <tr dTableRow>
-                                    <td dTableCell>
-                                        {{rowItem.port_type}}
+            <d-form-item>
+                <div 
+                    style="margin-bottom: 0 !important;" 
+                    *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
+                    <div>
+                        <d-data-table
+                            [dataSource]="formDataCreateFlowunit.port_infos"
+                            maxHeight="200px"
+                            [scrollable]="true"
+                            [tableOverflowType]="'overlay'"
+                            >
+                            <thead dTableHead>
+                                <tr dTableRow *ngIf="formDataCreateFlowunit.lang !== 'inference'">
+                                    <th dHeadCell *ngFor="let colOption of portHeaderOptions.columns">
+                                        {{ colOption.header }}
+                                    </th>
+                                </tr>
+                                <tr dTableRow *ngIf="formDataCreateFlowunit.lang === 'inference'">
+                                    <th dHeadCell *ngFor="let colOption of portHeaderFullOptions.columns">
+                                        {{ colOption.header }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody dTableBody>
+                                <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+                                  <tr dTableRow>
+                                    <td 
+                                        dTableCell
+                                        [editable]="true" 
+                                        [editableTip]="editableTipHover"
+                                        [(editing)]="rowItem['portTypeEdit']"
+                                        [field]="'port_type'">
+                                        <span *ngIf="!rowItem['portTypeEdit']">{{ rowItem?.port_type }}</span>
+                                        <div *ngIf="rowItem['portTypeEdit']" class="customized-editor edit-padding-fix">
+                                            <d-select
+                                                [options]="optionsInOut"
+                                                [isSearch]="true"
+                                                [filterKey]="'label'"
+                                                [toggleOnFocus]="true"
+                                                [appendToBody]="true"
+                                                [(ngModel)]="rowItem.port_type"
+                                                (ngModelChange)="onEditEnd(rowItem, 'portTypeEdit')"
+                                                [ngModelOptions]="{standalone: true}"
+                                                >
+                                            </d-select>
+                                        </div>
                                     </td>
-                                    <td dTableCell>
-                                        {{rowItem.port_name}}
+                                    <td 
+                                        dTableCell
+                                        [editable]="true" 
+                                        [editableTip]="editableTipBtn"
+                                        [rowItem]="rowItem" 
+                                        [(editing)]="rowItem['nameEditPortName']"
+                                        >
+                                        <span *ngIf="!rowItem['nameEditPortName']">{{ rowItem?.port_name }}</span>
+                                        <div *ngIf="rowItem['nameEditPortName']" class="edit-padding-fix">
+                                            <input
+                                            class="devui-form-control"
+                                            autofocus
+                                            name="port_name"
+                                            [(ngModel)]="rowItem.port_name"
+                                            />
+                                        </div>
                                     </td>
-                                    <td dTableCell *ngIf="rowItem.data_type">
-                                        {{rowItem.data_type}}
+                                    <td 
+                                        dTableCell 
+                                        *ngIf="rowItem.data_type && formDataCreateFlowunit.lang === 'inference'"
+                                        [editable]="true" 
+                                        [editableTip]="editableTipHover"
+                                        [rowItem]="rowItem" 
+                                        [(editing)]="rowItem['nameEditDataType']"
+                                        >
+                                        <span *ngIf="!rowItem['nameEditDataType']">{{ rowItem?.data_type }}</span>
+                                        <div *ngIf="rowItem['nameEditDataType']" class="customized-editor edit-padding-fix">
+                                            <d-select
+                                                [options]="optionsdata_type"
+                                                [isSearch]="true"
+                                                [filterKey]="'label'"
+                                                [toggleOnFocus]="true"
+                                                [appendToBody]="true"
+                                                [(ngModel)]="rowItem.data_type"
+                                                (ngModelChange)="onEditEnd(rowItem, 'nameEditDataType')"
+                                                [ngModelOptions]="{standalone: true}"
+                                                >
+                                            </d-select>
+                                        </div>
                                     </td>
-                                    <td dTableCell *ngIf="rowItem.device">
-                                        {{rowItem.device}}
+                                    <td 
+                                        dTableCell 
+                                        *ngIf="rowItem.device"
+                                        [editable]="true" 
+                                        [editableTip]="editableTipHover"
+                                        [(editing)]="rowItem['nameEditDevice']"
+                                        [rowItem]="rowItem"
+                                        [field]="'device'"
+                                        >
+                                        <span *ngIf="!rowItem['nameEditDevice']">{{ rowItem?.device }}</span>
+                                        <div *ngIf="rowItem['nameEditDevice']" class="customized-editor edit-padding-fix">
+                                            <d-select
+                                                [options]="optionsdevice"
+                                                [isSearch]="true"
+                                                [filterKey]="'label'"
+                                                [toggleOnFocus]="true"
+                                                [appendToBody]="true"
+                                                [(ngModel)]="rowItem.device"
+                                                (ngModelChange)="onEditEnd(rowItem, 'nameEditDevice')"
+                                                [ngModelOptions]="{standalone: true}"
+                                                >
+                                            </d-select>
+                                        </div>
                                     </td>
-                                    <td dTableCell>
+                                    <td 
+                                        dTableCell
+                                        >
                                         <a class="delete-button" (click)="deletePort(rowItem, rowIndex)">
                                             {{'toolBar.deleteDialogButton' | translate}}
                                         </a>
                                     </td>
-                                </tr>
-                            </ng-template>
-                        </tbody>
-                    </d-data-table>
-                </d-form-control>
+                                  </tr>
+                                </ng-template>
+                            </tbody>
+                        </d-data-table>
+                    </div>
+                    <div>
+                        <button 
+                            style="width:100%; border:1px solid #5e7ce0;"
+                            (click)="addPortLine()">
+                            <i class="icon icon-add"></i>
+                        </button>
+                    </div>
+                </div>
             </d-form-item>
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'inference' && 
@@ -621,9 +628,20 @@
                 </d-form-label>
                 <d-form-control style="height:32px">
                     <d-tabs 
+                        *ngIf="currentDevice === 'cuda'"
                         [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
                         type="slider">
-                        <d-tab *ngFor="let item of types" [id]="item.id">
+                        <d-tab *ngFor="let item of typesCuda" [id]="item.id">
+                            <ng-template dTabTitle>
+                                {{ item.title }}
+                            </ng-template>
+                        </d-tab>
+                    </d-tabs>
+                    <d-tabs 
+                        *ngIf="currentDevice === 'ascend'"
+                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
+                        type="slider">
+                        <d-tab *ngFor="let item of typesAscend" [id]="item.id">
                             <ng-template dTabTitle>
                                 {{ item.title }}
                             </ng-template>
@@ -853,8 +871,6 @@
   </d-content>
 </ng-template>
 
-
-
 <ng-template #solutionSelect let-context='context'>
     <d-content>
         <d-data-table 
@@ -899,6 +915,7 @@
         </d-data-table>
     </d-content>
 </ng-template>
+
 <d-toast 
   [value]="msgs" 
   [style]="{ top: '100px' }">
