@@ -65,7 +65,12 @@ export class DataServiceService {
         version: "",
         type: "",
         inputports: [],
-        outputports: []
+        outputports: [],
+        advance: {
+          deviceId: "",
+          batchSize: "",
+          queueSize: ""
+        }
       };
       obj.descryption = ele.base.description;
       obj.group = this.titleCase(ele.base.group_type);

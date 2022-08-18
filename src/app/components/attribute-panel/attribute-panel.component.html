@@ -219,18 +219,11 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.inputports" [scrollable]="true">
-          <thead dTableHead>
-            <tr dTableRow>
-              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
-            </tr>
-          </thead>
+        <d-data-table [dataSource]="unit.inputports" [scrollable]="true" [borderType]="'borderless'">
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
-                <td dTableCell>
-                  {{ rowItem.name }}
-                </td>
                 <td dTableCell>
                   {{ rowItem.device_type }}
                 </td>
@@ -251,18 +244,11 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.outputports" [scrollable]="true">
-          <thead dTableHead>
-            <tr dTableRow>
-              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
-            </tr>
-          </thead>
+        <d-data-table [dataSource]="unit.outputports" [scrollable]="true" [borderType]="'borderless'">
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
+              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
-                <td dTableCell>
-                  {{ rowItem.name }}
-                </td>
                 <td dTableCell>
                   {{ rowItem.device_type }}
                 </td>
@@ -353,7 +339,7 @@
 </ng-template>
 
 <ng-template #innerListTemplate3 let-item="item">
-  <div style="margin:20px">
+  <div style="margin:20px" *ngIf="unit && unit.advance" >
     <d-form-item class="form-item">
       <d-form-label>
         <span class="title-label">
@@ -372,7 +358,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="deviceID"
-            [(ngModel)]="deviceId">
+            [(ngModel)]="unit.advance.deviceId">
         </div>
       </d-form-control>
     </d-form-item>
@@ -394,7 +380,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="batch_size"
-            [(ngModel)]="batchSize">
+            [(ngModel)]="unit.advance.batchSize">
         </div>
       </d-form-control>
     </d-form-item>
@@ -416,7 +402,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="queue_size"
-            [(ngModel)]="queueSize">
+            [(ngModel)]="unit.advance.queueSize">
         </div>
       </d-form-control>
     </d-form-item>

@@ -27,6 +27,8 @@ import { DataTableComponent, TableWidthConfig } from 'ng-devui/data-table';
 import { BasicServiceService } from '@shared/services/basic-service.service';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { treeDataSource } from '../management/mock-data';
+import { EditableTip } from 'ng-devui/data-table';
+import { cloneDeep } from 'lodash-es';
 
 declare const require: any
 @Component({
@@ -128,13 +130,13 @@ export class ToolBarComponent {
   path: string = this.dataService.defaultSearchPath;
   template: string = "empty";
   optionSolutionList: any = [];
+  placeholderModel = "model.pb";
   blank: any = {
     checked: false,
     desc: "",
     file: "",
     name: "blank"
   };
-
 
   folderList: any = [];
 
@@ -293,8 +295,8 @@ export class ToolBarComponent {
 
   portInfo: any = {
     port_name: '',
-    port_type: '',
-    data_type: '',
+    port_type: 'input',
+    data_type: 'int',
     device: 'cpu',
   }
 
@@ -306,6 +308,7 @@ export class ToolBarComponent {
   flowunitGroupOptions = ['generic', 'video', 'inference'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
+  currentDevice = "cpu";
 
   portHeaderOptions = {
     columns: [
@@ -386,7 +389,7 @@ export class ToolBarComponent {
     }
   ];
 
-  types = [
+  typesCuda = [
     {
       id: 'tensorflow',
       title: 'Tensorflow'
@@ -399,6 +402,13 @@ export class ToolBarComponent {
       id: 'torch',
       title: 'Torch'
     },
+    {
+      id: 'mindspore',
+      title: 'Mindspore'
+    }
+  ];
+
+  typesAscend = [
     {
       id: 'acl',
       title: 'Acl'
@@ -478,6 +488,9 @@ export class ToolBarComponent {
   options: any;
   selectNameIndex: any;
   data: any;
+  editableTipBtn = EditableTip.btn;
+  editableTipHover = EditableTip.hover;
+  nameEditing: boolean;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -566,6 +579,12 @@ export class ToolBarComponent {
 
   }
 
+  addPortLine() {
+    let obj = cloneDeep(this.portInfo);
+    this.formDataCreateFlowunit.port_infos.push(obj);
+
+  }
+
   closeInput() {
     document.getElementById('projectDropDown').click();
   }
@@ -587,6 +606,37 @@ export class ToolBarComponent {
       this.sycnGraph();
     }
   }
+
+  onDrop(e: any) {
+    let index = e.dropIndex;
+    const fromIndex = e.dragFromIndex;
+    if (-1 !== index) {
+      /* 修正同一个container排序，往下拖动index多了1个位置*/
+      if (-1 !== fromIndex && index > fromIndex) {
+        index--;
+      }
+      this.formDataCreateFlowunit.port_infos.splice(index, 0, fromIndex === -1 ? e.dragData : this.formDataCreateFlowunit.port_infos.splice(fromIndex, 1)[0]);
+    } else {
+      this.formDataCreateFlowunit.port_infos.push(e.dragData);
+    }
+  }
+
+  onEditEnd(rowItem, field) {
+    rowItem[field] = false;
+  }
+
+  beforeEditStart = (rowItem, field) => {
+    return true;
+  };
+
+  beforeEditEnd = (rowItem, field) => {
+    console.log('beforeEditEnd');
+    if (rowItem && rowItem[field].length < 3) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   sycnGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));
@@ -681,11 +731,19 @@ export class ToolBarComponent {
       if (this.dataService.deviceTypes.indexOf('cuda') > -1) {
         this.formDataCreateFlowunit.device = 'cuda';
         this.portInfo.device = 'cuda';
-      } else {
+      } else if (this.dataService.deviceTypes.indexOf('ascend') > -1) {
         this.formDataCreateFlowunit.device = 'ascend';
         this.portInfo.device = 'ascend';
+      }else{
+        this.formDataCreateFlowunit.device = 'cpu';
+        this.portInfo.device = 'cpu';
       }
-      this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
+      if (this.currentDevice === 'ascend') {
+        this.formDataCreateFlowunit["virtual-type"] = 'acl';
+      } else {
+        this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
+      }
+
 
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -1063,7 +1121,7 @@ export class ToolBarComponent {
       port_infos: [],
       device: 'cpu',
       type: 'stream',
-      "virtual-type": 'tensorflow',
+      "virtual-type": this.currentDevice === "ascend" ? 'acl' : 'tensorflow',
       "group-type": 'generic',
       model: '',
       plugin: ''

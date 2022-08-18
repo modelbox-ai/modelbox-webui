@@ -94,3 +94,4 @@ export let openProject =
   "project_name": "cqw1234",
   "project_path": "/root/cqw1234"
 }
+

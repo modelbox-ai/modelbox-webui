@@ -97,7 +97,7 @@ export class AttributePanelComponent {
             type: item.type,
             default: item.default,
             desc: item.desc,
-            values: item.values,
+            values: item.values
           };
 
           if (item.type === 'int' || item.type === 'integer') {
@@ -138,7 +138,6 @@ export class AttributePanelComponent {
     },
     blur: () => {
       let config = { ...this.config };
-
       // 处理 node name更改
       if (this.newName !== this.config.name && this.unit) {
         const nodes = { ...this.dotGraph.nodes };
@@ -233,52 +232,19 @@ export class AttributePanelComponent {
         }
       });
       // 处理 advanced
-      if (this.deviceId) {
-        let num = config.attributes.find((item, index) => {
-          if (item.key === 'deviceId') {
-            return index;
-          }
-        });
-        if (num?.value) {
-          config.attributes[config.attributes.indexOf(num)].value = this.deviceId;
-        } else {
-          config.attributes.push({
-            key: "deviceId",
-            value: this.deviceId
-          });
+      if (!this.unit["advance"]) {
+        this.unit["advance"] = {
+          deviceId: "",
+          batchSize: "",
+          queueSize: ""
         }
-      }
-      if (this.batchSize) {
-        let num = config.attributes.find((item, index) => {
-          if (item.key === 'batchSize') {
-            return index;
-          }
-        });
-        if (num?.value) {
-          config.attributes[config.attributes.indexOf(num)].value = this.batchSize;
-        } else {
-          config.attributes.push({
-            key: "batchSize",
-            value: this.batchSize
-          });
-        }
-      }
-      if (this.queueSize) {
-        let num = config.attributes.find((item, index) => {
-          if (item.key === 'queueSize') {
-            return index;
-          }
-        });
-        if (num?.value) {
-          config.attributes[config.attributes.indexOf(num)].value = this.queueSize;
-        } else {
-          config.attributes.push({
-            key: "queueSize",
-            value: this.queueSize
-          });
-        }
+      } else {
+        config = this.handleAdvance(config, "deviceId");
+        config = this.handleAdvance(config, "batchSize");
+        config = this.handleAdvance(config, "queueSize");
       }
       this.config.name = this.newName;
+
       this.onNodeAttributeChange({ ...config, newName: this.newName });
     }
   };
@@ -330,18 +296,11 @@ export class AttributePanelComponent {
   portOptions = {
     columns: [
       {
-        field: 'fieldName',
-        header: 'Name',
-        fieldType: 'text'
-      },
-      {
         field: 'type',
-        header: 'Device',
         fieldType: 'text'
       },
       {
         field: 'port',
-        header: 'Port',
         fieldType: 'text'
       }
     ]
@@ -448,6 +407,11 @@ export class AttributePanelComponent {
       options: [""],
       inputports: [""],
       outputports: [""],
+      advance: {
+        deviceId: "",
+        batchSize: "",
+        queueSize: ""
+      },
       portDetail: '',
       constraint: ''
     }
@@ -465,6 +429,7 @@ export class AttributePanelComponent {
         }
       });
     }
+    this.unit && this.unit.advance;
   }
 
   initConfig(config) {
@@ -473,6 +438,14 @@ export class AttributePanelComponent {
 
     if (this.unit === undefined) {
       this.initUnit(config);
+    }
+
+    if (this.unit.advance === undefined) {
+      this.unit.advance = {
+        deviceId: "",
+        batchSize: "",
+        queueSize: ""
+      }
     }
 
     this.unitType.init();
@@ -514,6 +487,15 @@ export class AttributePanelComponent {
             it => it.id === item.value
           );
         }
+        if (item.key === 'deviceId') {
+          this.unit.advance.deviceId = item.value;
+        }
+        if (item.key === 'batchSize') {
+          this.unit.advance.batchSize = item.value;
+        }
+        if (item.key === 'queueSize') {
+          this.unit.advance.queueSize = item.value;
+        }
         this.unitOptions.data.forEach(it => {
           if (it.label.replaceAll(" ", "_") === item.key) {
             if (['string', 'int', 'integer'].includes(it.type)) {
@@ -544,5 +526,35 @@ export class AttributePanelComponent {
         ?.value;
       return this.dataService.getUnit(flowUnit, unitType);
     }
+  }
+
+  handleAdvance(config, prop) {
+    if (!this.unit["advance"]) {
+      this.unit["advance"] = {
+        deviceId: "",
+        batchSize: "",
+        queueSize: ""
+      }
+    } else {
+      let num = config.attributes.find((item, index) => {
+        if (item.key === prop) {
+          return index;
+        }
+      });
+      if (num?.value) {
+        if (this.unit["advance"][prop]) {
+          config.attributes[config.attributes.indexOf(num)].value = this.unit["advance"][prop];
+        } else {
+          config.attributes.splice(config.attributes.indexOf(num));
+        }
+
+      } else {
+        config.attributes.push({
+          key: prop,
+          value: this.unit["advance"][prop]
+        });
+      }
+    }
+    return config;
   }
 }

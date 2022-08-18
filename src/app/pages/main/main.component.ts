@@ -112,20 +112,13 @@ export class MainComponent {
   currentGraph: any;
   msgs: Array<Object> = [];
   typeFlowunit: any;
-  config = {
-    id: 'dialog-service',
-    width: '346px',
-    maxHeight: '600px',
-    title: '请打开IDE进行开发',
-    content: ModalVscodeComponent,
-    backdropCloseable: true
-  };
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
-    private toastService: ToastService,) {
+    private toastService: ToastService,
+    private modalService: ModalService) {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
       let path;
@@ -223,7 +216,7 @@ export class MainComponent {
       this.project_name = project.name;
       this.project_desc = project.project_desc;
       this.path = project.rootpath;
-      
+
       this.dotSrc = project.graph.dotSrc;
       this.graphName = this.getGraphNameFromGraph(this.dotSrc);
       if (typeof this.dotSrc === 'undefined') {
@@ -337,31 +330,32 @@ export class MainComponent {
     });
   }
 
-  openDialog(dialogtype?: string, showAnimation?: boolean) {
-    const results = this.dialogService.open({
-      ...this.config,
-      dialogtype: dialogtype,
-      showAnimation: showAnimation,
-      buttons: [
-        {
-          cssClass: 'primary',
-          text: 'Ok',
-          disabled: false,
-          handler: ($event: Event) => {
-            results.modalInstance.hide();
-          },
+  openDialog() {
+    const results = this.modalService.open({
+      id: 'modal-no-btn',
+      width: '400px',
+      backdropCloseable: true,
+      component: ModalVscodeComponent,
+      onClose: () => {
+      },
+      data: {
+        content: this.toolBar.formDataCreateProject.rootpath + "/" + this.toolBar.formDataCreateProject.name,
+        cancelBtnText: this.i18n.getById('modal.okButton'),
+        onClose: (event) => {
+          results.modalInstance.hide();
+          this.downloadTxt('# 将文件后缀名改成bat，修改好ip地址运行即可直接打开vscode\ncode --remote=ssh-remote+xx.xx.xx.xx[-xxxx] /home','打开vscode');
         },
-        {
-          id: 'btn-cancel',
-          cssClass: 'common',
-          text: 'Cancel',
-          handler: ($event: Event) => {
-            results.modalInstance.hide();
-          },
-        },
-      ],
+      },
     });
   }
+
+  downloadTxt(text, fileName){
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', fileName);
+    element.style.display = 'none';
+    element.click();
+}
 
   getGraphNameFromGraph(graph) {
     let graphName = "";
@@ -397,8 +391,9 @@ export class MainComponent {
               this.toolBar.formData.perfEnable = this.currentGraph.profile.profile;
               this.toolBar.formData.perfTraceEnable = this.currentGraph.profile.trace;
             }
-            this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit";
+
             this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
+            this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit" + "\n" + this.toolBar.formData.flowunitReleasePath;
             this.dirs = this.toolBar.formData.flowunitDebugPath;
             this.project_name = data.project_name;
           } else {
@@ -1098,6 +1093,16 @@ export class MainComponent {
 
   updateDeviceType(e) {
     this.toolBar.optionsdevice = e;
+    if (e.indexOf("ascend") > -1) {
+      this.toolBar.currentDevice = "ascend";
+      this.toolBar.placeholderModel = "model.om";
+    }
+
+    if (e.indexOf("cuda") > -1) {
+      this.toolBar.currentDevice = "cuda";
+      this.toolBar.placeholderModel = "model.pb";
+    }
+
   }
 
   handleRunButtonClick = (graphName) => {
