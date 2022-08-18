@@ -419,7 +419,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       type: 'flowunit',
       flowunit: data.name,
       device: data.type,
-      deviceid: 0,
     }
 
     return this.formateVirtualNode(obj);
@@ -1558,7 +1557,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     if (node.device === "Input" || node.device === "Output") {
       node.type = node.device;
       node.device = null;
-      node.deviceid = null;
     }
     return node;
   }

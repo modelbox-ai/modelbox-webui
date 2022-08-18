@@ -353,7 +353,7 @@
 </ng-template>
 
 <ng-template #innerListTemplate3 let-item="item">
-  <div style="margin:20px">
+  <div style="margin:20px" *ngIf="unit && unit.advance" >
     <d-form-item class="form-item">
       <d-form-label>
         <span class="title-label">
@@ -372,7 +372,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="deviceID"
-            [(ngModel)]="deviceId">
+            [(ngModel)]="unit.advance.deviceId">
         </div>
       </d-form-control>
     </d-form-item>
@@ -394,7 +394,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="batch_size"
-            [(ngModel)]="batchSize">
+            [(ngModel)]="unit.advance.batchSize">
         </div>
       </d-form-control>
     </d-form-item>
@@ -416,7 +416,7 @@
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="queue_size"
-            [(ngModel)]="queueSize">
+            [(ngModel)]="unit.advance.queueSize">
         </div>
       </d-form-control>
     </d-form-item>
