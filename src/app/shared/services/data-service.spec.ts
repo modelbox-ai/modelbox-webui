@@ -59,7 +59,8 @@ describe('DataService: titleCase', () => {
   it('transformFlowunit', () => {
     service.flowunits = test_flowunits_data;
     let res = test_transformed_data;
-    expect(service.transformFlowunit()).toEqual(res);
+    service.transformFlowunit();
+    expect(service.transformedFlowunits).toEqual(res);
   });
 
   it('pathValidate', () => {

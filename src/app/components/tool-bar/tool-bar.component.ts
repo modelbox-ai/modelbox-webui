@@ -607,36 +607,9 @@ export class ToolBarComponent {
     }
   }
 
-  onDrop(e: any) {
-    let index = e.dropIndex;
-    const fromIndex = e.dragFromIndex;
-    if (-1 !== index) {
-      /* 修正同一个container排序，往下拖动index多了1个位置*/
-      if (-1 !== fromIndex && index > fromIndex) {
-        index--;
-      }
-      this.formDataCreateFlowunit.port_infos.splice(index, 0, fromIndex === -1 ? e.dragData : this.formDataCreateFlowunit.port_infos.splice(fromIndex, 1)[0]);
-    } else {
-      this.formDataCreateFlowunit.port_infos.push(e.dragData);
-    }
-  }
-
   onEditEnd(rowItem, field) {
     rowItem[field] = false;
   }
-
-  beforeEditStart = (rowItem, field) => {
-    return true;
-  };
-
-  beforeEditEnd = (rowItem, field) => {
-    console.log('beforeEditEnd');
-    if (rowItem && rowItem[field].length < 3) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   sycnGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));

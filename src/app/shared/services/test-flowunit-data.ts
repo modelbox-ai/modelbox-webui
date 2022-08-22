@@ -68,7 +68,12 @@ export let test_transformed_data = [
         "name": "Output",
         "type": "float"
       }
-    ]
+    ],
+    "advance": {
+      "deviceId": "",
+      "batchSize": "",
+      "queueSize": ""
+    }
   },
   {
     "descryption": "mnist preprocess",
@@ -85,6 +90,11 @@ export let test_transformed_data = [
       {
         "name": "out_data"
       }
-    ]
+    ],
+    "advance": {
+      "deviceId": "",
+      "batchSize": "",
+      "queueSize": ""
+    }
   }
 ];
