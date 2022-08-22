@@ -1,11 +1,12 @@
 import { TestBed } from "@angular/core/testing";
-import { DialogService } from "ng-devui/modal";
+import { DialogService, ModalService } from "ng-devui/modal";
 import { MainComponent } from "./main.component";
 import { OverlayContainerModule } from 'ng-devui/overlay-container';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { I18nService } from '@core/i18n.service';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { DataServiceService } from '@shared/services/data-service.service';
+
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OverlayContainerRef } from 'ng-devui/overlay-container';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
@@ -41,6 +42,7 @@ describe("MainComponent", () => {
         OverlayContainerRef,
         TranslateService,
         TranslateStore,
+        ModalService
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA, 

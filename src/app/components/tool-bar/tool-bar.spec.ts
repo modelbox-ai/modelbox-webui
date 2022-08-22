@@ -262,4 +262,18 @@ describe("ToolBarComponent", () => {
       m.setAttribute("style", "display:none");
     });
   });
+
+  it('handleFlowunitDropDown: \
+  showCreateFlowunitDialog\
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.createFlowunitTemplate).toBeTruthy();
+    let e = { value: 1 }
+    app.showCreateFlowunitDialog = function (e) { };
+    app.handleFlowunitDropDown(e);
+    
+  });
+
+
 });
