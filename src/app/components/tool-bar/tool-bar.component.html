@@ -357,7 +357,7 @@
                     <d-radio-group 
                         [direction]="'row'" 
                         [(ngModel)]="formDataCreateFlowunit.lang"
-                        (change)="langValueChange2($event)" 
+                        (change)="langValueChange($event)" 
                         [direction]="'row'" 
                         [ngModelOptions]="{ standalone: true }">
                         <d-radio 
@@ -869,51 +869,6 @@
       </tbody>
     </d-data-table>
   </d-content>
-</ng-template>
-
-<ng-template #solutionSelect let-context='context'>
-    <d-content>
-        <d-data-table 
-            [fixHeader]="true" 
-            [containFixHeaderHeight]="true" 
-            [scrollable]="true" 
-            [headerBg]="true"
-            [colDraggable]="true" 
-            [dataSource]="solutionList" 
-            tableHeight="360px"
-            [tableWidthConfig]="solutionTableWidthConfig">
-            <thead dTableHead>
-                <tr dTableRow>
-                    <th dHeadCell *ngFor="let colOption of solutionTableOptions.columns">
-                        {{ colOption.header }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody dTableBody>
-                <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
-                    <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked }">
-                        <td dTableCell *ngFor="let colOption of solutionTableOptions.columns">
-                            <d-checkbox 
-                                *ngIf="colOption.field === 'checked'" 
-                                [ngModelOptions]="{ standalone: true }"
-                                (ngModelChange)="onSolutionRowCheckChange($event, rowItem)" 
-                                [ngModel]="rowItem.checked">
-                            </d-checkbox>
-                            <div *ngIf="colOption.field === 'name'" class="edit-padding-fix">
-                                {{ rowItem[colOption.field] }}
-                            </div>
-                            <div *ngIf="colOption.field === 'desc'" class="edit-padding-fix">
-                                {{ rowItem[colOption.field] }}
-                            </div>
-                            <div *ngIf="colOption.field === 'file'" class="edit-padding-fix">
-                                {{ rowItem[colOption.field] }}
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </tbody>
-        </d-data-table>
-    </d-content>
 </ng-template>
 
 <d-toast 

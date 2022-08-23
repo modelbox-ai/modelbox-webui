@@ -131,7 +131,7 @@ describe("ManagementComponent", () => {
     let modals = document.querySelectorAll("d-modal");
     modals.forEach((m) => {
       m.setAttribute("style", "display:none");
-    })
+    });
   });
 
   it('radioValueChange', () => {

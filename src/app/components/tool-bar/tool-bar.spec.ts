@@ -9,9 +9,10 @@ import { DataServiceService } from "@shared/services/data-service.service";
 import { DialogService } from "ng-devui/modal";
 import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-container";
 import { Observable } from "rxjs";
-import { openProject, project, solutions } from "./mock-data";
+import { dirs, formDataCreateFlowunit, graphSelectTableDataForDisplay, openProject, project, rowItem, solutions } from "./mock-data";
 import { ToolBarComponent } from "./tool-bar.component";
 import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { templateTarget } from "@shared/services/mock-data";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -272,8 +273,257 @@ describe("ToolBarComponent", () => {
     let e = { value: 1 }
     app.showCreateFlowunitDialog = function (e) { };
     app.handleFlowunitDropDown(e);
-    
+
   });
 
+  it('handleFlowunitDropDown: \
+  refreshFlowunit\
+        ', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    expect(app.refreshFlowunit).toBeTruthy();
+
+  });
+
+  it('langValueChange', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let value;
+
+    value = "python";
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('cpu');
+    expect(app.portInfo.device).toEqual('cpu');
+    expect(app.formDataCreateFlowunit.type).toEqual('stream');
+    expect(app.formDataCreateFlowunit.name).toEqual('flowunit');
+    expect(app.formDataCreateFlowunit.port_infos).toEqual([]);
+
+    value = "c++";
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('cpu');
+    expect(app.portInfo.device).toEqual('cpu');
+    expect(app.formDataCreateFlowunit.type).toEqual('stream');
+    expect(app.formDataCreateFlowunit.name).toEqual('flowunit');
+    expect(app.formDataCreateFlowunit.port_infos).toEqual([]);
+
+    value = "inference";
+    app.currentDevice = "ascend";
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit['virtual-type']).toEqual('acl');
+
+    app.currentDevice = "cuda";
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit['virtual-type']).toEqual('tensorflow');
+
+    let service = TestBed.inject(DataServiceService);
+    service.deviceTypes = ["cuda"];
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('cuda');
+    expect(app.portInfo.device).toEqual('cuda');
+
+    service.deviceTypes = ["ascend"];
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('ascend');
+    expect(app.portInfo.device).toEqual('ascend');
+
+    service.deviceTypes = ["cpu"];
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('cpu');
+    expect(app.portInfo.device).toEqual('cpu');
+
+    value = "yolo";
+    app.langValueChange(value);
+    expect(app.formDataCreateFlowunit.device).toEqual('cpu');
+    expect(app.portInfo.device).toEqual('cpu');
+    expect(app.formDataCreateFlowunit['virtual-type']).toEqual('yolov3_postprocess');
+    expect(app.formDataCreateFlowunit.name).toEqual('flowunit');
+    expect(app.formDataCreateFlowunit.port_infos).toEqual([]);
+
+  });
+
+  it('deviceValueChange', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.deviceValueChange("cpu");
+    expect(app.formDataCreateFlowunit.device).toEqual("cpu");
+    expect(app.portInfo.device).toEqual("cpu");
+  });
+
+  it('transformDisplayData', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.deviceValueChange("cpu");
+    expect(app.transformDisplayData("cpu".repeat(99)).indexOf("...")).toBeGreaterThan(-1);
+  });
+
+  it('onRowCheckChange', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let obj = rowItem;
+    app.graphSelectTableDataForDisplay = graphSelectTableDataForDisplay;
+    app.onRowCheckChange(true, 0, -1, obj);
+    expect(app.graphSelectTableData).toBeTruthy();
+  });
+
+  it('loadSolutionData', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(basicService, "queryTemplate").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(templateTarget);
+      }));
+    app.loadSolutionData();
+    expect(app.optionSolutionList.length).toEqual(2);
+  });
+
+  it('deletePort', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.formDataCreateFlowunit.port_infos = [
+      {
+        "port_name": "",
+        "port_type": "input",
+        "data_type": "int",
+        "device": "cpu"
+      }];
+    app.deletePort(null, 0);
+    expect(app.formDataCreateFlowunit.port_infos.length).toEqual(0);
+  });
+
+  it('onCheckboxPerfTraceEnableChange', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.onCheckboxPerfTraceEnableChange(false);
+    expect(app.formData.perfTraceEnable).toBeFalse();
+  });
+
+  it('initFormData', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.initFormData();
+    expect(app.formData).toBeTruthy();
+  });
+
+  it('register handler', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let e = "test";
+    app.onUndoButtonClick = function (e) { };
+    spyOn(app, "onUndoButtonClick");
+    app.handleUndoButtonClick(e);
+    expect(app.onUndoButtonClick).toHaveBeenCalled();
+
+    app.onRedoButtonClick = function (e) { };
+    spyOn(app, "onRedoButtonClick");
+    app.handleRedoButtonClick(e);
+    expect(app.onRedoButtonClick).toHaveBeenCalled();
+
+    app.onZoomInButtonClick = function (e) { };
+    spyOn(app, "onZoomInButtonClick");
+    app.handleZoomInButtonClick(e);
+    expect(app.onZoomInButtonClick).toHaveBeenCalled();
+
+    app.onZoomOutButtonClick = function (e) { };
+    spyOn(app, "onZoomOutButtonClick");
+    app.handleZoomOutButtonClick(e);
+    expect(app.onZoomOutButtonClick).toHaveBeenCalled();
+
+    app.onZoomFitButtonClick = function (e) { };
+    spyOn(app, "onZoomFitButtonClick");
+    app.handleZoomFitButtonClick(e);
+    expect(app.onZoomFitButtonClick).toHaveBeenCalled();
+
+    app.onZoomResetButtonClick = function (e) { };
+    spyOn(app, "onZoomResetButtonClick");
+    app.handleZoomResetButtonClick(e);
+    expect(app.onZoomResetButtonClick).toHaveBeenCalled();
+
+    app.onNewButtonClick = function (e) { };
+    spyOn(app, "onNewButtonClick");
+    app.handleNewButtonClick(e);
+    expect(app.onNewButtonClick).toHaveBeenCalled();
+
+    app.onSwitchDirectionButtonClick = function (e) { };
+    spyOn(app, "onSwitchDirectionButtonClick");
+    app.handleSwitchDirectionButtonClick(e);
+    expect(app.onSwitchDirectionButtonClick).toHaveBeenCalled();
+
+    app.onRunButtonClick = function (e) { };
+    spyOn(app, "onRunButtonClick");
+    app.handleRunButtonClick(e);
+    expect(app.onRunButtonClick).toHaveBeenCalled();
+
+    app.onStopButtonClick = function (e) { };
+    spyOn(app, "onStopButtonClick");
+    app.handleStopButtonClick(e);
+    expect(app.onStopButtonClick).toHaveBeenCalled();
+
+    app.onRestartButtonClick = function (e) { };
+    spyOn(app, "onRestartButtonClick");
+    app.handleRestartButtonClick(e);
+    expect(app.onRestartButtonClick).toHaveBeenCalled();
+
+    app.onCreateProjectButtonClick = function (e) { };
+    spyOn(app, "onCreateProjectButtonClick");
+    app.handleCreateProjectButtonClick(e);
+    expect(app.onCreateProjectButtonClick).toHaveBeenCalled();
+
+  });
+
+  it('initFormDataCreateFlowunit', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.initFormDataCreateFlowunit();
+    expect(app.in_num).toEqual(1);
+    expect(app.out_num).toEqual(1);
+    expect(app.formDataCreateFlowunit).toBeTruthy();
+  });
+
+  it('cellClick', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let e = {
+      rowIndex: 2,
+      rowItem: {
+        folder: "sss",
+        isProject: "✓"
+      }
+    }
+    app.openproject_path = "/root";
+    app.cellClick(e);
+    expect(app.openproject_path).toEqual("/root/sss");
+  });
+
+  it('onClickCard', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let e = {
+      desc: "A helloworld REST API service example project template for modelbox",
+      dirname: "hello_world",
+      name: "helloworld"
+    }
+    app.onClickCard(e, null);
+    expect(app.formDataCreateProject.template).toEqual("hello_world");
+  });
+
+  it('searchDirectory', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(basicService, "loadTreeByPath").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(dirs);
+      }));
+    app.searchDirectory("/root");
+    expect(app.folderList.length).toBeGreaterThan(0);
+  });
+
+  it('onPathSelect', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.onPathSelect("/root");
+    expect(app.openproject_path).toBeTruthy();
+  });
 
 });

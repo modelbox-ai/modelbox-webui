@@ -106,8 +106,6 @@ export class ToolBarComponent {
 
   openProjectList = [];
 
-  activeBasic: boolean = true;
-  activePerf: boolean = false;
   portdeviceAble = false;
   layoutDirection: FormLayout = FormLayout.Horizontal;
   graphSelectTableData: any;
@@ -536,7 +534,6 @@ export class ToolBarComponent {
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
       this.openProjectListPath = projectListPath;
-      this.loadOpenProjectList();
     }
   }
 
@@ -698,7 +695,7 @@ export class ToolBarComponent {
     }
   }
 
-  langValueChange2(value) {
+  langValueChange(value) {
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
       if (this.dataService.deviceTypes.indexOf('cuda') > -1) {
@@ -707,7 +704,7 @@ export class ToolBarComponent {
       } else if (this.dataService.deviceTypes.indexOf('ascend') > -1) {
         this.formDataCreateFlowunit.device = 'ascend';
         this.portInfo.device = 'ascend';
-      }else{
+      } else {
         this.formDataCreateFlowunit.device = 'cpu';
         this.portInfo.device = 'cpu';
       }
@@ -716,8 +713,6 @@ export class ToolBarComponent {
       } else {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
-
-
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
@@ -733,10 +728,6 @@ export class ToolBarComponent {
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
     }
 
-    if (value === "virtual") {
-      this.formDataCreateFlowunit.name = 'Input';
-    }
-
     this.formDataCreateFlowunit.name = 'flowunit';
     this.formDataCreateFlowunit.port_infos = [];
 
@@ -745,23 +736,6 @@ export class ToolBarComponent {
   deviceValueChange(value) {
     this.formDataCreateFlowunit.device = value;
     this.portInfo.device = value;
-  }
-
-  handleValueChangeport_type(e) {
-
-    if (e === "output") {
-      this.portdeviceAble = true;
-      this.portInfo.port_name = "output" + this.out_num;
-      this.out_num += 1;
-      return;
-    }
-
-    this.portdeviceAble = false;
-    this.portInfo.port_name = "input" + this.in_num;
-    this.in_num += 1;
-
-    this.portInfo.device = this.formDataCreateFlowunit.device;
-
   }
 
   transformDisplayData(data) {
@@ -785,18 +759,7 @@ export class ToolBarComponent {
       }
       self.graphSelectTableData.push(obj);
       return obj;
-    })
-  }
-
-  onSolutionRowCheckChange(checked, rowItem) {
-    rowItem.checked = checked;
-    this.selectedSolutionName = rowItem.name;
-    this.solutionList.map(function (obj) {
-      if (obj != rowItem) {
-        obj.checked = false;
-      }
-      return obj;
-    })
+    });
   }
 
   loadSolutionData() {
@@ -807,7 +770,7 @@ export class ToolBarComponent {
           obj.name = item.name;
           obj.desc = item.desc;
           obj.dirname = item.dirname;
-          this.optionSolutionList.push(obj)
+          this.optionSolutionList.push(obj);
         });
         let tmp = [];
         let tmp1 = [];
@@ -828,59 +791,8 @@ export class ToolBarComponent {
     );
   }
 
-  onPortNameChange(e) {
-    this.isChangingPortName = true;
-  }
-
-  handleAddPortInfoClick(): void {
-    if (this.portInfo != null) {
-      if (["python", "c++", "yolo"].indexOf(this.formDataCreateFlowunit.lang) > -1) {
-        delete this.portInfo.data_type
-      }
-      if (!this.formDataCreateFlowunit.port_infos) {
-        this.formDataCreateFlowunit.port_infos = [];
-      }
-      for (let key in this.portInfo) {
-        if (!this.portInfo[key]) {
-          this.msgs = [
-            { severity: 'warn', content: key + this.i18n.getById("message.valueIsNecessary") }
-          ];
-          return;
-        }
-
-        if (this.formDataCreateFlowunit.lang === "inference" && !this.portInfo.data_type) {
-          this.msgs = [
-            { severity: 'warn', content: this.i18n.getById("message.valueIsNecessaryForDataType") }
-          ];
-          return;
-        }
-      }
-
-      for (let p of this.formDataCreateFlowunit.port_infos) {
-        if (p.port_name === this.portInfo.port_name) {
-          this.msgs = [
-            { severity: 'warn', content: this.i18n.getById("message.duplicatePortName") }
-          ];
-
-          return;
-        }
-      }
-      this.formDataCreateFlowunit.port_infos.push({ ...this.portInfo });
-      if (!this.isChangingPortName) {
-        if (this.portInfo.port_type === "input") {
-          this.portInfo.port_name = "input" + this.in_num;
-          this.in_num += 1;
-        } else if (this.portInfo.port_type === "output") {
-          this.portInfo.port_name = "output" + this.out_num;
-          this.out_num += 1;
-        }
-      }
-    }
-    this.isChangingPortName = false;
-  }
-
   checkFormDataCreateFlowunit() {
-
+    // check model
     if (this.formDataCreateFlowunit.model) {
       this.formDataCreateFlowunit.model = this.formDataCreateFlowunit.model.trim();
       if ((/(^\s+)|(\s+$)|\s+/g).test(this.formDataCreateFlowunit.model)) {
@@ -929,32 +841,8 @@ export class ToolBarComponent {
     this.formDataCreateFlowunit.port_infos.splice(rowIndex, 1);
   }
 
-  deleteData(row, rowIndex) {
-    delete this.graphs[row.name];
-    this.graphSelectTableData = this.graphSelectTableData.filter(item => {
-      return item.name != row.name;
-    });
-    this.graphSelectTableDataForDisplay = JSON.parse(JSON.stringify(this.graphSelectTableData));
-    for (let e in this.graphSelectTableDataForDisplay) {
-      this.graphSelectTableDataForDisplay[e].dotSrc = this.transformDisplayData(this.graphSelectTableDataForDisplay[e].dotSrc);
-    }
-    this.graphsEmmiter.emit(this.graphs);
-  }
-
-  onCheckboxSkipDefaultChange(value) {
-    this.formData.skipDefault = value;
-  }
-
-  onCheckboxPerfEnableChange(value) {
-    this.formData.perfEnable = value;
-  }
-
   onCheckboxPerfTraceEnableChange(value) {
     this.formData.perfTraceEnable = value;
-  }
-
-  onCheckboxPerfSessionEnableChange(value) {
-    this.formData.perfSessionEnable = value;
   }
 
   initFormData() {
@@ -971,16 +859,6 @@ export class ToolBarComponent {
       flowunitDebugPath: '',
       flowunitReleasePath: ''
     };
-  }
-
-  click(tab: string): void {
-    if (tab === 'basic') {
-      this.activeBasic = true;
-      this.activePerf = false;
-    } else {
-      this.activeBasic = false;
-      this.activePerf = true;
-    }
   }
 
   saveAllProject() {
@@ -1268,30 +1146,22 @@ export class ToolBarComponent {
     if (e.rowIndex === 0) {
       let position = this.openproject_path.lastIndexOf("/");
       this.openproject_path = this.openproject_path.substring(0, position);
-      this.searchDirectory(this.openproject_path);
     } else {
       this.openproject_path = this.openproject_path + "/" + e.rowItem.folder;
-      this.searchDirectory(this.openproject_path);
     }
-  }
-
-  onCheckbox2Change(e) {
-    if (e.isChecked) {
-      this.valuesCheckbox = [e.value];
-    } else {
-      this.valuesCheckbox = [];
-    }
-
+    this.searchDirectory(this.openproject_path);
   }
 
   onClickCard(e, event) {
     this.formDataCreateProject.template = e.dirname;
-    for (let ele of event.currentTarget.parentElement.parentElement.children) {
-      for (let cd of ele.children) {
-        cd.classList.remove("card-focus");
+    if (event?.currentTarget?.parentElement?.parentElement?.children) {
+      for (let ele of event.currentTarget.parentElement.parentElement.children) {
+        for (let cd of ele.children) {
+          cd.classList.remove("card-focus");
+        }
       }
+      event.currentTarget.classList.add("card-focus");
     }
-    event.currentTarget.classList.add("card-focus");
   }
 
   searchDirectory(path = null) {
@@ -1328,25 +1198,7 @@ export class ToolBarComponent {
     this.openproject_path = e;
     this.searchDirectory(this.openproject_path);
   }
-
-  loadOpenProjectList() {
-    this.basicService.loadTreeByPath(this.openProjectListPath).subscribe(
-      (data: any) => {
-        if (data.folder_list) {
-          this.openProjectList = [];
-
-          let temp = data.folder_list.filter(dir => dir != "." && dir != "..");
-
-          temp.forEach(element => {
-            this.openProjectList.push(this.openProjectListPath + "/" + element);
-          });
-        }
-      },
-      error => {
-        this.openProjectList = [];
-        return;
-      });
-  }
+  
 
   openProject(comp) {
     if (this.folderList.indexOf("src")) {
