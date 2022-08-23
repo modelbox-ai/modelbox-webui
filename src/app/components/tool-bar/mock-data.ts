@@ -95,3 +95,84 @@ export let openProject =
   "project_path": "/root/cqw1234"
 }
 
+export let rowItem = {
+  checked: false,
+  desc: "A hello world REST API service demo.",
+  dotSrc: 'digraph hello_world_diagraph {\
+    node [shape=Mrecord]\
+    httpserver_sync_receive[type=flowunit, flowunit=httpserver_sync_receive, device=cpu, time_out_ms=5000, endpoint="http://0.0.0.0:7770", max_requests=100]\
+    hello_world[type=flowunit, flowunit=hello_world, device=cpu]\
+    httpserver_sync_reply[type=flowunit, flowunit=httpserver_sync_reply, device=cpu]\
+    \
+    httpserver_sync_receive:out_request_info -> hello_world:in_data\
+    hello_world:out_data -> httpserver_sync_reply:in_reply_info\
+    }',
+  name: "hello_world_diagraph"
+
+}
+
+export let graphSelectTableDataForDisplay = [{
+  "checked": false,
+  "name": "hello_world_diagraph",
+  "dotSrc": "digraph hello_world_diagraph {\n    node [shape=Mrecord]\n    httpserver_sync_receive[type=flowunit, flowunit=httpserver_sync_receive, device=cpu, time_out_ms=5000, endpoint=\"http://0.0.0.0:7770\", max_requests=100]\n    hello_world[type=flowunit, flowunit=hello_world, device=cpu]\n    httpserver_sync_reply[type=flowunit, flowunit=httpserver_sync_reply, device=cpu]\n\n    httpserver_sync_receive:out_request_info -> hello_world:in_data\n    hello_world:out_data -> httpserver_sync_reply:in_reply_info\n}\n",
+  "desc": "A hello world REST API service demo."
+}]
+
+export let formDataCreateFlowunit =
+{
+  "name": "flowunit",
+  "desc": "",
+  "lang": "inference",
+  "project-path": "/root/sss",
+  "device": "cpu",
+  "port_infos": [
+    {
+      "port_name": "sss",
+      "port_type": "input",
+      "data_type": "int",
+      "device": "cpu",
+      "nameEditPortName": false
+    },
+    {
+      "port_name": "www",
+      "port_type": "output",
+      "data_type": "uint8",
+      "device": "cpu",
+      "portTypeEdit": false,
+      "nameEditPortName": false,
+      "nameEditDataType": false
+    }
+  ],
+  "type": "stream",
+  "virtual-type": "tensorflow",
+  "group-type": "generic",
+  "model": "dhhdgfhgdf",
+  "plugin": ""
+}
+
+export let dirs = {
+  dirname: "/root",
+  isproject: false,
+  subdir: [
+    {
+      "dirname": "modelbox-service",
+      "isproject": false
+    },
+    {
+      "dirname": "pan2",
+      "isproject": true
+    },
+    {
+      "dirname": "pan3",
+      "isproject": true
+    },
+    {
+      "dirname": "pan4",
+      "isproject": true
+    },
+    {
+      "dirname": "sss",
+      "isproject": true
+    }
+  ]
+}
