@@ -232,17 +232,9 @@ export class AttributePanelComponent {
         }
       });
       // 处理 advanced
-      if (!this.unit["advance"]) {
-        this.unit["advance"] = {
-          deviceId: "",
-          batchSize: "",
-          queueSize: ""
-        }
-      } else {
-        config = this.handleAdvance(config, "deviceId");
-        config = this.handleAdvance(config, "batchSize");
-        config = this.handleAdvance(config, "queueSize");
-      }
+      config = this.handleAdvance(config, "deviceid");
+      config = this.handleAdvance(config, "batchSize");
+      config = this.handleAdvance(config, "queueSize");
       this.config.name = this.newName;
 
       this.onNodeAttributeChange({ ...config, newName: this.newName });
@@ -296,17 +288,19 @@ export class AttributePanelComponent {
   portOptions = {
     columns: [
       {
-        field: 'type',
+        field: 'fieldName',
+        header: '端口名称',
         fieldType: 'text'
       },
       {
-        field: 'port',
+        field: 'type',
+        header: '处理类型',
         fieldType: 'text'
       }
     ]
   };
 
-  deviceId: any;
+  deviceid: any;
   batchSize: any;
   queueSize: any;
 
@@ -408,7 +402,7 @@ export class AttributePanelComponent {
       inputports: [""],
       outputports: [""],
       advance: {
-        deviceId: "",
+        deviceid: "",
         batchSize: "",
         queueSize: ""
       },
@@ -442,7 +436,7 @@ export class AttributePanelComponent {
 
     if (this.unit.advance === undefined) {
       this.unit.advance = {
-        deviceId: "",
+        deviceid: "",
         batchSize: "",
         queueSize: ""
       }
@@ -487,8 +481,8 @@ export class AttributePanelComponent {
             it => it.id === item.value
           );
         }
-        if (item.key === 'deviceId') {
-          this.unit.advance.deviceId = item.value;
+        if (item.key === 'deviceid') {
+          this.unit.advance.deviceid = item.value;
         }
         if (item.key === 'batchSize') {
           this.unit.advance.batchSize = item.value;
@@ -529,32 +523,29 @@ export class AttributePanelComponent {
   }
 
   handleAdvance(config, prop) {
-    if (!this.unit["advance"]) {
-      this.unit["advance"] = {
-        deviceId: "",
-        batchSize: "",
-        queueSize: ""
-      }
-    } else {
-      let num = config.attributes.find((item, index) => {
-        if (item.key === prop) {
-          return index;
-        }
-      });
-      if (num?.value) {
-        if (this.unit["advance"][prop]) {
-          config.attributes[config.attributes.indexOf(num)].value = this.unit["advance"][prop];
-        } else {
-          config.attributes.splice(config.attributes.indexOf(num));
-        }
 
+    let num = config.attributes.find((item, index) => {
+      if (item.key === prop) {
+        return index;
+      }
+    });
+    
+    if (num?.value) {
+      if (this.unit["advance"][prop]) {
+        config.attributes[config.attributes.indexOf(num)].value = this.unit["advance"][prop];
       } else {
+        config.attributes.splice(config.attributes.indexOf(num));
+      }
+
+    } else {
+      if (this.unit["advance"][prop]) {
         config.attributes.push({
           key: prop,
           value: this.unit["advance"][prop]
         });
       }
     }
+
     return config;
   }
 }

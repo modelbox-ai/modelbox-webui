@@ -15,7 +15,7 @@ export class DataServiceService {
   public commonFlowunitPath = "/usr/local/lib";
   public defaultPerfDir = '/tmp/modelbox/perf/';
   public defaultFlowunitDir = "/usr/local/share/modelbox/solution/flowunit/";
-  public defaultSearchPath = "/home";
+  public defaultSearchPath = "";
   public defaultSrc: string = `digraph {
     node [shape=Mrecord];
   }`;
@@ -67,7 +67,7 @@ export class DataServiceService {
         inputports: [],
         outputports: [],
         advance: {
-          deviceId: "",
+          deviceid: "",
           batchSize: "",
           queueSize: ""
         }

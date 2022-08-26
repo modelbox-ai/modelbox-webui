@@ -70,7 +70,7 @@ export let test_transformed_data = [
       }
     ],
     "advance": {
-      "deviceId": "",
+      "deviceid": "",
       "batchSize": "",
       "queueSize": ""
     }
@@ -92,7 +92,7 @@ export let test_transformed_data = [
       }
     ],
     "advance": {
-      "deviceId": "",
+      "deviceid": "",
       "batchSize": "",
       "queueSize": ""
     }

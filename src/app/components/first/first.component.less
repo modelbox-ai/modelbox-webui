@@ -10,7 +10,7 @@
 
   .title {
     margin       : 0 auto;
-    width        : 400px;
+    width        : 440px;
     text-align   : center;
     font-size    : 36px;
     margin-top   : 100px;
@@ -27,9 +27,10 @@
 .sp-panel {
   position       : absolute;
   top            : 380px;
-  left           : 10%;
-  height         : calc(100%-300px);
-  width          : 80%;
+  left           : 16%;
+  height         : 36%;
+  right          : 16%;
+  width          : 68%;
   margin         : auto;
   display        : flex;
   justify-content: space-evenly;
@@ -37,8 +38,9 @@
 }
 
 .ch-panel {
-  width           : 320px;
-  height          : 400px;
+  width           : 20%;
+  height          : 100%;
+  min-width       : 200px;
   border-radius   : 2px;
   background-color: #fff;
   box-shadow      : 0 0 5px 2px rgb(207, 204, 204);
@@ -51,6 +53,7 @@
 .hr-dashed {
   border    : 0;
   border-top: 1px dashed #a2a9b6;
+  margin : 0px;
 }
 
 .first-icon {
@@ -59,20 +62,23 @@
 }
 
 .title-ch-panel {
-  font-size: 64px;
-  margin   : 20px 20px 0 20px;
-  display  : inline-block;
+  font-size: 30px;
+  display  :inline-flex;
+  align-items: center;
+  justify-content: center;
+  right: 50%;
+  left:50%
+  
 }
 
 .container-flex {
   display        : flex;
   align-items    : center;
-  justify-content: space-between;
 }
 
 .icon {
-  height           : 100px;
-  width            : 100px;
+  height           : 64px;
+  width            : 64px;
   margin           : 20px 20px 0 20px;
   background-size  : contain;
   background-repeat: no-repeat;
@@ -102,7 +108,7 @@
 }
 
 .para-ch-panel {
-  margin   : 60px 30px 0 30px;
+  margin   : 30px 30px 0 30px;
   font-size: 16px;
 }
 
@@ -126,8 +132,8 @@
 .rainbow {
 	position: relative;
 	z-index: 0;
-	width: 320px;
-	height: 400px;
+  height:100%;
+	width: 20%;
 	border-radius: 10px;
 	overflow: hidden;
 	

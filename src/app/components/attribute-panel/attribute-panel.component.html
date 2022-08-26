@@ -219,16 +219,20 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.inputports" [scrollable]="true" [borderType]="'borderless'">
+        <d-data-table [dataSource]="unit.inputports" [scrollable]="true" [type]="'striped'">
+          <thead dTableHead>
+            <tr dTableRow>
+              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
+            </tr>
+          </thead>
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
-              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
                 <td dTableCell>
-                  {{ rowItem.device_type }}
+                  {{ rowItem.name }}
                 </td>
                 <td dTableCell>
-                  {{ rowItem.port_type }}
+                  {{ rowItem.device_type }}
                 </td>
               </tr>
             </ng-template>
@@ -244,16 +248,23 @@
         </span>
       </d-form-label>
       <d-form-control>
-        <d-data-table [dataSource]="unit.outputports" [scrollable]="true" [borderType]="'borderless'">
+        <d-data-table 
+          [dataSource]="unit.outputports" 
+          [type]="'striped'"
+          [scrollable]="true">
+          <thead dTableHead>
+            <tr dTableRow>
+              <th dHeadCell *ngFor="let colOption of portOptions.columns">{{ colOption.header }}</th>
+            </tr>
+          </thead>
           <tbody dTableBody>
             <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex">
-              <p class="title-label">{{ rowItem.name }}: </p>
               <tr dTableRow>
                 <td dTableCell>
-                  {{ rowItem.device_type }}
+                  {{ rowItem.name }}
                 </td>
                 <td dTableCell>
-                  {{ rowItem.port_type }}
+                  {{ rowItem.device_type }}
                 </td>
               </tr>
             </ng-template>
@@ -353,12 +364,12 @@
             autocomplete="off"
             class="content-font"
             style="height:28px;"
-            [name]="'deviceId'"
+            [name]="'deviceid'"
             (keyup)="changedValue=true"
             (blur)="attributeModel.blur()"
             [required]="true"
             placeholder="deviceID"
-            [(ngModel)]="unit.advance.deviceId">
+            [(ngModel)]="unit.advance.deviceid">
         </div>
       </d-form-control>
     </d-form-item>
