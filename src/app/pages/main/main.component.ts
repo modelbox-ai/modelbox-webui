@@ -19,6 +19,7 @@ import { cloneDeep } from 'lodash';
 import { HeaderMainComponent } from 'src/app/components/header-main/header-main.component';
 import { GraphComponent } from 'src/app/components/graph/graph.component';
 import { ModalVscodeComponent } from '../../components/modal-vscode/modal-vscode.component';
+import { ModalGuideMainComponent } from 'src/app/components/modal-guide-main/modal-guide-main.component';
 
 @Component({
   selector: 'app-main',
@@ -89,6 +90,8 @@ export class MainComponent {
   @ViewChild('toolBar') toolBar: ToolBarComponent;
   @ViewChild('header') header: HeaderMainComponent;
   @ViewChild('graph') graph: GraphComponent;
+  @ViewChild('modalGuideMain', { static: true }) modalGuideTemplate: TemplateRef<any>;
+
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
   handleNodeShapeDragEnd = () => { };
@@ -112,6 +115,7 @@ export class MainComponent {
   currentGraph: any;
   msgs: Array<Object> = [];
   typeFlowunit: any;
+  resultsOpenGuideMain: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -146,6 +150,10 @@ export class MainComponent {
       this.updataStatusGraph();
       setInterval(() => { this.updataStatusGraph(); }, 5000);
     }
+
+    if (!JSON.parse(localStorage.getItem('project'))) {
+      this.openGuideMain();
+    }
   }
 
   ngAfterViewInit() {
@@ -174,6 +182,30 @@ export class MainComponent {
         }
       }
     });
+  }
+
+  openGuideMain(dialogtype?: string) {
+    this.resultsOpenGuideMain = this.dialogService.open({
+      id: 'main-guide',
+      title: "请先新建或者打开项目",
+      contentTemplate: this.modalGuideTemplate,
+      width: '400px',
+      showAnimation: true,
+      buttons: []
+    });
+    return this.resultsOpenGuideMain;
+  }
+
+  mainGuideCreateProject() {
+    this.toolBar.showCreateProjectDialog(this.toolBar.createProjectTemplate);
+    this.resultsOpenGuideMain.modalInstance.hide();
+    this.resultsOpenGuideMain.modalInstance.zIndex = -1;
+  }
+
+  mainGuideOpenProject() {
+    this.toolBar.showOpenProjectButtonDialog(this.toolBar.openProjectTemplate);
+    this.resultsOpenGuideMain.modalInstance.hide();
+    this.resultsOpenGuideMain.modalInstance.zIndex = -1;
   }
 
   updateProjectPath(e) {
@@ -343,19 +375,21 @@ export class MainComponent {
         cancelBtnText: this.i18n.getById('modal.okButton'),
         onClose: (event) => {
           results.modalInstance.hide();
-          this.downloadTxt('# 将文件后缀名改成bat，修改好ip地址运行即可直接打开vscode\ncode --remote=ssh-remote+xx.xx.xx.xx[-xxxx] /home','打开vscode');
+          if (event.target.className !== "icon-close") {
+            this.downloadTxt('# 将文件后缀名改成bat，修改好ip地址运行即可直接打开vscode\ncode --remote=ssh-remote+xx.xx.xx.xx[-xxxx] /home', '打开vscode');
+          }
         },
       },
     });
   }
 
-  downloadTxt(text, fileName){
+  downloadTxt(text, fileName) {
     let element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', fileName);
     element.style.display = 'none';
     element.click();
-}
+  }
 
   getGraphNameFromGraph(graph) {
     let graphName = "";
@@ -543,7 +577,7 @@ export class MainComponent {
   }
 
   setEditorMarkers(components) {
-    let marks = []
+    let marks = [];
     for (const component of components) {
       if (component.locations) {
         for (const location of component.locations) {

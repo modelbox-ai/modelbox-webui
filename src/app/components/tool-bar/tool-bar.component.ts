@@ -90,6 +90,7 @@ export class ToolBarComponent {
   @Output() saveGraphEmmiter = new EventEmitter();
   @Output() saveSettingEmmiter = new EventEmitter();
   @Output() removeLabelEmmiter = new EventEmitter();
+  @Output() openDialogEmmiter = new EventEmitter();
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -430,6 +431,8 @@ export class ToolBarComponent {
 
   in_num = 1;
   out_num = 1;
+  point_in = 0;
+  point_out = 0;
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
@@ -576,7 +579,16 @@ export class ToolBarComponent {
 
   }
 
-  addPortLine() {
+  addPortLine(target) {
+    if (target === "output") {
+      this.portInfo.port_type = "output";
+      this.portInfo.port_name = "output" + this.out_num;
+      this.out_num += 1;
+    } else {
+      this.portInfo.port_type = "input";
+      this.portInfo.port_name = "input" + this.in_num;
+      this.in_num += 1;
+    }
     let obj = cloneDeep(this.portInfo);
     this.formDataCreateFlowunit.port_infos.push(obj);
 
@@ -1198,7 +1210,7 @@ export class ToolBarComponent {
     this.openproject_path = e;
     this.searchDirectory(this.openproject_path);
   }
-  
+
 
   openProject(comp) {
     if (this.folderList.indexOf("src")) {
@@ -1339,6 +1351,15 @@ export class ToolBarComponent {
     return graphName;
   }
 
+  
+  openDialog(){
+    this.openDialogEmmiter.emit();
+  }
+
+  linkToGuide(){
+    window.open('https://modelbox-ai.com/modelbox-book/faq/faq.html');
+  }
+
   createProjectParam(project) {
     let params = {};
     params = {
@@ -1380,6 +1401,30 @@ export class ToolBarComponent {
     } else {
       return true;
     }
+  }
+
+  showGraphDescriptionDialog(content: TemplateRef<any>){
+    const results = this.dialogService.open({
+      id: 'graphDescription',
+      width: '400px',
+      title: this.i18n.getById('toolBar.graphDescriptionButton'),
+      showAnimate: false,
+      contentTemplate: content,
+      backdropCloseable: true,
+      onClose: () => {
+
+      },
+      buttons: [{
+        cssClass: 'danger',
+        text: this.i18n.getById('modal.okButton'),
+        disabled: false,
+        handler: ($event: Event) => {
+          results.modalInstance.hide();
+          results.modalInstance.zIndex = -1;
+         
+        },
+      }],
+    });
   }
 }
 

@@ -60,6 +60,7 @@
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
               [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)"
+              (openDialogEmmiter)="openDialog()"
               (graphsEmmiter)="getToolBarGraphsChange($event)"
               (refreshEmmiter)="refreshFlowunit($event)"
               (dotSrcEmmiter)="dotSrcUpdate($event)"
@@ -140,3 +141,23 @@
   [value]="msgs" 
   [style]="{ top: '100px' }">
 </d-toast>
+<ng-template #modalGuideMain id='modalGuideMain' let-context='context'>
+  <div class="flex-center" style="margin-top:10px">
+    <d-button 
+      bsStyle="primary" 
+      [bordered]="true" 
+      style="margin-right: 8px"
+      (btnClick)="mainGuideCreateProject()"
+      >
+      {{ 'toolBar.newButton' | translate }}
+    </d-button>
+    <d-button 
+      bsStyle="primary" 
+      [bordered]="true" 
+      style="margin-right: 8px"
+      (btnClick)="mainGuideOpenProject()"
+      >
+      {{ 'toolBar.openProjectButton' | translate }}
+    </d-button>
+  </div>
+</ng-template>

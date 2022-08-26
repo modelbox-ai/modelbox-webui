@@ -112,7 +112,18 @@
 
     <div class="tool-bar-mid ellipsis project-name">
         {{'toolBar.project.name' | translate}}
-        {{formDataCreateProject.name}}
+        <p 
+            (click)="openDialog()"
+            dPopover
+            [content]="'打开代码工程'"
+            [popMaxWidth]="100"
+            [zIndex]="100"
+            [position]="'bottom'"
+            [controlled]="true"
+            [trigger]="'hover'"
+            style="display:inline-block; text-decoration: underline;cursor:pointer">
+            {{formDataCreateProject.name}}
+        </p>
     </div>
 
     <div class="tool-bar-mid ellipsis project-name">
@@ -160,6 +171,12 @@
             (click)="showGraphSettingDialog(graphSetting)" 
             class="tool-bar-button">
             {{'toolBar.graphSettingButton' | translate}}
+        </button>
+        <button 
+            id="open-graph-setting" 
+            (click)="showGraphDescriptionDialog(graphDescription)" 
+            class="tool-bar-button">
+            {{'toolBar.graphDescriptionButton' | translate}}
         </button>
     </div>
 </div>
@@ -468,9 +485,25 @@
             </d-form-item>
 
             <d-form-item>
-                <div 
-                    style="margin-bottom: 0 !important;" 
-                    *ngIf="formDataCreateFlowunit.lang !== 'virtual'">
+                <d-form-label [required]="true">
+                    {{ "toolBar.modal.portConfig" | translate}}
+                </d-form-label>
+                <d-form-control 
+                    style="margin-bottom: 0 !important;">
+                    <d-button 
+                        bsStyle="primary" 
+                        [bordered]="true" 
+                        style="margin-right: 8px"
+                        (btnClick)="addPortLine('input')">
+                        {{ "toolBar.modal.addInput" | translate}}
+                    </d-button>
+                    <d-button 
+                        bsStyle="primary" 
+                        [bordered]="true" 
+                        style="margin-right: 8px"
+                        (btnClick)="addPortLine('output')">
+                        {{ "toolBar.modal.addOutput" | translate}}
+                    </d-button>
                     <div>
                         <d-data-table
                             [dataSource]="formDataCreateFlowunit.port_infos"
@@ -563,7 +596,9 @@
                                         [rowItem]="rowItem"
                                         [field]="'device'"
                                         >
-                                        <span *ngIf="!rowItem['nameEditDevice']">{{ rowItem?.device }}</span>
+                                        <span *ngIf="!rowItem['nameEditDevice']">
+                                            {{ rowItem?.device }}
+                                        </span>
                                         <div *ngIf="rowItem['nameEditDevice']" class="customized-editor edit-padding-fix">
                                             <d-select
                                                 [options]="optionsdevice"
@@ -590,14 +625,7 @@
                             </tbody>
                         </d-data-table>
                     </div>
-                    <div>
-                        <button 
-                            style="width:100%; border:1px solid #5e7ce0;"
-                            (click)="addPortLine()">
-                            <i class="icon icon-add"></i>
-                        </button>
-                    </div>
-                </div>
+                </d-form-control>
             </d-form-item>
 
             <d-form-item *ngIf="formDataCreateFlowunit.lang !== 'inference' && 
@@ -619,6 +647,23 @@
                         </d-tabs>
                     </div>
                 </d-form-control>
+                
+                <div
+                    bsStyle="common"
+                    dPopover
+                    [popType]="'default'"
+                    [content]="'详细信息'"
+                    [position]="'top'"
+                    [controlled]="true"
+                    [appendToBody]="false"
+                    [trigger]="'hover'"
+                    >
+                    <i 
+                        class="icon icon-info-o enable-click"
+                        (click)="linkToGuide()">
+                    </i>
+
+                </div>
 
             </d-form-item>
 
@@ -799,6 +844,27 @@
                 </ng-template>
             </d-tab>
         </d-tabs>
+    </d-layout>
+</ng-template>
+
+<ng-template #graphDescription id="graphDescription">
+    <d-layout class="basic-usage">
+        
+        <p class="description">1. Ctrl+鼠标左键可以拖动画布。</p>
+        <br/>
+        <p class="description">2. 放大缩小：鼠标滚轮，或键盘，-，=按键。</p>
+        <br/>
+        <p class="description">3. 全选：ctrl+a</p>
+        <br/>
+        <p class="description">4. 撤销：ctrl+z</p>
+        <br/>
+        <p class="description">5. 重做：ctrl+u</p>
+        <br/>
+        <p class="description">6. 取消选择：escape</p>
+        <br/>
+        <br/>
+        <p class="description">详细内容可参考<a style="font-size:18px" href="https://modelbox-ai.com/modelbox-book/plugins/editor.html" target="_blank">指导</a></p>
+
     </d-layout>
 </ng-template>
 

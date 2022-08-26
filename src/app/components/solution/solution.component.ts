@@ -15,7 +15,7 @@ import { HeaderMainComponent } from '../header-main/header-main.component';
   styleUrls: ['./solution.component.less']
 })
 export class SolutionComponent implements OnInit {
-  @ViewChild('textEditor') editor: TextEditorComponent;
+  @ViewChild('text') editor: TextEditorComponent;
   @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
   @ViewChild('header') header: HeaderMainComponent;
@@ -76,7 +76,6 @@ export class SolutionComponent implements OnInit {
       this.profile = this.project.profile;
       this.updateStatus();
     }
-
   }
 
   ngAfterViewInit(): void {
@@ -488,6 +487,7 @@ export class SolutionComponent implements OnInit {
 
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
+    this.setEditorMarkers(components);
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
       this.currentComponent.attributes = Object.keys(
@@ -516,6 +516,25 @@ export class SolutionComponent implements OnInit {
       this.currentComponent = null;
     }
   };
+
+  setEditorMarkers(components) {
+    let marks = [];
+    for (const component of components) {
+      if (component.locations) {
+        for (const location of component.locations) {
+          let mark = {
+            startRow: location.start.line - 1,
+            startCol: location.start.column - 1,
+            endRow: location.end.line - 1,
+            endCol: location.end.column - 1,
+          }
+          marks.push(mark);
+        }
+      }
+
+    }
+    this.editor.handleMarkers(marks)
+  }
 
   createOptionFromProject = (item) => {
     let params = {};
