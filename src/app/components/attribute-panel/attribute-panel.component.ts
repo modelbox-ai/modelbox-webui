@@ -139,7 +139,7 @@ export class AttributePanelComponent {
     blur: () => {
       let config = { ...this.config };
       // 处理 node name更改
-      if (this.newName !== this.config.name && this.unit) {
+      if ((this.newName !== this.config.name) && this.unit) {
         const nodes = { ...this.dotGraph.nodes };
         let nodesName = Object.keys(nodes);
         if (nodesName.indexOf(this.newName) > -1) {
@@ -523,29 +523,28 @@ export class AttributePanelComponent {
   }
 
   handleAdvance(config, prop) {
-
     let num = config.attributes.find((item, index) => {
       if (item.key === prop) {
         return index;
       }
     });
-    
-    if (num?.value) {
-      if (this.unit["advance"][prop]) {
-        config.attributes[config.attributes.indexOf(num)].value = this.unit["advance"][prop];
-      } else {
-        config.attributes.splice(config.attributes.indexOf(num));
-      }
+    if (num) {
+      if (num?.value) {
+        if (this.unit["advance"][prop]) {
+          config.attributes[config.attributes.indexOf(num)].value = this.unit["advance"][prop];
+        } else {
+          config.attributes.splice(config.attributes.indexOf(num));
+        }
 
-    } else {
-      if (this.unit["advance"][prop]) {
-        config.attributes.push({
-          key: prop,
-          value: this.unit["advance"][prop]
-        });
+      } else {
+        if (this.unit["advance"][prop]) {
+          config.attributes.push({
+            key: prop,
+            value: this.unit["advance"][prop]
+          });
+        }
       }
     }
-
     return config;
   }
 }

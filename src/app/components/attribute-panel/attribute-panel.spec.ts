@@ -94,15 +94,65 @@ describe("AttributePanelComponent", () => {
     app.unit = unit_example;
     app.unitType = unit_type_target;
     app.unitOptions = unit_options_example;
-    expect(app.newName !== app.config.name && app.unit).toBeFalsy();
+    expect((app.newName !== app.config.name) && app.unit).toBeFalsy();
     app.newName = "test";
-    expect(app.newName !== app.config.name && app.unit).toBeTruthy();
+    expect((app.newName !== app.config.name) && app.unit).toBeTruthy();
     app.dotGraph = dotGraph_example;
     app.onNodeAttributeChange = function (x, y) { };
     app.attributeModel.blur();
     expect(app.config.name).toEqual(app.newName);
   });
 
+  it('ngOnChanges', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.config = config;
+    app.ngOnChanges(null);
+    expect(app.newName).toBeTruthy();
+    expect(app.config["attributes"]).toBeTruthy();
 
+    let modals = document.querySelectorAll("d-modal");
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('ngOnInit', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.config = config;
+    app.ngOnInit();
+    expect(app.newName).toBeTruthy();
+    expect(app.config["attributes"]).toBeTruthy();
+
+    let modals = document.querySelectorAll("d-modal");
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('ngOnDestroy', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.config = config;
+    app.changedValue = false;
+    app.ngOnDestroy();
+    expect(app.config).toBeTruthy();
+
+    app.changedValue = true;
+    app.onNodeAttributeChange = function (x, y) { };
+    app.ngOnDestroy();
+    expect(app.config).toBeFalsy();
+
+  });
+
+  it('handleAdvance', () => {
+    const fixture = TestBed.createComponent(AttributePanelComponent);
+    const app = fixture.componentInstance;
+    app.config = config;
+    app.unit = unit_example;
+    app.handleAdvance(config, "deviceid");
+    expect(app.unit['advance']).toBeTruthy();
+  });
 
 });

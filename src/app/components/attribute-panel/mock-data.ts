@@ -455,6 +455,11 @@ export let unit_example = {
     }
   ],
   "name": "resize",
+  "advance": {
+    deviceid: "",
+    batchSize: "",
+    queueSize: ""
+  },
   "options": [
     {
       "default": "640",
