@@ -89,6 +89,21 @@ export let openProject =
         "format": "graphviz",
         "graphconf": "digraph hello_world_diagraph {\n    node [shape=Mrecord]\n    httpserver_sync_receive[type=flowunit, flowunit=httpserver_sync_receive, device=cpu, time_out_ms=5000, endpoint=\"http://0.0.0.0:7770\", max_requests=100]\n    hello_world[type=flowunit, flowunit=hello_world, device=cpu]\n    httpserver_sync_reply[type=flowunit, flowunit=httpserver_sync_reply, device=cpu]\n\n    httpserver_sync_receive:out_request_info -> hello_world:in_data\n    hello_world:out_data -> httpserver_sync_reply:in_reply_info\n}\n"
       }
+    },
+    {
+      "driver": {
+        "dir": [
+          "/opt/modelbox/application/cqw1234/flowunit"
+        ]
+      },
+      "flow": {
+        "desc": "A hello world REST API service demo.",
+        "name": "HelloWorld"
+      },
+      "graph": {
+        "format": "graphviz",
+        "graphconf": "digraph hello_world_diagraph2 {\n    node [shape=Mrecord]\n    httpserver_sync_receive[type=flowunit, flowunit=httpserver_sync_receive, device=cpu, time_out_ms=5000, endpoint=\"http://0.0.0.0:7770\", max_requests=100]\n    hello_world[type=flowunit, flowunit=hello_world, device=cpu]\n    httpserver_sync_reply[type=flowunit, flowunit=httpserver_sync_reply, device=cpu]\n\n    httpserver_sync_receive:out_request_info -> hello_world:in_data\n    hello_world:out_data -> httpserver_sync_reply:in_reply_info\n}\n"
+      }
     }
   ],
   "project_name": "cqw1234",
@@ -176,3 +191,25 @@ export let dirs = {
     }
   ]
 }
+
+export let folderList = [
+  {
+    "folder": "返回上级",
+    "isProject": "是否modelbox项目"
+  },
+  {
+    "folder": "CMake"
+  },
+  {
+    "folder": "package"
+  },
+  {
+    "folder": "src"
+  },
+  {
+    "folder": "test"
+  },
+  {
+    "folder": "thirdparty"
+  }
+]

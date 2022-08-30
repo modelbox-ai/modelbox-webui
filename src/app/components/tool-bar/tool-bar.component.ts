@@ -49,7 +49,8 @@ export class ToolBarComponent {
   @ViewChild('createFlowunit', { static: true }) createFlowunitTemplate: TemplateRef<any>;
   @ViewChild('graphSelect', { static: true }) graphSelectTemplate: TemplateRef<any>;
   @ViewChild('newGraph', { static: true }) newGraphTemplate: TemplateRef<any>;
-
+  @ViewChild('graphDescription', { static: true }) graphDescriptionTemplate: TemplateRef<any>;
+  
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() graphs: any = {};
@@ -1212,7 +1213,7 @@ export class ToolBarComponent {
   }
 
 
-  openProject(comp) {
+  openProject(comp = null) {
     if (this.folderList.indexOf("src")) {
       this.basicService.openProject(this.openproject_path).subscribe(
         (data: any) => {
@@ -1262,9 +1263,10 @@ export class ToolBarComponent {
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
             }
             this.saveProjectEmmiter.emit();
-
-            comp.modalInstance.hide();
-            comp.modalInstance.zIndex = -1;
+            if (comp) {
+              comp.modalInstance.hide();
+              comp.modalInstance.zIndex = -1;
+            }
             this.refreshFlowunit();
             if (data.graphs.length > 1) {
               this.showGraphSelectDialog(this.graphSelectTemplate);
@@ -1351,12 +1353,12 @@ export class ToolBarComponent {
     return graphName;
   }
 
-  
-  openDialog(){
+
+  openDialog() {
     this.openDialogEmmiter.emit();
   }
 
-  linkToGuide(){
+  linkToGuide() {
     window.open('https://modelbox-ai.com/modelbox-book/faq/faq.html');
   }
 
@@ -1403,7 +1405,7 @@ export class ToolBarComponent {
     }
   }
 
-  showGraphDescriptionDialog(content: TemplateRef<any>){
+  showGraphDescriptionDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
       id: 'graphDescription',
       width: '400px',
@@ -1421,7 +1423,7 @@ export class ToolBarComponent {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
-         
+
         },
       }],
     });

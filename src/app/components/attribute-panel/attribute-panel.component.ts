@@ -139,7 +139,7 @@ export class AttributePanelComponent {
     blur: () => {
       let config = { ...this.config };
       // 处理 node name更改
-      if ((this.newName !== this.config.name) && this.unit) {
+      if ((this.newName !== this.config.name) && (this.unit != undefined)) {
         const nodes = { ...this.dotGraph.nodes };
         let nodesName = Object.keys(nodes);
         if (nodesName.indexOf(this.newName) > -1) {

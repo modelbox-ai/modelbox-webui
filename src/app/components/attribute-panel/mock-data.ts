@@ -246,6 +246,7 @@ export let unit_http_receive = {
 }
 
 export let config = {
+  "name": "httpserver_sync_receive",
   "attributes": [
     {
       "key": "type",
@@ -302,7 +303,6 @@ export let config = {
       }
     }
   ],
-  "name": "httpserver_sync_receive"
 }
 
 export let unit_type_target = {
