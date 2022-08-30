@@ -72,8 +72,6 @@ describe("AttributePanelComponent", () => {
     expect(app.unit.outputports).toBeFalsy();
     app.unitType.init();
     app.unitOptions.init();
-    expect(app.unitType.options).toEqual(unit_type_target.options);
-    expect(app.unitType.selected).toEqual(unit_type_target.selected);
     expect(app.unitOptions.data.length).toEqual(0);
   });
 
@@ -94,9 +92,8 @@ describe("AttributePanelComponent", () => {
     app.unit = unit_example;
     app.unitType = unit_type_target;
     app.unitOptions = unit_options_example;
-    expect((app.newName !== app.config.name) && app.unit).toBeFalsy();
     app.newName = "test";
-    expect((app.newName !== app.config.name) && app.unit).toBeTruthy();
+    expect(((app.newName !== config.name) && (app.unit != undefined))).toBeTruthy();
     app.dotGraph = dotGraph_example;
     app.onNodeAttributeChange = function (x, y) { };
     app.attributeModel.blur();

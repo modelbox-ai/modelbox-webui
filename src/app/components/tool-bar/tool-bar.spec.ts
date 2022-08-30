@@ -9,10 +9,11 @@ import { DataServiceService } from "@shared/services/data-service.service";
 import { DialogService } from "ng-devui/modal";
 import { OverlayContainerModule, OverlayContainerRef } from "ng-devui/overlay-container";
 import { Observable } from "rxjs";
-import { dirs, formDataCreateFlowunit, graphSelectTableDataForDisplay, openProject, project, rowItem, solutions } from "./mock-data";
+import { dirs, folderList, formDataCreateFlowunit, graphSelectTableDataForDisplay, openProject, project, rowItem, solutions } from "./mock-data";
 import { ToolBarComponent } from "./tool-bar.component";
 import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { templateTarget } from "@shared/services/mock-data";
+import { dotSrc } from "../text-editor/mock-data";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -391,6 +392,21 @@ describe("ToolBarComponent", () => {
     expect(app.formDataCreateFlowunit.port_infos.length).toEqual(0);
   });
 
+  it('addPortLine', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    app.addPortLine("output");
+    expect(app.portInfo['port_type']).toBeTruthy();
+    expect(app.portInfo['port_name']).toBeTruthy();
+    expect(app.out_num).toEqual(2);
+    app.addPortLine("input");
+    expect(app.portInfo['port_type']).toBeTruthy();
+    expect(app.portInfo['port_name']).toBeTruthy();
+    expect(app.in_num).toEqual(2);
+    app.addPortLine("output");
+    expect(app.out_num).toEqual(3);
+  });
+
   it('onCheckboxPerfTraceEnableChange', () => {
     const fixture = TestBed.createComponent(ToolBarComponent);
     const app = fixture.componentInstance;
@@ -524,6 +540,97 @@ describe("ToolBarComponent", () => {
     const app = fixture.componentInstance;
     app.onPathSelect("/root");
     expect(app.openproject_path).toBeTruthy();
+  });
+
+  it('openProject', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+
+    let basicService = TestBed.inject(BasicServiceService);
+    app.folderList = folderList;
+    app.openproject_path = openProject.project_path;
+    spyOn(basicService, "openProject").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(openProject);
+      }));
+    app.showGraphSelectDialog = function (x) { };
+    app.openProject(null);
+    expect(app.currentGraph.graph.graphconf).toBeTruthy();
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('formatDotSrc', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let text = dotSrc;
+    let newDotSrc = app.formatDotSrc(text);
+    expect(newDotSrc).toBeTruthy();
+  });
+
+  it('showSaveAsDialog', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
+
+    spyOn(basicService, "openProject").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next(openProject);
+      }));
+
+    app.showSaveAsDialog();
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+
+  });
+
+  it('openDialog', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+
+    app.openDialog();
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('createProjectParam', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+
+    let params = app.createProjectParam(project);
+    expect(params["job_graph"]).toBeTruthy();
+
+  });
+
+  it('infoCreateProjectFirst', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+
+    expect(app.infoCreateProjectFirst()).toBeFalse();
+    app.formDataCreateProject["name"] = "test";
+    expect(app.infoCreateProjectFirst()).toBeTrue();
+  });
+
+  it('showGraphDescriptionDialog', () => {
+    const fixture = TestBed.createComponent(ToolBarComponent);
+    const app = fixture.componentInstance;
+
+    app.showGraphDescriptionDialog(app.graphDescriptionTemplate);
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
   });
 
 });
