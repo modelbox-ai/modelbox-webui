@@ -15,10 +15,10 @@ import { HeaderMainComponent } from '../header-main/header-main.component';
   styleUrls: ['./solution.component.less']
 })
 export class SolutionComponent implements OnInit {
-  @ViewChild('text') editor: TextEditorComponent;
-  @ViewChild('toolBarSolution') tool: ToolBarSolutionComponent;
-  @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
-  @ViewChild('header') header: HeaderMainComponent;
+  @ViewChild('text', { static: true }) editor: TextEditorComponent;
+  @ViewChild('toolBarSolution', { static: true }) tool: ToolBarSolutionComponent;
+  @ViewChild('attributePanel', { static: true }) attributePanel: AttributePanelComponent;
+  @ViewChild('header', { static: true }) header: HeaderMainComponent;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
@@ -414,6 +414,7 @@ export class SolutionComponent implements OnInit {
     this.statusGraph = "running";
     this.graphs = {};
     this.project = JSON.parse(sessionStorage.getItem("projectSolution"));
+    
     this.saveCurrentProject();
     this.graphs[this.project.name] = this.project;
     this.saveGraphs();

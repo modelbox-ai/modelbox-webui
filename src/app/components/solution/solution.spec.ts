@@ -11,7 +11,8 @@ import { Observable } from "rxjs";
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 import { BasicServiceService } from "@shared/services/basic-service.service";
 import { dotSrc } from "../text-editor/mock-data";
-import { solutions } from "../tool-bar/mock-data";
+import { project, solutions } from "../tool-bar/mock-data";
+import { solutionProject, solutionList, driver, graph, flow } from "./mock-data";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -231,10 +232,97 @@ describe("SolutionComponent", () => {
     const app = fixture.componentInstance;
   });
 
-  it('handleRunButtonClick && handlehandleStopButtonClick \
-    && handleRestartButtonClick', () => {
+  it('handleRunButtonClick', () => {
     const fixture = TestBed.createComponent(SolutionComponent);
     const app = fixture.componentInstance;
+    app.tool.solutionList = solutionList;
+    app.project = solutionProject;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = flow;
+    app.header.goManagement = function () { };
+    spyOn(service, "createTask").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({
+
+        });
+      }));
+    app.handleRunButtonClick();
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('handleStopButtonClick', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.tool.solutionList = solutionList;
+    app.project = solutionProject;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = {
+      "desc": "A hello world REST API service demo.",
+      "name": "HelloWorld"
+    };
+    app.header.goManagement = function () { };
+    spyOn(service, "getTaskLists").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({
+          job_list: [
+            {
+              "job_error_msg": "",
+              "job_id": "hello_world_diagraph",
+              "job_status": "RUNNING"
+            }
+          ]
+        });
+      }));
+    app.handleStopButtonClick("hello_world_diagraph");
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
+  });
+
+  it('handleRestartButtonClick', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.tool.solutionList = solutionList;
+    app.project = solutionProject;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = {
+      "desc": "A hello world REST API service demo.",
+      "name": "HelloWorld"
+    };
+    app.header.goManagement = function () { };
+    spyOn(service, "getTaskLists").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({
+          job_list: [
+            {
+              "job_error_msg": "",
+              "job_id": "hello_world_diagraph",
+              "job_status": "RUNNING"
+            }
+          ]
+        });
+      }));
+    app.handleRestartButtonClick("hello_world_diagraph");
+
+    let modals = document.querySelectorAll("d-modal");
+    expect(modals).toBeTruthy();
+    modals.forEach((m) => {
+      m.setAttribute("style", "display:none");
+    });
   });
 
   it('handleGraphComponentSelect', () => {
@@ -242,9 +330,60 @@ describe("SolutionComponent", () => {
     const app = fixture.componentInstance;
   });
 
+  it('setEditorMarkers', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+  });
+
   it('createOptionFromProject', () => {
     const fixture = TestBed.createComponent(SolutionComponent);
     const app = fixture.componentInstance;
+    app.tool.solutionList = solutionList;
+
+    let params = app.createOptionFromProject(solutionProject);
+    expect(params['job_id']).toEqual(params['graph_name']);
+  });
+
+  it('getProjectJson', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = flow;
+    expect(app.getProjectJson()).toBeTruthy();
+  });
+
+  it('saveCurrentProject', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = flow;
+    app.saveCurrentProject();
+    expect(sessionStorage.getItem("projectSolution")).toBeTruthy();
+  });
+
+  it('saveGraphs', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.dotSrc = dotSrc;
+    app.driver = driver;
+    app.graph = graph;
+    app.flow = flow;
+    app.graphs = ["1", "2"];
+    app.saveGraphs();
+    expect(sessionStorage.getItem("projectSolution")).toBeTruthy();
+    expect(sessionStorage.getItem("graphsSolution")).toBeTruthy();
+  });
+
+  it('renameGraphSrc', () => {
+    const fixture = TestBed.createComponent(SolutionComponent);
+    const app = fixture.componentInstance;
+    app.dotSrc = dotSrc;
+    app.renameGraphSrc("test");
+    expect(app.dotSrc.indexOf("test")).toEqual(8);
   });
 
 });
