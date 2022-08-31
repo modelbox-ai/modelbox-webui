@@ -35,7 +35,7 @@ export class ToolBarSolutionComponent implements OnInit {
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
 
-  solutionList = [];
+  solutionList: any;
   dirs = [];
   showLoading;
 
@@ -115,6 +115,9 @@ export class ToolBarSolutionComponent implements OnInit {
           obj.desc = item.desc;
           obj.graphfile = item.graphfile;
           obj.name = item.name;
+          if (this.solutionList === undefined) {
+            this.solutionList = [];
+          }
           this.solutionList.push(obj);
 
           let flowunitPath = this.getFlowunitPathFromGraphPath(obj.graphfile);

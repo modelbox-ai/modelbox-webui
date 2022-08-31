@@ -82,6 +82,7 @@ describe("ToolBarSolutionComponent", () => {
     let response = solutionList;
     service.querySolutionList().subscribe(data => {
       let solution = data.demo_list;
+      app.solutionList = [];
       solution.forEach((item) => {
         let obj = { demo: '', desc: '', graphfile: '', name: '' };
         obj.demo = item.demo;
