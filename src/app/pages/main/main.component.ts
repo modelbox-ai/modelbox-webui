@@ -379,8 +379,17 @@ export class MainComponent {
         cancelBtnText: this.i18n.getById('modal.okButton'),
         onClose: (event) => {
           results.modalInstance.hide();
+        },
+        onDownload: (event) => {
           if (event.target.className !== "icon-close") {
-            this.downloadTxt('# 将文件后缀名改成bat，修改好ip地址运行即可直接打开vscode\ncode --remote=ssh-remote+xx.xx.xx.xx[-xxxx] /home', '打开vscode');
+            this.downloadTxt('# 如果在容器内部运行modelbox，那么需要在ip地址后增加“-映射端口号”。\r\n\
+# 例如: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
+code --remote=ssh-remote+' +
+              window.location.hostname +
+              " " +
+              this.toolBar.formDataCreateProject.rootpath +
+              "/" +
+              this.toolBar.formDataCreateProject.name, '打开vscode.bat');
           }
         },
       },
