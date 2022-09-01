@@ -22,4 +22,8 @@ export class ModalVscodeComponent implements OnInit {
     this.data.onClose(event);
   }
 
+  download(event) {
+    this.data.onDownload(event);
+  }
+
 }

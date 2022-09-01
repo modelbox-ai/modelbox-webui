@@ -1,8 +1,11 @@
-
-
-
-<div [dMovable]="true" [handle]="header" [moveEl]="parent" class="modal-vscode">
-  <div class="modal-header" #header>请使用IDE打开代码工程</div>
+<div 
+  [dMovable]="true" 
+  [handle]="header" 
+  [moveEl]="parent" 
+  class="modal-vscode">
+  <div class="modal-header" #header>
+    请使用IDE打开代码工程
+  </div>
   <div class="modal-body">
     <div>
       <strong>项目路径：</strong>
@@ -15,11 +18,26 @@
       1. 用户使用IDE进行开发， UI提供功能单元创建和图编排功能
       <br>
       <br>
-      2. 推荐使用vscode进行代码开发，使用步骤参考<a style="font-size:16px" href="https://modelbox-ai.com/modelbox-book/" target="_blank">指导</a>
+      2. 推荐使用vscode进行代码开发，可以下载
+      <a 
+        style="font-size:16px; color:#0000EE; cursor:pointer" 
+        (click)="download($event)">
+        批处理
+      </a>
+      文件直接远程启动工程
+      <br>
+      <br>
+      3. 详情可参考
+      <a 
+        style="font-size:16px" 
+        href="https://modelbox-ai.com/modelbox-book/" 
+        target="_blank">
+        指导
+      </a>
     </div>
   </div>
   <div class="modal-footer">
-    <d-button (click)="close($event)" bsStyle="primary" circled="true">{{ data.cancelBtnText }} </d-button>
+    <d-button bsStyle="primary" circled="true">{{ data.cancelBtnText }} </d-button>
   </div>
   <i class="icon-close" (click)="close($event)"></i>
 </div>
