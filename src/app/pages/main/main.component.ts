@@ -85,11 +85,11 @@ export class MainComponent {
   InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
   createProjectDialogResults;
-  @ViewChild('attributePanel') attributePanel: AttributePanelComponent;
-  @ViewChild('textEditor') editor: TextEditorComponent;
-  @ViewChild('toolBar') toolBar: ToolBarComponent;
-  @ViewChild('header') header: HeaderMainComponent;
-  @ViewChild('graph') graph: GraphComponent;
+  @ViewChild('attributePanel', { static: true }) attributePanel: AttributePanelComponent;
+  @ViewChild('textEditor', { static: true }) editor: TextEditorComponent;
+  @ViewChild('toolBar', { static: true }) toolBar: ToolBarComponent;
+  @ViewChild('header', { static: true }) header: HeaderMainComponent;
+  @ViewChild('graph', { static: true }) graph: GraphComponent;
   @ViewChild('modalGuideMain', { static: true }) modalGuideTemplate: TemplateRef<any>;
 
   handleNodeShapeClick = () => { };
@@ -123,6 +123,10 @@ export class MainComponent {
     private dataService: DataServiceService,
     private toastService: ToastService,
     private modalService: ModalService) {
+    this.constructMainComponent();
+  }
+
+  constructMainComponent() {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
       let path;
