@@ -10,6 +10,9 @@ import { DataServiceService } from '@shared/services/data-service.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OverlayContainerRef } from 'ng-devui/overlay-container';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
+import { project } from "src/app/components/tool-bar/mock-data";
+import { BasicServiceService } from "@shared/services/basic-service.service";
+import { Observable } from "rxjs";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../i18n/', '.json');
@@ -28,7 +31,7 @@ describe("MainComponent", () => {
             deps: [HttpClient]
           }
         }),
-        
+
         HttpClientModule,
         OverlayContainerModule
       ],
@@ -45,7 +48,7 @@ describe("MainComponent", () => {
         ModalService
       ],
       schemas: [
-        CUSTOM_ELEMENTS_SCHEMA, 
+        CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
@@ -54,7 +57,42 @@ describe("MainComponent", () => {
   it('should create the MainComponent', () => {
     const fixture = TestBed.createComponent(MainComponent);
     const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
     expect(app).toBeTruthy();
+  });
+
+  it('constructMainComponent', () => {
+    const fixture = TestBed.createComponent(MainComponent);
+    const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(localStorage.__proto__, 'getItem').and.returnValue(null);
+    spyOn(app, "initCurrentProject");
+    spyOn(basicService, "queryRootPath").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({
+          "home-dir": "/root",
+          "user": "root"
+        });
+      }));
+    app.constructMainComponent();
+    expect(app.initCurrentProject).toHaveBeenCalled();
+  });
+
+  it('constructMainComponent with current project', () => {
+    const fixture = TestBed.createComponent(MainComponent);
+    const app = fixture.componentInstance;
+    let basicService = TestBed.inject(BasicServiceService);
+    spyOn(localStorage.__proto__, 'getItem').and.returnValue(JSON.stringify(project));
+    spyOn(app, "loadProjectFromJson");
+    spyOn(basicService, "queryRootPath").and.returnValue(
+      new Observable(subscriber => {
+        subscriber.next({
+          "home-dir": "/root",
+          "user": "root"
+        });
+      }));
+    app.constructMainComponent();
+    expect(app.loadProjectFromJson).toHaveBeenCalled();
   });
 
 });
