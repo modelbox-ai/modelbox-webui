@@ -150,7 +150,17 @@ export class DataServiceService {
           };
         }
       );
+      this.nodeShapeCategories = this.nodeShapeCategories.sort(this.compare("title"));
     });
+  }
+
+  compare(property) {
+    return function (obj1, obj2) {
+      var value1 = obj1[property];
+      var value2 = obj2[property];
+      let ans = value1.localeCompare(value2);
+      return ans;     // 升序
+    }
   }
 
   // 使用 unit name 及 type获取 对应的 unit

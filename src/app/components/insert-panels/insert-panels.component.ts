@@ -71,7 +71,6 @@ export class InsertPanelsComponent implements OnInit {
   tipNo: string = this.i18n.getById('insertPanels.tip.no');
   dotSrcLastChangeTime: any = Date.now();
   res: any;
-  autoOpenActiveMenu = false;
   showSlideMenu = true;
 
   classes = {
@@ -269,7 +268,6 @@ export class InsertPanelsComponent implements OnInit {
         const unit = {
           ...item,
           title: item.name,
-          active: this.nodeShapeCategories.length == 0 ? true : false,
           types: [
             ...new Set(
               data.flowunits.filter(u => u.name === item.name).map(i => i.type)
@@ -280,13 +278,18 @@ export class InsertPanelsComponent implements OnInit {
         if (group) {
           group.children.push(unit);
         } else {
-          this.nodeShapeCategories.push({
+          let obj = {
             title: item.group,
             collapsed: true,
             children: [unit],
-          });
+          }
+          if (item.group === "Generic") {
+            obj['open'] = true;
+          }
+          this.nodeShapeCategories.push(obj);
         }
 
+        this.nodeShapeCategories = this.nodeShapeCategories.sort(this.compare("title"));
         this.dataService.nodeShapeCategories = this.nodeShapeCategories;
 
       });
@@ -302,6 +305,15 @@ export class InsertPanelsComponent implements OnInit {
         };
       }
     );
+  }
+
+  compare(property) {
+    return function (obj1, obj2) {
+      var value1 = obj1[property];
+      var value2 = obj2[property];
+      let ans = value1.localeCompare(value2);
+      return ans;     // 升序
+    }
   }
 
   ngOnInit(): void {
