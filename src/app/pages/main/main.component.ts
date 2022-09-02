@@ -382,10 +382,11 @@ export class MainComponent {
         },
         onDownload: (event) => {
           if (event.target.className !== "icon-close") {
-            this.downloadTxt('# 如果在容器内部运行modelbox，那么需要在ip地址后增加“-映射端口号”。\r\n\
+            this.downloadTxt('# 如果在容器内部运行modelbox，需要更改映射端口号。\r\n\
 # 例如: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
 code --remote=ssh-remote+' +
               window.location.hostname +
+              "-22" +
               " " +
               this.toolBar.formDataCreateProject.rootpath +
               "/" +
@@ -1165,6 +1166,13 @@ code --remote=ssh-remote+' +
       this.graphs[this.project.graph.graphName] = this.project;
       this.saveGraphs();
       //run
+      if (Array.isArray(this.project.graph.dirs)) {
+        let str = "";
+        this.project.graph.dirs.forEach(element => {
+          str += element + "\n";
+        });
+        this.project.graph.dirs = str.slice(0, str.length - 2);
+      }
       this.project.graph.dirs = this.project.graph.dirs.split("\n");
       let option = this.createOptionFromProject(this.project);
 

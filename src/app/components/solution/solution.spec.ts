@@ -92,6 +92,7 @@ describe("SolutionComponent", () => {
     spyOn(app, "updateStatus");
     app.ngAfterViewInit();
     expect(app.refresh_timer).toBeTruthy();
+    app.refresh_timer = null;
 
   });
 
