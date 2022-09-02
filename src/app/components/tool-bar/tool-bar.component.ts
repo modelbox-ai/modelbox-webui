@@ -1359,7 +1359,7 @@ export class ToolBarComponent {
   }
 
   linkToGuide() {
-    window.open('https://modelbox-ai.com/modelbox-book/faq/faq.html');
+    window.open('https://modelbox-ai.com/modelbox-book/basic-conception/flowunit.html#功能单元类型');
   }
 
   createProjectParam(project) {
