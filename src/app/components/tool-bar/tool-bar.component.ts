@@ -50,7 +50,7 @@ export class ToolBarComponent {
   @ViewChild('graphSelect', { static: true }) graphSelectTemplate: TemplateRef<any>;
   @ViewChild('newGraph', { static: true }) newGraphTemplate: TemplateRef<any>;
   @ViewChild('graphDescription', { static: true }) graphDescriptionTemplate: TemplateRef<any>;
-  
+
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() graphs: any = {};
@@ -305,7 +305,7 @@ export class ToolBarComponent {
   optionsdevice = ['cpu', 'cuda', 'ascend'];
   optionsdevicePython = ['cpu'];
   optionsdeviceYolo = ['cpu'];
-  flowunitGroupOptions = ['generic', 'video', 'inference'];
+  flowunitGroupOptions = ['generic'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
   currentDevice = "cpu";
@@ -334,6 +334,8 @@ export class ToolBarComponent {
       }
     ]
   };
+
+  portTableWidthConfig: TableWidthConfig[] = [];
 
   portHeaderFullOptions = {
     columns: [
@@ -386,6 +388,17 @@ export class ToolBarComponent {
     {
       id: 'collapse',
       title: 'COLLAPSE'
+    }
+  ];
+
+  typesCpu = [
+    {
+      id: 'tensorflow',
+      title: 'Tensorflow'
+    },
+    {
+      id: 'mindspore',
+      title: 'Mindspore'
     }
   ];
 
@@ -709,8 +722,30 @@ export class ToolBarComponent {
   }
 
   langValueChange(value) {
+    let port = [
+      {
+        field: 'inputOutput',
+        width: '80px'
+      },
+      {
+        field: 'portName',
+        width: '140px'
+      },
+      {
+        field: 'device',
+        width: '100px'
+      }, {
+        field: 'data_type',
+        width: '100px'
+      },
+      {
+        field: 'operation',
+        width: '80px'
+      }
+    ];
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
+      this.portTableWidthConfig = port;
       if (this.dataService.deviceTypes.indexOf('cuda') > -1) {
         this.formDataCreateFlowunit.device = 'cuda';
         this.portInfo.device = 'cuda';
@@ -729,16 +764,20 @@ export class ToolBarComponent {
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
-      this.formDataCreateFlowunit.type = 'stream'
+      this.formDataCreateFlowunit.type = 'stream';
+      this.portTableWidthConfig = [];
+
     } else if (value === "c++") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream'
+      this.portTableWidthConfig = [];
     }
 
     if (value === "yolo") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
+      this.portTableWidthConfig = [];
     }
 
     this.formDataCreateFlowunit.name = 'flowunit';

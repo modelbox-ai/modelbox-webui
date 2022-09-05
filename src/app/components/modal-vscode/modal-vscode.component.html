@@ -20,13 +20,13 @@
       <br>
       2. 推荐使用vscode进行代码开发，具体安装及使用方法可参考
       <a 
-        style="font-size:16px" 
+        style="text-decoration: underline;color:#0000EE; cursor:pointer" 
         href="https://developer.huaweicloud.com/develop/aigallery/article/detail?id=f5c39a55-0f72-48c5-b8f3-5ec383b5be91" 
         target="_blank">
         指导
       </a>，如果环境准备完毕，可以直接下载
       <a 
-        style="font-size:16px; color:#0000EE; cursor:pointer" 
+        style="text-decoration: underline; color:#0000EE; cursor:pointer" 
         (click)="download($event)">
         批处理
       </a>
@@ -36,7 +36,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <d-button bsStyle="primary" circled="true">{{ data.cancelBtnText }} </d-button>
+    <d-button bsStyle="primary" circled="true" (click)="close($event)">{{ data.cancelBtnText }} </d-button>
   </div>
   <i class="icon-close" (click)="close($event)"></i>
 </div>
