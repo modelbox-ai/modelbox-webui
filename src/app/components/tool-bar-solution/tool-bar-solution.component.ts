@@ -147,6 +147,11 @@ export class ToolBarSolutionComponent implements OnInit {
     this.handleSelectChange(e);
     this.selectDemoDialog.modalInstance.hide();
     this.selectDemoDialog.modalInstance.zIndex = -1;
+
+    setTimeout(() => {
+      this.handleZoomResetButtonClick(e);
+    }, 1000);
+
   }
 
   showSelectDemoDialog(content: TemplateRef<any>) {

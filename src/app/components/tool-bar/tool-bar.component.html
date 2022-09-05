@@ -510,6 +510,7 @@
                             maxHeight="200px"
                             [scrollable]="true"
                             [tableOverflowType]="'overlay'"
+                            [tableWidthConfig]="portTableWidthConfig"
                             >
                             <thead dTableHead>
                                 <tr dTableRow *ngIf="formDataCreateFlowunit.lang !== 'inference'">
@@ -550,7 +551,7 @@
                                     <td 
                                         dTableCell
                                         [editable]="true" 
-                                        [editableTip]="editableTipBtn"
+                                        [editableTip]="editableTipHover"
                                         [rowItem]="rowItem" 
                                         [(editing)]="rowItem['nameEditPortName']"
                                         >
@@ -672,6 +673,16 @@
                     {{'virtualType' | translate}}
                 </d-form-label>
                 <d-form-control style="height:32px">
+                    <d-tabs 
+                        *ngIf="currentDevice === 'cpu'"
+                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
+                        type="slider">
+                        <d-tab *ngFor="let item of typesCpu" [id]="item.id">
+                            <ng-template dTabTitle>
+                                {{ item.title }}
+                            </ng-template>
+                        </d-tab>
+                    </d-tabs>
                     <d-tabs 
                         *ngIf="currentDevice === 'cuda'"
                         [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
