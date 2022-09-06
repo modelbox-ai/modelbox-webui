@@ -161,3 +161,9 @@
     </d-button>
   </div>
 </ng-template>
+<ng-template #modalBat id='modalBat' let-context='context'>
+  IP：<input dTextInput placeholder="Please Enter" id="textInput" [(ngModel)]="ipAddress"/>
+  <br>
+  <br>
+  端口：<input dTextInput placeholder="Please Enter" id="textInput" [(ngModel)]="portAddress"/>
+</ng-template>

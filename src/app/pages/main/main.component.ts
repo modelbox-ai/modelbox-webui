@@ -91,6 +91,8 @@ export class MainComponent {
   @ViewChild('header', { static: true }) header: HeaderMainComponent;
   @ViewChild('graph', { static: true }) graph: GraphComponent;
   @ViewChild('modalGuideMain', { static: true }) modalGuideTemplate: TemplateRef<any>;
+  @ViewChild('modalBat', { static: true }) modalBatTemplate: TemplateRef<any>;
+
 
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
@@ -116,6 +118,8 @@ export class MainComponent {
   msgs: Array<Object> = [];
   typeFlowunit: any;
   resultsOpenGuideMain: any;
+  ipAddress: any;
+  portAddress: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -158,6 +162,8 @@ export class MainComponent {
     if (!JSON.parse(localStorage.getItem('project'))) {
       this.openGuideMain();
     }
+    this.ipAddress = window.location.hostname;
+    this.portAddress = "22";
   }
 
   ngAfterViewInit() {
@@ -382,18 +388,49 @@ export class MainComponent {
         },
         onDownload: (event) => {
           if (event.target.className !== "icon-close") {
-            this.downloadTxt('# 如果在容器内部运行modelbox，需要更改映射端口号。\r\n\
+            this.openBatDialog();
+          }
+        },
+      },
+    });
+  }
+  openBatDialog() {
+    const results = this.dialogService.open({
+      id: 'dialog-bat',
+      width: '346px',
+      title: '请输入ip地址',
+      contentTemplate: this.modalBatTemplate,
+      backdropCloseable: true,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: this.i18n.getById('modal.okButton'),
+          handler: ($event: Event) => {
+            let text = '# 如果在容器内部运行modelbox，需要更改映射端口号。\r\n\
 # 例如: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
-code --remote=ssh-remote+' +
-              window.location.hostname +
-              "-22" +
+code --remote=ssh-remote+' + this.ipAddress;
+            if (this.portAddress) {
+              text += "-" + this.portAddress;
+            }
+            this.downloadTxt(
+              text +
               " " +
               this.toolBar.formDataCreateProject.rootpath +
               "/" +
               this.toolBar.formDataCreateProject.name, '打开vscode.bat');
-          }
+            results.modalInstance.hide();
+            results.modalInstance.zIndex = -1;
+          },
         },
-      },
+        {
+          cssClass: 'primary',
+          text: this.i18n.getById('modal.cancelButton'),
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+            results.modalInstance.zIndex = -1;
+          },
+        }
+      ],
     });
   }
 
