@@ -65,6 +65,7 @@
   "toolBar.selectDemo": "选择示例",
   "toolBar.graphSettingButton": "图属性",
   "toolBar.graphDescriptionButton": "按键说明",
+  "toolBar.downloadGraph": "下载图",
   "toolBar.graphSelectButton": "选择图",
   "toolBar.graph": "图相关",
   "toolBar.selectDialogButton": "加载图",
