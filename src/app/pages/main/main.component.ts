@@ -442,6 +442,26 @@ code --remote=ssh-remote+' + this.ipAddress;
     element.click();
   }
 
+  downloadGraph() {
+    this.handleZoomFitButtonClick();
+    let result = document.getElementById("graph0").parentElement.outerHTML;
+    this.downloadImg(result, "graphviz.svg");
+  }
+
+
+  downloadImg(result, fileName) {
+    let parser = new DOMParser();
+    let svg = parser.parseFromString(result, "image/svg+xml");
+    let serializer = new XMLSerializer();
+    let source = serializer.serializeToString(svg);
+
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source));
+    element.setAttribute('download', fileName);
+    element.style.display = 'none';
+    element.click();
+  }
+
   getGraphNameFromGraph(graph) {
     let graphName = "";
     if (graph) {

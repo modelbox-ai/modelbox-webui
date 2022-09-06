@@ -92,6 +92,8 @@ export class ToolBarComponent {
   @Output() saveSettingEmmiter = new EventEmitter();
   @Output() removeLabelEmmiter = new EventEmitter();
   @Output() openDialogEmmiter = new EventEmitter();
+  @Output() downloadGraphEmmiter = new EventEmitter();
+  
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -991,6 +993,10 @@ export class ToolBarComponent {
       },]
     });
     return results;
+  }
+
+  downloadGraph(){
+    this.downloadGraphEmmiter.emit();
   }
 
   onNewGraphClickOk(results) {
