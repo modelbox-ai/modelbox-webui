@@ -387,8 +387,30 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.dotGraph.reparse();
     this.formatDotSrc();
     this.addDefaultPropertiesForUnit(attributes, nodeName);
+    this.dotGraph.dotSrc = this.formatDotSrcStruct(this.dotGraph.dotSrc);
     this.onTextChange(this.dotGraph.dotSrc);
   }
+
+  formatDotSrcStruct(text) {
+    let tmp = text.split("\n");
+    let new_text = "";
+    let new_relation = "";
+    for (let i of tmp) {
+      if (i.trim().length > 0) {
+        if (i === "}") {
+          new_text = new_text + '\n' + new_relation + '\n' + i + '\n';
+          break;
+        }
+        if (i.indexOf("->") > -1) {
+          new_relation = new_relation.concat(i, '\n');
+        } else {
+          new_text = new_text.concat(i, '\n');
+        }
+      }
+    }
+    return new_text;
+  }
+
 
   addDefaultPropertiesForUnit(attributes, nodeName) {
     const edges = [];
