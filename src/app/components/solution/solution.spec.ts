@@ -92,8 +92,7 @@ describe("SolutionComponent", () => {
     spyOn(app, "updateStatus");
     app.ngAfterViewInit();
     expect(app.refresh_timer).toBeTruthy();
-    app.refresh_timer = null;
-
+    clearInterval(app.refresh_timer);
   });
 
   it('updateStatus', () => {
@@ -118,6 +117,7 @@ describe("SolutionComponent", () => {
     app.updateStatus();
     expect(app.statusGraph).toEqual("fault");
 
+    clearInterval();
   });
 
   it('handleTextChange && createUntitledName', () => {

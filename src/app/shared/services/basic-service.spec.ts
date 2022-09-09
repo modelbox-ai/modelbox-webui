@@ -400,7 +400,7 @@ describe('BasicServiceService', () => {
 
   });
 
-  it('httpclienr 404 error test case', () => {
+  it('httpclient 404 error test case', () => {
     const errormsg = 'mock 404 error';
     service.queryRootPath().subscribe((get) => {
       fail('fail with error 404');

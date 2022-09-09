@@ -29,6 +29,7 @@ export class DataServiceService {
   public msgstack = [];
   public deviceTypes = [];
   data: any;
+  currentUser = "root";
 
 
   constructor(
