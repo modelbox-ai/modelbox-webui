@@ -134,6 +134,7 @@ export class MainComponent {
     const current_project = JSON.parse(localStorage.getItem('project'));
     this.basicService.queryRootPath().subscribe((data) => {
       let path;
+      this.dataService.currentUser = data['user'];
       if (data['user'] === "modelbox") {
         path = "/tmp";
       } else {
@@ -406,12 +407,39 @@ export class MainComponent {
           cssClass: 'primary',
           text: this.i18n.getById('modal.okButton'),
           handler: ($event: Event) => {
-            let text = '# 如果在容器内部运行modelbox，需要更改映射端口号。\r\n\
-# 例如: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
-code --remote=ssh-remote+' + this.ipAddress;
+            let host = this.ipAddress;
             if (this.portAddress) {
-              text += "-" + this.portAddress;
+              host += "-" + this.portAddress;
             }
+            let text = 'REM If you run modelbox inside a container, you need to change the mapped port number. \r\n\
+REM For example: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
+@ECHO off\r\n\
+FINDSTR "' + host + '" "C:\\Users\\%USERNAME%\\.ssh\\config">nul\r\n\
+IF ERRORLEVEL 1 (\r\n\
+ECHO Host '+ host + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
+ECHO HostName '+ this.ipAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
+ECHO User '+ this.dataService.currentUser + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
+ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
+)\r\n';
+            text += 'code --remote=ssh-remote+' 
+                  + host 
+                  + " "
+                  + this.toolBar.formDataCreateProject.rootpath 
+                  + "/" 
+                  + this.toolBar.formDataCreateProject.name
+                  + "\r\n";
+            text += 'IF ERRORLEVEL 9009 (\r\n\
+  REM 9009 vscode cannot be found\r\n\
+  REM Download vscode installer\r\n\
+  IF %PROCESSOR_ARCHITECTURE%==AMD64 (\r\n\
+    ECHO Downloading installer from https://code.visualstudio.com/docs/?dv=win64user\r\n\
+    START https://code.visualstudio.com/docs/?dv=win64user\r\n\
+  )\r\n\
+  IF %PROCESSOR_ARCHITECTURE%==x86 (\r\n\
+    ECHO Downloading installer from https://code.visualstudio.com/docs/?dv=win32user\r\n\
+    START https://code.visualstudio.com/docs/?dv=win32user\r\n\
+  )\r\n'
+
             this.downloadTxt(
               text +
               " " +
