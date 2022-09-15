@@ -28,8 +28,8 @@ import { ModalGuideMainComponent } from 'src/app/components/modal-guide-main/mod
   encapsulation: ViewEncapsulation.None,
 })
 export class MainComponent {
-  @ViewChild('splitV') splitV: SplitComponent;
-  @ViewChild('splitH') splitH: SplitComponent;
+  @ViewChild('splitV', { static: true }) splitV: SplitComponent;
+  @ViewChild('splitH', { static: true }) splitH: SplitComponent;
 
   activeEditor: boolean = true;
   activeTaskLists: boolean = false;
@@ -82,9 +82,9 @@ export class MainComponent {
   currentComponent: any;
   folderList: any = [];
   modelFlowunitPath = [];
-  InsertPanels: InsertPanelsComponent;
   AttributePanel: AttributePanelComponent;
   createProjectDialogResults;
+  @ViewChild('insertPanel', { static: true }) InsertPanels: InsertPanelsComponent;
   @ViewChild('attributePanel', { static: true }) attributePanel: AttributePanelComponent;
   @ViewChild('textEditor', { static: true }) editor: TextEditorComponent;
   @ViewChild('toolBar', { static: true }) toolBar: ToolBarComponent;
@@ -120,6 +120,7 @@ export class MainComponent {
   resultsOpenGuideMain: any;
   ipAddress: any;
   portAddress: any;
+  refresh_timer: any;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -157,7 +158,7 @@ export class MainComponent {
     let item = JSON.parse(sessionStorage.getItem('statusGraph')) || undefined;
     if (item !== undefined) {
       this.updataStatusGraph();
-      setInterval(() => { this.updataStatusGraph(); }, 5000);
+      this.refresh_timer = setInterval(() => { this.updataStatusGraph(); }, 5000);
     }
 
     if (!JSON.parse(localStorage.getItem('project'))) {
@@ -856,7 +857,7 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
             this.resetUndoAtNextTextChange = true;
             setTimeout(() => {
               this.handleZoomResetButtonClick();
-            }, 1000)
+            }, 1000);
           },
         },
         {

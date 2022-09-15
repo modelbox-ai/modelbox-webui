@@ -117,7 +117,7 @@ describe("SolutionComponent", () => {
     app.updateStatus();
     expect(app.statusGraph).toEqual("fault");
 
-    clearInterval();
+    clearInterval(app.refresh_timer);
   });
 
   it('handleTextChange && createUntitledName', () => {
@@ -242,20 +242,24 @@ describe("SolutionComponent", () => {
     app.driver = driver;
     app.graph = graph;
     app.flow = flow;
-    app.header.goManagement = function () { };
-    spyOn(service, "createTask").and.returnValue(
-      new Observable(subscriber => {
-        subscriber.next({
+    setTimeout(() => {
+      app.header.goManagement = function () { };
+      spyOn(service, "createTask").and.returnValue(
+        new Observable(subscriber => {
+          subscriber.next({
 
-        });
-      }));
-    app.handleRunButtonClick();
+          });
+        }));
+      app.handleRunButtonClick();
 
-    let modals = document.querySelectorAll("d-modal");
-    expect(modals).toBeTruthy();
-    modals.forEach((m) => {
-      m.setAttribute("style", "display:none");
-    });
+      let modals = document.querySelectorAll("d-modal");
+      expect(modals).toBeTruthy();
+      modals.forEach((m) => {
+        m.setAttribute("style", "display:none");
+      });
+    }, 1000)
+
+
   });
 
   it('handleStopButtonClick', () => {
