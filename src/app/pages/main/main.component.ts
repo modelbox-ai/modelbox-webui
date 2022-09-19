@@ -473,7 +473,22 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
 
   downloadGraph() {
     this.handleZoomFitButtonClick();
-    let result = document.getElementById("graph0").parentElement.outerHTML;
+    let svgs = document.getElementsByTagName("svg");
+    let g = document.getElementById("graph0");
+    let width = g.getBoundingClientRect().width;
+
+
+    let svg = svgs[svgs.length - 1];
+    let xforms = g.getAttribute('transform');
+    let parts = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)/.exec(xforms);
+    let firstX = parts[1];
+    let firstY = parts[2];
+    let scaleIndex = xforms.indexOf("scale");
+    let scale = xforms.slice(scaleIndex, xforms.length);
+
+    // Setting
+    g.setAttribute('transform', 'translate(10, ' + firstY + ')' + scale);
+    let result = svg.outerHTML;
     this.downloadImg(result, "graphviz.svg");
   }
 
