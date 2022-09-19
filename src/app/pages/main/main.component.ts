@@ -92,7 +92,7 @@ export class MainComponent {
   @ViewChild('graph', { static: true }) graph: GraphComponent;
   @ViewChild('modalGuideMain', { static: true }) modalGuideTemplate: TemplateRef<any>;
   @ViewChild('modalBat', { static: true }) modalBatTemplate: TemplateRef<any>;
-
+  @ViewChild('customTemplate') customTemplate: TemplateRef<any>;
 
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
@@ -422,13 +422,13 @@ ECHO HostName '+ this.ipAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
 ECHO User '+ this.dataService.currentUser + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
 ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
 )\r\n';
-            text += 'code --remote=ssh-remote+' 
-                  + host 
-                  + " "
-                  + this.toolBar.formDataCreateProject.rootpath 
-                  + "/" 
-                  + this.toolBar.formDataCreateProject.name
-                  + "\r\n";
+            text += 'code --remote=ssh-remote+'
+              + host
+              + " "
+              + this.toolBar.formDataCreateProject.rootpath
+              + "/"
+              + this.toolBar.formDataCreateProject.name
+              + "\r\n";
             text += 'IF ERRORLEVEL 9009 (\r\n\
   REM 9009 vscode cannot be found\r\n\
   REM Download vscode installer\r\n\
@@ -1282,7 +1282,14 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
           sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
             this.msgs = [
-              { life: 30000, severity: 'error', summary: error.error.error_code, content: error.error.error_msg }
+              {
+                life: 30000,
+                severity: 'error',
+                summary: "错误信息",
+                content: this.customTemplate,
+                errorCode: error.error.error_code,
+                errorMsg: error.error.error_msg,
+              },
             ];
           }
         }
