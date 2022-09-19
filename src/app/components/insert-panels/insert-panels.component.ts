@@ -243,20 +243,16 @@ export class InsertPanelsComponent implements OnInit {
       }
       let objInput = {
         descryption: "",
-        group: "Virtual",
-        name: "Input",
-        title: "Input",
-        type: "Input",
+        group: "Port",
+        name: "input",
         types: "",
         version: "",
         virtual: true
       }
       let objOutput = {
         descryption: "",
-        group: "Virtual",
-        name: "Output",
-        title: "Output",
-        type: "Output",
+        group: "Port",
+        name: "output",
         types: "",
         version: "",
         virtual: true

@@ -381,6 +381,10 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         }
       }
     }
+    if (unit.group === "Port") {
+      attributes["type"] = unit.name;
+      attributes["flowunit"] = undefined;
+    }
     this.graphviz.updateDrawnNode(x0, y0, nodeName, attributes);
     this.graphviz.insertDrawnNode(nodeName);
     this.dotGraph.insertNode(nodeName, attributes);
@@ -602,7 +606,15 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             d.attributes.fill = "#252B3A";
             d.attributes["font-weight"] = "600";
           } else {
-            d.attributes.fill = "#8A8E99";
+            let n = d.id.split(".");
+            let nodeName = n[n.length - 2];
+            let device = that.queryDeviceByNodeName(nodeName);
+            if (device === "cpu") {
+              d.attributes.fill = "#99CC33";
+            } else if (device === "cuda") {
+              d.attributes.fill = "#3399CC";
+            }
+
           }
         }
       })
@@ -612,6 +624,28 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
 
     this.formatDotSrc();
+  }
+
+  queryDeviceByNodeName(nodeName) {
+    let device = 'cpu';
+    let lines = this.dotSrc.split("\n");
+    let filteredLines = lines.filter(function (x) {
+      let n = x.match(/.*(?=\[)/gm);
+      let node = "";
+      if (n) {
+        node = n[0].trim();
+      }
+      if (node === nodeName) {
+        return x.trim();
+      }
+    });
+
+    let n = filteredLines[0].match(/(?<=device=)[a-z]+/gm);
+    if (n) {
+      device = n[0].trim();
+    }
+
+    return device;
   }
 
   handleDotLayoutReady() {
@@ -949,7 +983,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
     const component = d3_select(nodes[i]);
     const nodeTitle = component.select('title').text();
-
     const nodeAttr = this.dotGraph.getNodeAttributes(nodeTitle);
     if (!nodeAttr) return;
     const nodeUnit = this.dataService.getUnit(
@@ -979,9 +1012,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         return;
       }
       let linkName = "";
-      if (isVirtual) {
-        // linkName = nodeTitle + ':' + itemTitle;
-      } else {
+      if (!isVirtual) {
         linkName = nodeTitle + ':' + itemTitle;
       }
 
@@ -993,14 +1024,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       if (!this.isDrawingEdge && nodeport_type === 'input') {
         return;
       }
-      if (this.isDrawingEdge && nodeUnit.type === 'Input') {
+      if (this.isDrawingEdge && nodeUnit?.type === 'input') {
         return;
       }
       // 终点
       if (this.isDrawingEdge && nodeport_type === 'output') {
         return;
       }
-      if (!this.isDrawingEdge && nodeUnit.type === 'Output') {
+      if (!this.isDrawingEdge && nodeUnit?.type === 'output') {
         return;
       }
 

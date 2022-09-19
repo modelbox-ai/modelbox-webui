@@ -169,3 +169,20 @@
   <br>
   端口：<input dTextInput placeholder="Please Enter" id="textInput" [(ngModel)]="portAddress"/>
 </ng-template>
+<ng-template #customTemplate let-msg="msg">
+  <div>
+    <div>
+      Error Code: 
+    </div>
+    <div>
+      {{msg.errorCode}}
+    </div>
+    <br>
+    <div>
+      Error Message:
+    </div>
+    <div>
+      {{msg.errorMsg}}
+    </div>
+  </div>
+</ng-template>
