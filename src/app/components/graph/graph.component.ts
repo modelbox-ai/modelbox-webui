@@ -72,7 +72,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   @Input() defaultEdgeAttributes: any;
   @Input() onUndo: any;
   @Input() onRedo: any;
-  @Input() onHelp: any;
   @Input() onError: any;
   @Input() onNodeAttributeChange: any;
   @Input() tweenPaths: any;
@@ -768,11 +767,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         return true;
       }
       if (!d3_event.ctrlKey) {
+        // ctrl+mouse
         return false;
       }
 
       if (graph.isDrawingEdge) {
-        return false;
+        // zoom behaviour when drawing edges
+        return true;
       }
 
       return true;
@@ -924,8 +925,6 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       this.onUndo();
     } else if (event.ctrlKey && event.key === 'y') {
       this.onRedo();
-    } else if (event.key === '?') {
-      this.onHelp();
     } else {
       return;
     }
@@ -1095,6 +1094,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
   }
 
   handleMouseDownSvg(d, i, nodes) {
+    // 框选nodes
     if (this.onFocus !== undefined) {
       this.onFocus();
     }
