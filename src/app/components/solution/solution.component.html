@@ -90,3 +90,11 @@
   [value]="msgs" 
   [style]="{ top: '100px' }">
 </d-toast>
+
+<ng-template #customTemplate let-msg="msg">
+  <div>
+    <div>
+      {{msg.errorMsg}}
+    </div>
+  </div>
+</ng-template>

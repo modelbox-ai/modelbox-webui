@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToolBarSolutionComponent } from '../tool-bar-solution/tool-bar-solution.component';
 import { BasicServiceService } from '@shared/services/basic-service.service';
@@ -19,6 +19,7 @@ export class SolutionComponent implements OnInit {
   @ViewChild('toolBarSolution', { static: true }) tool: ToolBarSolutionComponent;
   @ViewChild('attributePanel', { static: true }) attributePanel: AttributePanelComponent;
   @ViewChild('header', { static: true }) header: HeaderMainComponent;
+  @ViewChild('customTemplate') customTemplate: TemplateRef<any>;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
@@ -433,8 +434,15 @@ export class SolutionComponent implements OnInit {
         this.statusGraph = "fault";
         if (error.error != null) {
           this.msgs = [
-            { life: 30000, severity: 'error', summary: error.error.error_code, content: error.error.error_msg },
-          ];
+              {
+                life: 30000,
+                severity: 'error',
+                summary: "错误信息: " + error.error.error_code,
+                content: this.customTemplate,
+                errorCode: error.error.error_code,
+                errorMsg: error.error.error_msg,
+              },
+            ];
         }
         this.showLoading = false;
       }
