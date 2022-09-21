@@ -1300,7 +1300,7 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
               {
                 life: 30000,
                 severity: 'error',
-                summary: "错误信息",
+                summary: "错误信息: " + error.error.error_code,
                 content: this.customTemplate,
                 errorCode: error.error.error_code,
                 errorMsg: error.error.error_msg,
