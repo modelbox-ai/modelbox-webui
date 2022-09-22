@@ -93,7 +93,7 @@ export class ToolBarComponent {
   @Output() removeLabelEmmiter = new EventEmitter();
   @Output() openDialogEmmiter = new EventEmitter();
   @Output() downloadGraphEmmiter = new EventEmitter();
-  
+
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -176,6 +176,11 @@ export class ToolBarComponent {
         fieldType: 'text'
       },
       {
+        field: 'graphPath',
+        header: this.i18n.getById("toolBar.select.path"),
+        fieldType: 'text'
+      },
+      {
         field: 'dotSrc',
         header: this.i18n.getById("toolBar.select.dotSource"),
         fieldType: 'text'
@@ -191,63 +196,23 @@ export class ToolBarComponent {
   tableWidthConfig: TableWidthConfig[] = [
     {
       field: 'checked',
-      width: '50px'
+      width: '25px'
     },
     {
       field: 'name',
-      width: '100px'
+      width: '120px'
+    },
+    {
+      field: 'graphPath',
+      width: '150px'
     },
     {
       field: 'dotSrc',
-      width: '200px'
+      width: '180px'
     },
     {
       field: 'desc',
-      width: '250px'
-    },
-  ];
-
-  solutionTableOptions = {
-    columns: [
-      {
-        field: 'checked',
-        header: '',
-        fieldType: 'customized'
-      },
-      {
-        field: 'name',
-        header: this.i18n.getById("toolBar.select.name"),
-        fieldType: 'text'
-      },
-      {
-        field: 'desc',
-        header: this.i18n.getById("toolBar.setting.desc"),
-        fieldType: 'text'
-      },
-      {
-        field: 'file',
-        header: this.i18n.getById("toolBar.solutionDialogFile"),
-        fieldType: 'text'
-      },
-    ]
-  };
-
-  solutionTableWidthConfig: TableWidthConfig[] = [
-    {
-      field: 'checked',
-      width: '5%'
-    },
-    {
-      field: 'name',
-      width: '20%'
-    },
-    {
-      field: 'file',
-      width: '40%'
-    },
-    {
-      field: 'desc',
-      width: '35%'
+      width: '120px'
     },
   ];
 
@@ -290,7 +255,7 @@ export class ToolBarComponent {
     port_infos: [],
     type: 'stream',
     "virtual-type": 'tensorflow',
-    "group-type": 'generic',
+    "group-type": 'Generic',
     model: '',
     plugin: ''
   };
@@ -307,7 +272,7 @@ export class ToolBarComponent {
   optionsdevice = ['cpu', 'cuda', 'ascend'];
   optionsdevicePython = ['cpu'];
   optionsdeviceYolo = ['cpu'];
-  flowunitGroupOptions = ['generic'];
+  flowunitGroupOptions = ['Generic'];
   virtualOptions = ['Input', 'Output'];
   virtualType = 'Input';
   currentDevice = "cpu";
@@ -563,28 +528,14 @@ export class ToolBarComponent {
         this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
           (data: any) => {
             this.graphList = data.graphs;
-            this.graphSelectTableDataForDisplay = this.graphList.map(i => {
-              let obj = {};
-              obj['checked'] = false;
-              obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
-              obj['dotSrc'] = i.graph.graphconf;
-              obj['desc'] = i.flow?.desc;
-              return obj;
-            })
+            this.createGraphSelectTableDataForDisplay();
           });
         return;
       }
       this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
         (data: any) => {
           this.graphList = data.graphs;
-          this.graphSelectTableDataForDisplay = this.graphList.map(i => {
-            let obj = {};
-            obj['checked'] = false;
-            obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
-            obj['dotSrc'] = i.graph.graphconf;
-            obj['desc'] = i.flow?.desc;
-            return obj;
-          })
+          this.createGraphSelectTableDataForDisplay();
 
         }, error => {
           this.msgs = [
@@ -593,6 +544,23 @@ export class ToolBarComponent {
         });
     }
 
+  }
+
+  createGraphSelectTableDataForDisplay() {
+    const current_project = JSON.parse(localStorage.getItem('project'));
+    this.graphSelectTableDataForDisplay = this.graphList.map(i => {
+      let obj = {};
+      obj['checked'] = false;
+      obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
+      obj['dotSrc'] = i.graph.graphconf;
+      obj['desc'] = i.flow?.desc;
+      obj['graphPath'] = current_project.rootpath
+        + "/"
+        + current_project.name
+        + "/src/graph/"
+        + obj['name'];
+      return obj;
+    });
   }
 
   addPortLine(target) {
@@ -995,7 +963,7 @@ export class ToolBarComponent {
     return results;
   }
 
-  downloadGraph(){
+  downloadGraph() {
     this.downloadGraphEmmiter.emit();
   }
 
@@ -1031,7 +999,7 @@ export class ToolBarComponent {
       device: 'cpu',
       type: 'stream',
       "virtual-type": this.currentDevice === "ascend" ? 'acl' : 'tensorflow',
-      "group-type": 'generic',
+      "group-type": 'Generic',
       model: '',
       plugin: ''
     };
@@ -1049,7 +1017,7 @@ export class ToolBarComponent {
       obj['title'] = obj['name'];
       obj['version'] = "";
       obj['types'] = "";
-      obj['descryption'] = "";
+      obj['description'] = "";
       obj['virtual'] = true;
       let flag = false;
       for (let i of this.dataService.virtualFlowunits) {
@@ -1473,6 +1441,7 @@ export class ToolBarComponent {
       }],
     });
   }
+
 }
 
 

@@ -916,6 +916,11 @@
                         class="edit-padding-fix">
                         {{ rowItem[colOption.field] }}
                     </div>
+                    <div 
+                        *ngIf="colOption.field === 'graphPath'" 
+                        class="edit-padding-fix">
+                        {{ rowItem[colOption.field] }}
+                    </div>
                     <div *ngIf="colOption.field === 'dotSrc'">
                         <div 
                             class="dot-class"

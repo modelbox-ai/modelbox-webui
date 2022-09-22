@@ -148,7 +148,7 @@ export let paramQueryData = {
 export let flowInfo = {
   devices: [
     {
-      "descryption": "Host cpu device.",
+      "description": "Host cpu device.",
       "name": "0",
       "type": "CPU",
       "version": ""
@@ -156,7 +156,7 @@ export let flowInfo = {
   ],
   flowunits: [
     {
-      "descryption": "\n\t@Brief: Modify the input buffer meta field name and value according to custom rules. \n\t@Port parameter: The input port and the output buffer type are binary. \n\t@Constraint: ",
+      "description": "\n\t@Brief: Modify the input buffer meta field name and value according to custom rules. \n\t@Port parameter: The input port and the output buffer type are binary. \n\t@Constraint: ",
       "group": "Image",
       "inputports": [
         {

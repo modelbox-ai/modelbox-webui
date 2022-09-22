@@ -55,7 +55,7 @@ describe("AttributePanelComponent", () => {
     expect(app).toBeTruthy();
   });
 
-  it('format descryption from code to UI, handleTipText && handlePortDetail', () => {
+  it('format description from code to UI, handleTipText && handlePortDetail', () => {
     const fixture = TestBed.createComponent(AttributePanelComponent);
     const app = fixture.componentInstance;
     let context = context_origin;

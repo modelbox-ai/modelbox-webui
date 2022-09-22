@@ -53,11 +53,11 @@
 </ng-template>
 
 <ng-template #tipContent let-context="context">
-  <div class="tips-block">
+  <div *ngIf="context" class="tips-block">
     <div>{{tipName}}{{context.title}}</div>
     <div>{{tipVersion}}{{context.version}}</div>
     <div>{{tipTopType}}{{context.types.join(' | ')}}</div>
-    <div>{{tipDescription}}{{context.descryption}}</div>
+    <div>{{tipDescription}}{{context.description}}</div>
     <div>{{tipIsVirtualmodel}}{{context.virtual ? tipYes : tipNo}}</div>
   </div>
 </ng-template>

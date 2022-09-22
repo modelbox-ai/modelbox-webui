@@ -60,7 +60,7 @@ export class DataServiceService {
     this.transformedFlowunits = [];
     this.flowunits.map(ele => {
       let obj = {
-        descryption: "",
+        description: "",
         group: "",
         name: "",
         version: "",
@@ -73,7 +73,7 @@ export class DataServiceService {
           queueSize: ""
         }
       };
-      obj.descryption = ele.base.description;
+      obj.description = ele.base.description;
       obj.group = this.titleCase(ele.base.group_type);
       if (!obj.group) {
         obj.group = "Generic";
