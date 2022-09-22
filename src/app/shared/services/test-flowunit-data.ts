@@ -52,7 +52,7 @@ export let test_flowunits_data = [
 
 export let test_transformed_data = [
   {
-    "descryption": "Recognition handwritten digits recognition.",
+    "description": "Recognition handwritten digits recognition.",
     "group": "Generic",
     "name": "mnist_infer",
     "version": "1.0.0",
@@ -76,7 +76,7 @@ export let test_transformed_data = [
     }
   },
   {
-    "descryption": "mnist preprocess",
+    "description": "mnist preprocess",
     "group": "Generic",
     "name": "mnist_preprocess",
     "version": "1.0.0",

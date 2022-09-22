@@ -118,10 +118,11 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   handleTipText(context) {
+    
     let reg = /(?<=@Brief:)[\s\S]*?(?=@Port)/;
-    let res = context.descryption.match(reg);
+    let res = context.description.match(reg);
     if (res !== null) {
-      context.descryption = res[0].trim();
+      context.description = res[0].trim();
     }
 
     return context;
@@ -206,6 +207,10 @@ export class InsertPanelsComponent implements OnInit {
     );
   }
 
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   public loadFlowUnit(skip, dirs, path) {
     if (skip === null) {
       skip = false;
@@ -224,6 +229,10 @@ export class InsertPanelsComponent implements OnInit {
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
+      data.flowunits = data.flowunits.map(item => {
+        item.group = this.capitalizeFirstLetter(item.group);
+        return item;
+      });
       this.nodeShapeCategories = [];
       this.dataService.nodeShapeCategories = [];
       if (data.devices == null) {
@@ -242,7 +251,7 @@ export class InsertPanelsComponent implements OnInit {
         data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
       }
       let objInput = {
-        descryption: "",
+        description: "",
         group: "Port",
         name: "input",
         types: "",
@@ -250,7 +259,7 @@ export class InsertPanelsComponent implements OnInit {
         virtual: true
       }
       let objOutput = {
-        descryption: "",
+        description: "",
         group: "Port",
         name: "output",
         types: "",

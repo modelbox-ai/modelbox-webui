@@ -335,13 +335,13 @@ export class AttributePanelComponent {
   handleTipText(context) {
     if (context) {
       let reg = /(?<=[@.*:])[\s\S]*?(?=@)/g;
-      context.descryption = context.descryption.replace(/::/g, "->");
-      let res = context.descryption.match(reg);
+      context.description = context.description.replace(/::/g, "->");
+      let res = context.description.match(reg);
       let group = [];
       let smix = "";
       if (res !== null) {
-        if (context.descryption.indexOf("@Constraint:") != -1) {
-          group = context.descryption.split("@Constraint:");
+        if (context.description.indexOf("@Constraint:") != -1) {
+          group = context.description.split("@Constraint:");
           if (group.length > 0) {
             context.constraint = group[1].trim();
           }
@@ -392,7 +392,7 @@ export class AttributePanelComponent {
     this.unit = {
       name: '',
       version: '',
-      descryption: '',
+      description: '',
       desc: '',
       group: '',
       virtual: false,

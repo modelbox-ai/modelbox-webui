@@ -4,7 +4,7 @@ export let flow_info = [
     "collapsed": true,
     "children": [
       {
-        "descryption": "\n\t@Brief: Modify the input buffer meta field name and value according to custom rules. \n\t@Port parameter: The input port and the output buffer type are binary. \n\t@Constraint: ",
+        "description": "\n\t@Brief: Modify the input buffer meta field name and value according to custom rules. \n\t@Port parameter: The input port and the output buffer type are binary. \n\t@Constraint: ",
         "group": "Image",
         "inputports": [
           {
@@ -50,7 +50,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is rectangle, the memory arrangement is [x,y,w,h].\n\t  it contain the following meta fields: \n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. One image can only be cropped with one rectangle and output one crop image.",
+        "description": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is rectangle, the memory arrangement is [x,y,w,h].\n\t  it contain the following meta fields: \n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. One image can only be cropped with one rectangle and output one crop image.",
         "group": "Image",
         "inputports": [
           {
@@ -78,7 +78,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: draw a rectangle area on the input image. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is yolo boundingbox, the memory arrangement is [float x,float y,float w,float h,int32_t condition,float score].\n\t@Constraint: This flowunit can be only used follow the flowunit yolov3 postprocess'.",
+        "description": "\n\t@Brief: draw a rectangle area on the input image. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is yolo boundingbox, the memory arrangement is [float x,float y,float w,float h,int32_t condition,float score].\n\t@Constraint: This flowunit can be only used follow the flowunit yolov3 postprocess'.",
         "group": "Image",
         "inputports": [
           {
@@ -105,7 +105,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
+        "description": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
         "group": "Image",
         "inputports": [
           {
@@ -138,7 +138,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: An OpenCV rotate flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: rotate_angle,  Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
+        "description": "\n\t@Brief: An OpenCV rotate flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: rotate_angle,  Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
         "group": "Image",
         "inputports": [
           {
@@ -171,7 +171,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: The operator is used to subtract the mean for tensor data, for example the image(RGB/BGR), shape(W, H, C), subtract the corresponding value for different channels. \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
+        "description": "\n\t@Brief: The operator is used to subtract the mean for tensor data, for example the image(RGB/BGR), shape(W, H, C), subtract the corresponding value for different channels. \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
         "group": "Image",
         "inputports": [
           {
@@ -204,7 +204,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: The operator is used to normalize for tensor data, for example the image(RGB/BGR). \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
+        "description": "\n\t@Brief: The operator is used to normalize for tensor data, for example the image(RGB/BGR). \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
         "group": "Image",
         "inputports": [
           {
@@ -237,7 +237,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: Convert the image format from packed to planar. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [rgb,bgr], 'layout': [hwc]",
+        "description": "\n\t@Brief: Convert the image format from packed to planar. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [rgb,bgr], 'layout': [hwc]",
         "group": "Image",
         "inputports": [
           {
@@ -261,7 +261,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: A padding flowunit on cpu. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb,bgr], 'layout': [hwc]. ",
+        "description": "\n\t@Brief: A padding flowunit on cpu. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb,bgr], 'layout': [hwc]. ",
         "group": "Image",
         "inputports": [
           {
@@ -353,7 +353,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: A resize flowunit on cpu. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. ",
+        "description": "\n\t@Brief: A resize flowunit on cpu. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. ",
         "group": "Image",
         "inputports": [
           {
@@ -410,7 +410,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: Convert image color space between rgb, bgr, gray .\n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: This flowunit support: 'rgb' to 'bgr', 'bgr' to 'rgb', 'rgb' to 'gray', 'bgr' to 'gray', 'gray' to 'bgr', 'gray' to 'rgb'. ",
+        "description": "\n\t@Brief: Convert image color space between rgb, bgr, gray .\n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: This flowunit support: 'rgb' to 'bgr', 'bgr' to 'rgb', 'rgb' to 'gray', 'bgr' to 'gray', 'gray' to 'bgr', 'gray' to 'rgb'. ",
         "group": "Image",
         "inputports": [
           {
@@ -447,7 +447,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: A crop flowunit on cuda device. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is rectangle, the memory arrangement is [x,y,w,h].\n\t  it contain the following meta fields: \n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [nv12], 'layout': [hwc]. One image can only be cropped with one rectangle and output one crop image.",
+        "description": "\n\t@Brief: A crop flowunit on cuda device. \n\t@Port parameter: The input port 'in_image' and the output port 'out_image' buffer type are image. \n\t  The image type buffer contain the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t  The other input port 'in_region' buffer type is rectangle, the memory arrangement is [x,y,w,h].\n\t  it contain the following meta fields: \n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit support: 'pix_fmt': [nv12], 'layout': [hwc]. One image can only be cropped with one rectangle and output one crop image.",
         "group": "Image",
         "inputports": [
           {
@@ -475,7 +475,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
+        "description": "\n\t@Brief: An OpenCV crop flowunit on cpu. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
         "group": "Image",
         "inputports": [
           {
@@ -512,7 +512,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "",
+        "description": "",
         "group": "Image",
         "inputports": [
           {
@@ -558,7 +558,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: An OpenCV rotate flowunit on cuda. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: rotate_angle,  Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
+        "description": "\n\t@Brief: An OpenCV rotate flowunit on cuda. \n\t@Port parameter: The input port buffer type is image file binary, the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: rotate_angle,  Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint:",
         "group": "Image",
         "inputports": [
           {
@@ -591,7 +591,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: The operator is used to subtract the mean for tensor data, for example the image(RGB/BGR), shape(W, H, C), subtract the corresponding value for different channels. \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
+        "description": "\n\t@Brief: The operator is used to subtract the mean for tensor data, for example the image(RGB/BGR), shape(W, H, C), subtract the corresponding value for different channels. \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
         "group": "Image",
         "inputports": [
           {
@@ -624,7 +624,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: The operator is used to normalize for tensor data, for example the image(RGB/BGR). \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
+        "description": "\n\t@Brief: The operator is used to normalize for tensor data, for example the image(RGB/BGR). \n\t@Port parameter: The input port and the output buffer type are tensor. \n\t  The tensor type buffer contain the following meta fields:\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: ",
         "group": "Image",
         "inputports": [
           {
@@ -657,7 +657,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: A padding flowunit on cuda. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb,bgr], 'layout': [hwc]. ",
+        "description": "\n\t@Brief: A padding flowunit on cuda. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb,bgr], 'layout': [hwc]. ",
         "group": "Image",
         "inputports": [
           {
@@ -749,7 +749,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "\n\t@Brief: A resize flowunit on cuda device. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. ",
+        "description": "\n\t@Brief: A resize flowunit on cuda device. \n\t@Port parameter: The input port buffer type and the output port buffer type are image. \n\t  The image type buffer contains the following meta fields:\n\t\tField Name: width,         Type: int32_t\n\t\tField Name: height,        Type: int32_t\n\t\tField Name: width_stride,  Type: int32_t\n\t\tField Name: height_stride, Type: int32_t\n\t\tField Name: channel,       Type: int32_t\n\t\tField Name: pix_fmt,       Type: string\n\t\tField Name: layout,        Type: int32_t\n\t\tField Name: shape,         Type: vector<size_t>\n\t\tField Name: type,          Type: ModelBoxDataType::MODELBOX_UINT8\n\t@Constraint: The field value range of this flowunit supports: 'pix_fmt': [rgb_packed,bgr_packed], 'layout': [hwc]. ",
         "group": "Image",
         "inputports": [
           {
@@ -810,7 +810,7 @@ export let flow_info = [
     "collapsed": true,
     "children": [
       {
-        "descryption": "",
+        "description": "",
         "group": "Generic",
         "inputports": [
           {
@@ -830,7 +830,7 @@ export let flow_info = [
         ]
       },
       {
-        "descryption": "",
+        "description": "",
         "group": "Generic",
         "inputports": [
           {
@@ -861,7 +861,7 @@ export let flow_info = [
     "collapsed": true,
     "children": [
       {
-        "descryption": "",
+        "description": "",
         "group": "Virtual",
         "name": "Input",
         "title": "Input",
@@ -874,7 +874,7 @@ export let flow_info = [
         "active": false
       },
       {
-        "descryption": "",
+        "description": "",
         "group": "Virtual",
         "name": "Output",
         "title": "Output",
