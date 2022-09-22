@@ -1143,6 +1143,7 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
     this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
       (data: any) => {
         this.toolBar.graphList = data.graphs;
+        this.toolBar.createGraphSelectTableDataForDisplay();
         const results = this.dialogService.open({
           id: 'graphSelect',
           width: '1000px',

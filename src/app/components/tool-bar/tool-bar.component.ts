@@ -548,9 +548,12 @@ export class ToolBarComponent {
 
   createGraphSelectTableDataForDisplay() {
     const current_project = JSON.parse(localStorage.getItem('project'));
-    this.graphSelectTableDataForDisplay = this.graphList.map(i => {
+    this.graphSelectTableDataForDisplay = this.graphList.map((i,index) => {
       let obj = {};
       obj['checked'] = false;
+      if (index === 0){
+        obj['checked'] = true;
+      }
       obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
       obj['dotSrc'] = i.graph.graphconf;
       obj['desc'] = i.flow?.desc;
@@ -558,7 +561,7 @@ export class ToolBarComponent {
         + "/"
         + current_project.name
         + "/src/graph/"
-        + obj['name'];
+        + i.name;
       return obj;
     });
   }
