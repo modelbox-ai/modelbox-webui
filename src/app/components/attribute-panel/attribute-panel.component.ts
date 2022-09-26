@@ -484,10 +484,10 @@ export class AttributePanelComponent {
         if (item.key === 'deviceid') {
           this.unit.advance.deviceid = item.value;
         }
-        if (item.key === 'batchSize') {
+        if (item.key === 'batch_size') {
           this.unit.advance.batchSize = item.value;
         }
-        if (item.key === 'queueSize') {
+        if (item.key === 'queue_size') {
           this.unit.advance.queueSize = item.value;
         }
         this.unitOptions.data.forEach(it => {
@@ -528,6 +528,7 @@ export class AttributePanelComponent {
         return index;
       }
     });
+    
     if (num) {
       if (num?.value) {
         if (this.unit["advance"][prop]) {
@@ -535,14 +536,20 @@ export class AttributePanelComponent {
         } else {
           config.attributes.splice(config.attributes.indexOf(num));
         }
-
-      } else {
-        if (this.unit["advance"][prop]) {
-          config.attributes.push({
-            key: prop,
-            value: this.unit["advance"][prop]
-          });
+      }
+    } else {
+      if (this.unit["advance"][prop]) {
+        let name;
+        if (prop === "batchSize") {
+          name = "batch_size";
         }
+        if (prop === "queueSize") {
+          name = "queue_size";
+        }
+        config.attributes.push({
+          key: name,
+          value: this.unit["advance"][prop]
+        });
       }
     }
     return config;

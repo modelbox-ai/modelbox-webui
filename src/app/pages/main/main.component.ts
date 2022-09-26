@@ -486,8 +486,8 @@ ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
     let scaleIndex = xforms.indexOf("scale");
     let scale = xforms.slice(scaleIndex, xforms.length);
 
-    // Setting
-    g.setAttribute('transform', 'translate(10, ' + firstY + ')' + scale);
+    // Setting if left side the graph 
+    // ex: g.setAttribute('transform', 'translate(10, ' + firstY + ')' + scale);
     let result = svg.outerHTML;
     this.downloadImg(result, "graphviz.svg");
   }
