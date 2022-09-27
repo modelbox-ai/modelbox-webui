@@ -412,15 +412,16 @@ export class MainComponent {
             if (this.portAddress) {
               host += "-" + this.portAddress;
             }
-            let text = 'REM If you run modelbox inside a container, you need to change the mapped port number. \r\n\
+            let text = 'REM vscode and remote-ssh plugin both are necessary. \r\n\
+REM If you run modelbox inside a container, you need to change the mapped port number. \r\n\
 REM For example: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_project\r\n\
 @ECHO off\r\n\
-FINDSTR "' + host + '" "C:\\Users\\%USERNAME%\\.ssh\\config">nul\r\n\
+FINDSTR "' + host + '" "%HOMEDRIVE%%HOMEPATH%\\.ssh\\config">nul\r\n\
 IF ERRORLEVEL 1 (\r\n\
-ECHO Host '+ host + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
-ECHO HostName '+ this.ipAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
-ECHO User '+ this.dataService.currentUser + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
-ECHO Port '+ this.portAddress + '>>"C:\\Users\\%USERNAME%\\.ssh\\config"\r\n\
+ECHO Host '+ host + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
+ECHO HostName '+ this.ipAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
+ECHO User '+ this.dataService.currentUser + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
+ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 )\r\n';
             text += 'code --remote=ssh-remote+'
               + host
