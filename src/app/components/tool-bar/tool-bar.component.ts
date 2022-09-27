@@ -1344,6 +1344,7 @@ export class ToolBarComponent {
       param.graph.dirs = param.graph.dirs.split("\n");
     }
     this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
+    debugger
     param = this.createProjectParam(param);
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
@@ -1380,6 +1381,23 @@ export class ToolBarComponent {
 
   createProjectParam(project) {
     let params = {};
+    debugger
+    // this.graphSelectTableDataForDisplay = this.graphList.map((i,index) => {
+    //   let obj = {};
+    //   obj['checked'] = false;
+    //   if (index === 0){
+    //     obj['checked'] = true;
+    //   }
+    //   obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
+    //   obj['dotSrc'] = i.graph.graphconf;
+    //   obj['desc'] = i.flow?.desc;
+    //   obj['graphPath'] = current_project.rootpath
+    //     + "/"
+    //     + current_project.name
+    //     + "/src/graph/"
+    //     + i.name;
+    //   return obj;
+
     params = {
       job_id: this.getGraphNameFromGraph(project.graph.dotSrc),
       graph_name: "",

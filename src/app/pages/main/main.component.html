@@ -164,10 +164,43 @@
   </div>
 </ng-template>
 <ng-template #modalBat id='modalBat' let-context='context'>
-  IP：<input dTextInput placeholder="Please Enter" id="textInput" [(ngModel)]="ipAddress"/>
-  <br>
-  <br>
-  端口：<input dTextInput placeholder="Please Enter" id="textInput" [(ngModel)]="portAddress"/>
+  <div>
+    <div>
+      <p style="width:50px">IP：</p>
+      <input 
+        style="width:240px"
+        dTextInput 
+        placeholder="Please Enter" 
+        id="textInput" 
+        [(ngModel)]="ipAddress"/>
+    </div>
+    <br>
+    <div>
+      <p style="width:50px">端口：</p>
+      <input 
+        style="width:240px;display:inline-block"
+        dTextInput 
+        placeholder="Please Enter" 
+        id="textInput" 
+        [(ngModel)]="portAddress"/>
+      <div
+        style="display:inline-block; margin-left:10px"
+        bsStyle="common"
+        dPopover
+        [popType]="'default'"
+        [content]='"容器场景请填写主机映射端口，例如\n\"-p 50022:22\"，填写50022"'
+        [position]="'top'"
+        [controlled]="true"
+        [appendToBody]="false"
+        [trigger]="'hover'"
+        >
+        <i 
+          class="icon icon-info-o">
+        </i>
+      </div>
+    </div>
+  </div>
+  
 </ng-template>
 <ng-template #customTemplate let-msg="msg">
   <div>
