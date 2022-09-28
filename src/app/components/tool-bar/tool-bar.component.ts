@@ -237,7 +237,8 @@ export class ToolBarComponent {
     perfSessionEnable: false,
     perfPath: this.dataService.defaultPerfDir,
     flowunitDebugPath: '',
-    flowunitReleasePath: ''
+    flowunitReleasePath: '',
+    fileName: ''
   };
 
   formDataCreateProject = {
@@ -486,6 +487,7 @@ export class ToolBarComponent {
     if (current_project) {
       this.formData.graphName = current_project.graph.graphName;
       this.formData.graphDesc = current_project.graph.graphDesc;
+      this.formData.fileName = current_project.graph.fileName;
       this.formData.flowunitPath = current_project.graph.dirs;
       this.formData.flowunitDebugPath = current_project.graph.flowunitDebugPath;
       this.formData.skipDefault = current_project.graph.skipDefault;
@@ -548,10 +550,10 @@ export class ToolBarComponent {
 
   createGraphSelectTableDataForDisplay() {
     const current_project = JSON.parse(localStorage.getItem('project'));
-    this.graphSelectTableDataForDisplay = this.graphList.map((i,index) => {
+    this.graphSelectTableDataForDisplay = this.graphList.map((i, index) => {
       let obj = {};
       obj['checked'] = false;
-      if (index === 0){
+      if (index === 0) {
         obj['checked'] = true;
       }
       obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
@@ -882,7 +884,8 @@ export class ToolBarComponent {
       perfSessionEnable: false,
       perfPath: this.dataService.defaultPerfDir,
       flowunitDebugPath: '',
-      flowunitReleasePath: ''
+      flowunitReleasePath: '',
+      fileName: ''
     };
   }
 
@@ -1344,7 +1347,6 @@ export class ToolBarComponent {
       param.graph.dirs = param.graph.dirs.split("\n");
     }
     this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
-    debugger
     param = this.createProjectParam(param);
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
@@ -1381,25 +1383,8 @@ export class ToolBarComponent {
 
   createProjectParam(project) {
     let params = {};
-    debugger
-    // this.graphSelectTableDataForDisplay = this.graphList.map((i,index) => {
-    //   let obj = {};
-    //   obj['checked'] = false;
-    //   if (index === 0){
-    //     obj['checked'] = true;
-    //   }
-    //   obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
-    //   obj['dotSrc'] = i.graph.graphconf;
-    //   obj['desc'] = i.flow?.desc;
-    //   obj['graphPath'] = current_project.rootpath
-    //     + "/"
-    //     + current_project.name
-    //     + "/src/graph/"
-    //     + i.name;
-    //   return obj;
-
     params = {
-      job_id: this.getGraphNameFromGraph(project.graph.dotSrc),
+      job_id: project.graph.fileName.slice(0, project.graph.fileName.length - ".toml".length),
       graph_name: "",
       job_graph: {},
       graph: {
