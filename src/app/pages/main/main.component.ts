@@ -301,7 +301,8 @@ export class MainComponent {
         settingPerfSessionEnable: this.toolBar.formData.perfSessionEnable,
         settingPerfDir: this.toolBar.formData.perfPath,
         flowunitDebugPath: this.toolBar.formData.flowunitDebugPath,
-        flowunitReleasePath: this.toolBar.formData.flowunitReleasePath
+        flowunitReleasePath: this.toolBar.formData.flowunitReleasePath,
+        fileName: this.toolBar.formData.fileName
       },
 
       flowunit: this.toolBar.formDataCreateFlowunit
@@ -536,6 +537,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
             this.dotSrc = this.dataService.insertNodeType(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
             this.toolBar.formData.graphDesc = this.currentGraph.flow?.desc;
+            this.toolBar.formData.fileName = this.currentGraph.name;
             this.toolBar.formData.skipDefault = false;
             if (this.currentGraph.profile) {
               this.toolBar.formData.perfEnable = this.currentGraph.profile.profile;
@@ -1375,7 +1377,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
   createOptionFromProject = (item) => {
     let params = {};
     params = {
-      job_id: this.handleGraphName(item.graph.graphName),
+      job_id: item.graph.fileName.slice(0, item.graph.fileName.length - ".toml".length),
       graph_name: this.handleGraphName(item.graph.graphName),
       graph: {
         flow: {

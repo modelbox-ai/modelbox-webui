@@ -146,7 +146,7 @@
   "attributePanel.outputport": "输出端口",
   "tasklist.newTask": "新建任务",
   "tasklist.searchBarPlaceHolder": "请输入名称搜索",
-  "tasklist.jobName": "图名称",
+  "tasklist.jobName": "文件名称",
   "tasklist.jobStatus": "状态",
   "tasklist.jobMessage": "消息",
   "tasklist.jobOperation": "操作",
