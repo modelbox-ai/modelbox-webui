@@ -1164,10 +1164,10 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
             handler: ($event: Event) => {
               results.modalInstance.hide();
               results.modalInstance.zIndex = -1;
-
               let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.checked === true);
               this.dotSrc = chosenGraph[0]?.dotSrc;
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
+              this.toolBar.formData.graphName = chosenGraph[0]?.name;
               this.saveCurrentProject();
             },
           },
