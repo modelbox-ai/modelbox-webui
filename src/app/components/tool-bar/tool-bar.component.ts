@@ -107,6 +107,7 @@ export class ToolBarComponent {
   runGraphSvg = "../../../assets/run-graph.svg";
   stopSvg = "../../../assets/stop.svg";
   restartSvg = "../../../assets/restart.svg";
+  graphNameForDisplay = "";
 
   openProjectList = [];
 
