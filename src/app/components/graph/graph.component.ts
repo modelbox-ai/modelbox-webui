@@ -608,9 +608,22 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             let n = d.id.split(".");
             let nodeName = n[n.length - 2];
             let device = that.queryDeviceByNodeName(nodeName);
-            if (device === "cpu") {
+            let flowunitName = that.queryFlowunitNameByNodeName(nodeName);
+            let unit = that.dataService.getUnit(flowunitName, "flowunit");
+            let portDeviceType = "cpu";
+            let ports = [];
+            if (unit){
+              ports = unit.inputports.concat(unit.outputports)
+            }
+            
+            let result = ports.filter(x => x.name === d.children[0].text);
+            if (result && result[0]){
+              portDeviceType = result[0].device_type;
+            }
+          
+            if (portDeviceType === "cpu") {
               d.attributes.fill = "#99CC33";
-            } else if (device === "cuda") {
+            } else if (portDeviceType === "cuda") {
               d.attributes.fill = "#3399CC";
             }
 
@@ -623,6 +636,28 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
 
     this.formatDotSrc();
+  }
+
+  queryFlowunitNameByNodeName(nodeName: any) {
+    let flowunitName = nodeName;
+    let lines = this.dotSrc.split("\n");
+    let filteredLines = lines.filter(function (x) {
+      let n = x.match(/.*(?=\[)/gm);
+      let node = "";
+      if (n) {
+        node = n[0].trim();
+      }
+      if (node === nodeName) {
+        return x.trim();
+      }
+    });
+
+    let n = filteredLines[0].match(/(?<=flowunit=)[a-z]+/gm);
+    if (n) {
+      flowunitName = n[0].trim();
+    }
+
+    return flowunitName;
   }
 
   queryDeviceByNodeName(nodeName) {

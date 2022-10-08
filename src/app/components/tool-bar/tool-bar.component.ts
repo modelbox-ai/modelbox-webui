@@ -551,12 +551,19 @@ export class ToolBarComponent {
 
   createGraphSelectTableDataForDisplay() {
     const current_project = JSON.parse(localStorage.getItem('project'));
+    let fileName = current_project.graph.fileName;
+    let existFile = false;
     this.graphSelectTableDataForDisplay = this.graphList.map((i, index) => {
       let obj = {};
       obj['checked'] = false;
       if (index === 0) {
         obj['checked'] = true;
       }
+
+      if (i.name === fileName) {
+        existFile = true;
+      }
+
       obj['name'] = this.getGraphNameFromGraph(i.graph.graphconf);
       obj['dotSrc'] = i.graph.graphconf;
       obj['desc'] = i.flow?.desc;
@@ -567,7 +574,20 @@ export class ToolBarComponent {
         + i.name;
       return obj;
     });
+
+    if (existFile) {
+      for (let i = 0; i < this.graphSelectTableDataForDisplay.length; i++) {
+        if (i === 0) {
+          this.graphSelectTableDataForDisplay[i]['checked'] = false;
+        }
+        let path = this.graphSelectTableDataForDisplay[i].graphPath.split("/");
+        if (path[path.length - 1] === fileName) {
+          this.graphSelectTableDataForDisplay[i]['checked'] = true;
+        }
+      }
+    }
   }
+
 
   addPortLine(target) {
     if (target === "output") {
@@ -643,11 +663,9 @@ export class ToolBarComponent {
 
           if (data.graphs && this.currentGraph !== null) {
             if (this.currentGraph.graph.graphconf) {
-              this.formData.graphName = this.currentGraph.name;
+              this.formData.fileName = this.currentGraph.name;
               this.formData.graphDesc = this.currentGraph.flow?.desc;
-              if (this.formData.graphName == undefined) {
-                this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
-              }
+              this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
 
               this.formData.skipDefault = false;
               if (this.currentGraph.profile) {
@@ -927,11 +945,11 @@ export class ToolBarComponent {
   };
 
   handleRunButtonClick = event => {
-    this.onRunButtonClick && this.onRunButtonClick(this.formData.graphName);
+    this.onRunButtonClick && this.onRunButtonClick(this.dataService.formatFileNameToId(this.formData.fileName));
   };
 
   handleStopButtonClick = event => {
-    this.onStopButtonClick && this.onStopButtonClick(this.formData.graphName);
+    this.onStopButtonClick && this.onStopButtonClick(this.dataService.formatFileNameToId(this.formData.fileName));
   };
 
   handleRestartButtonClick = event => {
@@ -976,15 +994,25 @@ export class ToolBarComponent {
 
   onNewGraphClickOk(results) {
     let graphName = this.formData.graphName;
-    this.formData.graphName = '';
-    this.formData.graphDesc = '';
-    this.formData.radioValue = "N";
-    this.formData.skipDefault = false;
-    this.formData.perfEnable = false;
-    this.formData.perfTraceEnable = false;
-    this.formData.perfSessionEnable = false;
-    this.formData.perfPath = this.dataService.defaultPerfDir;
+    let fileName = this.formData.graphName;
+    let existTheSameGraph = false;
+    // 如果存在同项目的同名图，不允许创建
+    this.graphList.forEach(element => {
+      if (this.dataService.formatFileNameToId(element.name) === this.formData.fileName
+        || this.getGraphNameFromGraph(element.graph.graphconf) === this.formData.graphName) {
+        existTheSameGraph = true;
+        return;
+      }
+    });
 
+    if (existTheSameGraph) {
+      this.msgs = [
+        { severity: 'error', content: "当前项目存在相同图名称" }
+      ];
+      return;
+    }
+
+    this.initFormData();
     this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
     results.modalInstance.hide();
     results.modalInstance.zIndex = -1;
@@ -992,8 +1020,11 @@ export class ToolBarComponent {
       { severity: 'success', content: this.i18n.getById('graph.creation') }
     ];
     setTimeout(() => {
-      this.saveSettingEmmiter.emit(graphName);
-    }, 0)
+      this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
+    }, 500);
+    this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
+    this.formData.graphName = graphName;
+    this.formData.graphName = fileName;
   }
 
   initFormDataCreateFlowunit() {
@@ -1254,12 +1285,9 @@ export class ToolBarComponent {
             }
             if (data.graphs && this.currentGraph !== null) {
               if (this.currentGraph.graph.graphconf) {
-                this.formData.graphName = this.currentGraph.name;
+                this.formData.fileName = this.currentGraph.name;
                 this.formData.graphDesc = this.currentGraph.flow?.desc;
-                if (this.formData.graphName == undefined) {
-                  this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
-                }
-
+                this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
                 this.formData.skipDefault = false;
                 if (this.currentGraph.profile) {
                   this.formData.perfEnable = this.currentGraph.profile.profile;
@@ -1384,9 +1412,10 @@ export class ToolBarComponent {
 
   createProjectParam(project) {
     let params = {};
+    let job_id = this.dataService.formatFileNameToId(project.graph.fileName);
     params = {
-      job_id: project.graph.fileName.slice(0, project.graph.fileName.length - ".toml".length),
-      graph_name: "",
+      job_id: job_id ? job_id : project.graph.graphName,
+      graph_name: project.graph.graphName,
       job_graph: {},
       graph: {
         flow: {

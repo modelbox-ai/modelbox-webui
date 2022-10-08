@@ -184,7 +184,7 @@ export class MainComponent {
       }
       for (let i of data.job_list) {
         let name = this.getGraphNameFromGraph(this.project.graph.dotSrc);
-        if (i.job_id === name + ".toml") {
+        if (i.job_id === name) {
           this.statusGraph = 1;
           if (i.job_error_msg !== '') {
             this.statusGraph = 2;
@@ -903,6 +903,10 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 ' + name + ' {');
   }
 
+  saveSettingOnNewGraph(obj){
+    this.renameGraphSrc(obj.graphName);
+  }
+
   handleSaveAsToBrowser(newName, newDotSrc = '', rename = false) {
     if (newName === null) {
       return;
@@ -1168,6 +1172,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               this.dotSrc = chosenGraph[0]?.dotSrc;
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
               this.toolBar.formData.graphName = chosenGraph[0]?.name;
+              let path = chosenGraph[0]?.graphPath.split('/');
+              this.toolBar.formData.fileName = path[path.length - 1];
               this.saveCurrentProject();
             },
           },
@@ -1257,8 +1263,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     }
     this.graphs = {};
     if (graphName) {
-      this.project.graph.graphName = this.graphName;
-      this.toolBar.formData.graphName = this.graphName;
+      this.project.graph.graphName = graphName;
       this.saveCurrentProject();
       this.graphs[this.project.graph.graphName] = this.project;
       this.saveGraphs();
@@ -1334,10 +1339,9 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     let obj = {};
     obj[graphName] = 0;
     sessionStorage.setItem('statusGraph', JSON.stringify(obj));
-
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
-        if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
+        if (graphName === i.job_id) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
             this.msgs = [
               { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
@@ -1376,8 +1380,9 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
   createOptionFromProject = (item) => {
     let params = {};
+    let job_id = this.dataService.formatFileNameToId(item.graph.fileName);
     params = {
-      job_id: item.graph.fileName.slice(0, item.graph.fileName.length - ".toml".length),
+      job_id: job_id?job_id:item.graph.graphName,
       graph_name: this.handleGraphName(item.graph.graphName),
       graph: {
         flow: {
