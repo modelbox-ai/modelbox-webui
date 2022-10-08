@@ -284,4 +284,12 @@ export class DataServiceService {
     }
     return obj;
   }
+
+  formatFileNameToId(fileName) {
+    if (fileName.indexOf(".toml") > -1) {
+      return fileName.slice(0, fileName.length - ".toml".length);
+    }
+    return fileName;
+  }
+  
 }
