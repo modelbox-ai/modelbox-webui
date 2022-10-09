@@ -183,7 +183,7 @@ export class MainComponent {
         return;
       }
       for (let i of data.job_list) {
-        let name = this.getGraphNameFromGraph(this.project.graph.dotSrc);
+        let name = this.dataService.formatFileNameToId(this.project.graph.fileName);
         if (i.job_id === name) {
           this.statusGraph = 1;
           if (i.job_error_msg !== '') {
@@ -903,7 +903,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     this.dotSrc = this.dotSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 ' + name + ' {');
   }
 
-  saveSettingOnNewGraph(obj){
+  saveSettingOnNewGraph(obj) {
     this.renameGraphSrc(obj.graphName);
   }
 
@@ -1366,7 +1366,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
-        if (graphName === i.job_id.substring(0, i.job_id.length - ".toml".length)) {
+        if (this.dataService.formatFileNameToId(this.project.graph.fileName)
+          === this.dataService.formatFileNameToId(i.job_id)) {
           this.basicService.deleteTask(i.job_id).subscribe(data => {
             this.msgs = [
               { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
@@ -1382,7 +1383,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     let params = {};
     let job_id = this.dataService.formatFileNameToId(item.graph.fileName);
     params = {
-      job_id: job_id?job_id:item.graph.graphName,
+      job_id: job_id ? job_id : item.graph.graphName,
       graph_name: this.handleGraphName(item.graph.graphName),
       graph: {
         flow: {
