@@ -1364,32 +1364,58 @@ export class ToolBarComponent {
   }
 
   showSaveAsDialog() {
-    this.loadGraphData();
-    let param = JSON.parse(localStorage.getItem('project'));
-    let ret = this.infoCreateProjectFirst();
-    if (!ret) {
-      return;
-    }
-    this.removeLabelEmmiter.emit();
-    param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
-    if (typeof param.graph.dirs === "string") {
-      param.graph.dirs = param.graph.dirs.split("\n");
-    }
-    this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
-    param = this.createProjectParam(param);
-    this.basicService.saveAllProject(param).subscribe((data) => {
-      if (data.status === 201) {
-        this.msgs = [
-          { severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }
-        ];
-      }
-    },
-      (error) => {
-        this.msgs = [
-          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
-        ];
-        return null;
-      });
+    const results = this.dialogService.open({
+      id: 'if-cover-graph',
+      width: '346px',
+      maxHeight: '600px',
+      title: '是否覆盖后端图文件？',
+      content: '注意！此操作不可撤销！',
+      backdropCloseable: true,
+      dialogtype: 'error',
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: this.i18n.getById('modal.okButton'),
+          handler: ($event: Event) => {
+            this.loadGraphData();
+            let param = JSON.parse(localStorage.getItem('project'));
+            let ret = this.infoCreateProjectFirst();
+            if (!ret) {
+              return;
+            }
+            this.removeLabelEmmiter.emit();
+            param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
+            if (typeof param.graph.dirs === "string") {
+              param.graph.dirs = param.graph.dirs.split("\n");
+            }
+            this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
+            param = this.createProjectParam(param);
+            this.basicService.saveAllProject(param).subscribe((data) => {
+              if (data.status === 201) {
+                this.msgs = [
+                  { severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }
+                ];
+              }
+            },
+              (error) => {
+                this.msgs = [
+                  { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
+                ];
+                return null;
+              });
+            results.modalInstance.hide();
+          },
+        },
+        {
+          cssClass: 'common',
+          text: this.i18n.getById('modal.cancelButton'),
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        }
+      ],
+    });
+
   }
 
   getGraphNameFromGraph(graph) {
