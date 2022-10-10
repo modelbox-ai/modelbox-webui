@@ -425,46 +425,46 @@ export class ToolBarComponent {
   layoutDirection2: FormLayout = FormLayout.Vertical;
   dotSrcWithoutLabel: string;
 
-  currentOption1 = "项目";
+  currentOption1 = this.i18n.getById('project');
   options1 = [{
     name: this.i18n.getById('toolBar.newButton'),
     value: 1,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.openProjectButton'),
     value: 2,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.clearCacheButton'),
     value: 6,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.newGraphButton'),
     value: 3,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.graphSelectButton'),
     value: 4,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.saveAsButton'),
     value: 5,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }, {
     name: this.i18n.getById('toolBar.sycnGraphButton'),
     value: 7,
-    specialContent: '项目'
+    specialContent: this.i18n.getById('project')
   }];
 
-  currentOption2 = "功能单元";
+  currentOption2 = this.i18n.getById('flowunit');
   options2 = [{
     name: this.i18n.getById('toolBar.newFlowunitButton'),
     value: 1,
-    specialContent: '功能单元'
+    specialContent: this.i18n.getById('flowunit')
   }, {
     name: this.i18n.getById('toolBar.refreshFlowunitButton'),
     value: 2,
-    specialContent: '功能单元'
+    specialContent: this.i18n.getById('flowunit')
   }];
   currentGraph: any;
   graphList: any;
@@ -1007,7 +1007,7 @@ export class ToolBarComponent {
 
     if (existTheSameGraph) {
       this.msgs = [
-        { severity: 'error', content: "当前项目存在相同图名称" }
+        { severity: 'error', content: this.i18n.getById('message.currentProjectExistTheSameGraphName') }
       ];
       return;
     }
@@ -1235,7 +1235,12 @@ export class ToolBarComponent {
     this.basicService.loadTreeByPath(path).subscribe(
       (data: any) => {
         if (data.subdir) {
-          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": "是否modelbox项目" }];
+          this.folderList = [
+            { 
+              "folder": this.i18n.getById('toolBar.modal.return'), 
+              "isProject": this.i18n.getById('ifModelboxProject') 
+            }
+          ];
           data.subdir.forEach(element => {
             if (element.isproject) {
               this.folderList.push({ "folder": element.dirname, "isProject": "✓" });
@@ -1273,6 +1278,7 @@ export class ToolBarComponent {
             this.formDataCreateProject.name = data.project_name;
             this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
             this.formDataCreateFlowunit["project-path"] = data.project_path;
+            this.graphList = data.graphs;
 
             //加载功能单元信息
             //加载图信息
@@ -1368,8 +1374,8 @@ export class ToolBarComponent {
       id: 'if-cover-graph',
       width: '346px',
       maxHeight: '600px',
-      title: '是否覆盖后端图文件？',
-      content: '注意！此操作不可撤销！',
+      title: this.i18n.getById('message.ifCoverBackendFile'),
+      content: this.i18n.getById('message.warnTheOperationCannotBeRestore'),
       backdropCloseable: true,
       dialogtype: 'error',
       buttons: [

@@ -289,7 +289,7 @@ export class ManagementComponent implements OnInit {
     this.basicService.loadTreeByPath(path).subscribe(
       (data: any) => {
         if (data.subdir) {
-          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": "是否modelbox项目" }];
+          this.folderList = [{ "folder": this.i18n.getById('toolBar.modal.return'), "isProject": this.i18n.getById('ifModelboxProject') }];
           data.subdir.forEach(element => {
             this.folderList.push({ "folder": element.dirname });
           });

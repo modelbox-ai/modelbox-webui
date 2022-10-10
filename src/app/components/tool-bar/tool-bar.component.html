@@ -115,7 +115,7 @@
         <p 
             (click)="openDialog()"
             dPopover
-            [content]="'打开代码工程'"
+            [content]="'openCodeProject' | translate"
             [popMaxWidth]="100"
             [zIndex]="100"
             [position]="'bottom'"
@@ -659,7 +659,7 @@
                     bsStyle="common"
                     dPopover
                     [popType]="'default'"
-                    [content]="'详细信息'"
+                    [content]="'detail' | translate"
                     [position]="'top'"
                     [controlled]="true"
                     [appendToBody]="false"
@@ -867,20 +867,40 @@
 <ng-template #graphDescription id="graphDescription">
     <d-layout class="basic-usage">
         
-        <p class="description">1. Ctrl+鼠标左键可以拖动画布。</p>
+        <p class="description">
+            {{'description.1' | translate}}
+        </p>
         <br/>
-        <p class="description">2. 放大缩小：鼠标滚轮，或键盘，-，=按键。</p>
+        <p class="description">
+            {{'description.2' | translate}}
+        </p>
         <br/>
-        <p class="description">3. 全选：ctrl+a</p>
+        <p class="description">
+            {{'description.3' | translate}}
+        </p>
         <br/>
-        <p class="description">4. 撤销：ctrl+z</p>
+        <p class="description">
+            {{'description.4' | translate}}
+        </p>
         <br/>
-        <p class="description">5. 重做：ctrl+u</p>
+        <p class="description">
+            {{'description.5' | translate}}
+        </p>
         <br/>
-        <p class="description">6. 取消选择：escape</p>
+        <p class="description">
+            {{'description.6' | translate}}
+        </p>
         <br/>
         <br/>
-        <p class="description">详细内容可参考<a style="font-size:18px" href="https://modelbox-ai.com/modelbox-book/plugins/editor.html" target="_blank">指导</a></p>
+        <p class="description">
+            {{'description.content' | translate}}
+            <a 
+                style="font-size:18px" 
+                href="https://modelbox-ai.com/modelbox-book/plugins/editor.html" 
+                target="_blank">
+                {{'guide' | translate}}
+            </a>
+        </p>
 
     </d-layout>
 </ng-template>
