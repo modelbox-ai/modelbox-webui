@@ -199,7 +199,7 @@ export class MainComponent {
   openGuideMain(dialogtype?: string) {
     this.resultsOpenGuideMain = this.dialogService.open({
       id: 'main-guide',
-      title: "请先新建或者打开项目",
+      title: this.i18n.getById("pleaseNewOrOpenProjectFirst"),
       contentTemplate: this.modalGuideTemplate,
       width: '400px',
       showAnimation: true,
@@ -401,7 +401,7 @@ export class MainComponent {
     const results = this.dialogService.open({
       id: 'dialog-bat',
       width: '346px',
-      title: '请输入ip地址',
+      title: this.i18n.getById('message.pleaseInputIpAddress'),
       contentTemplate: this.modalBatTemplate,
       backdropCloseable: true,
       buttons: [
@@ -448,7 +448,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               " " +
               this.toolBar.formDataCreateProject.rootpath +
               "/" +
-              this.toolBar.formDataCreateProject.name, '打开vscode.bat');
+              this.toolBar.formDataCreateProject.name, this.i18n.getById('openvscode.bat'));
             results.modalInstance.hide();
             results.modalInstance.zIndex = -1;
           },
@@ -1301,7 +1301,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               {
                 life: 30000,
                 severity: 'error',
-                summary: "错误信息: " + error.error.error_code,
+                summary: this.i18n.getById("errorMessage") + error.error.error_code,
                 content: this.customTemplate,
                 errorCode: error.error.error_code,
                 errorMsg: error.error.error_msg,

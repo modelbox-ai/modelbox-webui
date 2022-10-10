@@ -289,12 +289,12 @@ export class AttributePanelComponent {
     columns: [
       {
         field: 'fieldName',
-        header: '端口名称',
+        header: this.i18n.getById('portName'),
         fieldType: 'text'
       },
       {
         field: 'type',
-        header: '处理类型',
+        header: this.i18n.getById('deviceHandleType'),
         fieldType: 'text'
       }
     ]

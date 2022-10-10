@@ -350,7 +350,7 @@ export class SolutionComponent implements OnInit {
       {
         element: '#graph-guide',
         popover: {
-          title: '画布',
+          title: this.i18n.getById('graph'),
           description: this.i18n.getById("tutorial.graphGuide"),
           position: 'right'
         }
@@ -358,7 +358,7 @@ export class SolutionComponent implements OnInit {
       {
         element: '#text-guide',
         popover: {
-          title: '编辑器',
+          title: this.i18n.getById('panelEar.editToolLabel'),
           description: this.i18n.getById("tutorial.textGuide"),
           position: 'top'
         }
@@ -437,7 +437,7 @@ export class SolutionComponent implements OnInit {
               {
                 life: 30000,
                 severity: 'error',
-                summary: "错误信息: " + error.error.error_code,
+                summary: this.i18n.getById('errorMessage') + error.error.error_code,
                 content: this.customTemplate,
                 errorCode: error.error.error_code,
                 errorMsg: error.error.error_msg,

@@ -176,7 +176,7 @@
     </div>
     <br>
     <div>
-      <p style="width:50px">端口：</p>
+      <p style="width:50px">{{ 'port' | translate}}</p>
       <input 
         style="width:240px;display:inline-block"
         dTextInput 
@@ -188,7 +188,7 @@
         bsStyle="common"
         dPopover
         [popType]="'default'"
-        [content]='"容器场景请填写主机映射端口，例如\n\"-p 50022:22\"，填写50022"'
+        [content]="'message.containerSituationPleaseInputHostMapPort' | translate"
         [position]="'top'"
         [controlled]="true"
         [appendToBody]="false"
