@@ -435,6 +435,10 @@ export class ToolBarComponent {
     value: 2,
     specialContent: this.i18n.getById('project')
   }, {
+    name: "IDE打开工程",
+    value: 8,
+    specialContent: this.i18n.getById('project')
+  }, {
     name: this.i18n.getById('toolBar.clearCacheButton'),
     value: 6,
     specialContent: this.i18n.getById('project')
@@ -613,6 +617,8 @@ export class ToolBarComponent {
       this.showCreateProjectDialog(this.createProjectTemplate);
     } else if (e.value === 2) {
       this.showOpenProjectButtonDialog(this.openProjectTemplate);
+    } else if (e.value === 8) {
+      this.openDialog();
     } else if (e.value === 3) {
       this.handleNewGraphClick(null);
     } else if (e.value === 4) {
