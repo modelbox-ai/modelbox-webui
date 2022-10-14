@@ -28,6 +28,7 @@ import { EditableTip } from 'ng-devui/data-table';
 import { IFileOptions, IUploadOptions, SingleUploadComponent } from 'ng-devui/upload';
 import { ModalGuideComponent } from '../modal-guide/modal-guide.component';
 import { FormLayout } from 'ng-devui/form';
+import { MessageService } from '@shared/services/msg-service.service';
 
 @Component({
   selector: 'app-management',
@@ -202,7 +203,8 @@ export class ManagementComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     private i18n: I18nService,
-    private basicService: BasicServiceService
+    private basicService: BasicServiceService,
+    private message:MessageService
   ) { }
 
   ngOnInit(): void {
@@ -474,6 +476,7 @@ export class ManagementComponent implements OnInit {
   public getTaskslists() {
     this.basicService.getTaskLists().subscribe((data: any) => {
       this.tableData.srcData.data = this.tasksListparse(data.job_list);
+      this.message.changeMessage(data.job_list);
     },
       (error) => {
         this.tableData.srcData.data.forEach(item => {
