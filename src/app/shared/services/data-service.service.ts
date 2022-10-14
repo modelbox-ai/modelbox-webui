@@ -173,7 +173,9 @@ export class DataServiceService {
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name) {
-          unit = it;
+          if (it.type === type){
+            unit = it;
+          }
           if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
             this.toastService.open({
               value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
@@ -286,10 +288,12 @@ export class DataServiceService {
   }
 
   formatFileNameToId(fileName) {
-    if (fileName.indexOf(".toml") > -1) {
-      return fileName.slice(0, fileName.length - ".toml".length);
+    if (fileName) {
+      if (fileName.indexOf(".toml") > -1) {
+        return fileName.slice(0, fileName.length - ".toml".length);
+      }
+      return fileName;
     }
-    return fileName;
   }
-  
+
 }

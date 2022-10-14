@@ -229,8 +229,10 @@ export class InsertPanelsComponent implements OnInit {
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
+
       data.flowunits = data.flowunits.map(item => {
         item.group = this.capitalizeFirstLetter(item.group);
+        this.addDefaultPortType(item);
         return item;
       });
       this.nodeShapeCategories = [];
@@ -266,6 +268,7 @@ export class InsertPanelsComponent implements OnInit {
         version: "",
         virtual: true
       }
+      
       data.flowunits.push.apply(data.flowunits, [objInput, objOutput]);
       data.flowunits.forEach(item => {
 
@@ -298,7 +301,7 @@ export class InsertPanelsComponent implements OnInit {
         this.dataService.nodeShapeCategories = this.nodeShapeCategories;
 
       });
-    })
+    });
 
     this.nodeShapeCategories = this.dataService.nodeShapeCategories.map(
       item => {
@@ -310,6 +313,29 @@ export class InsertPanelsComponent implements OnInit {
         };
       }
     );
+  }
+
+  addDefaultPortType(obj){
+    if (obj.type){
+      if (obj.inputports.length>0){
+        obj.inputports.forEach(element => {
+          if (element.device_type === ""){
+            element.device_type = obj.type;
+            return element;
+          }
+        });
+      }
+
+      if (obj.outputports.length>0){
+        obj.outputports.forEach(element => {
+          if (element.device_type === ""){
+            element.device_type = obj.type;
+            return element;
+          }
+        });
+      }
+    }
+    return obj;
   }
 
   compare(property) {

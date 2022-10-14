@@ -8,3 +8,9 @@ export const TaskStatus = {
     UNKNOWN: '未知状态',
     NOTEXIST: '任务不存在' ,
 }
+
+export const GraphStatus = {
+    FAILED: 2,
+    RUNNING: 0,
+    STOP: 1
+}

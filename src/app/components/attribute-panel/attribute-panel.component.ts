@@ -77,6 +77,7 @@ export class AttributePanelComponent {
       }
     },
     change: (event, form) => {
+      
       const unitType = this.config.attributes.find(
         item => item.key === 'device'
       );
@@ -528,7 +529,6 @@ export class AttributePanelComponent {
         return index;
       }
     });
-    
     if (num) {
       if (num?.value) {
         if (this.unit["advance"][prop]) {
@@ -540,6 +540,9 @@ export class AttributePanelComponent {
     } else {
       if (this.unit["advance"][prop]) {
         let name;
+        if (prop === "deviceid") {
+          name = "deviceid";
+        }
         if (prop === "batchSize") {
           name = "batch_size";
         }

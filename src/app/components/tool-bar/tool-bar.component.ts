@@ -237,8 +237,8 @@ export class ToolBarComponent {
     perfTraceEnable: false,
     perfSessionEnable: false,
     perfPath: this.dataService.defaultPerfDir,
-    flowunitDebugPath: '',
-    flowunitReleasePath: '',
+    flowunitDebugPath: [],
+    flowunitReleasePath: [],
     fileName: ''
   };
 
@@ -520,7 +520,6 @@ export class ToolBarComponent {
     if (this.formDataCreateProject) {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
       this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
-      this.formData.flowunitReleasePath = "/opt/modelbox/application/" + this.formDataCreateProject.name;
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -685,8 +684,12 @@ export class ToolBarComponent {
               this.projectPathEmmiter.emit(data.project_path);
               this.flowunitEmmiter.emit(this.formData.flowunitPath);
               this.project_name = data.project_name;
-              this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
+              this.formData.flowunitDebugPath = this.currentGraph.driver.dir;
               this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
+
+              if (this.formData.flowunitReleasePath.indexOf(data.project_path + "/src/flowunit") === -1) {
+                this.formData.flowunitDebugPath.push(data.project_path + "/src/flowunit");
+              }
             }
           }
         }
@@ -908,8 +911,8 @@ export class ToolBarComponent {
       perfTraceEnable: false,
       perfSessionEnable: false,
       perfPath: this.dataService.defaultPerfDir,
-      flowunitDebugPath: '',
-      flowunitReleasePath: '',
+      flowunitDebugPath: [],
+      flowunitReleasePath: [],
       fileName: ''
     };
   }
@@ -1242,9 +1245,9 @@ export class ToolBarComponent {
       (data: any) => {
         if (data.subdir) {
           this.folderList = [
-            { 
-              "folder": this.i18n.getById('toolBar.modal.return'), 
-              "isProject": this.i18n.getById('ifModelboxProject') 
+            {
+              "folder": this.i18n.getById('toolBar.modal.return'),
+              "isProject": this.i18n.getById('ifModelboxProject')
             }
           ];
           data.subdir.forEach(element => {
@@ -1312,8 +1315,11 @@ export class ToolBarComponent {
                 this.projectPathEmmiter.emit(data.project_path);
                 this.flowunitEmmiter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
-                this.formData.flowunitDebugPath = data.project_path + "/src/flowunit";
+                this.formData.flowunitDebugPath = this.currentGraph.driver.dir;
                 this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
+                if (this.formData.flowunitReleasePath.indexOf(data.project_path + "/src/flowunit") === -1) {
+                  this.formData.flowunitDebugPath.push(data.project_path + "/src/flowunit");
+                }
               } else {
                 this.initFormData();
                 this.dotSrcEmmiter.emit(this.dataService.defaultSrc);

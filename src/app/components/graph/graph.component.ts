@@ -609,7 +609,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             let nodeName = n[n.length - 2];
             let device = that.queryDeviceByNodeName(nodeName);
             let flowunitName = that.queryFlowunitNameByNodeName(nodeName);
-            let unit = that.dataService.getUnit(flowunitName, "flowunit");
+            let unit = that.dataService.getUnit(flowunitName, device);
             let portDeviceType = "cpu";
             let ports = [];
             if (unit){
@@ -620,11 +620,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             if (result && result[0]){
               portDeviceType = result[0].device_type;
             }
-          
+            
             if (portDeviceType === "cpu") {
               d.attributes.fill = "#99CC33";
             } else if (portDeviceType === "cuda") {
               d.attributes.fill = "#3399CC";
+            }else{
+              d.attributes.fill = "#99CC33";
             }
 
           }

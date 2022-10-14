@@ -20,6 +20,8 @@ import { HeaderMainComponent } from 'src/app/components/header-main/header-main.
 import { GraphComponent } from 'src/app/components/graph/graph.component';
 import { ModalVscodeComponent } from '../../components/modal-vscode/modal-vscode.component';
 import { ModalGuideMainComponent } from 'src/app/components/modal-guide-main/modal-guide-main.component';
+import { MessageService } from '@shared/services/msg-service.service';
+import { GraphStatus } from '@shared/constants';
 
 @Component({
   selector: 'app-main',
@@ -109,11 +111,7 @@ export class MainComponent {
   openProjectDialogResults: any;
   createFlowunitDialogResults: any;
   statusGraph = 0;
-  Status = {
-    STOP: 0,
-    RUNNING: 1,
-    FAULT: 2
-  }
+
   currentGraph: any;
   msgs: Array<Object> = [];
   typeFlowunit: any;
@@ -127,7 +125,8 @@ export class MainComponent {
     private basicService: BasicServiceService,
     private dataService: DataServiceService,
     private toastService: ToastService,
-    private modalService: ModalService) {
+    private modalService: ModalService,
+    private message: MessageService) {
     this.constructMainComponent();
   }
 
@@ -154,25 +153,25 @@ export class MainComponent {
 
   ngOnInit(): void {
     this.dataService.currentPage = "main";
-    //加载既存project
-    let item = JSON.parse(sessionStorage.getItem('statusGraph')) || undefined;
-    if (item !== undefined) {
-      this.updataStatusGraph();
-      this.refresh_timer = setInterval(() => { this.updataStatusGraph(); }, 5000);
-    }
-
     if (!JSON.parse(localStorage.getItem('project'))) {
       this.openGuideMain();
     }
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
+    this.getGraphStatus();
   }
 
-  ngAfterViewInit() {
-    this.splitH.dragProgress$.subscribe(x => {
-      this.handleGrutterMove(x);
-    });
-    this.splitV.dragProgress$.subscribe(x => {
+  getGraphStatus() {
+    this.message.currentMessage.subscribe(msg => {
+      if (msg.length > 0) {
+        msg.forEach(element => {
+          if (this.dataService.formatFileNameToId(this.project.graph.fileName) === element.job_id) {
+            this.statusGraph = this.graphStatusparse(element.job_status);
+          }
+        });
+      } else {
+        this.updataStatusGraph();
+      }
     });
   }
 
@@ -183,17 +182,36 @@ export class MainComponent {
         return;
       }
       for (let i of data.job_list) {
-        let name = this.dataService.formatFileNameToId(this.project.graph.fileName);
+        let name = this.dataService.formatFileNameToId(this.project.graph?.fileName);
         if (i.job_id === name) {
-          this.statusGraph = 1;
-          if (i.job_error_msg !== '') {
-            this.statusGraph = 2;
-          }
+          this.statusGraph = this.graphStatusparse(i.job_status);
+          return;
         } else {
           this.statusGraph = 0;
         }
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.splitH.dragProgress$.subscribe(x => {
+      this.handleGrutterMove(x);
+    });
+    this.splitV.dragProgress$.subscribe(x => {
+    });
+
+  }
+
+  private graphStatusparse(data) {
+    switch (data) {
+      case "CREATEING":
+        return GraphStatus.RUNNING;
+      case "FAILED":
+        return GraphStatus.FAILED;
+      default:
+        return GraphStatus.STOP;
+    }
+    return data;
   }
 
   openGuideMain(dialogtype?: string) {
@@ -360,7 +378,8 @@ export class MainComponent {
         this.msgs = [
           { severity: 'success', content: data.body.msg }
         ];
-        this.loadProject(param);
+        let openProejctPath = param.rootpath + "/" + param.name;
+        this.loadProject(openProejctPath);
 
         this.createProjectDialogResults.modalInstance.hide();
         this.createProjectDialogResults.modalInstance.zIndex = -1;
@@ -397,6 +416,7 @@ export class MainComponent {
       },
     });
   }
+
   openBatDialog() {
     const results = this.dialogService.open({
       id: 'dialog-bat',
@@ -494,7 +514,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     this.downloadImg(result, "graphviz.svg");
   }
 
-
   downloadImg(result, fileName) {
     let parser = new DOMParser();
     let svg = parser.parseFromString(result, "image/svg+xml");
@@ -519,8 +538,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     return graphName;
   }
 
-  loadProject(param) {
-    this.basicService.openProject(param.rootpath + "/" + param.name).subscribe(
+  loadProject(openProejctPath) {
+    this.basicService.openProject(openProejctPath).subscribe(
       (data: any) => {
         this.toolBar.formDataCreateProject.name = data.project_name;
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
@@ -545,7 +564,11 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
             }
 
             this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
-            this.toolBar.formData.flowunitDebugPath = param.rootpath + "/" + param.name + "/src/flowunit" + "\n" + this.toolBar.formData.flowunitReleasePath;
+            this.toolBar.formData.flowunitDebugPath = this.toolBar.formData.flowunitReleasePath;
+            if (this.toolBar.formData.flowunitReleasePath.indexOf(openProejctPath + "/src/flowunit") === -1) {
+              this.toolBar.formData.flowunitDebugPath.push(openProejctPath + "/src/flowunit");
+            }
+
             this.dirs = this.toolBar.formData.flowunitDebugPath;
             this.project_name = data.project_name;
           } else {
@@ -1111,6 +1134,9 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     )
   }
 
+  updateProject(e) {
+    this.loadProject(e);
+  }
 
   showGraphSettingDialog(content: TemplateRef<any>) {
     const results = this.dialogService.open({
@@ -1263,8 +1289,10 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     }
     this.graphs = {};
     if (graphName) {
-      this.project.graph.graphName = graphName;
       this.saveCurrentProject();
+      this.project = JSON.parse(localStorage.getItem('project'));
+
+      this.project.graph.graphName = graphName;
       this.graphs[this.project.graph.graphName] = this.project;
       this.saveGraphs();
       //run
@@ -1278,24 +1306,17 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       this.project.graph.dirs = this.project.graph.dirs.split("\n");
       let option = this.createOptionFromProject(this.project);
 
-      this.statusGraph = 1;
-      let obj = {};
-      obj[this.graphName] = 1;
-      sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       this.basicService.createTask(option)
         .subscribe(async (data: any) => {
           //提示任务运行状态
           this.msgs = [
             { severity: 'success', summary: "Success", content: this.i18n.getById('message.checkInTaskPage') }
           ];
+          this.statusGraph = 1;
 
           await new Promise(r => setTimeout(r, 2000));
           this.header.goManagement();
         }, error => {
-          this.statusGraph = this.Status.FAULT;
-          let obj = {};
-          obj[this.graphName] = this.statusGraph;
-          sessionStorage.setItem('statusGraph', JSON.stringify(obj));
           if (error.error != null) {
             this.msgs = [
               {
@@ -1307,6 +1328,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
                 errorMsg: error.error.error_msg,
               },
             ];
+            this.statusGraph = 2;
           }
         }
         );
@@ -1320,10 +1342,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       this.msgs = [
         { severity: 'info', summary: "Info", content: this.i18n.getById('message.saveYourProjectFirst') }
       ];
-      this.statusGraph = 0;
-      let obj = {};
-      obj[this.graphName] = 0;
-      sessionStorage.setItem('statusGraph', JSON.stringify(obj));
       //open graph saving
       this.toolBar.showSaveAsDialog();
     }
@@ -1334,11 +1352,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
     }
-
-    this.statusGraph = 0;
-    let obj = {};
-    obj[graphName] = 0;
-    sessionStorage.setItem('statusGraph', JSON.stringify(obj));
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
         if (graphName === i.job_id) {
@@ -1346,11 +1359,12 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
             this.msgs = [
               { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
             ];
+
+            this.statusGraph = 0;
           });
         }
       }
     });
-
   }
 
   handleRestartButtonClick = (graphName) => {
@@ -1358,11 +1372,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
     }
-
-    this.statusGraph = 0;
-    let obj = {};
-    obj[graphName] = 0;
-    sessionStorage.setItem('statusGraph', JSON.stringify(obj));
 
     this.basicService.getTaskLists().subscribe((data: any) => {
       for (let i of data.job_list) {
@@ -1372,11 +1381,14 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
             this.msgs = [
               { severity: 'success', content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully') }
             ];
+
             this.handleRunButtonClick(graphName);
           });
         }
       }
     });
+
+    this.getGraphStatus();
   }
 
   createOptionFromProject = (item) => {
@@ -1391,7 +1403,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         },
         driver: {
           "skip-default": item.skipDefault,
-          dir: item.graph.flowunitDebugPath.split("\n"),
+          dir: item.graph.flowunitDebugPath,
         },
         profile: {
           profile: item.graph.settingPerfEnable,
