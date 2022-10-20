@@ -1067,18 +1067,6 @@ export class ToolBarComponent {
       obj['description'] = "";
       obj['virtual'] = true;
       let flag = false;
-      for (let i of this.dataService.virtualFlowunits) {
-        if (i['name'] === obj['name']) {
-          flag = true;
-          break;
-        }
-      }
-      if (flag) {
-        this.msgs = [
-          { life: 30000, severity: 'error', content: this.i18n.getById("message.duplicateVirtualFlowunit") }
-        ];
-      }
-      this.dataService.virtualFlowunits.push(obj);
       this.refreshFlowunit();
       comp.modalInstance.hide();
       comp.modalInstance.zIndex = -1;

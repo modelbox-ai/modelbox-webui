@@ -223,6 +223,7 @@
   "message.pleaseInputIpAddress": "请输入ip地址",
   "portName": "端口名称",
   "deviceHandleType": "处理类型",
+  "type": "类型：",
   "pleaseNewOrOpenProjectFirst": "请先新建或者打开项目",
   "errorMessage": "错误信息： ",
   "openvscode.bat": "打开vscode.bat",

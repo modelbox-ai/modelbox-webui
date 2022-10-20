@@ -739,7 +739,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
     this.setEditorMarkers(components);
-
+    
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
       if (this.currentComponent.attributes) {
@@ -1062,6 +1062,18 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         text: this.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
+          localStorage.clear();
+          sessionStorage.clear();
+          // stop running service
+          this.basicService.getTaskLists().subscribe((data: any) => {
+            if (data.job_list) {
+              data.job_list.map(ele => {
+                this.basicService.deleteTask(ele.job_id).subscribe((res: any) => {
+                  location.reload();
+                });
+              });
+            }
+          });
           this.toolBar.openProject(this.openProjectDialogResults);
         },
       },

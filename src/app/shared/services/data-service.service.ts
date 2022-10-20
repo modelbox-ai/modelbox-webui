@@ -25,7 +25,6 @@ export class DataServiceService {
   public transformedFlowunits = [];
   public currentSolutionList = [];
   warningMessage = false;
-  public virtualFlowunits = [];
   public msgstack = [];
   public deviceTypes = [];
   data: any;

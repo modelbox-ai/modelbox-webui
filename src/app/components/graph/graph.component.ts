@@ -1601,8 +1601,16 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         return;
       }
       // end
+
       let startnode = startNodeName.split(':');
+      if (startnode.length === 1){
+        startnode.push("out");
+      }
+      
       let endnode = endNodeName.split(':');
+      if (endnode.length === 1){
+        endnode.push("in");
+      }
       startNodeName = startnode[0] + ':\"' + startnode[1] + '\"';
       endNodeName = endnode[0] + ':\"' + endnode[1] + '\"';
       if (startnode.length === 1) {

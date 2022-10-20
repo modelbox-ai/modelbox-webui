@@ -22,6 +22,7 @@
         [loadingTemplate]="loadingTemplate">
       </d-accordion>
       <d-accordion
+        *ngIf="!isPort"
         [data]="menu2"
         class="menu"
         [accordionType]="'embed'"
@@ -30,6 +31,7 @@
         [loadingTemplate]="loadingTemplate">
       </d-accordion>
       <d-accordion
+        *ngIf="!isPort"
         [data]="menu3"
         class="menu"
         [accordionType]="'embed'"
@@ -91,11 +93,11 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngFor="let item of unitOptions.data">
-      <div class="form-item">
+      <div class="form-item" *ngIf="!isPort">
         <d-form-label [required]="item.required">
           <div
             class="title-label-required">
-            {{item.label}}
+            <span>{{item.label}}</span>
           </div>
         </d-form-label>
         <d-form-control>

@@ -65,6 +65,15 @@ export class AttributePanelComponent {
     selected: {},
     init: () => {
       if (this.unit) {
+        if (this.unit.group === "Port") {
+          this.unitType.options = this.dataService.deviceTypes.map(item => {
+            return {
+              id: item,
+              label: item,
+            };
+          });
+          return;
+        }
         this.unitType.options = this.unit.types.map(item => {
           return {
             id: item,
@@ -77,7 +86,7 @@ export class AttributePanelComponent {
       }
     },
     change: (event, form) => {
-      
+
       const unitType = this.config.attributes.find(
         item => item.key === 'device'
       );
@@ -93,7 +102,7 @@ export class AttributePanelComponent {
       if (this.unit && this.unit.options) {
         this.unit.options.forEach(item => {
           let formItem: any = {
-            label: item.name.replace(/_/g, " "),
+            label: item.name?.replace(/_/g, " "),
             required: item.required,
             type: item.type,
             default: item.default,
@@ -123,6 +132,7 @@ export class AttributePanelComponent {
           this.unitOptions.data.push(formItem);
         });
       }
+      
     },
   };
 
@@ -237,7 +247,6 @@ export class AttributePanelComponent {
       config = this.handleAdvance(config, "batchSize");
       config = this.handleAdvance(config, "queueSize");
       this.config.name = this.newName;
-
       this.onNodeAttributeChange({ ...config, newName: this.newName });
     }
   };
@@ -304,6 +313,7 @@ export class AttributePanelComponent {
   deviceid: any;
   batchSize: any;
   queueSize: any;
+  isPort = false;
 
   constructor(
     private dataService: DataServiceService,
@@ -413,14 +423,19 @@ export class AttributePanelComponent {
     if (config) {
       this.unit.name = config.name;
       this.unit.group = "Generic";
-      delete this.unit.options;
-      delete this.unit.inputports;
-      delete this.unit.outputports;
 
       config.attributes.forEach(it => {
         if (it.key === "device") {
           this.unit.type = it.value;
           this.unit.types = [it.value];
+        }
+        if (it.key === "type") {
+          if (it.value === "input" || it.value === "output") {
+            this.unit.type = this.dataService.deviceTypes[0];
+            this.unit.types = this.dataService.deviceTypes;
+            this.unit.group = "Port";
+            this.isPort = true;
+          }
         }
       });
     }
@@ -430,7 +445,7 @@ export class AttributePanelComponent {
   initConfig(config) {
     this.changedValue = false;
     this.unit = this.getUnit(config);
-
+    this.isPort = false;
     if (this.unit === undefined) {
       this.initUnit(config);
     }
@@ -492,7 +507,7 @@ export class AttributePanelComponent {
           this.unit.advance.queueSize = item.value;
         }
         this.unitOptions.data.forEach(it => {
-          if (it.label.replaceAll(" ", "_") === item.key) {
+          if (it.label?.replaceAll(" ", "_") === item.key) {
             if (['string', 'int', 'integer'].includes(it.type)) {
               it.value = item.value;
             } else if (it.type === 'bool') {
@@ -502,7 +517,7 @@ export class AttributePanelComponent {
                 it.value = false;
               }
             } else if (it.type === 'list') {
-              it.selected = it.options.find(i => i.id === item.value);
+              it.selected = it?.options.find(i => i.id === item.value);
             }
           }
         });
