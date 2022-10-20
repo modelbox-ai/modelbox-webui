@@ -65,6 +65,7 @@ export class InsertPanelsComponent implements OnInit {
   tipName: string = this.i18n.getById('insertPanels.tip.name');
   tipVersion: string = this.i18n.getById('insertPanels.tip.version');
   tipTopType: string = this.i18n.getById('insertPanels.tip.topType');
+  tipType: string = this.i18n.getById('type');
   tipDescription: string = this.i18n.getById('insertPanels.tip.description');
   tipIsVirtualmodel: string = this.i18n.getById('insertPanels.tip.isVirtualmodel');
   tipYes: string = this.i18n.getById('insertPanels.tip.yes');
@@ -118,7 +119,7 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   handleTipText(context) {
-    
+
     let reg = /(?<=@Brief:)[\s\S]*?(?=@Port)/;
     let res = context.description.match(reg);
     if (res !== null) {
@@ -249,39 +250,43 @@ export class InsertPanelsComponent implements OnInit {
         this.deviceTypeEmmiter.emit(this.dataService.deviceTypes);
       }
 
-      if (this.dataService.virtualFlowunits.length > 0) {
-        data.flowunits.push.apply(data.flowunits, this.dataService.virtualFlowunits);
-      }
       let objInput = {
         description: "",
         group: "Port",
         name: "input",
-        types: "",
-        version: "",
-        virtual: true
+        type: this.dataService.deviceTypes[0],
+        types: this.dataService.deviceTypes,
+        version: ""
       }
       let objOutput = {
         description: "",
         group: "Port",
         name: "output",
-        types: "",
-        version: "",
-        virtual: true
+        type: this.dataService.deviceTypes[0],
+        types: this.dataService.deviceTypes,
+        version: ""
       }
-      
       data.flowunits.push.apply(data.flowunits, [objInput, objOutput]);
       data.flowunits.forEach(item => {
 
         const group = this.nodeShapeCategories.find(i => i.title === item.group);
-        const unit = {
-          ...item,
-          title: item.name,
-          types: [
-            ...new Set(
-              data.flowunits.filter(u => u.name === item.name).map(i => i.type)
-            ),
-          ],
-        };
+        let unit;
+        if (item.group === "Port") {
+          unit = {
+            ...item,
+            title: item.name
+          }
+        } else {
+          unit = {
+            ...item,
+            title: item.name,
+            types: [
+              ...new Set(
+                data.flowunits.filter(u => u.name === item.name).map(i => i.type)
+              ),
+            ],
+          };
+        }
 
         if (group) {
           group.children.push(unit);
@@ -315,20 +320,20 @@ export class InsertPanelsComponent implements OnInit {
     );
   }
 
-  addDefaultPortType(obj){
-    if (obj.type){
-      if (obj.inputports.length>0){
+  addDefaultPortType(obj) {
+    if (obj.type) {
+      if (obj.inputports.length > 0) {
         obj.inputports.forEach(element => {
-          if (element.device_type === ""){
+          if (element.device_type === "") {
             element.device_type = obj.type;
             return element;
           }
         });
       }
 
-      if (obj.outputports.length>0){
+      if (obj.outputports.length > 0) {
         obj.outputports.forEach(element => {
-          if (element.device_type === ""){
+          if (element.device_type === "") {
             element.device_type = obj.type;
             return element;
           }

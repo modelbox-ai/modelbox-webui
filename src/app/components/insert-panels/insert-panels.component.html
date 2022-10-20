@@ -54,10 +54,10 @@
 
 <ng-template #tipContent let-context="context">
   <div *ngIf="context" class="tips-block">
-    <div>{{tipName}}{{context.title}}</div>
-    <div>{{tipVersion}}{{context.version}}</div>
-    <div>{{tipTopType}}{{context.types.join(' | ')}}</div>
-    <div>{{tipDescription}}{{context.description}}</div>
-    <div>{{tipIsVirtualmodel}}{{context.virtual ? tipYes : tipNo}}</div>
+    <div *ngIf="context.title">{{tipName}}{{context.title}}</div>
+    <div *ngIf="context.version">{{tipVersion}}{{context.version}}</div>
+    <div *ngIf="context.types.length>0 && context.group!=='Port'">{{tipTopType}}{{context.types.join(' | ')}}</div>
+    <div *ngIf="context.types.length>0 && context.group==='Port'">{{tipType}}{{context.types.join(' | ')}}</div>
+    <div *ngIf="context.description">{{tipDescription}}{{context.description}}</div>
   </div>
 </ng-template>
