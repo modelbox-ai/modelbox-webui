@@ -479,6 +479,7 @@ export class ToolBarComponent {
   editableTipBtn = EditableTip.btn;
   editableTipHover = EditableTip.hover;
   nameEditing: boolean;
+  showStar = false;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -524,6 +525,11 @@ export class ToolBarComponent {
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
       this.openProjectListPath = projectListPath;
+    }
+    if (this.formData.graphName && localStorage.getItem('isModifying') === "1") {
+      this.showStar = true;
+    } else {
+      this.showStar = false;
     }
   }
 
@@ -918,7 +924,14 @@ export class ToolBarComponent {
   }
 
   saveAllProject() {
-    this.showSaveAsDialog();
+    let isModifying;
+    isModifying = localStorage.getItem("isModifying");
+    if (isModifying !== "0") {
+      this.showSaveAsDialog();
+    } else {
+      this.saveGraph();
+    }
+
   }
 
   handleUndoButtonClick = event => {
@@ -1383,32 +1396,7 @@ export class ToolBarComponent {
           cssClass: 'primary',
           text: this.i18n.getById('modal.okButton'),
           handler: ($event: Event) => {
-            this.loadGraphData();
-            let param = JSON.parse(localStorage.getItem('project'));
-            let ret = this.infoCreateProjectFirst();
-            if (!ret) {
-              return;
-            }
-            this.removeLabelEmmiter.emit();
-            param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
-            if (typeof param.graph.dirs === "string") {
-              param.graph.dirs = param.graph.dirs.split("\n");
-            }
-            this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
-            param = this.createProjectParam(param);
-            this.basicService.saveAllProject(param).subscribe((data) => {
-              if (data.status === 201) {
-                this.msgs = [
-                  { severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }
-                ];
-              }
-            },
-              (error) => {
-                this.msgs = [
-                  { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
-                ];
-                return null;
-              });
+            this.saveGraph();
             results.modalInstance.hide();
           },
         },
@@ -1422,6 +1410,37 @@ export class ToolBarComponent {
       ],
     });
 
+  }
+
+  saveGraph() {
+    this.loadGraphData();
+    let param = JSON.parse(localStorage.getItem('project'));
+    let ret = this.infoCreateProjectFirst();
+    if (!ret) {
+      return;
+    }
+    this.removeLabelEmmiter.emit();
+    localStorage.setItem("normGraph", param.graph.dotSrc);
+    param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
+    if (typeof param.graph.dirs === "string") {
+      param.graph.dirs = param.graph.dirs.split("\n");
+    }
+    this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
+    param = this.createProjectParam(param);
+    this.basicService.saveAllProject(param).subscribe((data) => {
+      if (data.status === 201) {
+        this.msgs = [
+          { severity: 'success', content: this.i18n.getById("message.createProjectSuccess") }
+        ];
+      }
+      localStorage.setItem("isModifying", "0");
+    },
+      (error) => {
+        this.msgs = [
+          { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
+        ];
+        return null;
+      });
   }
 
   getGraphNameFromGraph(graph) {
