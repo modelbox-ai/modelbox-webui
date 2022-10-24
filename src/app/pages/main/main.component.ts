@@ -271,6 +271,7 @@ export class MainComponent {
       this.toolBar.initFormData();
     }
     this.reloadInsertComponent();
+    localStorage.setItem("normGraph",this.dotSrc);
   }
 
   loadProjectFromJson(project) {
@@ -298,6 +299,7 @@ export class MainComponent {
       this.settingPerfDir = project.graph.settingPerfDir;
       this.projectPath = project.flowunit['project-path'];
       this.reloadInsertComponent();
+      localStorage.setItem("normGraph",this.dotSrc);
     }
   }
 
@@ -739,7 +741,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
   handleGraphComponentSelect = components => {
     this.selectedGraphComponents = components;
     this.setEditorMarkers(components);
-    
+
     if (components.length === 1 && components[0].name.indexOf('->') === -1) {
       this.currentComponent = components[0];
       if (this.currentComponent.attributes) {
@@ -791,7 +793,14 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
   handleTextChange = (text, undoRedoState) => {
     this.isSaved = false;
-    this.dotSrc = text;
+    let normGraph = localStorage.getItem("normGraph");
+    if (this.dotSrc !== text) {
+      localStorage.setItem("isModifying", "1");
+      this.dotSrc = text;
+    }
+    if (this.dotSrc === normGraph){
+      localStorage.setItem("isModifying", "0");
+    }
     this.dotSrcLastChangeTime = Date.now();
 
     if (this.project && this.project.graph) {

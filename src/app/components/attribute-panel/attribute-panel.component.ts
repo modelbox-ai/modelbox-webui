@@ -209,7 +209,7 @@ export class AttributePanelComponent {
       attrType.value = this.unitType.selected.id;
       // 处理 options
       this.unitOptions.data.forEach(item => {
-        let attr = config.attributes.find(it => it.key === item.label.replaceAll(' ', '_'));
+        let attr = config.attributes.find(it => it.key === item.label?.replaceAll(' ', '_'));
         if (['string', 'int', 'integer', 'bool'].includes(item.type)) {
           if (item.value !== item.default && item.value !== '') {
             if (attr) {

@@ -134,6 +134,7 @@
     <div class="tool-bar-mid ellipsis project-name">
         {{'toolBar.graph.name' | translate}}
         {{formData.graphName}}
+        <span *ngIf="showStar">*</span>
     </div>
 
     <div class="tool-bar-right">
