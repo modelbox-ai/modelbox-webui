@@ -172,9 +172,7 @@ export class DataServiceService {
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name) {
-          if (it.type === type){
-            unit = it;
-          }
+          unit = it;
           if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
             this.toastService.open({
               value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],

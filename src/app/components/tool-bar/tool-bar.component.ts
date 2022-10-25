@@ -324,11 +324,6 @@ export class ToolBarComponent {
         fieldType: 'text'
       },
       {
-        field: 'device',
-        header: this.i18n.getById("toolBar.modal.device"),
-        fieldType: 'text'
-      },
-      {
         field: 'operation',
         header: this.i18n.getById("toolBar.select.operation"),
         fieldType: 'customized'
@@ -701,8 +696,6 @@ export class ToolBarComponent {
         }
       );
     }
-
-
   }
 
   clearCache() {
@@ -731,27 +724,7 @@ export class ToolBarComponent {
   }
 
   langValueChange(value) {
-    let port = [
-      {
-        field: 'inputOutput',
-        width: '80px'
-      },
-      {
-        field: 'portName',
-        width: '140px'
-      },
-      {
-        field: 'device',
-        width: '100px'
-      }, {
-        field: 'data_type',
-        width: '100px'
-      },
-      {
-        field: 'operation',
-        width: '80px'
-      }
-    ];
+    let port = [];
     this.formDataCreateFlowunit.lang = value;
     if (value === "inference") {
       this.portTableWidthConfig = port;
@@ -1019,7 +992,7 @@ export class ToolBarComponent {
     let fileName = this.formData.graphName;
     let existTheSameGraph = false;
     // 如果存在同项目的同名图，不允许创建
-    this.graphList.forEach(element => {
+    this.graphList?.forEach(element => {
       if (this.dataService.formatFileNameToId(element.name) === this.formData.fileName
         || this.getGraphNameFromGraph(element.graph.graphconf) === this.formData.graphName) {
         existTheSameGraph = true;
@@ -1047,6 +1020,12 @@ export class ToolBarComponent {
     this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
     this.formData.graphName = graphName;
     this.formData.graphName = fileName;
+    this.formData.flowunitDebugPath = this.formData.flowunitReleasePath;
+    this.formData.flowunitReleasePath = ["/opt/modelbox/application/" + this.formDataCreateProject.name + "/flowunit"];
+    let openProjectPath = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name + "/src/flowunit";
+    if (this.formData.flowunitReleasePath.indexOf(openProjectPath + "/src/flowunit") === -1) {
+      this.formData.flowunitDebugPath.push(openProjectPath + "/src/flowunit");
+    }
   }
 
   initFormDataCreateFlowunit() {
