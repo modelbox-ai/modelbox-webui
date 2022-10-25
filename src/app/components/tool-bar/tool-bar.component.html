@@ -597,7 +597,7 @@
                                     </td>
                                     <td 
                                         dTableCell 
-                                        *ngIf="rowItem.device"
+                                        *ngIf="rowItem.device && formDataCreateFlowunit.lang !== 'inference'"
                                         [editable]="true" 
                                         [editableTip]="editableTipHover"
                                         [(editing)]="rowItem['nameEditDevice']"

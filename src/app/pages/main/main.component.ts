@@ -271,7 +271,6 @@ export class MainComponent {
       this.toolBar.initFormData();
     }
     this.reloadInsertComponent();
-    localStorage.setItem("normGraph",this.dotSrc);
   }
 
   loadProjectFromJson(project) {
@@ -299,7 +298,13 @@ export class MainComponent {
       this.settingPerfDir = project.graph.settingPerfDir;
       this.projectPath = project.flowunit['project-path'];
       this.reloadInsertComponent();
-      localStorage.setItem("normGraph",this.dotSrc);
+      this.basicService.openProject(this.path + "/" + this.project_name).subscribe(
+        data => {
+          let src = data.graphs.find(ele => ele.name === project.graph.fileName);
+          src ? localStorage.setItem("normGraph", src) : localStorage.setItem("normGraph", this.dotSrc);
+
+        }
+      );
     }
   }
 
@@ -376,12 +381,14 @@ export class MainComponent {
         //after created successfully
         localStorage.removeItem("project");
         this.dotSrc = this.dataService.defaultSrc;
+
+        localStorage.setItem("normGraph", this.dotSrc);
         this.createProjectDialogResults.modalInstance.hide();
         this.msgs = [
           { severity: 'success', content: data.body.msg }
         ];
-        let openProejctPath = param.rootpath + "/" + param.name;
-        this.loadProject(openProejctPath);
+        let openProjectPath = param.rootpath + "/" + param.name;
+        this.loadProject(openProjectPath);
 
         this.createProjectDialogResults.modalInstance.hide();
         this.createProjectDialogResults.modalInstance.zIndex = -1;
@@ -441,6 +448,7 @@ REM For example: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_projec
 @ECHO off\r\n\
 FINDSTR "' + host + '" "%HOMEDRIVE%%HOMEPATH%\\.ssh\\config">nul\r\n\
 IF ERRORLEVEL 1 (\r\n\
+ECHO \r\n\
 ECHO Host '+ host + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO HostName '+ this.ipAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO User '+ this.dataService.currentUser + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
@@ -540,8 +548,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     return graphName;
   }
 
-  loadProject(openProejctPath) {
-    this.basicService.openProject(openProejctPath).subscribe(
+  loadProject(openProjectPath) {
+    this.basicService.openProject(openProjectPath).subscribe(
       (data: any) => {
         this.toolBar.formDataCreateProject.name = data.project_name;
         this.toolBar.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
@@ -567,8 +575,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
             this.toolBar.formData.flowunitReleasePath = this.currentGraph.driver.dir;
             this.toolBar.formData.flowunitDebugPath = this.toolBar.formData.flowunitReleasePath;
-            if (this.toolBar.formData.flowunitReleasePath.indexOf(openProejctPath + "/src/flowunit") === -1) {
-              this.toolBar.formData.flowunitDebugPath.push(openProejctPath + "/src/flowunit");
+            if (this.toolBar.formData.flowunitReleasePath.indexOf(openProjectPath + "/src/flowunit") === -1) {
+              this.toolBar.formData.flowunitDebugPath.push(openProjectPath + "/src/flowunit");
             }
 
             this.dirs = this.toolBar.formData.flowunitDebugPath;
@@ -798,7 +806,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       localStorage.setItem("isModifying", "1");
       this.dotSrc = text;
     }
-    if (this.dotSrc === normGraph){
+    if (this.dotSrc === normGraph) {
       localStorage.setItem("isModifying", "0");
     }
     this.dotSrcLastChangeTime = Date.now();
