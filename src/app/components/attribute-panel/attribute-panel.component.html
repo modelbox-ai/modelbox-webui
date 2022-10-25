@@ -92,64 +92,66 @@
         </div>
       </d-form-control>
     </d-form-item>
-    <d-form-item *ngFor="let item of unitOptions.data">
-      <div class="form-item" *ngIf="!isPort">
-        <d-form-label [required]="item.required">
-          <div
-            class="title-label-required">
-            <span>{{item.label}}</span>
-          </div>
-        </d-form-label>
-        <d-form-control>
-          <ng-container *ngIf="item.type === 'string'">
-            <input
-              class="content-font content-input"
-              dTextInput
-              autocomplete="off"
-              [name]="'option-' + item.label.replaceAll(' ', '_')"
-              placeholder="{{item.desc}}"
-              [(ngModel)]="item.value"
-              (keyup)="changedValue=true"
-              (blur)="attributeModel.blur()" />
-          </ng-container>
-          <ng-container *ngIf="item.type === 'bool'">
-            <input
-              class="content-font content-input"
-              type="checkbox"
-              [(ngModel)]="item.value"
-              [name]="'option-' + item.label.replaceAll(' ', '_')"
-              (keyup)="changedValue=true"
-              (blur)="attributeModel.blur()"
-              placeholder="{{item.desc}}" />
-          </ng-container>
-          <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
-            <input
-              class="content-font content-input"
-              dTextInput
-              autocomplete="off"
-              [(ngModel)]="item.value"
-              [name]="'option-' + item.label.replaceAll(' ', '_')"
-              placeholder="{{item.desc}}"
-              (keyup)="changedValue=true"
-              (blur)="attributeModel.blur()" />
-          </ng-container>
-          <ng-container *ngIf="item.type === 'list'">
-            <select
-              class="form-select"
-              [name]="'option-' + item.label.replaceAll(' ', '_')"
-              [(ngModel)]="item.selected"
-              (ngModelChange)="attributeModel.blur()">
-              <option [ngValue]="op" *ngFor="let op of item.options">
-                {{op.label}}
-              </option>
-            </select>
-            <span style="color:#adb0b8">
-              {{item.desc}}
-            </span>
-          </ng-container>
-        </d-form-control>
-      </div>
-    </d-form-item>
+    <div *ngIf="!isPort">
+      <d-form-item *ngFor="let item of unitOptions.data">
+        <div class="form-item">
+          <d-form-label [required]="item.required">
+            <div
+              class="title-label-required">
+              <span>{{item.label}}</span>
+            </div>
+          </d-form-label>
+          <d-form-control>
+            <ng-container *ngIf="item.type === 'string'">
+              <input
+                class="content-font content-input"
+                dTextInput
+                autocomplete="off"
+                [name]="'option-' + item.label.replaceAll(' ', '_')"
+                placeholder="{{item.desc}}"
+                [(ngModel)]="item.value"
+                (keyup)="changedValue=true"
+                (blur)="attributeModel.blur()" />
+            </ng-container>
+            <ng-container *ngIf="item.type === 'bool'">
+              <input
+                class="content-font content-input"
+                type="checkbox"
+                [(ngModel)]="item.value"
+                [name]="'option-' + item.label.replaceAll(' ', '_')"
+                (keyup)="changedValue=true"
+                (blur)="attributeModel.blur()"
+                placeholder="{{item.desc}}" />
+            </ng-container>
+            <ng-container *ngIf="item.type === 'int' || item.type === 'integer'">
+              <input
+                class="content-font content-input"
+                dTextInput
+                autocomplete="off"
+                [(ngModel)]="item.value"
+                [name]="'option-' + item.label.replaceAll(' ', '_')"
+                placeholder="{{item.desc}}"
+                (keyup)="changedValue=true"
+                (blur)="attributeModel.blur()" />
+            </ng-container>
+            <ng-container *ngIf="item.type === 'list'">
+              <select
+                class="form-select"
+                [name]="'option-' + item.label.replaceAll(' ', '_')"
+                [(ngModel)]="item.selected"
+                (ngModelChange)="attributeModel.blur()">
+                <option [ngValue]="op" *ngFor="let op of item.options">
+                  {{op.label}}
+                </option>
+              </select>
+              <span style="color:#adb0b8">
+                {{item.desc}}
+              </span>
+            </ng-container>
+          </d-form-control>
+        </div>
+      </d-form-item>
+    </div>
 
     <d-form-item *ngIf="unit" class="form-item">
       <d-form-label>

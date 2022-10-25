@@ -132,7 +132,6 @@ export class AttributePanelComponent {
           this.unitOptions.data.push(formItem);
         });
       }
-      
     },
   };
 
@@ -445,7 +444,6 @@ export class AttributePanelComponent {
   initConfig(config) {
     this.changedValue = false;
     this.unit = this.getUnit(config);
-    this.isPort = false;
     if (this.unit === undefined) {
       this.initUnit(config);
     }
@@ -505,6 +503,13 @@ export class AttributePanelComponent {
         }
         if (item.key === 'queue_size') {
           this.unit.advance.queueSize = item.value;
+        }
+        if (item.key === "type") {
+          if (item.value === "input" || item.value === "output") {
+            this.isPort = true;
+          }else{
+            this.isPort = false;
+          }
         }
         this.unitOptions.data.forEach(it => {
           if (it.label?.replaceAll(" ", "_") === item.key) {
