@@ -172,17 +172,31 @@ export class DataServiceService {
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name) {
-          unit = it;
+          if (it.type === type) {
+            unit = it;
+          }
           if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {
-            this.toastService.open({
-              value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
-              life: 3000,
-              style: { top: '100px' }
-            });
-            this.warningMessage = true;
-            this.sleep(3000).then(() => {
-              this.warningMessage = false;
-            });
+            if (unit) {
+              this.toastService.open({
+                value: [{ severity: 'warn', content: unit.name + this.i18n.getById("message.wrongFlowunitTypePleaseChooseGPUDevice") }],
+                life: 3000,
+                style: { top: '100px' }
+              });
+              this.warningMessage = true;
+              this.sleep(3000).then(() => {
+                this.warningMessage = false;
+              });
+            } else {
+              this.toastService.open({
+                value: [{ severity: 'warn', content: it.name + ":" + it.type + " not found!" }],
+                life: 3000,
+                style: { top: '100px' }
+              });
+              this.warningMessage = true;
+              this.sleep(3000).then(() => {
+                this.warningMessage = false;
+              });
+            }
           }
         }
       });

@@ -91,7 +91,10 @@ export class AttributePanelComponent {
         item => item.key === 'device'
       );
       unitType.value = event.id;
+      let oldAttribute = JSON.parse(JSON.stringify(this.config.attributes))
+      debugger
       this.initConfig(this.config);
+      this.config.attributes = oldAttribute;
       this.attributeModel.blur();
     },
   };

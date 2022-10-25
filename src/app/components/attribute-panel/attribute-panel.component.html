@@ -155,8 +155,11 @@
 
     <d-form-item *ngIf="unit" class="form-item">
       <d-form-label>
-        <span class="title-label">
+        <span *ngIf="!isPort" class="title-label">
           {{'insertPanels.tip.topType'|translate}}
+        </span>
+        <span *ngIf="isPort" class="title-label">
+          {{'insertPanels.tip.portType'|translate}}
         </span>
       </d-form-label>
       <d-form-control>
