@@ -130,6 +130,7 @@
   "insertPanels.tip.version": "版本：",
   "insertPanels.tip.name": "节点名称：",
   "insertPanels.tip.topType": "功能单元类型：",
+  "insertPanels.tip.portType":"节点类型：",
   "insertPanels.tip.description": "描述：",
   "insertPanels.tip.portDetail": "端口说明: ",
   "insertPanels.tip.constraint": "约束: ",
