@@ -614,21 +614,70 @@ export class ToolBarComponent {
 
   handleProjectDropDown(e) {
     if (e.value === 1) {
-      this.showCreateProjectDialog(this.createProjectTemplate);
+      this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate);
     } else if (e.value === 2) {
-      this.showOpenProjectButtonDialog(this.openProjectTemplate);
+      this.isModifyingDecorater(this.showOpenProjectButtonDialog, this.openProjectTemplate);
     } else if (e.value === 8) {
       this.openDialog();
     } else if (e.value === 3) {
-      this.handleNewGraphClick(null);
+      this.isModifyingDecorater(this.handleNewGraphClick, null);
     } else if (e.value === 4) {
-      this.showGraphSelectDialog(this.graphSelectTemplate);
+      this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate);
     } else if (e.value === 5) {
       this.saveAllProject();
     } else if (e.value === 6) {
       this.clearCache();
     } else if (e.value === 7) {
       this.sycnGraph();
+    }
+  }
+
+  isModifyingDecorater(func, arg=null) {
+    let isModifying = localStorage.getItem("isModifying");
+    if (isModifying === "1") {
+      let result = this.dialogService.open({
+        id: 'createProject',
+        width: '400px',
+        title: "是否保存图文件？",
+        showAnimate: false,
+        content: "图文件已有修改，是否保存？",
+        backdropCloseable: true,
+        onClose: () => {
+
+        },
+        buttons: [{
+          cssClass: 'danger',
+          text: this.i18n.getById('modal.okButton'),
+          disabled: false,
+          handler: ($event: Event) => {
+            this.saveGraph();
+            result.modalInstance.hide();
+            result.modalInstance.zIndex = -1;
+            func(arg);
+          },
+        },
+        {
+          id: 'give-up',
+          cssClass: 'common',
+          text: "放弃修改",
+          handler: ($event: Event) => {
+            result.modalInstance.hide();
+            result.modalInstance.zIndex = -1;
+            func(arg);
+          },
+        },
+        {
+          id: 'save-as-cancel',
+          cssClass: 'common',
+          text: this.i18n.getById('modal.cancelButton'),
+          handler: ($event: Event) => {
+            result.modalInstance.hide();
+            result.modalInstance.zIndex = -1;
+          },
+        },],
+      });
+    }else{
+      func(arg);
     }
   }
 

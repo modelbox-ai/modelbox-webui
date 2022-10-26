@@ -188,7 +188,7 @@ export class DataServiceService {
               });
             } else {
               this.toastService.open({
-                value: [{ severity: 'warn', content: it.name + ":" + it.type + " not found!" }],
+                value: [{ severity: 'warn', content: name + ":" + type + " not found!" }],
                 life: 3000,
                 style: { top: '100px' }
               });

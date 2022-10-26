@@ -373,14 +373,14 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     let flowunit = attributes?.flowunit;
     let device = attributes?.device;
     let unit = this.dataService.getUnit(flowunit, device);
-    if (unit.options) {
+    if (unit?.options) {
       for (let i of unit.options) {
         if (i.required) {
           attributes[i.name] = i.default;
         }
       }
     }
-    if (unit.group === "Port") {
+    if (unit?.group === "Port") {
       attributes["type"] = unit.name;
       attributes["flowunit"] = undefined;
     }
