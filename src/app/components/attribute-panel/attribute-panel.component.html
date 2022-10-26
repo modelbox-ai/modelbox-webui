@@ -92,8 +92,8 @@
         </div>
       </d-form-control>
     </d-form-item>
-    <div *ngIf="!isPort">
-      <d-form-item *ngFor="let item of unitOptions.data">
+    <d-form-item *ngIf="!isPort">
+      <div *ngFor="let item of unitOptions.data">
         <div class="form-item">
           <d-form-label [required]="item.required">
             <div
@@ -150,8 +150,8 @@
             </ng-container>
           </d-form-control>
         </div>
-      </d-form-item>
-    </div>
+      </div>
+    </d-form-item>
 
     <d-form-item *ngIf="unit" class="form-item">
       <d-form-label>
