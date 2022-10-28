@@ -1313,6 +1313,16 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
   handleRunButtonClick = (graphName) => {
     //saveToBrowser
+    let isModifying = localStorage.getItem("isModifying");
+    //if user is modifying the graph
+    if (isModifying === "1") {
+
+    } else {
+      this.handleRun(graphName);
+    }
+  }
+
+  handleRun = (graphName) => {
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
     }

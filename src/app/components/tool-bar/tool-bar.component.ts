@@ -620,7 +620,7 @@ export class ToolBarComponent {
     } else if (e.value === 8) {
       this.openDialog();
     } else if (e.value === 3) {
-      this.isModifyingDecorater(this.handleNewGraphClick, null);
+      this.isModifyingDecorater(this.handleNewGraphClick, null, this);
     } else if (e.value === 4) {
       this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate);
     } else if (e.value === 5) {
@@ -632,7 +632,7 @@ export class ToolBarComponent {
     }
   }
 
-  isModifyingDecorater(func, arg=null) {
+  isModifyingDecorater(func, arg = null, that = null) {
     let isModifying = localStorage.getItem("isModifying");
     if (isModifying === "1") {
       let result = this.dialogService.open({
@@ -653,7 +653,11 @@ export class ToolBarComponent {
             this.saveGraph();
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
-            func(arg);
+            if (that) {
+              func(arg, that);
+            } else {
+              func(arg);
+            }
           },
         },
         {
@@ -676,8 +680,12 @@ export class ToolBarComponent {
           },
         },],
       });
-    }else{
-      func(arg);
+    } else {
+      if (that) {
+        func(arg, that);
+      } else {
+        func(arg);
+      }
     }
   }
 
@@ -1004,25 +1012,25 @@ export class ToolBarComponent {
     this.onCreateProjectButtonClick && this.onCreateProjectButtonClick();
   };
 
-  handleNewGraphClick(e) {
-    const results = this.dialogService.open({
+  handleNewGraphClick(e, that) {
+    const results = that.dialogService.open({
       id: 'new-graph',
-      title: this.i18n.getById('toolBar.newGraphButton'),
-      contentTemplate: this.newGraphTemplate,
+      title: that.i18n.getById('toolBar.newGraphButton'),
+      contentTemplate: that.newGraphTemplate,
       width: '400px',
       showAnimation: true,
       buttons: [{
         cssClass: 'danger',
-        text: this.i18n.getById('modal.okButton'),
+        text: that.i18n.getById('modal.okButton'),
         disabled: false,
         handler: ($event: Event) => {
-          this.onNewGraphClickOk(results);
+          that.onNewGraphClickOk(results);
         },
       },
       {
         id: 'new-cancel',
         cssClass: 'common',
-        text: this.i18n.getById('modal.cancelButton'),
+        text: that.i18n.getById('modal.cancelButton'),
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
