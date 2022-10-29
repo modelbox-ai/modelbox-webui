@@ -32,8 +32,7 @@
     draggable="true"
     (dragstart)="handleNodeShapeDragStart(child).call(this, $event)"
     (drag)="handleNodeShapeDrag(child).call(this, $event)"
-    (dragend)="handleNodeShapeDragEnd(child).call(this, $event)"
-    (dblclick)="handleNodeShapeClick(child)($event)">
+    (dragend)="handleNodeShapeDragEnd(child).call(this, $event)">
     <div
       class="menu-block"
       [ngbTooltip]="tipContent"
