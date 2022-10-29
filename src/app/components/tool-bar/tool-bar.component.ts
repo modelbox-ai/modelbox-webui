@@ -1090,7 +1090,7 @@ export class ToolBarComponent {
       name: 'flowunit',
       desc: '',
       lang: 'python',
-      "project-path": this.dataService.defaultSearchPath + this.project_name + '/src/flowunit',
+      "project-path": this.dataService.defaultSearchPath + "/" + this.formDataCreateProject.name,
       port_infos: [],
       device: 'cpu',
       type: 'stream',
@@ -1463,6 +1463,7 @@ export class ToolBarComponent {
     }
     this.dotSrcWithoutLabel = this.formatDotSrc(this.dotSrcWithoutLabel);
     param = this.createProjectParam(param);
+
     this.basicService.saveAllProject(param).subscribe((data) => {
       if (data.status === 201) {
         this.msgs = [
