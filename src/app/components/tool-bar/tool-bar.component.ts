@@ -93,7 +93,7 @@ export class ToolBarComponent {
   @Output() removeLabelEmmiter = new EventEmitter();
   @Output() openDialogEmmiter = new EventEmitter();
   @Output() downloadGraphEmmiter = new EventEmitter();
-
+  @Output() setGraphStatusEmmiter = new EventEmitter();
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -667,7 +667,11 @@ export class ToolBarComponent {
           handler: ($event: Event) => {
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
-            func(arg);
+            if (that) {
+              func(arg, that);
+            } else {
+              func(arg);
+            }
           },
         },
         {
@@ -1083,6 +1087,7 @@ export class ToolBarComponent {
     if (this.formData.flowunitReleasePath.indexOf(openProjectPath + "/src/flowunit") === -1) {
       this.formData.flowunitDebugPath.push(openProjectPath + "/src/flowunit");
     }
+    this.setGraphStatusEmmiter.emit(0);
   }
 
   initFormDataCreateFlowunit() {

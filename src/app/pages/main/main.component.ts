@@ -22,6 +22,7 @@ import { ModalVscodeComponent } from '../../components/modal-vscode/modal-vscode
 import { ModalGuideMainComponent } from 'src/app/components/modal-guide-main/modal-guide-main.component';
 import { MessageService } from '@shared/services/msg-service.service';
 import { GraphStatus } from '@shared/constants';
+import { ManagementComponent } from 'src/app/components/management/management.component';
 
 @Component({
   selector: 'app-main',
@@ -158,32 +159,32 @@ export class MainComponent {
     }
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
-    this.getGraphStatus();
+    this.getGraphStatus(this.project.graph.fileName);
   }
 
-  getGraphStatus() {
+  getGraphStatus(name) {
     this.message.currentMessage.subscribe(msg => {
       if (msg.length > 0) {
         msg.forEach(element => {
-          if (this.dataService.formatFileNameToId(this.project.graph.fileName) === element.job_id) {
+          if (this.dataService.formatFileNameToId(name) === element.job_id) {
             this.statusGraph = this.graphStatusparse(element.job_status);
           }
         });
       } else {
-        this.updataStatusGraph();
+        this.updataStatusGraph(name);
       }
     });
   }
 
-  updataStatusGraph() {
+  updataStatusGraph(name) {
     this.basicService.getTaskLists().subscribe((data: any) => {
       if (data.job_list.length === 0) {
         this.statusGraph = 0;
         return;
       }
       for (let i of data.job_list) {
-        let name = this.dataService.formatFileNameToId(this.project.graph?.fileName);
-        if (i.job_id === name) {
+        let fileName = this.dataService.formatFileNameToId(name);
+        if (i.job_id === fileName) {
           this.statusGraph = this.graphStatusparse(i.job_status);
           return;
         } else {
@@ -271,6 +272,7 @@ export class MainComponent {
       this.toolBar.initFormData();
     }
     this.reloadInsertComponent();
+    this.statusGraph = 0;
   }
 
   loadProjectFromJson(project) {
@@ -302,7 +304,7 @@ export class MainComponent {
         data => {
           let src = data.graphs.find(ele => ele.name === project.graph.fileName);
           src ? localStorage.setItem("normGraph", src) : localStorage.setItem("normGraph", this.dotSrc);
-
+          this.getGraphStatus(this.project.graph.fileName);
         }
       );
     }
@@ -364,6 +366,7 @@ export class MainComponent {
     localStorage.clear();
     sessionStorage.clear();
     // stop running service
+    this.statusGraph = 0;
     this.basicService.getTaskLists().subscribe((data: any) => {
       if (data.job_list) {
         data.job_list.map(ele => {
@@ -1230,6 +1233,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               let path = chosenGraph[0]?.graphPath.split('/');
               this.toolBar.formData.fileName = path[path.length - 1];
               this.saveCurrentProject();
+              this.getGraphStatus(this.toolBar.formData.fileName);
             },
           },
           {
@@ -1427,7 +1431,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       }
     });
 
-    this.getGraphStatus();
+    this.getGraphStatus(this.project.graph.fileName);
   }
 
   createOptionFromProject = (item) => {
@@ -1501,5 +1505,9 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         },
       },],
     });
+  }
+
+  setStatusGraph(value){
+    this.statusGraph = value;
   }
 }
