@@ -1316,7 +1316,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     let isModifying = localStorage.getItem("isModifying");
     //if user is modifying the graph
     if (isModifying === "1") {
-
+      this.toolBar.isModifyingDecorater(this.handleRun, graphName, this);
     } else {
       this.handleRun(graphName);
     }
