@@ -66,13 +66,13 @@ export class BasicServiceService {
     return this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).pipe(timeout(30000));
   }
 
-  openProjectPromise(paramData?: string){
+  openProjectPromise(paramData?: string) {
     const promise = this.http.get(this.serviceRouter + '/editor/project/?path=' + paramData).toPromise();
-    console.log(promise);  
-    promise.then((data)=>{
-      
+    console.log(promise);
+    promise.then((data) => {
+
       console.log(JSON.stringify(data));
-    }).catch((error)=>{
+    }).catch((error) => {
       console.log("Promise rejected with " + JSON.stringify(error));
     });
   }
@@ -96,6 +96,10 @@ export class BasicServiceService {
 
   saveAllProject(paramData?: any): Observable<any> {
     return this.http.put(this.serviceRouter + '/editor/graph', paramData, { observe: 'response' }).pipe(timeout(30000));
+  }
+
+  queryGraphFile(params?: string): Observable<any> {
+    return this.http.get(this.serviceRouter + '/editor/graph/?graph_path=' + params).pipe(timeout(30000));
   }
 
   // 查询任务列表

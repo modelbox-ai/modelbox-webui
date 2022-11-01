@@ -121,6 +121,8 @@ export class MainComponent {
   portAddress: any;
   refresh_timer: any;
 
+  tagDialogService = false;
+
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
@@ -160,6 +162,8 @@ export class MainComponent {
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph.fileName);
+    this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 5000);
+
   }
 
   getGraphStatus(name) {
@@ -305,9 +309,75 @@ export class MainComponent {
           let src = data.graphs.find(ele => ele.name === project.graph.fileName);
           src ? localStorage.setItem("normGraph", src) : localStorage.setItem("normGraph", this.dotSrc);
           this.getGraphStatus(this.project.graph.fileName);
+          this.getGraphFileTime(data.project_path + "/src/graph/" + this.project.graph.fileName);
         }
       );
     }
+  }
+
+  getGraphFileTime(graphPath) {
+    this.basicService.queryGraphFile(graphPath).subscribe(
+      data => {
+        if (data?.modify_time) {
+          let oldModTime = localStorage.getItem(graphPath);
+          if (oldModTime) {
+            if (oldModTime < data?.modify_time) {
+              //提示要不要覆盖?
+              if (!this.tagDialogService) {
+                this.tagDialogService = true;
+                const results = this.dialogService.open({
+                  id: 'dialog-service',
+                  width: '346px',
+                  maxHeight: '600px',
+                  title: '',
+                  content: "后端文件已更新，下一步的操作是？",
+                  backdropCloseable: true,
+                  dialogtype: 'warning',
+                  buttons: [
+                    {
+                      cssClass: 'primary',
+                      text: '保存图',
+                      handler: ($event: Event) => {
+                        results.modalInstance.hide();
+                        results.modalInstance.zIndex = -1;
+                        this.toolBar.saveAllProject();
+                        
+                        localStorage.setItem(graphPath, data?.modify_time);
+                        this.tagDialogService = false;
+                      },
+                    },
+                    {
+                      cssClass: 'primary',
+                      text: '同步图',
+                      handler: ($event: Event) => {
+                        results.modalInstance.hide();
+                        results.modalInstance.zIndex = -1;
+                        this.toolBar.sycnGraph();
+                        localStorage.setItem(graphPath, data?.modify_time);
+                        this.tagDialogService = false;
+                      },
+                    },
+                    {
+                      cssClass: 'common',
+                      text: this.i18n.getById('modal.cancelButton'),
+                      handler: ($event: Event) => {
+                        results.modalInstance.hide();
+                        results.modalInstance.zIndex = -1;
+                      },
+                    }
+                  ],
+                });
+              }
+            }
+          } else {
+            localStorage.setItem(graphPath, data?.modify_time);
+          }
+        } else {
+          this.msgs = [
+            { severity: 'error', content: graphPath + "is not found!" }
+          ];
+        }
+      });
   }
 
   getProjectJson() {
@@ -1507,7 +1577,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     });
   }
 
-  setStatusGraph(value){
+  setStatusGraph(value) {
     this.statusGraph = value;
   }
 }
