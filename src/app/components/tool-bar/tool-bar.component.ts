@@ -1476,12 +1476,22 @@ export class ToolBarComponent {
         ];
       }
       localStorage.setItem("isModifying", "0");
+      this.updateModifyTime(param.graph_path + "/src/graph/" + param.graph_name + ".toml");
     },
       (error) => {
         this.msgs = [
           { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
         ];
         return null;
+      });
+  }
+
+  updateModifyTime(graphPath) {
+    this.basicService.queryGraphFile(graphPath).subscribe(
+      data => {
+        if (data?.modify_time) {
+          localStorage.setItem(graphPath, data?.modify_time);
+        }
       });
   }
 
