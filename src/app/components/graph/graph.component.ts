@@ -610,22 +610,28 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             let device = that.queryDeviceByNodeName(nodeName);
             let flowunitName = that.queryFlowunitNameByNodeName(nodeName);
             let unit = that.dataService.getUnit(flowunitName, device);
-            let portDeviceType = "cpu";
+            let portDeviceType = "";
             let ports = [];
-            if (unit){
+            if (unit) {
               ports = unit.inputports.concat(unit.outputports)
             }
-            
+
             let result = ports.filter(x => x.name === d.children[0].text);
-            if (result && result[0]){
+            if (result && result[0]) {
               portDeviceType = result[0].device_type;
             }
             
+            if (!portDeviceType) {
+              portDeviceType = device;
+            }
+
             if (portDeviceType === "cpu") {
               d.attributes.fill = "#99CC33";
             } else if (portDeviceType === "cuda") {
               d.attributes.fill = "#3399CC";
-            }else{
+            } else if (portDeviceType === "ascend") {
+              d.attributes.fill = "#666699";
+            } else {
               d.attributes.fill = "#99CC33";
             }
 
@@ -1603,12 +1609,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
       // end
 
       let startnode = startNodeName.split(':');
-      if (startnode.length === 1){
+      if (startnode.length === 1) {
         startnode.push("out");
       }
-      
+
       let endnode = endNodeName.split(':');
-      if (endnode.length === 1){
+      if (endnode.length === 1) {
         endnode.push("in");
       }
       startNodeName = startnode[0] + ':\"' + startnode[1] + '\"';

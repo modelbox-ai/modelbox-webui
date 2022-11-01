@@ -162,7 +162,7 @@ export class MainComponent {
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph.fileName);
-    this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 5000);
+    this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 10000);
 
   }
 
