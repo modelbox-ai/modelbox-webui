@@ -161,7 +161,7 @@ export class MainComponent {
     }
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
-    this.getGraphStatus(this.project.graph.fileName);
+    this.getGraphStatus(this.project.graph?.fileName);
     this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 10000);
 
   }
@@ -521,7 +521,7 @@ REM For example: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_projec
 @ECHO off\r\n\
 FINDSTR "' + host + '" "%HOMEDRIVE%%HOMEPATH%\\.ssh\\config">nul\r\n\
 IF ERRORLEVEL 1 (\r\n\
-ECHO \r\n\
+ECHO.>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO Host '+ host + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO HostName '+ this.ipAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO User '+ this.dataService.currentUser + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
