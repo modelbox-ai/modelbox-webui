@@ -130,7 +130,7 @@
   "insertPanels.tip.version": "版本：",
   "insertPanels.tip.name": "节点名称：",
   "insertPanels.tip.topType": "功能单元类型：",
-  "insertPanels.tip.portType":"节点类型：",
+  "insertPanels.tip.portType": "节点类型：",
   "insertPanels.tip.description": "描述：",
   "insertPanels.tip.portDetail": "端口说明: ",
   "insertPanels.tip.constraint": "约束: ",
@@ -237,8 +237,12 @@
   "bat": "批处理",
   "message.containerSituationPleaseInputHostMapPort": "容器场景请填写主机映射端口，例如\n\"-p 50022:22\"，填写50022",
   "message.pleaseUseIDEOpenCodeProject": "请使用IDE打开代码工程",
-  "vscode.1":"1. 用户使用IDE进行代码开发和调试， UI主要提供功能单元创建和图编排可视化等辅助功能",
-  "vscode.2":"2. 推荐使用vscode进行代码开发，具体安装及使用方法可参考",
-  "vscode.3":"，如果环境准备完毕，可以直接下载",
-  "vscode.4":"文件远程启动工程"
+  "vscode.1": "1. 用户使用IDE进行代码开发和调试， UI主要提供功能单元创建和图编排可视化等辅助功能",
+  "vscode.2": "2. 推荐使用vscode进行代码开发，具体安装及使用方法可参考",
+  "vscode.3": "，如果环境准备完毕，可以直接下载",
+  "vscode.4": "文件远程启动工程",
+  "save": "保存",
+  "backendGraphFileChanged": "后台图文件已修改，请选择保存图到后台或同步后台图到界面",
+  "remind":"提醒：",
+  "graphIsChanged":"当前界面图文件已修改，是否保存？"
 }

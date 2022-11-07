@@ -239,7 +239,8 @@ export class ToolBarComponent {
     perfPath: this.dataService.defaultPerfDir,
     flowunitDebugPath: [],
     flowunitReleasePath: [],
-    fileName: ''
+    fileName: '',
+    flowunitDebugPathForDisplay: ""
   };
 
   formDataCreateProject = {
@@ -526,6 +527,9 @@ export class ToolBarComponent {
     } else {
       this.showStar = false;
     }
+    if (this.formData.flowunitDebugPath.length > 0) {
+      this.formData.flowunitDebugPathForDisplay = this.formData.flowunitDebugPath.join("\n");
+    }
   }
 
   loadGraphData(status = null) {
@@ -638,33 +642,19 @@ export class ToolBarComponent {
       let result = this.dialogService.open({
         id: 'createProject',
         width: '400px',
-        title: "是否保存图文件？",
+        title: this.i18n.getById("remind"),
         showAnimate: false,
-        content: "图文件已有修改，是否保存？",
+        content: this.i18n.getById("graphIsChanged"),
         backdropCloseable: true,
         onClose: () => {
 
         },
         buttons: [{
           cssClass: 'danger',
-          text: this.i18n.getById('modal.okButton'),
+          text: this.i18n.getById('save'),
           disabled: false,
           handler: ($event: Event) => {
             this.saveGraph();
-            result.modalInstance.hide();
-            result.modalInstance.zIndex = -1;
-            if (that) {
-              func(arg, that);
-            } else {
-              func(arg);
-            }
-          },
-        },
-        {
-          id: 'give-up',
-          cssClass: 'common',
-          text: "放弃修改",
-          handler: ($event: Event) => {
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
             if (that) {
@@ -953,6 +943,7 @@ export class ToolBarComponent {
       perfPath: this.dataService.defaultPerfDir,
       flowunitDebugPath: [],
       flowunitReleasePath: [],
+      flowunitDebugPathForDisplay: "",
       fileName: ''
     };
   }

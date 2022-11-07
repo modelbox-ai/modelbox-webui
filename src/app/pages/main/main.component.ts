@@ -162,7 +162,9 @@ export class MainComponent {
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph?.fileName);
-    this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 10000);
+    if (this.project.rootpath && this.project.name && this.project.graph.fileName) {
+      this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 10000);
+    }
 
   }
 
@@ -325,30 +327,31 @@ export class MainComponent {
               //提示要不要覆盖?
               if (!this.tagDialogService) {
                 this.tagDialogService = true;
+                document.querySelectorAll("dialog-service");
                 const results = this.dialogService.open({
                   id: 'dialog-service',
                   width: '346px',
                   maxHeight: '600px',
-                  title: '',
-                  content: "后端文件已更新，下一步的操作是？",
+                  title: this.i18n.getById("notice"),
+                  content: this.i18n.getById("backendGraphFileChanged"),
                   backdropCloseable: true,
                   dialogtype: 'warning',
                   buttons: [
                     {
                       cssClass: 'primary',
-                      text: '保存图',
+                      text: this.i18n.getById("toolBar.saveAsButton"),
                       handler: ($event: Event) => {
                         results.modalInstance.hide();
                         results.modalInstance.zIndex = -1;
                         this.toolBar.saveAllProject();
-                        
+
                         localStorage.setItem(graphPath, data?.modify_time);
                         this.tagDialogService = false;
                       },
                     },
                     {
                       cssClass: 'primary',
-                      text: '同步图',
+                      text: this.i18n.getById("toolBar.sycnGraphButton"),
                       handler: ($event: Event) => {
                         results.modalInstance.hide();
                         results.modalInstance.zIndex = -1;
@@ -357,14 +360,6 @@ export class MainComponent {
                         this.tagDialogService = false;
                       },
                     },
-                    {
-                      cssClass: 'common',
-                      text: this.i18n.getById('modal.cancelButton'),
-                      handler: ($event: Event) => {
-                        results.modalInstance.hide();
-                        results.modalInstance.zIndex = -1;
-                      },
-                    }
                   ],
                 });
               }
@@ -1258,6 +1253,9 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
+
+          let flowScanPath = document.getElementById("flowScanPath");
+          this.toolBar.formData.flowunitDebugPath = flowScanPath['value'].split(/[\s,;]+/g);
           this.saveSetting(this.toolBar.formData);
         },
       },
