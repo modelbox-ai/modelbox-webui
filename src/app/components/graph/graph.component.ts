@@ -220,7 +220,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.formatDotSrc();
     setTimeout(() => {
       this.onTextChange(this.dotGraph.dotSrc);
-    }, 100)
+    }, 1000);
   };
 
   formatDotSrc(): void {
@@ -620,7 +620,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             if (result && result[0]) {
               portDeviceType = result[0].device_type;
             }
-            
+
             if (!portDeviceType) {
               portDeviceType = device;
             }

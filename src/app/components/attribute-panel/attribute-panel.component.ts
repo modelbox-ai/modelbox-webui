@@ -86,7 +86,6 @@ export class AttributePanelComponent {
       }
     },
     change: (event, form) => {
-
       const unitType = this.config.attributes.find(
         item => item.key === 'device'
       );
