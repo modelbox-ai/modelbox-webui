@@ -119,9 +119,6 @@ export class MainComponent {
   resultsOpenGuideMain: any;
   ipAddress: any;
   portAddress: any;
-  refresh_timer: any;
-
-  tagDialogService = false;
 
   constructor(private dialogService: DialogService,
     private i18n: I18nService,
@@ -163,7 +160,14 @@ export class MainComponent {
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph?.fileName);
     if (this.project.rootpath && this.project.name && this.project.graph.fileName) {
-      this.refresh_timer = setInterval(() => { this.getGraphFileTime(this.project.rootpath + "/" + this.project.name + "/src/graph/" + this.project.graph.fileName); }, 10000);
+      this.dataService.refresh_timer = setInterval(() => {
+        this.getGraphFileTime(this.project.rootpath
+          + "/"
+          + this.project.name
+          + "/src/graph/"
+          + this.dataService.formatIdToFileName(this.project.graph.fileName)
+        );
+      }, 10000);
     }
 
   }
@@ -311,7 +315,7 @@ export class MainComponent {
           let src = data.graphs.find(ele => ele.name === project.graph.fileName);
           src ? localStorage.setItem("normGraph", src) : localStorage.setItem("normGraph", this.dotSrc);
           this.getGraphStatus(this.project.graph.fileName);
-          this.getGraphFileTime(data.project_path + "/src/graph/" + this.project.graph.fileName);
+          this.getGraphFileTime(data.project_path + "/src/graph/" + this.dataService.formatIdToFileName(this.project.graph.fileName));
         }
       );
     }
@@ -325,11 +329,9 @@ export class MainComponent {
           if (oldModTime) {
             if (oldModTime < data?.modify_time) {
               //提示要不要覆盖?
-              if (!this.tagDialogService) {
-                this.tagDialogService = true;
-                document.querySelectorAll("dialog-service");
+              if (!document.querySelector("#backend-changed")) {
                 const results = this.dialogService.open({
-                  id: 'dialog-service',
+                  id: 'backend-changed',
                   width: '346px',
                   maxHeight: '600px',
                   title: this.i18n.getById("notice"),
@@ -344,9 +346,7 @@ export class MainComponent {
                         results.modalInstance.hide();
                         results.modalInstance.zIndex = -1;
                         this.toolBar.saveAllProject();
-
                         localStorage.setItem(graphPath, data?.modify_time);
-                        this.tagDialogService = false;
                       },
                     },
                     {
@@ -357,7 +357,6 @@ export class MainComponent {
                         results.modalInstance.zIndex = -1;
                         this.toolBar.sycnGraph();
                         localStorage.setItem(graphPath, data?.modify_time);
-                        this.tagDialogService = false;
                       },
                     },
                   ],
