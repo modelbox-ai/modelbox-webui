@@ -580,7 +580,7 @@ export class ToolBarComponent {
         + "/"
         + current_project.name
         + "/src/graph/"
-        + i.name;
+        + this.dataService.formatIdToFileName(i.name);
       return obj;
     });
 

@@ -447,12 +447,10 @@ export class AttributePanelComponent {
       this.initUnit(config);
     }
 
-    if (this.unit.advance === undefined) {
-      this.unit.advance = {
-        deviceid: "",
-        batchSize: "",
-        queueSize: ""
-      }
+    this.unit.advance = {
+      deviceid: "",
+      batchSize: "",
+      queueSize: ""
     }
 
     this.unitType.init();
@@ -506,7 +504,7 @@ export class AttributePanelComponent {
         if (item.key === "type") {
           if (item.value === "input" || item.value === "output") {
             this.isPort = true;
-          }else{
+          } else {
             this.isPort = false;
           }
         }
