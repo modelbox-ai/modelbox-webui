@@ -94,6 +94,7 @@ export class ToolBarComponent {
   @Output() openDialogEmmiter = new EventEmitter();
   @Output() downloadGraphEmmiter = new EventEmitter();
   @Output() setGraphStatusEmmiter = new EventEmitter();
+  @Output() getGraphFileTimeEmmitter = new EventEmitter();
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -699,18 +700,7 @@ export class ToolBarComponent {
           //加载功能单元信息
           //加载图信息
           if (data.graphs?.length > 1) {
-            //加载指定图
-            if (!this.selectedName) {
-              this.selectedName = this.getGraphNameFromGraph(current_project.graph.dotSrc);
-            }
-            this.currentGraph = data.graphs.find(item => this.selectedName === this.getGraphNameFromGraph(item.graph.graphconf));
-            if (this.currentGraph.length > 1) {
-              if (this.selectNameIndex) {
-                this.currentGraph = this.currentGraph[this.selectNameIndex];
-              } else {
-                this.currentGraph = this.currentGraph[0];
-              }
-            }
+            this.currentGraph = data.graphs.find(item => this.dataService.formatFileNameToId(current_project.graph.fileName) === this.getGraphNameFromGraph(item.graph.graphconf));
           } else if (data.graphs?.length === 1) {
             this.currentGraph = data.graphs[0];
           } else {
@@ -718,8 +708,9 @@ export class ToolBarComponent {
           }
 
 
+
           if (data.graphs && this.currentGraph !== null) {
-            if (this.currentGraph.graph.graphconf) {
+            if (this.currentGraph?.graph.graphconf) {
               this.formData.fileName = this.currentGraph.name;
               this.formData.graphDesc = this.currentGraph.flow?.desc;
               this.formData.graphName = this.getGraphNameFromGraph(this.currentGraph.graph.graphconf);
@@ -1041,12 +1032,13 @@ export class ToolBarComponent {
 
   onNewGraphClickOk(results) {
     let graphName = this.formData.graphName;
+
     let fileName = this.formData.graphName;
     let existTheSameGraph = false;
     // 如果存在同项目的同名图，不允许创建
     this.graphList?.forEach(element => {
-      if (this.dataService.formatFileNameToId(element.name) === this.formData.fileName
-        || this.getGraphNameFromGraph(element.graph.graphconf) === this.formData.graphName) {
+      if (this.dataService.formatFileNameToId(element.name) === fileName
+        || this.getGraphNameFromGraph(element.graph.graphconf) === graphName) {
         existTheSameGraph = true;
         return;
       }
@@ -1071,7 +1063,7 @@ export class ToolBarComponent {
     }, 500);
     this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
     this.formData.graphName = graphName;
-    this.formData.graphName = fileName;
+    this.formData.fileName = this.dataService.formatIdToFileName(fileName);
     this.formData.flowunitDebugPath = this.formData.flowunitReleasePath;
     this.formData.flowunitReleasePath = ["/opt/modelbox/application/" + this.formDataCreateProject.name + "/flowunit"];
     let openProjectPath = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name + "/src/flowunit";
@@ -1079,6 +1071,9 @@ export class ToolBarComponent {
       this.formData.flowunitDebugPath.push(openProjectPath + "/src/flowunit");
     }
     this.setGraphStatusEmmiter.emit(0);
+    //刷新main中this.project的graph
+    this.saveProjectEmmiter.emit();
+    this.dataService.stopRefreshTimer();
   }
 
   initFormDataCreateFlowunit() {
@@ -1468,6 +1463,17 @@ export class ToolBarComponent {
       }
       localStorage.setItem("isModifying", "0");
       this.updateModifyTime(param.graph_path + "/src/graph/" + param.graph_name + ".toml");
+      // 保存成功后，重置timer
+      this.dataService.stopRefreshTimer();
+      if (param.graph_path && param.graph_name) {
+        this.dataService.refresh_timer = setInterval(() => {
+          this.getGraphFileTimeEmmitter.emit(param.graph_path
+            + "/src/graph/"
+            + this.dataService.formatIdToFileName(param.graph_name)
+          );
+        }, 10000);
+      }
+
     },
       (error) => {
         this.msgs = [

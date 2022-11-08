@@ -29,6 +29,7 @@ export class DataServiceService {
   public deviceTypes = [];
   data: any;
   currentUser = "root";
+  refresh_timer: any;
 
 
   constructor(
@@ -53,6 +54,10 @@ export class DataServiceService {
       return newStr;
     }
     return str;
+  }
+
+  stopRefreshTimer() {
+    clearInterval(this.refresh_timer);
   }
 
   transformFlowunit() {
@@ -302,6 +307,15 @@ export class DataServiceService {
     if (fileName) {
       if (fileName.indexOf(".toml") > -1) {
         return fileName.slice(0, fileName.length - ".toml".length);
+      }
+      return fileName;
+    }
+  }
+
+  formatIdToFileName(fileName) {
+    if (fileName) {
+      if (fileName.indexOf(".toml") === -1) {
+        return fileName + ".toml";
       }
       return fileName;
     }
