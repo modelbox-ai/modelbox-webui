@@ -159,17 +159,21 @@ export class MainComponent {
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph?.fileName);
-    if (this.project.rootpath && this.project.name && this.project.graph.fileName) {
+    this.startTimerGetGraphFileName(this.project.rootpath, this.project.name, this.project.graph?.fileName);
+
+  }
+
+  startTimerGetGraphFileName(rootpath, name, fileName) {
+    if (rootpath && name && fileName) {
       this.dataService.refresh_timer = setInterval(() => {
-        this.getGraphFileTime(this.project.rootpath
+        this.getGraphFileTime(rootpath
           + "/"
-          + this.project.name
+          + name
           + "/src/graph/"
-          + this.dataService.formatIdToFileName(this.project.graph.fileName)
+          + this.dataService.formatIdToFileName(fileName)
         );
       }, 10000);
     }
-
   }
 
   getGraphStatus(name) {
@@ -461,6 +465,8 @@ export class MainComponent {
         this.createProjectDialogResults.modalInstance.zIndex = -1;
         // 弹出提示框，要求在vscode中开发
         this.openDialog();
+        this.dataService.stopRefreshTimer();
+        this.startTimerGetGraphFileName(param.rootpath, param.name, this.dataService.formatIdToFileName(param.name));
         return;
       }
     }, error => {
