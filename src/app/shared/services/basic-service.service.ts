@@ -99,7 +99,7 @@ export class BasicServiceService {
   }
 
   queryGraphFile(params?: string): Observable<any> {
-    return this.http.get(this.serviceRouter + '/editor/graph/?graph_path=' + params).pipe(timeout(30000));
+    return this.http.get(this.serviceRouter + '/editor/graph/?graph_path=' + params).pipe(timeout(8000));
   }
 
   // 查询任务列表

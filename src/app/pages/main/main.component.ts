@@ -317,7 +317,7 @@ export class MainComponent {
       this.basicService.openProject(this.path + "/" + this.project_name).subscribe(
         data => {
           let src = data.graphs.find(ele => ele.name === project.graph.fileName);
-          src ? localStorage.setItem("normGraph", src) : localStorage.setItem("normGraph", this.dotSrc);
+          src ? localStorage.setItem("normGraph", src.graph?.graphconf) : localStorage.setItem("normGraph", this.dotSrc);
           this.getGraphStatus(this.project.graph.fileName);
           this.getGraphFileTime(data.project_path + "/src/graph/" + this.dataService.formatIdToFileName(this.project.graph.fileName));
         }
@@ -523,6 +523,7 @@ REM For example: code --remote=ssh-remote+xx.xx.xx.xx-xxxx /home/modelbox_projec
 @ECHO off\r\n\
 FINDSTR "' + host + '" "%HOMEDRIVE%%HOMEPATH%\\.ssh\\config">nul\r\n\
 IF ERRORLEVEL 1 (\r\n\
+ECHO.>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO.>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO Host '+ host + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 ECHO HostName '+ this.ipAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
@@ -877,6 +878,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
   handleTextChange = (text, undoRedoState) => {
     this.isSaved = false;
     let normGraph = localStorage.getItem("normGraph");
+    // label不影响判断
     if (this.dotSrc !== text) {
       localStorage.setItem("isModifying", "1");
       this.dotSrc = text;
@@ -1394,11 +1396,14 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     //saveToBrowser
     let isModifying = localStorage.getItem("isModifying");
     //if user is modifying the graph
-    if (isModifying === "1") {
-      this.toolBar.isModifyingDecorater(this.handleRun, graphName, this);
-    } else {
-      this.handleRun(graphName);
-    }
+    setTimeout(() => {
+      if (isModifying === "1") {
+        this.toolBar.isModifyingDecorater(this.handleRun, graphName, this);
+      } else {
+        this.handleRun(graphName);
+      }
+    }, 100)
+
   }
 
   handleRun = (graphName) => {

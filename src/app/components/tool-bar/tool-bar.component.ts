@@ -619,25 +619,25 @@ export class ToolBarComponent {
 
   handleProjectDropDown(e) {
     if (e.value === 1) {
-      this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate);
+      this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate, null, true);
     } else if (e.value === 2) {
-      this.isModifyingDecorater(this.showOpenProjectButtonDialog, this.openProjectTemplate);
+      this.isModifyingDecorater(this.showOpenProjectButtonDialog, this.openProjectTemplate, null, true);
     } else if (e.value === 8) {
       this.openDialog();
     } else if (e.value === 3) {
-      this.isModifyingDecorater(this.handleNewGraphClick, null, this);
+      this.isModifyingDecorater(this.handleNewGraphClick, null, this, true);
     } else if (e.value === 4) {
-      this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate);
+      this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate, null, true);
     } else if (e.value === 5) {
       this.saveAllProject();
     } else if (e.value === 6) {
-      this.clearCache();
+      this.isModifyingDecorater(this.clearCache, null, this, true);
     } else if (e.value === 7) {
       this.sycnGraph();
     }
   }
 
-  isModifyingDecorater(func, arg = null, that = null) {
+  isModifyingDecorater(func, arg = null, that = null, cancel = false) {
     let isModifying = localStorage.getItem("isModifying");
     if (isModifying === "1") {
       let result = this.dialogService.open({
@@ -672,6 +672,13 @@ export class ToolBarComponent {
           handler: ($event: Event) => {
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
+            if (cancel) {
+              if (that) {
+                func(arg, that);
+              } else {
+                func(arg);
+              }
+            }
           },
         },],
       });
@@ -740,15 +747,15 @@ export class ToolBarComponent {
     }
   }
 
-  clearCache() {
+  clearCache(e, that) {
     // clear cache
     localStorage.clear();
     sessionStorage.clear();
     // stop running service
-    this.basicService.getTaskLists().subscribe((data: any) => {
+    that.basicService.getTaskLists().subscribe((data: any) => {
       if (data.job_list) {
         data.job_list.map(ele => {
-          this.basicService.deleteTask(ele.job_id).subscribe((res: any) => {
+          that.basicService.deleteTask(ele.job_id).subscribe((res: any) => {
 
           });
         });
@@ -1068,7 +1075,7 @@ export class ToolBarComponent {
     this.formData.flowunitReleasePath = ["/opt/modelbox/application/" + this.formDataCreateProject.name + "/flowunit"];
     let openProjectPath = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name + "/src/flowunit";
     if (this.formData.flowunitReleasePath.indexOf(openProjectPath + "/src/flowunit") === -1) {
-      this.formData.flowunitDebugPath.push(openProjectPath + "/src/flowunit");
+      this.formData.flowunitDebugPath.push(openProjectPath);
     }
     this.setGraphStatusEmmiter.emit(0);
     //刷新main中this.project的graph
