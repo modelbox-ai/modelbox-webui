@@ -340,7 +340,9 @@ export class MainComponent {
                   maxHeight: '600px',
                   title: this.i18n.getById("notice"),
                   content: this.i18n.getById("backendGraphFileChanged"),
-                  backdropCloseable: true,
+                  backdropCloseable: false,
+                  escapable: false,
+                  showCloseBtn: false,
                   dialogtype: 'warning',
                   buttons: [
                     {
