@@ -204,7 +204,7 @@ export class ManagementComponent implements OnInit {
     private dialogService: DialogService,
     private i18n: I18nService,
     private basicService: BasicServiceService,
-    private message:MessageService
+    private message: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -212,7 +212,7 @@ export class ManagementComponent implements OnInit {
     this.refresh_timer = setInterval(() => { this.getTaskslists(); }, 5000);
     this.basicService.queryTemplate().subscribe(
       (data: any) => {
-        this.demo_list = data.project_template_list.filter(item => item.name !== "empty");
+        this.demo_list = data.project_template_list.filter(item => item.name !== "empty" && item.restapi);
         this.optionsTemplate = this.demo_list.map(item => item.name);
       },
       (error) => {
@@ -452,6 +452,7 @@ export class ManagementComponent implements OnInit {
       id: 'dialog-debug',
       title: this.i18n.getById('toolBar.debug'),
       width: '1000px',
+      maxHeight: '800px',
       showAnimation: true,
       contentTemplate: content,
       buttons: [],

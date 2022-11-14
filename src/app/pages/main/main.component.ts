@@ -875,12 +875,16 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
   };
 
 
-  handleTextChange = (text, undoRedoState) => {
+  handleTextChange = (text, undoRedoState, dotGraph, removeLabel) => {
     this.isSaved = false;
     let normGraph = localStorage.getItem("normGraph");
     // label不影响判断
     if (this.dotSrc !== text) {
-      localStorage.setItem("isModifying", "1");
+      if (this.isEqual(this.dotSrc, removeLabel?.dotSrc)) {
+        localStorage.setItem("isModifying", "0");
+      } else {
+        localStorage.setItem("isModifying", "1");
+      }
       this.dotSrc = text;
     }
     if (this.dotSrc === normGraph) {
@@ -906,6 +910,14 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     this.hasUndo = !!undoRedoState?.hasUndo;
     this.hasRedo = !!undoRedoState?.hasRedo;
   };
+
+  isEqual(a, b) {
+    if (a && b) {
+      a = a.replace(/\s+/g, "");
+      b = b.replace(/\s+/g, "");
+    }
+    return a === b;
+  }
 
   handleInsertPanelsClick = () => {
     this.setFocus('InsertPanels');
@@ -1402,7 +1414,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       } else {
         this.handleRun(graphName);
       }
-    }, 100)
+    }, 100);
 
   }
 
@@ -1490,7 +1502,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     });
   }
 
-  handleRestartButtonClick = (graphName) => {
+  handleRestart = (graphName) => {
     //saveToBrowser
     if (!graphName && this.project && this.project.graph) {
       graphName = this.getGraphNameFromGraph(this.project.graph.dotSrc);
@@ -1512,6 +1524,20 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     });
 
     this.getGraphStatus(this.project.graph.fileName);
+  }
+
+
+  handleRestartButtonClick = (graphName) => {
+    //saveToBrowser
+    let isModifying = localStorage.getItem("isModifying");
+    //if user is modifying the graph
+    setTimeout(() => {
+      if (isModifying === "1") {
+        this.toolBar.isModifyingDecorater(this.handleRestart, graphName, this);
+      } else {
+        this.handleRestart(graphName);
+      }
+    }, 100);
   }
 
   createOptionFromProject = (item) => {

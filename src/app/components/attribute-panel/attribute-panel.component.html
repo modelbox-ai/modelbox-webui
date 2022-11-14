@@ -79,6 +79,7 @@
       <d-form-control>
         <div>
           <input
+            [disabled]="currentPage === 'solution'"
             dTextInput
             autocomplete="off"
             class="content-font"
@@ -165,6 +166,7 @@
       <d-form-control>
         <select
           id="typeSelect"
+          [disabled]="currentPage === 'solution'"
           class="form-select"
           name="'unittype'"
           [(ngModel)]="unitType.selected"

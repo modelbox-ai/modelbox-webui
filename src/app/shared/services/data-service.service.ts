@@ -177,7 +177,7 @@ export class DataServiceService {
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name) {
-          if (it.type === type || it.types.indexOf(type) > -1) {
+          if (it.type === type) {
             unit = it;
           }
           if (it.type !== type && it.types.indexOf(type) === -1 && !this.warningMessage && !it.virtual) {

@@ -42,6 +42,7 @@ import { DataServiceService } from '@shared/services/data-service.service';
 import { I18nService } from '@core/i18n.service';
 import { ToastService } from 'ng-devui/toast';
 import { BasicServiceService } from '@shared/services/basic-service.service';
+import { cloneDeep } from 'lodash';
 
 const shapes = 'box polygon ellipse oval circle point egg triangle plaintext plain diamond trapezium parallelogram house pentagon hexagon septagon octagon doublecircle doubleoctagon tripleoctagon invtriangle invtrapezium invhouse Mdiamond Msquare Mcircle rect rectangle square star none underline cylinder note tab folder box3d component promoter cds terminator utr primersite restrictionsite fivepoverhang threepoverhang noverhang assembly signature insulator ribosite rnastab proteasesite proteinstab rpromoter rarrow larrow lpromoter'.split(
   ' '
@@ -257,6 +258,26 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     }
 
     this.deduplicationDotSrc();
+  }
+
+  removeLabel(srcDotGraph) {
+    let dotGraph = cloneDeep(srcDotGraph);
+    if (dotGraph !== undefined) {
+      let nodes = { ...dotGraph.nodes };
+      let edges = { ...dotGraph.edges };
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        if (attr["label"]) {
+          delete attr["label"];
+        }
+        try {
+          dotGraph.updateNode(node, attr);
+          dotGraph.reparse();
+        }
+        catch { }
+      }
+    }
+    return dotGraph;
   }
 
   unique(arr) {
@@ -1493,7 +1514,8 @@ export class GraphComponent implements AfterViewInit, OnChanges {
 
         this.formatDotSrc();
         if (this.onTextChange !== undefined) {
-          this.onTextChange(this.dotGraph.dotSrc);
+          let srcDotGraph = cloneDeep(this.dotGraph);
+          this.onTextChange(this.dotGraph.dotSrc, null, srcDotGraph, this.removeLabel(srcDotGraph));
         }
       }
     }
