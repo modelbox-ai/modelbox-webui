@@ -609,7 +609,33 @@
                                         </span>
                                         <div *ngIf="rowItem['nameEditDevice']" class="customized-editor edit-padding-fix">
                                             <d-select
+                                                *ngIf="rowItem.device && formDataCreateFlowunit.lang === 'inference' 
+                                                        || formDataCreateFlowunit.lang === 'c++'"
                                                 [options]="optionsdevice"
+                                                [isSearch]="true"
+                                                [filterKey]="'label'"
+                                                [toggleOnFocus]="true"
+                                                [appendToBody]="true"
+                                                [(ngModel)]="rowItem.device"
+                                                (ngModelChange)="onEditEnd(rowItem, 'nameEditDevice')"
+                                                [ngModelOptions]="{standalone: true}"
+                                                >
+                                            </d-select>
+                                            <d-select
+                                                *ngIf="rowItem.device && formDataCreateFlowunit.lang === 'python'"
+                                                [options]="optionsdevicePython"
+                                                [isSearch]="true"
+                                                [filterKey]="'label'"
+                                                [toggleOnFocus]="true"
+                                                [appendToBody]="true"
+                                                [(ngModel)]="rowItem.device"
+                                                (ngModelChange)="onEditEnd(rowItem, 'nameEditDevice')"
+                                                [ngModelOptions]="{standalone: true}"
+                                                >
+                                            </d-select>
+                                            <d-select
+                                                *ngIf="rowItem.device && formDataCreateFlowunit.lang === 'yolo'"
+                                                [options]="optionsdeviceYolo"
                                                 [isSearch]="true"
                                                 [filterKey]="'label'"
                                                 [toggleOnFocus]="true"

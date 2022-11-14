@@ -59,6 +59,7 @@ export class AttributePanelComponent {
   warnNoNode = true;
   // 节点对应的顶点信息
   unit: any;
+  currentPage = "main";
   // unitType
   unitType: any = {
     options: [],
@@ -149,7 +150,7 @@ export class AttributePanelComponent {
       let config = { ...this.config };
       // 处理 node name更改
       if ((this.newName !== this.config.name) && (this.unit != undefined)) {
-        const nodes = { ...this.dotGraph.nodes };
+        const nodes = { ...this.dotGraph?.nodes };
         let nodesName = Object.keys(nodes);
         if (nodesName.indexOf(this.newName) > -1) {
           const results = this.dialogService.open({
@@ -323,6 +324,7 @@ export class AttributePanelComponent {
     if (this.config) {
       this.initConfig(this.config);
     }
+    this.currentPage = this.dataService.currentPage;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -442,6 +444,7 @@ export class AttributePanelComponent {
 
   initConfig(config) {
     this.changedValue = false;
+
     this.unit = this.getUnit(config);
     if (this.unit === undefined) {
       this.initUnit(config);
@@ -527,6 +530,21 @@ export class AttributePanelComponent {
       this.newName =
         config?.name ||
         config?.attributes.find(item => item.key === 'label')?.value;
+    }
+
+    if (this.unit.inputports.length > 0) {
+      this.unit.inputports.forEach(element => {
+        if (!element?.device_type) {
+          element.device_type = this.unit.type;
+        }
+      });
+    }
+    if (this.unit.outputports.length > 0) {
+      this.unit.outputports.forEach(element => {
+        if (!element?.device_type) {
+          element.device_type = this.unit.type;
+        }
+      });
     }
   }
 

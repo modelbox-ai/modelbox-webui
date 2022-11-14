@@ -267,7 +267,7 @@ export class ToolBarComponent {
   portInfo: any = {
     port_name: '',
     port_type: 'input',
-    data_type: 'int',
+    data_type: 'float',
     device: 'cpu',
   }
 
@@ -792,28 +792,46 @@ export class ToolBarComponent {
       } else {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
+
+      this.formDataCreateFlowunit.port_infos
+
+
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream';
       this.portTableWidthConfig = [];
 
+      this.formDataCreateFlowunit.port_infos
+
     } else if (value === "c++") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream'
       this.portTableWidthConfig = [];
+
+      this.formDataCreateFlowunit.port_infos
     }
 
     if (value === "yolo") {
       this.formDataCreateFlowunit.device = 'cpu';
+      this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
       this.portTableWidthConfig = [];
+      this.formDataCreateFlowunit.port_infos
     }
 
     this.formDataCreateFlowunit.name = 'flowunit';
-    this.formDataCreateFlowunit.port_infos = [];
+    this.handleFormDataCreateFlowunitPortInfos(value);
+  }
 
+  handleFormDataCreateFlowunitPortInfos(v) {
+    if (this.formDataCreateFlowunit.port_infos.length > 0) {
+      this.formDataCreateFlowunit.port_infos.forEach(element => {
+      });
+    } else {
+      this.formDataCreateFlowunit.port_infos = [];
+    }
   }
 
   deviceValueChange(value) {

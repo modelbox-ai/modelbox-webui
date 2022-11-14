@@ -51,7 +51,7 @@
   "toolBar.refreshFlowunitButton": "刷新单元",
   "toolBar.chooseDemo": "请选择示例",
   "toolBar.debug": "调试",
-  "toolBar.apiDebug": "api调试",
+  "toolBar.apiDebug": "Http调试",
   "toolBar.scriptDebug": "脚本调试",
   "toolBar.log": "日志",
   "toolBar.new": "新建",
@@ -95,7 +95,7 @@
   "toolBar.modal.unitType": "单元类型",
   "toolBar.modal.loadTemplate": "加载模板",
   "toolBar.modal.project_path": "项目路径",
-  "toolBar.base64": "转base64",
+  "toolBar.base64": "Base64编码",
   "toolBar.upload": "上传",
   "toolBar.modal.template": "项目模板",
   "toolBar.modal.port_name": "端口名称",
@@ -243,6 +243,7 @@
   "vscode.4": "文件远程启动工程",
   "save": "保存",
   "backendGraphFileChanged": "后台图文件已修改，请选择保存图到后台或同步后台图到界面",
-  "remind":"提醒：",
-  "graphIsChanged":"当前界面图文件已修改，是否保存？"
+  "remind": "提醒：",
+  "graphIsChanged": "当前界面图文件已修改，是否保存？",
+  "requestTemplate": "请求样例"
 }
