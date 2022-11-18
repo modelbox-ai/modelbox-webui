@@ -96,69 +96,6 @@ export class DataServiceService {
     return this.transformedFlowunits;
   }
 
-  loadFlowUnit(skip, dirs, path) {
-    if (skip === null) {
-      skip = false;
-    }
-
-    if (skip === "") {
-      skip = false;
-    }
-    let params = {
-      "skip-default": skip,
-      dir: dirs,
-    }
-    if (path != null && path != undefined) {
-      this.loadProjectFlowunit(path);
-    }
-    this.basicService.queryData(params).subscribe((data) => {
-      let nodeShapeCategories = [];
-      this.nodeShapeCategories = [];
-      if (data.devices == null) {
-        return;
-      }
-      if (this.flowunits && this.flowunits.length > 0) {
-        this.transformFlowunit();
-        data.flowunits.push(...this.transformedFlowunits);
-      }
-      data.flowunits.forEach(item => {
-        const group = nodeShapeCategories.find(i => i.title === item.group);
-        const unit = {
-          ...item,
-          title: item.name,
-          active: nodeShapeCategories.length == 0 ? true : false,
-          types: [
-            ...new Set(
-              data.flowunits.filter(u => u.name === item.name).map(i => i.type)
-            ),
-          ],
-        };
-
-        if (group) {
-          group.children.push(unit);
-        } else {
-          nodeShapeCategories.push({
-            title: item.group,
-            collapsed: true,
-            children: [unit],
-          });
-        }
-      });
-      this.nodeShapeCategories = nodeShapeCategories;
-      this.nodeShapeCategories = this.nodeShapeCategories.map(
-        item => {
-          return {
-            ...item,
-            children: [...new Set(item.children.map(it => it.title))].map(it =>
-              item.children.find(i => i.title === it)
-            ),
-          };
-        }
-      );
-      this.nodeShapeCategories = this.nodeShapeCategories.sort(this.compare("title"));
-    });
-  }
-
   compare(property) {
     return function (obj1, obj2) {
       var value1 = obj1[property];
@@ -171,9 +108,6 @@ export class DataServiceService {
   // 使用 unit name 及 type获取 对应的 unit
   getUnit(name, type) {
     let unit;
-    if (this.nodeShapeCategories.length === 0) {
-      this.loadFlowUnit(null, [], null);
-    }
     this.nodeShapeCategories.forEach(cat => {
       cat.children.forEach(it => {
         if (it.name === name) {

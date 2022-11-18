@@ -127,7 +127,6 @@ export class ToolBarSolutionComponent implements OnInit {
 
         });
 
-        this.dataService.loadFlowUnit(null, this.dirs, null);
         this.showLoading = false;
       },
       (error) => {

@@ -531,18 +531,21 @@ export class AttributePanelComponent {
         config?.name ||
         config?.attributes.find(item => item.key === 'label')?.value;
     }
-
     if (this.unit.inputports.length > 0) {
       this.unit.inputports.forEach(element => {
-        if (!element?.device_type) {
-          element.device_type = this.unit.type;
+        if (element) {
+          if (!element.device_type) {
+            element.device_type = this.unit.type;
+          }
         }
       });
     }
     if (this.unit.outputports.length > 0) {
       this.unit.outputports.forEach(element => {
-        if (!element?.device_type) {
-          element.device_type = this.unit.type;
+        if (element) {
+          if (!element.device_type) {
+            element.device_type = this.unit.type;
+          }
         }
       });
     }
