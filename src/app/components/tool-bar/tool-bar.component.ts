@@ -29,6 +29,7 @@ import { DataServiceService } from '@shared/services/data-service.service';
 import { treeDataSource } from '../management/mock-data';
 import { EditableTip } from 'ng-devui/data-table';
 import { cloneDeep } from 'lodash-es';
+import { LoadingType } from 'ng-devui';
 
 declare const require: any
 @Component({
@@ -141,6 +142,11 @@ export class ToolBarComponent {
     file: "",
     name: "blank"
   };
+  view = {
+    top: '50px',
+    left: '50%'
+  };
+  loading: LoadingType;
 
   folderList: any = [];
 
@@ -698,7 +704,7 @@ export class ToolBarComponent {
   sycnGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));
     if (current_project?.flowunit) {
-      this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
+      this.loading = this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
         data => {
           this.formDataCreateProject.name = data.project_name;
           this.formDataCreateProject.rootpath = data.project_path.substring(0, data.project_path.lastIndexOf("/"));
@@ -713,8 +719,6 @@ export class ToolBarComponent {
           } else {
             this.currentGraph = null;
           }
-
-
 
           if (data.graphs && this.currentGraph !== null) {
             if (this.currentGraph?.graph.graphconf) {
@@ -793,24 +797,20 @@ export class ToolBarComponent {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
 
-      this.formDataCreateFlowunit.port_infos
-
-
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream';
       this.portTableWidthConfig = [];
-
-      this.formDataCreateFlowunit.port_infos
+      this.formDataCreateFlowunit.port_infos.map(x => {
+        x.device = 'cpu';
+      });
 
     } else if (value === "c++") {
       this.formDataCreateFlowunit.device = 'cpu';
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream'
       this.portTableWidthConfig = [];
-
-      this.formDataCreateFlowunit.port_infos
     }
 
     if (value === "yolo") {
@@ -818,7 +818,9 @@ export class ToolBarComponent {
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit['virtual-type'] = this.types_yolo[0].id;
       this.portTableWidthConfig = [];
-      this.formDataCreateFlowunit.port_infos
+      this.formDataCreateFlowunit.port_infos.map(x => {
+        x.device = 'cpu';
+      });
     }
 
     this.formDataCreateFlowunit.name = 'flowunit';
@@ -1238,7 +1240,6 @@ export class ToolBarComponent {
             }
             this.formData.flowunitPath = dirs.join("\n");
             this.flowunitEmmiter.emit(this.formData.flowunitPath);
-            this.dataService.loadFlowUnit("", dirs, this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name);
             this.initFormDataCreateFlowunit();
             this.refreshFlowunit();
             this.msgs = [
