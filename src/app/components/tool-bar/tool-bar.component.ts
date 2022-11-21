@@ -796,6 +796,9 @@ export class ToolBarComponent {
       } else {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
+      this.formDataCreateFlowunit.port_infos.map(x => {
+        delete x.device;
+      });
 
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -804,6 +807,7 @@ export class ToolBarComponent {
       this.portTableWidthConfig = [];
       this.formDataCreateFlowunit.port_infos.map(x => {
         x.device = 'cpu';
+        delete x.data_type;
       });
 
     } else if (value === "c++") {
@@ -811,6 +815,9 @@ export class ToolBarComponent {
       this.portInfo.device = 'cpu';
       this.formDataCreateFlowunit.type = 'stream'
       this.portTableWidthConfig = [];
+      this.formDataCreateFlowunit.port_infos.map(x => {
+        delete x.data_type;
+      });
     }
 
     if (value === "yolo") {
@@ -820,6 +827,7 @@ export class ToolBarComponent {
       this.portTableWidthConfig = [];
       this.formDataCreateFlowunit.port_infos.map(x => {
         x.device = 'cpu';
+        delete x.data_type;
       });
     }
 
