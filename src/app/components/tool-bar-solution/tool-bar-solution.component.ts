@@ -14,7 +14,6 @@ declare const require: any
 export class ToolBarSolutionComponent implements OnInit {
 
   @ViewChild("selectDemo", { static: true }) selectDemo: TemplateRef<any>;
-
   @Input() hasUndo: boolean;
   @Input() hasRedo: boolean;
   @Input() onUndoButtonClick: any;
@@ -34,6 +33,7 @@ export class ToolBarSolutionComponent implements OnInit {
   @Input() msgs: any;
 
   @Output() currentProjectEmitter = new EventEmitter<any>();
+  @Output() loadFlowunitEmitter = new EventEmitter<any>();
 
   solutionList: any;
   dirs = [];
@@ -173,6 +173,7 @@ export class ToolBarSolutionComponent implements OnInit {
     this.statusGraph = 'stop';
     this.basicService.querySolution(selectedName).subscribe((data) => {
       const response = data;
+      this.dirs = this.dirs.concat(data.driver.dir);
       if (response.graph) {
         this.sendCurrentProject(data);
       } else {
@@ -193,7 +194,8 @@ export class ToolBarSolutionComponent implements OnInit {
         }
         this.statusGraph = 'stop';
       });
-
+      let param = [false, this.dirs, null];
+      this.loadFlowunitEmitter.emit(param);
     });
   }
 

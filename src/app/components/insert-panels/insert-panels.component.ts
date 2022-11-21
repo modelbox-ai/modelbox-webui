@@ -353,7 +353,9 @@ export class InsertPanelsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.regFlowUnitPanel(this);
+    if (this.regFlowUnitPanel) {
+      this.regFlowUnitPanel(this);
+    }
   }
 
   handleNodeShapeClick = shape => event => {

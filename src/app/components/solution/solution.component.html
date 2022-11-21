@@ -31,7 +31,8 @@
           [onStopButtonClick]="handleStopButtonClick"
           [onRestartButtonClick]="handleRestartButtonClick"
           [onOpenTutorial]="handleTutorials"
-          (currentProjectEmitter)="handleCurrentProjectChange($event)">
+          (currentProjectEmitter)="handleCurrentProjectChange($event)"
+          (loadFlowunitEmitter)="loadFlowunit($event)">
         </app-tool-bar-solution>
         <as-split-area [size]="80">
           <div class="graph" id="graph">
@@ -98,3 +99,8 @@
     </div>
   </div>
 </ng-template>
+
+<app-insert-panels
+  #insertPanel
+  style="display:none">
+</app-insert-panels>

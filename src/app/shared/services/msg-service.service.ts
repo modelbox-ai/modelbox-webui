@@ -10,7 +10,8 @@ export class MessageService {
   public subject = new Subject<any>();
   private messageSource = new BehaviorSubject(this.editDataDetails);
   currentMessage = this.messageSource.asObservable();
+
   changeMessage(message: string) {
-  this.messageSource.next(message)
+    this.messageSource.next(message)
   }
 }
