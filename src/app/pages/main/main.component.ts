@@ -880,7 +880,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     let normGraph = localStorage.getItem("normGraph");
     // label不影响判断
     if (this.dotSrc !== text) {
-      if (this.isEqual(this.dotSrc, removeLabel?.dotSrc)) {
+      if (this.dotSrc === removeLabel?.dotSrc) {
         localStorage.setItem("isModifying", "0");
       } else {
         localStorage.setItem("isModifying", "1");

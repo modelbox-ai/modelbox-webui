@@ -606,6 +606,15 @@ export class ToolBarComponent {
 
   addPortLine(target) {
     if (target === "output") {
+      if (this.formDataCreateFlowunit.lang === "yolo") {
+        let outNum = this.formDataCreateFlowunit.port_infos.filter(x => x.port_type === "output").length;
+        if (outNum > 0) {
+          this.msgs = [
+            { life: 1000, severity: 'warn', summary: 'WARNING', content: "yolo有且仅有一个输出端口" }
+          ];
+          return;
+        }
+      }
       this.portInfo.port_type = "output";
       this.portInfo.port_name = "output" + this.out_num;
       this.out_num += 1;
@@ -796,9 +805,6 @@ export class ToolBarComponent {
       } else {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
-      this.formDataCreateFlowunit.port_infos.map(x => {
-        delete x.device;
-      });
 
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -1181,8 +1187,19 @@ export class ToolBarComponent {
     }
     let input = [];
     let output = [];
-
     param.port_infos.forEach(ele => {
+      if (param.lang === "inference") {
+        delete ele.device;
+      } else if (param.lang === "python") {
+        ele.device = 'cpu';
+        delete ele.data_type;
+      } if (param.lang === "c++") {
+        delete ele.data_type;
+      } if (param.lang === "yolo") {
+        ele.device = 'cpu';
+        delete ele.device;
+        delete ele.data_type;
+      }
 
       if (ele.port_type === "input") {
         input.push({
@@ -1210,6 +1227,13 @@ export class ToolBarComponent {
         delete ele.type;
       }
     });
+    
+    if (output.length !== 1 && param.lang === "yolo") {
+      this.msgs = [
+        { life: 1000, severity: 'warn', summary: 'WARNING', content: "yolo有且仅有一个输出端口" }
+      ];
+      return;
+    }
 
     delete param.port_infos;
     if (input.length > 0) {
