@@ -8,6 +8,7 @@ import Driver from 'driver.js';
 import { I18nService } from '@core/i18n.service';
 import { DataServiceService } from '@shared/services/data-service.service';
 import { HeaderMainComponent } from '../header-main/header-main.component';
+import { InsertPanelsComponent } from '../../components/insert-panels/insert-panels.component';
 
 @Component({
   selector: 'app-solution',
@@ -20,6 +21,7 @@ export class SolutionComponent implements OnInit {
   @ViewChild('attributePanel', { static: true }) attributePanel: AttributePanelComponent;
   @ViewChild('header', { static: true }) header: HeaderMainComponent;
   @ViewChild('customTemplate') customTemplate: TemplateRef<any>;
+  @ViewChild('insertPanel', { static: true }) InsertPanels: InsertPanelsComponent;
 
   handleZoomInButtonClick = () => { };
   handleZoomOutButtonClick = () => { };
@@ -76,6 +78,9 @@ export class SolutionComponent implements OnInit {
       this.graph = this.project.graph;
       this.profile = this.project.profile;
       this.updateStatus();
+      if (this.driver.dir?.length > 0) {
+        this.loadFlowunit([false, this.driver.dir, null]);
+      }
     }
   }
 
@@ -85,6 +90,16 @@ export class SolutionComponent implements OnInit {
     } else {
       this.refresh_timer = setInterval(() => { this.updateStatus(); }, 5000);
     }
+  }
+
+  loadFlowunit(arr) {
+    if (arr.length !== 3) {
+      return;
+    }
+    let skipDefault = arr[0];
+    let dirs = arr[1];
+    let projectPath = arr[2];
+    this.InsertPanels.loadFlowUnit(skipDefault, dirs, projectPath);
   }
 
   updateStatus() {
@@ -415,7 +430,7 @@ export class SolutionComponent implements OnInit {
     this.statusGraph = "running";
     this.graphs = {};
     this.project = JSON.parse(sessionStorage.getItem("projectSolution"));
-    
+
     this.saveCurrentProject();
     this.graphs[this.project.name] = this.project;
     this.saveGraphs();
@@ -434,15 +449,15 @@ export class SolutionComponent implements OnInit {
         this.statusGraph = "fault";
         if (error.error != null) {
           this.msgs = [
-              {
-                life: 30000,
-                severity: 'error',
-                summary: this.i18n.getById('errorMessage') + error.error.error_code,
-                content: this.customTemplate,
-                errorCode: error.error.error_code,
-                errorMsg: error.error.error_msg,
-              },
-            ];
+            {
+              life: 30000,
+              severity: 'error',
+              summary: this.i18n.getById('errorMessage') + error.error.error_code,
+              content: this.customTemplate,
+              errorCode: error.error.error_code,
+              errorMsg: error.error.error_msg,
+            },
+          ];
         }
         this.showLoading = false;
       }
