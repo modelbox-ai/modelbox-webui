@@ -4,6 +4,10 @@ import {
   ViewEncapsulation,
   ViewChild,
   SimpleChanges,
+  HostListener,
+  ViewChildren,
+  QueryList,
+  ElementRef,
 } from '@angular/core';
 import { DialogService, ModalService } from 'ng-devui/modal';
 import { InsertPanelsComponent } from '../../components/insert-panels/insert-panels.component';
@@ -96,6 +100,27 @@ export class MainComponent {
   @ViewChild('modalGuideMain', { static: true }) modalGuideTemplate: TemplateRef<any>;
   @ViewChild('modalBat', { static: true }) modalBatTemplate: TemplateRef<any>;
   @ViewChild('customTemplate') customTemplate: TemplateRef<any>;
+
+  @ViewChildren('attribute') attribute: QueryList<ElementRef>;
+
+  //监听dom
+  @HostListener('document:click', ['$event']) bodyClick(e) {
+    if ((getTrigger(this.attribute, 'half-drawer'))) {
+      this.currentComponent = undefined;
+    }
+
+    function getTrigger(queryList, className?) {
+      let flag = true;
+      (<HTMLElement[]>e.path).forEach(i => {
+        flag && queryList.forEach(el => {
+          i.isEqualNode && i.isEqualNode(el.nativeElement) && (flag = false)
+        })
+        flag && i.className && i.className.indexOf && i.className.indexOf(className) > -1 && (flag = false)
+      })
+      return flag
+    }
+
+  }
 
   handleNodeShapeClick = () => { };
   handleNodeShapeDragStart = () => { };
