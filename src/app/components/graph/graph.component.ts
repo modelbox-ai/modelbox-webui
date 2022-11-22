@@ -219,9 +219,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     this.dotGraph.updateNode(nodeName, attributes, newName);
     this.dotGraph.reparse();
     this.formatDotSrc();
-    setTimeout(() => {
-      this.onTextChange(this.dotGraph.dotSrc);
-    }, 1000);
+    this.onTextChange(this.dotGraph.dotSrc);
   };
 
   formatDotSrc(): void {

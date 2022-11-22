@@ -1,8 +1,12 @@
-<div class="drawer-menu">
+<div 
+  dLoading
+  [showLoading]="showLoading"
+  class="drawer-menu">
   <form
     dForm
     [layout]="layoutDirection"
     [labelSize]="'sm'"
+    [disabled] = "showLoading"
     #myForm1>
     <d-form-item>
       <p class="attribute-title">

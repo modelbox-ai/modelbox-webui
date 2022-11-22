@@ -134,6 +134,7 @@ export class AttributePanelComponent {
       }
     },
   };
+  showLoading = false;
 
   attributeModel = {
     add: (form: FormGroup) => {
@@ -147,6 +148,7 @@ export class AttributePanelComponent {
       this.onNodeAttributeChange({ ...this.config, newName: this.newName });
     },
     blur: () => {
+      this.showLoading = true;
       let config = { ...this.config };
       // 处理 node name更改
       if ((this.newName !== this.config.name) && (this.unit != undefined)) {
@@ -247,6 +249,10 @@ export class AttributePanelComponent {
       config = this.handleAdvance(config, "queueSize");
       this.config.name = this.newName;
       this.onNodeAttributeChange({ ...config, newName: this.newName });
+
+      setTimeout(() => {
+        this.showLoading = false;
+      }, 800);
     }
   };
 
