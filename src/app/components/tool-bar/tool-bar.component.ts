@@ -634,15 +634,15 @@ export class ToolBarComponent {
 
   handleProjectDropDown(e) {
     if (e.value === 1) {
-      this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate, null, true);
+      this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate, this, true);
     } else if (e.value === 2) {
-      this.isModifyingDecorater(this.showOpenProjectButtonDialog, this.openProjectTemplate, null, true);
+      this.isModifyingDecorater(this.showOpenProjectButtonDialog, this.openProjectTemplate, this, true);
     } else if (e.value === 8) {
       this.openDialog();
     } else if (e.value === 3) {
       this.isModifyingDecorater(this.handleNewGraphClick, null, this, true);
     } else if (e.value === 4) {
-      this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate, null, true);
+      this.isModifyingDecorater(this.showGraphSelectDialog, this.graphSelectTemplate, this, true);
     } else if (e.value === 5) {
       this.saveAllProject();
     } else if (e.value === 6) {
@@ -652,25 +652,25 @@ export class ToolBarComponent {
     }
   }
 
-  isModifyingDecorater(func, arg = null, that = null, cancel = false) {
+  isModifyingDecorater(func, arg = null, that, cancel = false) {
     let isModifying = localStorage.getItem("isModifying");
     if (isModifying === "1") {
-      let result = this.dialogService.open({
+      let result = that.dialogService.open({
         id: 'createProject',
         width: '400px',
-        title: this.i18n.getById("remind"),
+        title: that.i18n.getById("remind"),
         showAnimate: false,
-        content: this.i18n.getById("graphIsChanged"),
+        content: that.i18n.getById("graphIsChanged"),
         backdropCloseable: true,
         onClose: () => {
 
         },
         buttons: [{
           cssClass: 'danger',
-          text: this.i18n.getById('save'),
+          text: that.i18n.getById('save'),
           disabled: false,
           handler: ($event: Event) => {
-            this.saveGraph();
+            that.saveGraph();
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
             if (that) {
@@ -683,7 +683,7 @@ export class ToolBarComponent {
         {
           id: 'save-as-cancel',
           cssClass: 'common',
-          text: this.i18n.getById('modal.cancelButton'),
+          text: that.i18n.getById('modal.cancelButton'),
           handler: ($event: Event) => {
             result.modalInstance.hide();
             result.modalInstance.zIndex = -1;
