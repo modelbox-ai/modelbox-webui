@@ -805,6 +805,11 @@ export class ToolBarComponent {
       } else {
         this.formDataCreateFlowunit["virtual-type"] = 'tensorflow';
       }
+      this.formDataCreateFlowunit.port_infos.map(x => {
+        if (!x.data_type) {
+          x.data_type = 'float';
+        }
+      });
 
     } else if (value === "python") {
       this.formDataCreateFlowunit.device = 'cpu';
@@ -1227,7 +1232,7 @@ export class ToolBarComponent {
         delete ele.type;
       }
     });
-    
+
     if (output.length !== 1 && param.lang === "yolo") {
       this.msgs = [
         { life: 1000, severity: 'warn', summary: 'WARNING', content: "yolo有且仅有一个输出端口" }
