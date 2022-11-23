@@ -48,6 +48,12 @@ export class DataServiceService {
     return this.currentPage;
   }
 
+  addGraphNameOnDotSrc(graphName) {
+    let name = graphName.replace(/[\. -]/gi, '_');
+    let dotSrc = this.defaultSrc.replace(/(\s*)(digraph|graph)\s(.*){/gi, '$1$2 ' + name + ' {');
+    return dotSrc;
+  }
+
   titleCase(str) {
     if (str) {
       let newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();

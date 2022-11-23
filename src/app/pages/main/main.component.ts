@@ -480,7 +480,6 @@ export class MainComponent {
         localStorage.removeItem("project");
         this.dotSrc = this.dataService.defaultSrc;
 
-        localStorage.setItem("normGraph", this.dotSrc);
         this.createProjectDialogResults.modalInstance.hide();
         this.msgs = [
           { severity: 'success', content: data.body.msg }
@@ -692,6 +691,8 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         }
         this.saveCurrentProject();
         this.reloadInsertComponent();
+
+        localStorage.setItem("normGraph", this.dotSrc);
 
       }, error => {
         this.msgs = [
@@ -905,7 +906,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     let normGraph = localStorage.getItem("normGraph");
     // label不影响判断
     if (this.dotSrc !== text) {
-      if (this.dotSrc === removeLabel?.dotSrc) {
+      if (this.isEqual(this.dotSrc, removeLabel?.dotSrc)) {
         localStorage.setItem("isModifying", "0");
       } else {
         localStorage.setItem("isModifying", "1");
@@ -1344,6 +1345,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               results.modalInstance.zIndex = -1;
               let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.checked === true);
               this.dotSrc = chosenGraph[0]?.dotSrc;
+              localStorage.setItem("normGraph", this.dotSrc);
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
               this.toolBar.formData.graphName = chosenGraph[0]?.name;
               let path = chosenGraph[0]?.graphPath.split('/');
