@@ -742,6 +742,7 @@ export class ToolBarComponent {
                 this.formData.perfTraceEnable = this.currentGraph.profile.trace;
               }
               this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
+              localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
               this.formData.flowunitPath = this.currentGraph.driver.dir;
 
               this.projectPathEmmiter.emit(data.project_path);
@@ -1099,6 +1100,9 @@ export class ToolBarComponent {
 
     this.initFormData();
     this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+    let dotSrc = this.dataService.addGraphNameOnDotSrc(graphName);
+    localStorage.setItem("normGraph", dotSrc);
+
     results.modalInstance.hide();
     results.modalInstance.zIndex = -1;
     this.msgs = [
@@ -1368,7 +1372,6 @@ export class ToolBarComponent {
     this.searchDirectory(this.openproject_path);
   }
 
-
   openProject(comp = null) {
     if (this.folderList.indexOf("src")) {
       this.basicService.openProject(this.openproject_path).subscribe(
@@ -1401,6 +1404,7 @@ export class ToolBarComponent {
                   this.formData.perfTraceEnable = this.currentGraph.profile.trace;
                 }
                 this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
+                localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
 
                 this.projectPathEmmiter.emit(data.project_path);
@@ -1414,10 +1418,14 @@ export class ToolBarComponent {
               } else {
                 this.initFormData();
                 this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+                let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
+                localStorage.setItem("normGraph", dotSrc);
               }
             } else {
               this.initFormData();
               this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+              let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
+              localStorage.setItem("normGraph", dotSrc);
             }
             this.saveProjectEmmiter.emit();
             if (comp) {
