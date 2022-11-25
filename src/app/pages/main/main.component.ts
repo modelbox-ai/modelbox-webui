@@ -184,19 +184,24 @@ export class MainComponent {
     this.ipAddress = window.location.hostname;
     this.portAddress = "22";
     this.getGraphStatus(this.project.graph?.fileName);
-    this.startTimerGetGraphFileName(this.project.rootpath, this.project.name, this.project.graph?.fileName);
+    this.startTimerGetGraphFileName(null, this.project.rootpath, this.project.name, this.project.graph?.fileName);
 
   }
 
-  startTimerGetGraphFileName(rootpath, name, fileName) {
-    if (rootpath && name && fileName) {
+  startTimerGetGraphFileName(graphPath = null, rootpath, name, fileName) {
+    let path;
+    if (graphPath) {
+      path = graphPath;
+    } else {
+      path = rootpath
+        + "/"
+        + name
+        + "/src/graph/"
+        + this.dataService.formatIdToFileName(fileName);
+    }
+    if (path) {
       this.dataService.refresh_timer = setInterval(() => {
-        this.getGraphFileTime(rootpath
-          + "/"
-          + name
-          + "/src/graph/"
-          + this.dataService.formatIdToFileName(fileName)
-        );
+        this.getGraphFileTime(path);
       }, 10000);
     }
   }
@@ -492,7 +497,7 @@ export class MainComponent {
         // 弹出提示框，要求在vscode中开发
         this.openDialog();
         this.dataService.stopRefreshTimer();
-        this.startTimerGetGraphFileName(param.rootpath, param.name, this.dataService.formatIdToFileName(param.name));
+        this.startTimerGetGraphFileName(null, param.rootpath, param.name, this.dataService.formatIdToFileName(param.name));
         return;
       }
     }, error => {
@@ -1345,6 +1350,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               results.modalInstance.zIndex = -1;
               let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.checked === true);
               this.dotSrc = chosenGraph[0]?.dotSrc;
+              this.dataService.stopRefreshTimer();
               localStorage.setItem("normGraph", this.dotSrc);
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
               this.toolBar.formData.graphName = chosenGraph[0]?.name;
@@ -1352,6 +1358,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               this.toolBar.formData.fileName = path[path.length - 1];
               this.saveCurrentProject();
               this.getGraphStatus(this.toolBar.formData.fileName);
+              this.startTimerGetGraphFileName(chosenGraph[0]?.graphPath, undefined, undefined, undefined);
             },
           },
           {

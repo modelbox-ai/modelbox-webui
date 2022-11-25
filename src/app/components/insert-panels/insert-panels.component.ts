@@ -53,8 +53,8 @@ export class InsertPanelsComponent implements OnInit {
   @Input() regFlowUnitPanel: any;
   @Input() dirs: any;
   @Input() projectPath: any;
-  @Output() refreshEmmiter = new EventEmitter();
-  @Output() deviceTypeEmmiter = new EventEmitter();
+  @Output() refreshEmmitter = new EventEmitter();
+  @Output() deviceTypeEmmitter = new EventEmitter();
   imgSvg = "../../../assets/img.svg";
   videoSvg = "../../../assets/video.svg";
   commonSvg = "../../../assets/common.svg";
@@ -247,7 +247,7 @@ export class InsertPanelsComponent implements OnInit {
             this.dataService.deviceTypes.push(item.type.toLowerCase());
           }
         });
-        this.deviceTypeEmmiter.emit(this.dataService.deviceTypes);
+        this.deviceTypeEmmitter.emit(this.dataService.deviceTypes);
       }
 
       let objInput = {
@@ -397,6 +397,6 @@ export class InsertPanelsComponent implements OnInit {
   };
 
   refreshFlowunit() {
-    this.refreshEmmiter.emit("refresh");
+    this.refreshEmmitter.emit("refresh");
   }
 }

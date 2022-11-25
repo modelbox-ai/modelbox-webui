@@ -21,8 +21,8 @@
               [regFlowUnitPanel]="regFlowUnitPanel"
               [dirs]="dirs"
               [optionsdevice]="toolBar.optionsdevice"
-              (refreshEmmiter)="refreshFlowunit($event)"
-              (deviceTypeEmmiter)="updateDeviceType($event)">
+              (refreshEmmitter)="refreshFlowunit($event)"
+              (deviceTypeEmmitter)="updateDeviceType($event)">
             </app-insert-panels>
           </as-split-area>
         </as-split>
@@ -62,20 +62,21 @@
               [showCreateProjectDialog]="showCreateProjectDialog.bind(this)"
               [showOpenProjectButtonDialog]="showOpenProjectButtonDialog.bind(this)"
               [showCreateFlowunitDialog]="showCreateFlowunitDialog.bind(this)"
-              (openDialogEmmiter)="openDialog()"
-              (graphsEmmiter)="getToolBarGraphsChange($event)"
-              (refreshEmmiter)="refreshFlowunit($event)"
-              (dotSrcEmmiter)="dotSrcUpdate($event)"
-              (flowunitEmmiter)="updateDir($event)"
-              (projectPathEmmiter)="updateProjectPath($event)"
-              (saveProjectEmmiter)="saveCurrentProject()"
-              (saveSettingEmmiter)="saveSettingOnNewGraph($event)"
-              (saveGraphEmmiter)="handleSaveAsToBrowser($event)"
-              (removeLabelEmmiter)="removeDotSrcLabel()"
-              (downloadGraphEmmiter)="downloadGraph()"
-              (setGraphStatusEmmiter)="setStatusGraph($event)"
-              (projectEmmiter)="updateProject($event)"
-              (getGraphFileTimeEmmitter)="getGraphFileTime($event)">
+              (openDialogEmmitter)="openDialog()"
+              (graphsEmmitter)="getToolBarGraphsChange($event)"
+              (refreshEmmitter)="refreshFlowunit($event)"
+              (dotSrcEmmitter)="dotSrcUpdate($event)"
+              (flowunitEmmitter)="updateDir($event)"
+              (projectPathEmmitter)="updateProjectPath($event)"
+              (saveProjectEmmitter)="saveCurrentProject()"
+              (saveSettingEmmitter)="saveSettingOnNewGraph($event)"
+              (saveGraphEmmitter)="handleSaveAsToBrowser($event)"
+              (removeLabelEmmitter)="removeDotSrcLabel()"
+              (downloadGraphEmmitter)="downloadGraph()"
+              (setGraphStatusEmmitter)="setStatusGraph($event)"
+              (projectEmmitter)="updateProject($event)"
+              (getGraphFileTimeEmmitter)="getGraphFileTime($event)"
+              (startTimerGetGraphFileNameEmmitter)="startTimerGetGraphFileName($event,null,null,null)">
             </app-tool-bar>
 
             <div style="flex: 2;" class="graph">
