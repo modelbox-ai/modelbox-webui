@@ -82,20 +82,21 @@ export class ToolBarComponent {
   @Input() statusGraph: any;
   @Input() msgs: any;
 
-  @Output() graphsEmmiter = new EventEmitter();
-  @Output() refreshEmmiter = new EventEmitter();
-  @Output() dotSrcEmmiter = new EventEmitter();
-  @Output() createProjectEmmiter = new EventEmitter();
-  @Output() flowunitEmmiter = new EventEmitter();
-  @Output() projectPathEmmiter = new EventEmitter();
-  @Output() saveProjectEmmiter = new EventEmitter();
-  @Output() saveGraphEmmiter = new EventEmitter();
-  @Output() saveSettingEmmiter = new EventEmitter();
-  @Output() removeLabelEmmiter = new EventEmitter();
-  @Output() openDialogEmmiter = new EventEmitter();
-  @Output() downloadGraphEmmiter = new EventEmitter();
-  @Output() setGraphStatusEmmiter = new EventEmitter();
+  @Output() graphsEmmitter = new EventEmitter();
+  @Output() refreshEmmitter = new EventEmitter();
+  @Output() dotSrcEmmitter = new EventEmitter();
+  @Output() createProjectEmmitter = new EventEmitter();
+  @Output() flowunitEmmitter = new EventEmitter();
+  @Output() projectPathEmmitter = new EventEmitter();
+  @Output() saveProjectEmmitter = new EventEmitter();
+  @Output() saveGraphEmmitter = new EventEmitter();
+  @Output() saveSettingEmmitter = new EventEmitter();
+  @Output() removeLabelEmmitter = new EventEmitter();
+  @Output() openDialogEmmitter = new EventEmitter();
+  @Output() downloadGraphEmmitter = new EventEmitter();
+  @Output() setGraphStatusEmmitter = new EventEmitter();
   @Output() getGraphFileTimeEmmitter = new EventEmitter();
+  @Output() startTimerGetGraphFileNameEmmitter = new EventEmitter();
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -508,7 +509,7 @@ export class ToolBarComponent {
       this.formDataCreateProject.name = current_project.name;
       this.formDataCreateProject.rootpath = current_project.rootpath;
       this.formDataCreateFlowunit["project-path"] = current_project.flowunit["project-path"];
-      this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
+      this.projectPathEmmitter.emit(this.formDataCreateFlowunit["project-path"]);
 
       this.formData.flowunitReleasePath = current_project.graph.flowunitReleasePath;
     }
@@ -523,7 +524,7 @@ export class ToolBarComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (this.formDataCreateProject) {
       this.formDataCreateFlowunit["project-path"] = this.formDataCreateProject.rootpath + "/" + this.formDataCreateProject.name;
-      this.projectPathEmmiter.emit(this.formDataCreateFlowunit["project-path"]);
+      this.projectPathEmmitter.emit(this.formDataCreateFlowunit["project-path"]);
     }
     let projectListPath = this.openproject_path.substring(0, this.openproject_path.lastIndexOf("/"));
     if (projectListPath !== this.openProjectListPath) {
@@ -741,12 +742,12 @@ export class ToolBarComponent {
 
                 this.formData.perfTraceEnable = this.currentGraph.profile.trace;
               }
-              this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
+              this.dotSrcEmmitter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
               localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
               this.formData.flowunitPath = this.currentGraph.driver.dir;
 
-              this.projectPathEmmiter.emit(data.project_path);
-              this.flowunitEmmiter.emit(this.formData.flowunitPath);
+              this.projectPathEmmitter.emit(data.project_path);
+              this.flowunitEmmitter.emit(this.formData.flowunitPath);
               this.project_name = data.project_name;
               this.formData.flowunitDebugPath = this.currentGraph.driver.dir;
               this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
@@ -1074,7 +1075,7 @@ export class ToolBarComponent {
   }
 
   downloadGraph() {
-    this.downloadGraphEmmiter.emit();
+    this.downloadGraphEmmitter.emit();
   }
 
   onNewGraphClickOk(results) {
@@ -1099,7 +1100,7 @@ export class ToolBarComponent {
     }
 
     this.initFormData();
-    this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+    this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
     let dotSrc = this.dataService.addGraphNameOnDotSrc(graphName);
     localStorage.setItem("normGraph", dotSrc);
 
@@ -1109,9 +1110,9 @@ export class ToolBarComponent {
       { severity: 'success', content: this.i18n.getById('graph.creation') }
     ];
     setTimeout(() => {
-      this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
+      this.saveSettingEmmitter.emit({ "graphName": graphName, "fileName": fileName });
     }, 500);
-    this.saveSettingEmmiter.emit({ "graphName": graphName, "fileName": fileName });
+    this.saveSettingEmmitter.emit({ "graphName": graphName, "fileName": fileName });
     this.formData.graphName = graphName;
     this.formData.fileName = this.dataService.formatIdToFileName(fileName);
     this.formData.flowunitDebugPath = this.formData.flowunitReleasePath;
@@ -1120,9 +1121,9 @@ export class ToolBarComponent {
     if (this.formData.flowunitReleasePath.indexOf(openProjectPath + "/src/flowunit") === -1) {
       this.formData.flowunitDebugPath.push(openProjectPath);
     }
-    this.setGraphStatusEmmiter.emit(0);
+    this.setGraphStatusEmmitter.emit(0);
     //刷新main中this.project的graph
-    this.saveProjectEmmiter.emit();
+    this.saveProjectEmmitter.emit();
     this.dataService.stopRefreshTimer();
   }
 
@@ -1280,7 +1281,7 @@ export class ToolBarComponent {
               dirs.push(param["project-path"] + "/src/flowunit");
             }
             this.formData.flowunitPath = dirs.join("\n");
-            this.flowunitEmmiter.emit(this.formData.flowunitPath);
+            this.flowunitEmmitter.emit(this.formData.flowunitPath);
             this.initFormDataCreateFlowunit();
             this.refreshFlowunit();
             this.msgs = [
@@ -1403,12 +1404,12 @@ export class ToolBarComponent {
 
                   this.formData.perfTraceEnable = this.currentGraph.profile.trace;
                 }
-                this.dotSrcEmmiter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
+                this.dotSrcEmmitter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
                 localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
 
-                this.projectPathEmmiter.emit(data.project_path);
-                this.flowunitEmmiter.emit(this.formData.flowunitPath);
+                this.projectPathEmmitter.emit(data.project_path);
+                this.flowunitEmmitter.emit(this.formData.flowunitPath);
                 this.project_name = data.project_name;
                 this.formData.flowunitDebugPath = this.currentGraph.driver.dir;
                 this.formData.flowunitReleasePath = this.currentGraph.driver.dir;
@@ -1417,17 +1418,20 @@ export class ToolBarComponent {
                 }
               } else {
                 this.initFormData();
-                this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+                this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
                 let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
                 localStorage.setItem("normGraph", dotSrc);
               }
             } else {
               this.initFormData();
-              this.dotSrcEmmiter.emit(this.dataService.defaultSrc);
+              this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
               let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
               localStorage.setItem("normGraph", dotSrc);
             }
-            this.saveProjectEmmiter.emit();
+            this.saveProjectEmmitter.emit();
+            let path = this.openproject_path + "/src/graph/" + this.formData.fileName;
+            this.dataService.stopRefreshTimer();
+            this.startTimerGetGraphFileNameEmmitter.emit(path);
             if (comp) {
               comp.modalInstance.hide();
               comp.modalInstance.zIndex = -1;
@@ -1457,7 +1461,7 @@ export class ToolBarComponent {
   }
 
   refreshFlowunit() {
-    this.refreshEmmiter.emit("refresh");
+    this.refreshEmmitter.emit("refresh");
   }
 
   formatDotSrc(text) {
@@ -1517,7 +1521,7 @@ export class ToolBarComponent {
     if (!ret) {
       return;
     }
-    this.removeLabelEmmiter.emit();
+    this.removeLabelEmmitter.emit();
     localStorage.setItem("normGraph", param.graph.dotSrc);
     param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
     if (typeof param.graph.dirs === "string") {
@@ -1574,7 +1578,7 @@ export class ToolBarComponent {
 
 
   openDialog() {
-    this.openDialogEmmiter.emit();
+    this.openDialogEmmitter.emit();
   }
 
   linkToGuide() {
