@@ -387,11 +387,11 @@ export class MainComponent {
                     },
                     {
                       cssClass: 'primary',
-                      text: this.i18n.getById("toolBar.sycnGraphButton"),
+                      text: this.i18n.getById("toolBar.syncGraphButton"),
                       handler: ($event: Event) => {
                         results.modalInstance.hide();
                         results.modalInstance.zIndex = -1;
-                        this.toolBar.sycnGraph();
+                        this.toolBar.syncGraph();
                         localStorage.setItem(graphPath, data?.modify_time);
                       },
                     },

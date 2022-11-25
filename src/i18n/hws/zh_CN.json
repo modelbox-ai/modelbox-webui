@@ -35,7 +35,7 @@
   "toolBar.switchButton": "切换布局",
   "toolBar.runGraphButton": "运行",
   "toolBar.stopGraphButton": "停止",
-  "toolBar.sycnGraphButton": "同步图",
+  "toolBar.syncGraphButton": "同步图",
   "toolBar.restartGraphButton": "重启",
   "toolBar.backButton": "回退",
   "toolBar.redoButton": "重做",
