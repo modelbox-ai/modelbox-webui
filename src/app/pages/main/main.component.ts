@@ -944,10 +944,10 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
   private isEqual(a, b) {
     if (a && b) {
-      a = a.replace(/\s+/g, "");
-      b = b.replace(/\s+/g, "");
+      a = a.replace(/[\s,'"]+/g, "");
+      b = b.replace(/[\s,'"]+/g, "");
     } else if (b === undefined) {
-      return true;
+      return false;
     }
     return a === b;
   }

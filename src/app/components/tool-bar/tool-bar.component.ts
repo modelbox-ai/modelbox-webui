@@ -713,7 +713,6 @@ export class ToolBarComponent {
 
   syncGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));
-    debugger
     if (current_project?.flowunit) {
       this.loading = this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
         data => {
