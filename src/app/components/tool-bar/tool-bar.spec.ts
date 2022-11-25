@@ -130,7 +130,7 @@ describe("ToolBarComponent", () => {
   });
 
   it('handleProjectDropDown: \
-        sycnGraph, \
+        syncGraph, \
         ', () => {
     const fixture = TestBed.createComponent(ToolBarComponent);
     const app = fixture.componentInstance;

@@ -459,7 +459,7 @@ export class ToolBarComponent {
     value: 5,
     specialContent: this.i18n.getById('project')
   }, {
-    name: this.i18n.getById('toolBar.sycnGraphButton'),
+    name: this.i18n.getById('toolBar.syncGraphButton'),
     value: 7,
     specialContent: this.i18n.getById('project')
   }];
@@ -649,7 +649,7 @@ export class ToolBarComponent {
     } else if (e.value === 6) {
       this.isModifyingDecorater(this.clearCache, null, this, true);
     } else if (e.value === 7) {
-      this.sycnGraph();
+      this.syncGraph();
     }
   }
 
@@ -711,8 +711,9 @@ export class ToolBarComponent {
     rowItem[field] = false;
   }
 
-  sycnGraph() {
+  syncGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));
+    debugger
     if (current_project?.flowunit) {
       this.loading = this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
         data => {
@@ -723,7 +724,7 @@ export class ToolBarComponent {
           //加载功能单元信息
           //加载图信息
           if (data.graphs?.length > 1) {
-            this.currentGraph = data.graphs.find(item => this.dataService.formatFileNameToId(current_project.graph.fileName) === this.getGraphNameFromGraph(item.graph.graphconf));
+            this.currentGraph = data.graphs.find(item => this.dataService.formatFileNameToId(current_project.graph.fileName) === this.dataService.formatFileNameToId(item.name));
           } else if (data.graphs?.length === 1) {
             this.currentGraph = data.graphs[0];
           } else {
