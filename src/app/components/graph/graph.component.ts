@@ -632,10 +632,12 @@ export class GraphComponent implements AfterViewInit, OnChanges {
             let portDeviceType = "";
             let ports = [];
             if (unit) {
-              ports = unit.inputports.concat(unit.outputports)
+              ports = unit.inputports?.concat(unit.outputports)
             }
-
-            let result = ports.filter(x => x.name === d.children[0].text);
+            let result;
+            if (ports) {
+              result = ports.filter(x => x.name === d.children[0].text);
+            }
             if (result && result[0]) {
               portDeviceType = result[0].device_type;
             }
