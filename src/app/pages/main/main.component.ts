@@ -1446,7 +1446,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     //if user is modifying the graph
     setTimeout(() => {
       if (isModifying === "1") {
-        this.toolBar.isModifyingDecorater(this.handleRun, graphName, this);
+        this.toolBar.isModifyingDecorater(this.handleRun, graphName, this.toolBar);
       } else {
         this.handleRun(graphName);
       }
@@ -1569,7 +1569,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     //if user is modifying the graph
     setTimeout(() => {
       if (isModifying === "1") {
-        this.toolBar.isModifyingDecorater(this.handleRestart, graphName, this);
+        this.toolBar.isModifyingDecorater(this.handleRestart, graphName, this.toolBar);
       } else {
         this.handleRestart(graphName);
       }
