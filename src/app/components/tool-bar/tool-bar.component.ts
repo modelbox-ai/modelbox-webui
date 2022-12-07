@@ -97,6 +97,8 @@ export class ToolBarComponent {
   @Output() setGraphStatusEmmitter = new EventEmitter();
   @Output() getGraphFileTimeEmmitter = new EventEmitter();
   @Output() startTimerGetGraphFileNameEmmitter = new EventEmitter();
+  @Output() isAttrExistEmmitter = new EventEmitter();
+  @Output() addDotSrcLabelEmmitter = new EventEmitter();
 
   backSvg = "../../../assets/undo.svg";
   backDisabledSvg = "../../../assets/undo_disabled.svg";
@@ -111,6 +113,7 @@ export class ToolBarComponent {
   stopSvg = "../../../assets/stop.svg";
   restartSvg = "../../../assets/restart.svg";
   graphNameForDisplay = "";
+  isLabelExist;
 
   openProjectList = [];
 
@@ -713,6 +716,7 @@ export class ToolBarComponent {
 
   syncGraph() {
     const current_project = JSON.parse(localStorage.getItem('project'));
+    this.isAttrExistEmmitter.emit();
     if (current_project?.flowunit) {
       this.loading = this.basicService.openProject(current_project.flowunit['project-path']).subscribe(
         data => {
@@ -729,6 +733,10 @@ export class ToolBarComponent {
           } else {
             this.currentGraph = null;
           }
+          if (this.isLabelExist) {
+            this.addDotSrcLabelEmmitter.emit();
+          }
+          this.currentGraph
 
           if (data.graphs && this.currentGraph !== null) {
             if (this.currentGraph?.graph.graphconf) {
@@ -760,6 +768,7 @@ export class ToolBarComponent {
         }
       );
     }
+    this.removeLabelEmmitter.emit();
   }
 
   clearCache(e, that) {
