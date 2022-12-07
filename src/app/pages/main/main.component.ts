@@ -457,6 +457,49 @@ export class MainComponent {
     }
   }
 
+  addDotSrcLabel() {
+    if (this.graph.dotGraph !== undefined) {
+      const nodes = { ...this.graph.dotGraph.nodes };
+      const edges = { ...this.graph.dotGraph.edges };
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        let device = attr['device'];
+        if (flowunit) {
+          attr["label"] = this.dataService.getLabel(flowunit, device, node);
+          if (attr["label"] == "") {
+            attr["label"] = this.graph.getLabelFromEdge(node, edges);
+          }
+        }
+        try {
+          this.graph.dotGraph.updateNode(node, attr);
+          this.graph.dotGraph.reparse();
+        }
+        catch { }
+      }
+      this.toolBar.currentGraph.graph.graphconf = this.graph.dotGraph.dotSrc;
+    }
+  }
+
+  isAttrExist(targetAttr = null) {
+    if (this.graph.dotGraph !== undefined) {
+      const nodes = { ...this.graph.dotGraph.nodes };
+      const edges = { ...this.graph.dotGraph.edges };
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        let device = attr['device'];
+        if (flowunit) {
+          if (attr["label"] == undefined) {
+            this.toolBar.isLabelExist = false;
+            return;
+          }
+        }
+      }
+    }
+    this.toolBar.isLabelExist = true;
+  }
+
   createProject(param) {
     this.saveCurrentProject();
     param["rootpath"] = this.toolBar.openproject_path;
