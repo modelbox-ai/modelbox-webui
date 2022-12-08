@@ -751,7 +751,6 @@ export class ToolBarComponent {
                 this.formData.perfTraceEnable = this.currentGraph.profile.trace;
               }
               this.dotSrcEmmitter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
-              localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
               this.formData.flowunitPath = this.currentGraph.driver.dir;
 
               this.projectPathEmmitter.emit(data.project_path);
@@ -1110,9 +1109,6 @@ export class ToolBarComponent {
 
     this.initFormData();
     this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
-    let dotSrc = this.dataService.addGraphNameOnDotSrc(graphName);
-    localStorage.setItem("normGraph", dotSrc);
-
     results.modalInstance.hide();
     results.modalInstance.zIndex = -1;
     this.msgs = [
@@ -1414,7 +1410,6 @@ export class ToolBarComponent {
                   this.formData.perfTraceEnable = this.currentGraph.profile.trace;
                 }
                 this.dotSrcEmmitter.emit(this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
-                localStorage.setItem("normGraph", this.dataService.insertNodeType(this.currentGraph.graph.graphconf));
                 this.formData.flowunitPath = this.currentGraph.driver.dir;
 
                 this.projectPathEmmitter.emit(data.project_path);
@@ -1428,14 +1423,12 @@ export class ToolBarComponent {
               } else {
                 this.initFormData();
                 this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
-                let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
-                localStorage.setItem("normGraph", dotSrc);
               }
             } else {
               this.initFormData();
               this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
-              let dotSrc = this.dataService.addGraphNameOnDotSrc(this.formData.graphName);
-              localStorage.setItem("normGraph", dotSrc);
+              
+              
             }
             this.saveProjectEmmitter.emit();
             let path = this.openproject_path + "/src/graph/" + this.formData.fileName;
@@ -1531,7 +1524,6 @@ export class ToolBarComponent {
       return;
     }
     this.removeLabelEmmitter.emit();
-    localStorage.setItem("normGraph", param.graph.dotSrc);
     param.graph.dotSrc = this.formatDotSrc(param.graph.dotSrc);
     if (typeof param.graph.dirs === "string") {
       param.graph.dirs = param.graph.dirs.split("\n");
