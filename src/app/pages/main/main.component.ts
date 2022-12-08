@@ -347,7 +347,6 @@ export class MainComponent {
       this.basicService.openProject(this.path + "/" + this.project_name).subscribe(
         data => {
           let src = data.graphs.find(ele => ele.name === project.graph.fileName);
-          src ? localStorage.setItem("normGraph", src.graph?.graphconf) : localStorage.setItem("normGraph", this.dotSrc);
           this.getGraphStatus(this.project.graph.fileName);
           this.getGraphFileTime(data.project_path + "/src/graph/" + this.dataService.formatIdToFileName(this.project.graph.fileName));
         }
@@ -478,6 +477,31 @@ export class MainComponent {
         catch { }
       }
       this.toolBar.currentGraph.graph.graphconf = this.graph.dotGraph.dotSrc;
+    }
+  }
+
+  addDotSrcLabel2() {
+    if (this.graph.dotGraph !== undefined) {
+      const nodes = { ...this.graph.dotGraph.nodes };
+      const edges = { ...this.graph.dotGraph.edges };
+      let dotGraph = cloneDeep(this.graph.dotGraph);
+      for (let node in nodes) {
+        let attr = nodes[node]['attributes'];
+        let flowunit = attr['flowunit'];
+        let device = attr['device'];
+        if (flowunit) {
+          attr["label"] = this.dataService.getLabel(flowunit, device, node);
+          if (attr["label"] == "") {
+            attr["label"] = this.graph.getLabelFromEdge(node, edges);
+          }
+        }
+        try {
+          dotGraph.updateNode(node, attr);
+          dotGraph.reparse();
+        }
+        catch { }
+      }
+      return dotGraph.dotSrc;
     }
   }
 
@@ -740,8 +764,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         this.saveCurrentProject();
         this.reloadInsertComponent();
 
-        localStorage.setItem("normGraph", this.dotSrc);
-
       }, error => {
         this.msgs = [
           { life: 30000, severity: 'error', summary: 'ERROR', content: error.error.msg }
@@ -951,19 +973,18 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
 
   handleTextChange = (text, undoRedoState, dotGraph, removeLabel) => {
     this.isSaved = false;
-    let normGraph = localStorage.getItem("normGraph");
-    // label不影响判断
-    if (this.dotSrc !== text) {
-      if (this.isEqual(this.dotSrc, removeLabel?.dotSrc)) {
+    let dotSrc = this.graph.removeLabel(this.graph.dotGraph);
+
+    if (this.dotSrc != text) {
+      if (this.isEqual(this.dotSrc, dotSrc.dotSrc) || this.dotSrc === text) {
         localStorage.setItem("isModifying", "0");
       } else {
         localStorage.setItem("isModifying", "1");
       }
-      this.dotSrc = text;
     }
-    if (this.dotSrc === normGraph) {
-      localStorage.setItem("isModifying", "0");
-    }
+
+    this.dotSrc = text;
+
     this.dotSrcLastChangeTime = Date.now();
 
     if (this.project && this.project.graph) {
@@ -1394,7 +1415,6 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
               let chosenGraph = this.toolBar.graphSelectTableDataForDisplay.filter(x => x.checked === true);
               this.dotSrc = chosenGraph[0]?.dotSrc;
               this.dataService.stopRefreshTimer();
-              localStorage.setItem("normGraph", this.dotSrc);
               this.toolBar.formData.graphDesc = chosenGraph[0]?.desc;
               this.toolBar.formData.graphName = chosenGraph[0]?.name;
               let path = chosenGraph[0]?.graphPath.split('/');
