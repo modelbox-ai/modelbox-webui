@@ -456,55 +456,6 @@ export class MainComponent {
     }
   }
 
-  addDotSrcLabel() {
-    if (this.graph.dotGraph !== undefined) {
-      const nodes = { ...this.graph.dotGraph.nodes };
-      const edges = { ...this.graph.dotGraph.edges };
-      for (let node in nodes) {
-        let attr = nodes[node]['attributes'];
-        let flowunit = attr['flowunit'];
-        let device = attr['device'];
-        if (flowunit) {
-          attr["label"] = this.dataService.getLabel(flowunit, device, node);
-          if (attr["label"] == "") {
-            attr["label"] = this.graph.getLabelFromEdge(node, edges);
-          }
-        }
-        try {
-          this.graph.dotGraph.updateNode(node, attr);
-          this.graph.dotGraph.reparse();
-        }
-        catch { }
-      }
-      this.toolBar.currentGraph.graph.graphconf = this.graph.dotGraph.dotSrc;
-    }
-  }
-
-  addDotSrcLabel2() {
-    if (this.graph.dotGraph !== undefined) {
-      const nodes = { ...this.graph.dotGraph.nodes };
-      const edges = { ...this.graph.dotGraph.edges };
-      let dotGraph = cloneDeep(this.graph.dotGraph);
-      for (let node in nodes) {
-        let attr = nodes[node]['attributes'];
-        let flowunit = attr['flowunit'];
-        let device = attr['device'];
-        if (flowunit) {
-          attr["label"] = this.dataService.getLabel(flowunit, device, node);
-          if (attr["label"] == "") {
-            attr["label"] = this.graph.getLabelFromEdge(node, edges);
-          }
-        }
-        try {
-          dotGraph.updateNode(node, attr);
-          dotGraph.reparse();
-        }
-        catch { }
-      }
-      return dotGraph.dotSrc;
-    }
-  }
-
   isAttrExist(targetAttr = null) {
     if (this.graph.dotGraph !== undefined) {
       const nodes = { ...this.graph.dotGraph.nodes };
