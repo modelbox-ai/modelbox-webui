@@ -529,7 +529,7 @@ export class MainComponent {
     const results = this.modalService.open({
       id: 'modal-no-btn',
       width: '400px',
-      backdropCloseable: true,
+      backdropCloseable: false,
       component: ModalVscodeComponent,
       onClose: () => {
       },
@@ -554,7 +554,7 @@ export class MainComponent {
       width: '346px',
       title: this.i18n.getById('message.pleaseInputIpAddress'),
       contentTemplate: this.modalBatTemplate,
-      backdropCloseable: true,
+      backdropCloseable: false,
       buttons: [
         {
           cssClass: 'primary',
@@ -1173,7 +1173,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         title: this.i18n.getById('toolBar.newButton'),
         showAnimate: false,
         contentTemplate: content,
-        backdropCloseable: true,
+        backdropCloseable: false,
         onClose: () => {
 
         },
@@ -1207,7 +1207,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.openProjectButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: true,
+      backdropCloseable: false,
       onClose: () => {
 
       },
@@ -1251,7 +1251,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.newFlowunitButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: true,
+      backdropCloseable: false,
       onClose: () => {
 
       },
@@ -1311,7 +1311,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.graphSettingButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: true,
+      backdropCloseable: false,
       onClose: () => {
 
       },
@@ -1352,7 +1352,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
           title: this.i18n.getById('toolBar.selectDialogButton'),
           showAnimate: false,
           contentTemplate: content,
-          backdropCloseable: true,
+          backdropCloseable: false,
           onClose: () => {
 
           },
@@ -1636,7 +1636,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.solutionDialogButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: true,
+      backdropCloseable: false,
       onClose: () => {
 
       },

@@ -665,7 +665,7 @@ export class ToolBarComponent {
         title: that.i18n.getById("remind"),
         showAnimate: false,
         content: that.i18n.getById("graphIsChanged"),
-        backdropCloseable: true,
+        backdropCloseable: false,
         onClose: () => {
 
         },
@@ -1489,7 +1489,7 @@ export class ToolBarComponent {
       maxHeight: '600px',
       title: this.i18n.getById('message.ifCoverBackendFile'),
       content: this.i18n.getById('message.warnTheOperationCannotBeRestore'),
-      backdropCloseable: true,
+      backdropCloseable: false,
       dialogtype: 'error',
       buttons: [
         {
@@ -1633,7 +1633,7 @@ export class ToolBarComponent {
       title: this.i18n.getById('toolBar.graphDescriptionButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: true,
+      backdropCloseable: false,
       onClose: () => {
 
       },

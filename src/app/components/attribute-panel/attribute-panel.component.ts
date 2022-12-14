@@ -162,7 +162,7 @@ export class AttributePanelComponent {
             maxHeight: '600px',
             title: '',
             content: this.i18n.getById('message.onlyNumberCharUnderline'),
-            backdropCloseable: true,
+            backdropCloseable: false,
             dialogtype: 'failed',
             buttons: [
               {
@@ -189,7 +189,7 @@ export class AttributePanelComponent {
             maxHeight: '600px',
             title: '',
             content: this.i18n.getById('message.duplicatedNodeName'),
-            backdropCloseable: true,
+            backdropCloseable: false,
             dialogtype: 'failed',
             buttons: [
               {
@@ -217,7 +217,7 @@ export class AttributePanelComponent {
             maxHeight: '600px',
             title: '',
             content: this.i18n.getById('message.duplicatedNodeNameWithPort'),
-            backdropCloseable: true,
+            backdropCloseable: false,
             dialogtype: 'failed',
             buttons: [
               {
@@ -503,7 +503,7 @@ export class AttributePanelComponent {
           maxHeight: '600px',
           title: '',
           content: this.i18n.getById('message.cannotFindCorrespondingDefinition'),
-          backdropCloseable: true,
+          backdropCloseable: false,
           dialogtype: 'failed',
           buttons: [
             {
