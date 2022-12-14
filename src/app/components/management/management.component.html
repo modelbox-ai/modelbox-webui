@@ -324,15 +324,26 @@
             class="flex-space-between">
             <div 
               class="left-block">
-              <div class="input-block">
-                <input type="file" (change)="handleFileSelect($event)" />
+              <div style="vertical-align: middle;margin-left:100px;">
+                <div class="input-block">
+                  <input type="file" (change)="handleFileSelect($event)" />
+                </div>
+                <div class="input-block">
+                  <button 
+                    class="input-button" 
+                    (click)="selectText()">
+                      {{'toolBar.copyWithOneKey' | translate}}
+                  </button>
+                </div>
               </div>
             </div>
+            
             <div class="right-block">
               <textarea 
                 dTextarea 
                 placeholder="base64" 
                 id="textArea" 
+                #textArea
                 style="height:100%;"
                 [(ngModel)]="base64textString">
               </textarea>
@@ -344,3 +355,7 @@
     </d-tabs>
   </d-layout>
 </ng-template>
+<d-toast 
+  [value]="msgs" 
+  [style]="{ top: '100px' }">
+</d-toast>
