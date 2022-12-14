@@ -733,10 +733,6 @@ export class ToolBarComponent {
           } else {
             this.currentGraph = null;
           }
-          if (this.isLabelExist) {
-            this.addDotSrcLabelEmmitter.emit();
-          }
-          this.currentGraph
 
           if (data.graphs && this.currentGraph !== null) {
             if (this.currentGraph?.graph.graphconf) {

@@ -150,6 +150,34 @@ export class AttributePanelComponent {
     blur: () => {
       this.showLoading = true;
       let config = { ...this.config };
+      // 只允许项目名称是数字字符和下划线
+      let reg = /^[0-9a-zA-Z_]{1,}$/g;
+      let res = this.newName.match(reg);
+      if (res === null) {
+        let diag = document.getElementById('dialog-onlyNumberCharUnderline');
+        if (!diag) {
+          const results = this.dialogService.open({
+            id: 'dialog-onlyNumberCharUnderline',
+            width: '346px',
+            maxHeight: '600px',
+            title: '',
+            content: this.i18n.getById('message.onlyNumberCharUnderline'),
+            backdropCloseable: true,
+            dialogtype: 'failed',
+            buttons: [
+              {
+                cssClass: 'primary',
+                text: 'Ok',
+                handler: ($event: Event) => {
+                  results.modalInstance.hide();
+                  results.modalInstance.zIndex = -1;
+                },
+              }
+            ],
+          });
+        }
+        return;
+      }
       // 处理 node name更改
       if ((this.newName !== this.config.name) && (this.unit != undefined)) {
         const nodes = { ...this.dotGraph?.nodes };

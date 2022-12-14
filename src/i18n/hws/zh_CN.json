@@ -158,6 +158,7 @@
   "message.cannotFindCorrespondingDefinition": "未能找到节点相关定义",
   "message.duplicatedNodeNamewithPort": "节点名称不能跟port名重复！",
   "message.duplicatedNodeName": "节点名称不能重复",
+  "message.onlyNumberCharUnderline": "节点名称只能包含数字字母和下划线",
   "message.taskWithTheSameNameHasAlreadyBeenExisted": "已存在同名任务",
   "message.taskHasBeenCreatedSuccessfully": "任务创建成功",
   "message.failToCreateTask": "任务创建失败",
