@@ -113,18 +113,25 @@
 
 .left-block {
   .block();
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .input-block {
-    display       : table-cell;
     width         : 100%;
-    vertical-align: middle;
-    text-align    : center;
-    top           : 0;
-    left          : 0;
-    right         : 0;
-    bottom        : 0;
-    margin        : auto;
+  }
+
+  .input-button{
+    background-color: #f0f0f0;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.5;
+    margin: 0;
+    border: 1px solid rgb(118, 118, 118);
+    width:  64px;
+    border-radius: 2px;
+    text-align: center;
+    margin-top: 40px
   }
 }
 

@@ -197,7 +197,7 @@ export class ManagementComponent implements OnInit {
   currentTemplate: any;
   openproject_path: any;
   folderList: any;
-  msgs: { severity: string; content: any; }[];
+  msgs: any;
   content: TemplateRef<any>;
 
   constructor(
@@ -243,6 +243,20 @@ export class ManagementComponent implements OnInit {
   _handleReaderLoaded(readerEvt) {
     let binaryString = readerEvt.target.result;
     this.base64textString = btoa(binaryString);
+  }
+
+  selectText() {
+    const input = document.getElementById('textArea') as HTMLInputElement;
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    let res = document.execCommand('copy');
+    if (res) {
+      this.msgs = [
+        { severity: 'success', content: this.i18n.getById('message.copySuccessfully') }
+      ];
+    }
+
   }
 
   handleChange(value) {
