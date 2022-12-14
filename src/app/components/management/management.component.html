@@ -1,7 +1,11 @@
-<app-header-main #header [active]="page">
-
+<app-header-main 
+  #header 
+  [active]="page">
 </app-header-main>
-<div class="demo-page">
+<div 
+  class="demo-page"
+  dLoading
+  [showLoading]="deleteTaskLoading">
   <div class="tasklist-search-box-div">
     <div class="tasklist-search-box-block">
     </div>
@@ -59,7 +63,6 @@
     </tbody>
   </d-data-table>
 </div>
-
 <ng-template #debug id="debug">
   <d-layout class="basic-usage">
     <d-tabs [type]="'tabs'" [(activeTab)]="tab1acticeID">
