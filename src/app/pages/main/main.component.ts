@@ -1182,7 +1182,17 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
           text: this.i18n.getById('modal.okButton'),
           disabled: false,
           handler: ($event: Event) => {
-            this.createProject(this.toolBar.formDataCreateProject);
+            // 只允许项目名称是数字字符和下划线
+            let reg = /^[0-9a-zA-Z_]{1,}$/g;
+            let res = reg.test(this.toolBar.formDataCreateProjectName);
+            if (res) {
+              this.toolBar.formDataCreateProject.name = this.toolBar.formDataCreateProjectName;
+              this.createProject(this.toolBar.formDataCreateProject);
+            } else {
+              this.msgs = [
+                { severity: 'warn', summary: "", content: this.i18n.getById('message.onlyNumberCharUnderline') }
+              ];
+            }
           },
         },
         {
