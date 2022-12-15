@@ -232,7 +232,8 @@
                         <input 
                             dTextInput 
                             name="project_name" 
-                            [(ngModel)]="formDataCreateProject.name" 
+                            [(ngModel)]="formDataCreateProjectName"
+                            (input)="projectNameOnChange($event)"
                             maxlength="31"/>
                     </div>
                 </d-form-control>
