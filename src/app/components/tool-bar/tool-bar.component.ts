@@ -378,6 +378,10 @@ export class ToolBarComponent {
     }
   ];
 
+
+
+  typesCurrent = this.typesCpu;
+
   typesCuda = [
     {
       id: 'tensorflow',
@@ -417,6 +421,21 @@ export class ToolBarComponent {
       id: 'yolov5_postprocess',
       title: 'yolov5_postprocess'
     },
+  ];
+
+  types_rockchip = [
+    {
+      id: 'tensorflow',
+      title: 'Tensorflow'
+    },
+    {
+      id: 'mindspore',
+      title: 'Mindspore'
+    },
+    {
+      id: 'rknpu2',
+      title: 'Rknpu2'
+    }
   ];
 
   in_num = 1;

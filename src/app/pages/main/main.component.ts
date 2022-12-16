@@ -1455,11 +1455,19 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     if (e.indexOf("ascend") > -1) {
       this.toolBar.currentDevice = "ascend";
       this.toolBar.placeholderModel = "model.om";
+      this.toolBar.typesCurrent = this.toolBar.typesAscend;
     }
 
     if (e.indexOf("cuda") > -1) {
       this.toolBar.currentDevice = "cuda";
       this.toolBar.placeholderModel = "model.pb";
+      this.toolBar.typesCurrent = this.toolBar.typesCuda;
+    }
+
+    if (e.indexOf("rockchip") > -1) {
+      this.toolBar.currentDevice = "rockchip";
+      this.toolBar.placeholderModel = "model.rknn";
+      this.toolBar.typesCurrent = this.toolBar.types_rockchip;
     }
 
   }
