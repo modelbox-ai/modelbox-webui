@@ -232,7 +232,8 @@
                         <input 
                             dTextInput 
                             name="project_name" 
-                            [(ngModel)]="formDataCreateProject.name" 
+                            [(ngModel)]="formDataCreateProjectName"
+                            (input)="projectNameOnChange($event)"
                             maxlength="31"/>
                     </div>
                 </d-form-control>
@@ -707,30 +708,9 @@
                 </d-form-label>
                 <d-form-control style="height:32px">
                     <d-tabs 
-                        *ngIf="currentDevice === 'cpu'"
                         [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
                         type="slider">
-                        <d-tab *ngFor="let item of typesCpu" [id]="item.id">
-                            <ng-template dTabTitle>
-                                {{ item.title }}
-                            </ng-template>
-                        </d-tab>
-                    </d-tabs>
-                    <d-tabs 
-                        *ngIf="currentDevice === 'cuda'"
-                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
-                        type="slider">
-                        <d-tab *ngFor="let item of typesCuda" [id]="item.id">
-                            <ng-template dTabTitle>
-                                {{ item.title }}
-                            </ng-template>
-                        </d-tab>
-                    </d-tabs>
-                    <d-tabs 
-                        *ngIf="currentDevice === 'ascend'"
-                        [(activeTab)]="formDataCreateFlowunit['virtual-type']" 
-                        type="slider">
-                        <d-tab *ngFor="let item of typesAscend" [id]="item.id">
+                        <d-tab *ngFor="let item of typesCurrent" [id]="item.id">
                             <ng-template dTabTitle>
                                 {{ item.title }}
                             </ng-template>

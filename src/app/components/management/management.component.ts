@@ -135,6 +135,7 @@ export class ManagementComponent implements OnInit {
     }
   ];
   editableTip = EditableTip.btn;
+  deleteTaskLoading = false;
 
 
   dataTableOptions = {
@@ -197,7 +198,7 @@ export class ManagementComponent implements OnInit {
   currentTemplate: any;
   openproject_path: any;
   folderList: any;
-  msgs: { severity: string; content: any; }[];
+  msgs: any;
   content: TemplateRef<any>;
 
   constructor(
@@ -243,6 +244,20 @@ export class ManagementComponent implements OnInit {
   _handleReaderLoaded(readerEvt) {
     let binaryString = readerEvt.target.result;
     this.base64textString = btoa(binaryString);
+  }
+
+  selectText() {
+    const input = document.getElementById('textArea') as HTMLInputElement;
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    let res = document.execCommand('copy');
+    if (res) {
+      this.msgs = [
+        { severity: 'success', content: this.i18n.getById('message.copySuccessfully') }
+      ];
+    }
+
   }
 
   handleChange(value) {
@@ -332,7 +347,7 @@ export class ManagementComponent implements OnInit {
       maxHeight: '900px',
       title: this.currentTemplate,
       content: ModalGuideComponent,
-      backdropCloseable: true,
+      backdropCloseable: false,
       dialogtype: dialogtype,
       onClose: () => {
       },
@@ -493,7 +508,7 @@ export class ManagementComponent implements OnInit {
       width: '400px',
       showAnimation: true,
       title: this.i18n.getById('toolBar.deleteDialogButton'),
-      backdropCloseable: true,
+      backdropCloseable: false,
       dialogtype: 'standard',
       content: this.i18n.getById('management.doYouWantToDeleteThisRecord?'),
       buttons: [{
@@ -503,6 +518,8 @@ export class ManagementComponent implements OnInit {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
+
+          this.deleteTaskLoading = true;
           this.deleteTask(row);
         },
       },
@@ -513,6 +530,7 @@ export class ManagementComponent implements OnInit {
         handler: ($event: Event) => {
           results.modalInstance.hide();
           results.modalInstance.zIndex = -1;
+          this.deleteTaskLoading = false;
         },
       },],
     });
@@ -551,27 +569,27 @@ export class ManagementComponent implements OnInit {
         let obj = {};
         obj[option.job_id.substring(0, option.job_id - ".toml".length)] = false;
         sessionStorage.setItem('statusGraph', JSON.stringify(obj));
-        if (data && data.status === 204) {
-          const results = this.dialogService.open({
-            id: 'task-delete-success',
-            width: '346px',
-            maxHeight: '600px',
-            title: '',
-            content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully'),
-            backdropCloseable: true,
-            dialogtype: 'success',
-            buttons: [
-              {
-                cssClass: 'primary',
-                text: this.i18n.getById('modal.okButton'),
-                handler: ($event: Event) => {
-                  results.modalInstance.hide();
-                },
-              }
-            ],
-          });
-          this.getTaskslists();
-        }
+        const results = this.dialogService.open({
+          id: 'task-delete-success',
+          width: '346px',
+          maxHeight: '600px',
+          title: '',
+          content: this.i18n.getById('management.taskHasBeenDeletedSuccessfully'),
+          backdropCloseable: false,
+          dialogtype: 'success',
+          buttons: [
+            {
+              cssClass: 'primary',
+              text: this.i18n.getById('modal.okButton'),
+              handler: ($event: Event) => {
+                results.modalInstance.hide();
+                this.deleteTaskLoading = false;
+              },
+            }
+          ],
+        });
+        this.getTaskslists();
+
       },
         (error) => error => {
           const results = this.dialogService.open({
@@ -580,7 +598,7 @@ export class ManagementComponent implements OnInit {
             maxHeight: '600px',
             title: '',
             content: this.i18n.getById('management.failToDeleteTask'),
-            backdropCloseable: true,
+            backdropCloseable: false,
             dialogtype: 'error',
             buttons: [
               {
