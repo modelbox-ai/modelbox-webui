@@ -230,6 +230,7 @@ export class InsertPanelsComponent implements OnInit {
       dir: dirs,
     }
     this.basicService.queryData(params).subscribe((data) => {
+
       data.flowunits = data.flowunits.map(item => {
         item.group = this.capitalizeFirstLetter(item.group);
         this.addDefaultPortType(item);

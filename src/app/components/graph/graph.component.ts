@@ -1559,7 +1559,7 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         maxHeight: '600px',
         title: '',
         content: this.i18n.getById('message.cannotConnectToSelf'),
-        backdropCloseable: false,
+        backdropCloseable: true,
         dialogtype: 'failed',
         buttons: [
           {

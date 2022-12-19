@@ -160,7 +160,7 @@ export class ToolBarSolutionComponent implements OnInit {
       title: this.i18n.getById('toolBar.chooseDemo'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },

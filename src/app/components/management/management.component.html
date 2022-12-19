@@ -1,11 +1,7 @@
-<app-header-main 
-  #header 
-  [active]="page">
+<app-header-main #header [active]="page">
+
 </app-header-main>
-<div 
-  class="demo-page"
-  dLoading
-  [showLoading]="deleteTaskLoading">
+<div class="demo-page">
   <div class="tasklist-search-box-div">
     <div class="tasklist-search-box-block">
     </div>
@@ -63,6 +59,7 @@
     </tbody>
   </d-data-table>
 </div>
+
 <ng-template #debug id="debug">
   <d-layout class="basic-usage">
     <d-tabs [type]="'tabs'" [(activeTab)]="tab1acticeID">
@@ -327,26 +324,15 @@
             class="flex-space-between">
             <div 
               class="left-block">
-              <div style="vertical-align: middle;margin-left:100px;">
-                <div class="input-block">
-                  <input type="file" (change)="handleFileSelect($event)" />
-                </div>
-                <div class="input-block">
-                  <button 
-                    class="input-button" 
-                    (click)="selectText()">
-                      {{'toolBar.copyWithOneKey' | translate}}
-                  </button>
-                </div>
+              <div class="input-block">
+                <input type="file" (change)="handleFileSelect($event)" />
               </div>
             </div>
-            
             <div class="right-block">
               <textarea 
                 dTextarea 
                 placeholder="base64" 
                 id="textArea" 
-                #textArea
                 style="height:100%;"
                 [(ngModel)]="base64textString">
               </textarea>
@@ -358,7 +344,3 @@
     </d-tabs>
   </d-layout>
 </ng-template>
-<d-toast 
-  [value]="msgs" 
-  [style]="{ top: '100px' }">
-</d-toast>

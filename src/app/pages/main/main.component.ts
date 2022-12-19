@@ -529,7 +529,7 @@ export class MainComponent {
     const results = this.modalService.open({
       id: 'modal-no-btn',
       width: '400px',
-      backdropCloseable: false,
+      backdropCloseable: true,
       component: ModalVscodeComponent,
       onClose: () => {
       },
@@ -554,7 +554,7 @@ export class MainComponent {
       width: '346px',
       title: this.i18n.getById('message.pleaseInputIpAddress'),
       contentTemplate: this.modalBatTemplate,
-      backdropCloseable: false,
+      backdropCloseable: true,
       buttons: [
         {
           cssClass: 'primary',
@@ -1173,7 +1173,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
         title: this.i18n.getById('toolBar.newButton'),
         showAnimate: false,
         contentTemplate: content,
-        backdropCloseable: false,
+        backdropCloseable: true,
         onClose: () => {
 
         },
@@ -1182,17 +1182,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
           text: this.i18n.getById('modal.okButton'),
           disabled: false,
           handler: ($event: Event) => {
-            // 只允许项目名称是数字字符和下划线
-            let reg = /^[0-9a-zA-Z_]{1,}$/g;
-            let res = reg.test(this.toolBar.formDataCreateProjectName);
-            if (res) {
-              this.toolBar.formDataCreateProject.name = this.toolBar.formDataCreateProjectName;
-              this.createProject(this.toolBar.formDataCreateProject);
-            } else {
-              this.msgs = [
-                { severity: 'warn', summary: "", content: this.i18n.getById('message.onlyNumberCharUnderline') }
-              ];
-            }
+            this.createProject(this.toolBar.formDataCreateProject);
           },
         },
         {
@@ -1217,7 +1207,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.openProjectButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },
@@ -1261,7 +1251,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.newFlowunitButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },
@@ -1321,7 +1311,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.graphSettingButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },
@@ -1362,7 +1352,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
           title: this.i18n.getById('toolBar.selectDialogButton'),
           showAnimate: false,
           contentTemplate: content,
-          backdropCloseable: false,
+          backdropCloseable: true,
           onClose: () => {
 
           },
@@ -1455,19 +1445,11 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
     if (e.indexOf("ascend") > -1) {
       this.toolBar.currentDevice = "ascend";
       this.toolBar.placeholderModel = "model.om";
-      this.toolBar.typesCurrent = this.toolBar.typesAscend;
     }
 
     if (e.indexOf("cuda") > -1) {
       this.toolBar.currentDevice = "cuda";
       this.toolBar.placeholderModel = "model.pb";
-      this.toolBar.typesCurrent = this.toolBar.typesCuda;
-    }
-
-    if (e.indexOf("rockchip") > -1) {
-      this.toolBar.currentDevice = "rockchip";
-      this.toolBar.placeholderModel = "model.rknn";
-      this.toolBar.typesCurrent = this.toolBar.types_rockchip;
     }
 
   }
@@ -1654,7 +1636,7 @@ ECHO Port '+ this.portAddress + '>>"%HOMEDRIVE%%HOMEPATH%\\.ssh\\config"\r\n\
       title: this.i18n.getById('toolBar.solutionDialogButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },

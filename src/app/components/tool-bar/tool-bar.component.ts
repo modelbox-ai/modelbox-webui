@@ -283,7 +283,7 @@ export class ToolBarComponent {
 
   optionsInOut = ['input', 'output'];
   optionsdata_type = ['uint8', 'int', 'int64', 'float', 'float64', 'long', 'double']; //flowunit type
-  optionsdevice = ['cpu', 'cuda', 'ascend', 'rockchip'];
+  optionsdevice = ['cpu', 'cuda', 'ascend'];
   optionsdevicePython = ['cpu'];
   optionsdeviceYolo = ['cpu'];
   flowunitGroupOptions = ['Generic'];
@@ -378,10 +378,6 @@ export class ToolBarComponent {
     }
   ];
 
-
-
-  typesCurrent = this.typesCpu;
-
   typesCuda = [
     {
       id: 'tensorflow',
@@ -423,26 +419,10 @@ export class ToolBarComponent {
     },
   ];
 
-  types_rockchip = [
-    {
-      id: 'tensorflow',
-      title: 'Tensorflow'
-    },
-    {
-      id: 'mindspore',
-      title: 'Mindspore'
-    },
-    {
-      id: 'rknpu2',
-      title: 'Rknpu2'
-    }
-  ];
-
   in_num = 1;
   out_num = 1;
   point_in = 0;
   point_out = 0;
-  formDataCreateProjectName: string;
 
   tabActiveId: string = "tab1";
   openproject_path: string = this.dataService.defaultSearchPath;
@@ -656,19 +636,6 @@ export class ToolBarComponent {
     document.getElementById('projectDropDown').click();
   }
 
-  projectNameOnChange(e) {
-
-    // 只允许项目名称是数字字符和下划线
-    let reg = /^[0-9a-zA-Z_]{1,}$/g;
-    let res = reg.test(e.data);
-
-    if (!res) {
-      e.srcElement.value = e.srcElement.value.substr(0, e.srcElement.value.length - 1);
-      this.formDataCreateProjectName = e.srcElement.value;
-    }
-
-  }
-
   handleProjectDropDown(e) {
     if (e.value === 1) {
       this.isModifyingDecorater(this.showCreateProjectDialog, this.createProjectTemplate, this, true);
@@ -698,7 +665,7 @@ export class ToolBarComponent {
         title: that.i18n.getById("remind"),
         showAnimate: false,
         content: that.i18n.getById("graphIsChanged"),
-        backdropCloseable: false,
+        backdropCloseable: true,
         onClose: () => {
 
         },
@@ -1456,6 +1423,8 @@ export class ToolBarComponent {
             } else {
               this.initFormData();
               this.dotSrcEmmitter.emit(this.dataService.defaultSrc);
+              
+              
             }
             this.saveProjectEmmitter.emit();
             let path = this.openproject_path + "/src/graph/" + this.formData.fileName;
@@ -1520,7 +1489,7 @@ export class ToolBarComponent {
       maxHeight: '600px',
       title: this.i18n.getById('message.ifCoverBackendFile'),
       content: this.i18n.getById('message.warnTheOperationCannotBeRestore'),
-      backdropCloseable: false,
+      backdropCloseable: true,
       dialogtype: 'error',
       buttons: [
         {
@@ -1664,7 +1633,7 @@ export class ToolBarComponent {
       title: this.i18n.getById('toolBar.graphDescriptionButton'),
       showAnimate: false,
       contentTemplate: content,
-      backdropCloseable: false,
+      backdropCloseable: true,
       onClose: () => {
 
       },
